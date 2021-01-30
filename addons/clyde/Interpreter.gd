@@ -51,17 +51,35 @@ func choose(option_index):
 		else:
 			_add_to_stack(content[option_index])
 			_add_to_stack(content[option_index].content)
+	else:
+		printerr("Nothing to select")
 
-
-#  } else {
-#    throw new Error('Nothing to select.');
-#  }
 
 func select_block(block_name = null):
 	if block_name:
 		_initialise_stack(_anchors[block_name])
 	else:
 		_initialise_stack(_doc)
+
+
+func get_variable(name):
+	return _mem.get_variable(name)
+
+
+func set_variable(name, value):
+	return _mem.set_variable(name, value)
+
+
+func get_data():
+	return _mem.get_all()
+
+
+func load_data(data):
+	return _mem.load_data(data)
+
+
+func clear_data():
+	return _mem.clear()
 
 
 func _initialise_stack(root):
@@ -331,27 +349,6 @@ func _replace_variables(text):
 	return text
 
 
-#  return {
-#    getData() {
-
-#      return mem.getAll();
-#    },
-#    loadData(data) {
-#      mem.load(data);
-#    },
-#    clearData() {
-#      mem.clear();
-#    },
-#    setVariable(name, value) {
-#      mem.setVariable(name, value);
-#    },
-#    getVariable(name) {
-#      return mem.getVariable(name);
-#    },
-#  }
-#}
-
-
 func _handle_variation_mode(variations):
 	match variations.mode:
 		"cycle":
@@ -446,6 +443,7 @@ func _filter(function: FuncRef, array: Array) -> Array:
 		if function.call_func(item):
 			output.append(item)
 	return output
+
 
 func _trigger_variable_changed(name, value):
 	emit_signal("variable_changed", name, value)

@@ -133,7 +133,7 @@ func _test_variations():
 
 
 	for _i in range(4):
-		dialogue.select_block()
+		dialogue.start()
 
 		# sequence
 		compare_var(
@@ -193,6 +193,35 @@ func _test_variables():
 	compare_content(dialogue.get_content(), { "type": "line", "text": "That's too complex!", "speaker": "npc" })
 	compare_content(dialogue.get_content(), { "type": "line", "text": "I'm in trouble" })
 	compare_var(dialogue.get_content(), null)
+	compare_var(dialogue.get_variable('xx'), true)
+
+func _test_set_variables():
+	var dialogue = ClydeDialogue.new()
+	dialogue.load_dialogue('res://sample/variables.json')
+	dialogue.set_variable('first_time', true)
+	compare_var(dialogue.get_content().text, "what do you want to talk about?")
+	dialogue.set_variable('first_time', false)
+	dialogue.start()
+	compare_var(dialogue.get_content().text, "not")
+
+
+func _test_data_control():
+	var dialogue = ClydeDialogue.new()
+	dialogue.load_dialogue('res://sample/variations.json')
+
+	compare_var(dialogue.get_content().text, "Hello")
+	dialogue.start()
+	compare_var(dialogue.get_content().text, "Hi")
+
+	var dialogue2 = ClydeDialogue.new()
+	dialogue2.load_dialogue('res://sample/variations.json')
+	dialogue2.load_data(dialogue.get_data())
+	compare_var(dialogue2.get_content().text, "Hey")
+
+	dialogue.clear_data()
+	dialogue.start()
+	compare_var(dialogue.get_content().text, "Hello")
+
 
 var pending_events = []
 

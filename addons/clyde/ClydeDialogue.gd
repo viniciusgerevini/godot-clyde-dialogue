@@ -19,8 +19,9 @@ func load_dialogue(file_name, _block = null):
 		_interpreter.select_block(_block)
 
 
-func select_block(block_name = null):
+func start(block_name = null):
 	_interpreter.select_block(block_name)
+
 
 func get_content():
 	return _interpreter.get_content()
@@ -30,8 +31,24 @@ func choose(option_index):
 	return _interpreter.choose(option_index)
 
 
-func set_variable(_key, _value):
-	pass
+func set_variable(name, value):
+	_interpreter.set_variable(name, value)
+
+
+func get_variable(name):
+	return _interpreter.get_variable(name)
+
+
+func get_data():
+	return _interpreter.get_data()
+
+
+func load_data(data):
+	return _interpreter.load_data(data)
+
+
+func clear_data():
+	return _interpreter.clear_data()
 
 
 func _load_file(path) -> Dictionary:
