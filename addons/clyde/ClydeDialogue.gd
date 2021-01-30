@@ -7,10 +7,12 @@ class_name ClydeDialogue
 signal variable_changed(name, value)
 signal event_triggered(name)
 
+var dialogue_folder = 'res://dialogues/'
+
 var _interpreter
 
 func load_dialogue(file_name, _block = null):
-	var file = _load_file(file_name)
+	var file = _load_file(_get_file_path(file_name))
 	_interpreter = Interpreter.new()
 	_interpreter.init(file)
 	_interpreter.connect("variable_changed", self, "_trigger_variable_changed")
@@ -57,7 +59,9 @@ func _load_file(path) -> Dictionary:
 	var result := JSON.parse(f.get_as_text())
 	f.close()
 	if result.error:
-		printerr("Failed to parse file: ", f.error_string)
+		printerr("Failed to parse file: ", f.get_error())
+		return {}
+
 	return result.result as Dictionary
 
 
@@ -67,3 +71,14 @@ func _trigger_variable_changed(name, value):
 
 func _trigger_event_triggered(name):
 	emit_signal("event_triggered", name)
+
+
+func _get_file_path(file_name):
+	var p = file_name
+	if (not file_name.get_extension()):
+		p = "%s.json" % file_name
+
+	if p.begins_with('./') or p.begins_with('res://'):
+		return p
+
+	return dialogue_folder.plus_file(p)

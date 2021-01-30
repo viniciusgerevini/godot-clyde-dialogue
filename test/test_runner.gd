@@ -269,8 +269,41 @@ func _on_event_triggered(event_name):
 			pending_events.erase(e)
 
 
+func _test_file_path_without_extension():
+	var dialogue = ClydeDialogue.new()
+	dialogue.load_dialogue('res://sample/simple_lines')
 
-# ============ HELPERS
+	var lines = [
+		{ "type": "line", "text": "Dinner at Jack Rabbit Slim's:" },
+		{ "type": "line", "text": "Don’t you hate that?", "speaker": "Mia" },
+		{ "type": "line", "text": "What?", "speaker": "Vincent" },
+		{ "type": "line", "text": "Uncomfortable silences. Why do we feel it’s necessary to yak about bullshit in order to be comfortable?", "speaker": "Mia", "id": "145" },
+		{ "type": "line", "text": "I don’t know. That’s a good question.", "speaker": "Vincent" },
+		{ "type": "line", "text": "That’s when you know you’ve found somebody special. When you can just shut the fuck up for a minute and comfortably enjoy the silence.", "speaker": "Mia", "id": "123"},
+	]
+
+	for line in lines:
+		compare_content(dialogue.get_content(), line)
+
+func _test_uses_configured_dialogue_folder():
+	var dialogue = ClydeDialogue.new()
+	dialogue.dialogue_folder = 'res://sample'
+	dialogue.load_dialogue('simple_lines')
+
+	var lines = [
+		{ "type": "line", "text": "Dinner at Jack Rabbit Slim's:" },
+		{ "type": "line", "text": "Don’t you hate that?", "speaker": "Mia" },
+		{ "type": "line", "text": "What?", "speaker": "Vincent" },
+		{ "type": "line", "text": "Uncomfortable silences. Why do we feel it’s necessary to yak about bullshit in order to be comfortable?", "speaker": "Mia", "id": "145" },
+		{ "type": "line", "text": "I don’t know. That’s a good question.", "speaker": "Vincent" },
+		{ "type": "line", "text": "That’s when you know you’ve found somebody special. When you can just shut the fuck up for a minute and comfortably enjoy the silence.", "speaker": "Mia", "id": "123"},
+	]
+
+	for line in lines:
+		compare_content(dialogue.get_content(), line)
+
+
+# ============ TEST HELPERS
 var pending_tests = []
 
 func _ready():
