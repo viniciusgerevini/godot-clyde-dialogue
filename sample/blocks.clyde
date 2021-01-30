@@ -1,0 +1,27 @@
+-- blocks are used to help organise dialogues
+
+== initial_dialogue
+<> intro
+
+* [Life]
+  -> about_life
+* [The universe]
+  -> about_universe
+* [Everything else...]
+  -> about_everything_else
+
+== intro
+npc: what do you want to talk about?
+
+== about_life
+player: I want to talk about life!
+npc: Well! That's too complicated...
+
+== about_universe
+player: I want to talk about the universe!
+npc: That's too complex!
+
+== about_everything_else
+player: What about everything else?
+npc: I don't have time for this...
+

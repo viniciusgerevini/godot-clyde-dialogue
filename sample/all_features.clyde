@@ -1,0 +1,92 @@
+-- this is a comment
+"Hello darkness my old : friend 123!"
+I come to show you this line with id $SCENE_1_LINE002
+
+-- another comment
+
+== this_is_a_block
+NPC: This is a dialogue with speaker and id $SCENE_1_LINE001
+player: This is a line with another speaker
+
+* this is the first topic
+  NPC: just a normal line inside the topic #sad #happy #some_tag
+  player: another line inside the first topic
+* the second topic
+  player: a line in the second topic, with speaker defined.
+
+"Those are the topics available:"
+* another topic
+  player: line inside a topic
+  NPC: another line inside a topic
+  a line without speaker inside the topic
+  a line with id inside the topic $this_is_an_id
+  <-
+* one more topic
+  speaker: love is all you need
+  <-
+* this is a topic pointing to another block
+  -> another_block
++ this is a sticky topic, with redirect to the beginning of the topics block
+  just a line
+  <-
+
+== another_block
+* straight to the topic
+  player: Go, johnny go.
+<-
+
+(
+  - This is the first time I talk to you
+  - This is the second time I talk to you
+  -
+  (
+    - Well, I lost count already.
+  )
+)
+
+(
+  - -> money_talk
+  - -> crazy_talk
+  - -> drunk_talk
+)
+
+( once
+  - This is the first time I talk to you
+  - This is the second time I talk to you
+  - Well, I lost count already.
+)
+
+
+( cycle
+  - This is the first time I talk to you
+  - This is the second time I talk to you
+  - Well, I lost count already.
+)
+
+( shuffle
+  - This is the first time I talk to you #test #tag
+  - "This is the second time I talk to you |test|"
+  - Well, I lost count already.
+)
+
+
+( shuffle once
+  - This is the first time I talk to you
+  - This is the second time I talk to you
+  - Well, I lost count already.
+)
+
+"-> this is the way\nheyhey"
+"speaker: this is $id: the way\nheyhey" $whatsup
+"speaker: this is the way\nheyhey"
+this is the way\nheyhey
+
+== money_talk
+blah
+
+== crazy_talk
+bleh
+
+== drunk_talk
+wat
+

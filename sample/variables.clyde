@@ -1,0 +1,48 @@
+{ first_time } npc: what do you want to talk about?
+{ not first_time } npc: not
+{ first_time && second_time } npc: what do you want to talk about?
+{ first_time and second_time or third_time } npc: what do you want to talk about?
+{ first_time or second_time and third_time } npc: what do you want to talk about?
+{ first_time and second_time or third_time and fourth_time } npc: what do you want to talk about?
+
+{ first_time == second_time or third_time != fourth_time } equality
+{ first_time is second_time or third_time isnt fourth_time } alias equality
+
+{ first_time < second_time or third_time > fourth_time } alias equality
+{ first_time <= second_time and third_time >= fourth_time } alias equality
+
+{ first_time > x + y - z * d / e % b } a
+
+{set xx = true } { first_time > 0 } hey
+{ first_time != null } ho
+{ first_time is false } let's go
+{ first_time is "hello darkness >= my old friend" } let's go
+{ set first_time = 2 }
+{ set a = b = c = d = 3 }
+{ set a += b }
+{ set a -= 4 ^ 2 }
+
+trigger {trigger some_event}
+{trigger another_event}
+
+hey you { set a -= 4, b=1, c = "hello" }
+
+{ first_time > 0 } "hey {you}" {set a = 4}
+
+{ set hp = 5 }
+
+* { hp < 40 } [Life] { set s = false }
+  player: I want to talk about life! {set x = true }
+  npc: Well! That's too complicated...
+* [The universe]
+  player: I want to talk about the universe!
+  npc: That's too complex! { set last_talk = "universe" }
+* {first_time && hp > 10} [Everything else...]
+  {hp > 20 || count == 0} player: What about everything else?
+  npc: I don't have time for this...
+
+(
+  - { hp > 50 } all good
+  - { hp < 10 } I'm in trouble
+)
+

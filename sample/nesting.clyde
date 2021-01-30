@@ -1,0 +1,31 @@
+-- nesting
+
+npc: what do you want to talk about?
+* [Life]
+  player: I want to talk about life!
+    * [nested life]
+      npc: Well! That's too complicated...
+* [The universe]
+  (
+      - player: I want to talk about the universe!
+      - npc: That's too complex!
+   )
+* [Everything else...]
+  (
+      -
+        option 1
+        player: What about everything else?
+        * nested option 1
+          yep
+        * nested option 2
+          nope
+      -
+        option 2
+        npc: I don't have time for this...
+  )
+  ( cycle
+      -
+        * nested option 1
+        * nested option 2
+      - option 2
+  )

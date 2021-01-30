@@ -1,0 +1,42 @@
+-- Options
+
+npc: what do you want to talk about?
+* [Life]
+  player: I want to talk about life!
+  npc: Well! That's too complicated...
+* [The universe]
+  player: I want to talk about the universe!
+  npc: That's too complex!
+* [Everything else... #some_tag]
+  player: What about everything else?
+  npc: I don't have time for this...
+
+-- example of option with description
+
+What's in your mind? #test
+  * [Nothing]
+    npc: That's a hard state to achieve.
+  * [Everything]
+    npc: You should try to empty it.
+
+
+speaker: What's in your mind? $abc
+  * [Nothing $abc123]
+    npc: That's a hard state to achieve.
+  + [Anything $abc123]
+    npc: That's a hard state to achieve.
+
+speaker: What's in your mind?
+  * [Nothing $abc123]
+    npc: That's a hard state to achieve.
+
+
+What's in your mind? $abc
+  + [Anything $abc123 #some_other_tag]
+    npc: That's a hard state to achieve.
+
+
+"speaker: >> What's in your mind? $id:abc"
+  * [Nothing]
+    npc: That's a hard state to achieve.
+

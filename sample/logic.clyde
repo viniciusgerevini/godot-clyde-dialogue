@@ -1,0 +1,21 @@
+-- logic example
+
+-- assignments
+{ set some_value = 1 } variable was initialized with %some_value%
+{ set a = 1, b = 2, c = 3 } setting multiple variables
+{ set some_value += a += b } %some_value% == 4.  %a% == 3
+
+--  conditions
+{ a == 1 } Hello!
+{ a == 2 || a != 3 } Hi!
+Hello { when a == 2 }
+
+{ not bl }
+  This is a block
+  inside a condition
+
+
+-- events
+{ trigger some_event }
+{ trigger some_event, another_event }
+
