@@ -1,6 +1,6 @@
 extends Node
 
-const Interpreter = preload('./Interpreter.gd')
+const Interpreter = preload('./interpreter/Interpreter.gd')
 
 class_name ClydeDialogue
 
