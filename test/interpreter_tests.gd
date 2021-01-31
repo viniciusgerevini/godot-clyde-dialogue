@@ -135,7 +135,7 @@ func _test_variations():
 		dialogue.start()
 
 		# sequence
-		compare_var(
+		expect(
 			dialogue.get_content().text,
 			sequence[0]
 		)
@@ -166,22 +166,22 @@ func _test_variations():
 func _test_logic():
 	var dialogue = ClydeDialogue.new()
 	dialogue.load_dialogue('res://sample/logic.json')
-	compare_var(dialogue.get_content().text, "variable was initialized with 1")
-	compare_var(dialogue.get_content().text, "setting multiple variables")
-	compare_var(dialogue.get_content().text, "4 == 4.  3 == 3")
-	compare_var(dialogue.get_content().text, "This is a block")
-	compare_var(dialogue.get_content().text, "inside a condition")
-	compare_var(dialogue.get_content(), null)
+	expect(dialogue.get_content().text, "variable was initialized with 1")
+	expect(dialogue.get_content().text, "setting multiple variables")
+	expect(dialogue.get_content().text, "4 == 4.  3 == 3")
+	expect(dialogue.get_content().text, "This is a block")
+	expect(dialogue.get_content().text, "inside a condition")
+	expect(dialogue.get_content(), null)
 
 func _test_variables():
 	var dialogue = ClydeDialogue.new()
 	dialogue.load_dialogue('res://sample/variables.json')
-	compare_var(dialogue.get_content().text, "not")
-	compare_var(dialogue.get_content().text, "equality")
-	compare_var(dialogue.get_content().text, "alias equality")
-	compare_var(dialogue.get_content().text, "trigger")
-	compare_var(dialogue.get_content().text, "hey you")
-	compare_var(dialogue.get_content().text, "hey {you}")
+	expect(dialogue.get_content().text, "not")
+	expect(dialogue.get_content().text, "equality")
+	expect(dialogue.get_content().text, "alias equality")
+	expect(dialogue.get_content().text, "trigger")
+	expect(dialogue.get_content().text, "hey you")
+	expect(dialogue.get_content().text, "hey {you}")
 	compare_content(
 		dialogue.get_content(),
 		{ "type": "options", "options": [{ "label": "Life" }, { "label": "The universe" }] }
@@ -191,35 +191,35 @@ func _test_variables():
 	compare_content(dialogue.get_content(), { "type": "line", "text": "I want to talk about the universe!", "speaker": "player" })
 	compare_content(dialogue.get_content(), { "type": "line", "text": "That's too complex!", "speaker": "npc" })
 	compare_content(dialogue.get_content(), { "type": "line", "text": "I'm in trouble" })
-	compare_var(dialogue.get_content(), null)
-	compare_var(dialogue.get_variable('xx'), true)
+	expect(dialogue.get_content(), null)
+	expect(dialogue.get_variable('xx'), true)
 
 func _test_set_variables():
 	var dialogue = ClydeDialogue.new()
 	dialogue.load_dialogue('res://sample/variables.json')
 	dialogue.set_variable('first_time', true)
-	compare_var(dialogue.get_content().text, "what do you want to talk about?")
+	expect(dialogue.get_content().text, "what do you want to talk about?")
 	dialogue.set_variable('first_time', false)
 	dialogue.start()
-	compare_var(dialogue.get_content().text, "not")
+	expect(dialogue.get_content().text, "not")
 
 
 func _test_data_control():
 	var dialogue = ClydeDialogue.new()
 	dialogue.load_dialogue('res://sample/variations.json')
 
-	compare_var(dialogue.get_content().text, "Hello")
+	expect(dialogue.get_content().text, "Hello")
 	dialogue.start()
-	compare_var(dialogue.get_content().text, "Hi")
+	expect(dialogue.get_content().text, "Hi")
 
 	var dialogue2 = ClydeDialogue.new()
 	dialogue2.load_dialogue('res://sample/variations.json')
 	dialogue2.load_data(dialogue.get_data())
-	compare_var(dialogue2.get_content().text, "Hey")
+	expect(dialogue2.get_content().text, "Hey")
 
 	dialogue.clear_data()
 	dialogue.start()
-	compare_var(dialogue.get_content().text, "Hello")
+	expect(dialogue.get_content().text, "Hello")
 
 
 #var pending_events = []

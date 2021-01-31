@@ -13,11 +13,11 @@ func _ready():
 		add_child(node)
 
 
-func _on_test_finished(test):
-	print("=== %s [COMPLETED]" % test.name)
+func _on_test_finished(result, test):
+	print("=== %s [%s]" % [test.name, 'SUCCESS' if result else 'FAILED'])
 	pending.erase(test)
 	if pending.size() == 0:
-		get_tree().quit()
+		get_tree().quit(0 if result else 1)
 
 
 func _get_test_files():

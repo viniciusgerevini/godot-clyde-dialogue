@@ -1,0 +1,727 @@
+extends Node
+
+const TOKEN_TEXT = "TEXT"
+const TOKEN_INDENT = "INDENT"
+const TOKEN_DEDENT = "DEDENT"
+const TOKEN_OPTION = "OPTION"
+const TOKEN_STICKY_OPTION = "STICKY_OPTION"
+const TOKEN_SQR_BRACKET_OPEN = "SQR_BRACKET_OPEN"
+const TOKEN_SQR_BRACKET_CLOSE = "SQR_BRACKET_CLOSE"
+const TOKEN_BRACKET_OPEN = "BRACKET_OPEN"
+const TOKEN_BRACKET_CLOSE = "BRACKET_CLOSE"
+const TOKEN_EOF = "EOF"
+const TOKEN_SPEAKER = "SPEAKER"
+const TOKEN_LINE_ID = "LINE_ID"
+const TOKEN_TAG = "TAG"
+const TOKEN_BLOCK = "BLOCK"
+const TOKEN_DIVERT = "DIVERT"
+const TOKEN_DIVERT_PARENT = "DIVERT_PARENT"
+const TOKEN_VARIATIONS_MODE = "VARIATIONS_MODE"
+const TOKEN_MINUS = "-"
+const TOKEN_PLUS = "+"
+const TOKEN_MULT = "*"
+const TOKEN_DIV = "/"
+const TOKEN_POWER = "^"
+const TOKEN_MOD = "%"
+const TOKEN_BRACE_OPEN = "{"
+const TOKEN_BRACE_CLOSE = "}"
+const TOKEN_AND = "AND"
+const TOKEN_OR = "OR"
+const TOKEN_NOT ="NOT"
+const TOKEN_EQUAL = "==, is"
+const TOKEN_NOT_EQUAL = "!=, isnt"
+const TOKEN_GE = ">="
+const TOKEN_LE = "<="
+const TOKEN_GREATER = "GREATER"
+const TOKEN_LESS = "LESS"
+const TOKEN_NUMBER_LITERAL = "number"
+const TOKEN_NULL_TOKEN = "null"
+const TOKEN_BOOLEAN_LITERAL = "boolean"
+const TOKEN_STRING_LITERAL = "string"
+const TOKEN_IDENTIFIER = "identifier"
+const TOKEN_KEYWORD_SET = "set"
+const TOKEN_KEYWORD_TRIGGER = "trigger"
+const TOKEN_KEYWORD_WHEN = "when"
+const TOKEN_ASSIGN = "="
+const TOKEN_ASSIGN_SUM = "+="
+const TOKEN_ASSIGN_SUB = "-="
+const TOKEN_ASSIGN_DIV = "/="
+const TOKEN_ASSIGN_MULT = "*="
+const TOKEN_ASSIGN_POW = "^="
+const TOKEN_ASSIGN_MOD = "%="
+const TOKEN_COMMA = ","
+const TOKEN_LINE_BREAK = "line break"
+
+
+const MODE_DEFAULT = "DEFAULT"
+const MODE_OPTION = "OPTION"
+const MODE_QSTRING = "QSTRING"
+const MODE_LOGIC = "LOGIC"
+const MODE_VARIATIONS = "VARIATIONS"
+
+
+const _token_hints = {
+	TOKEN_TEXT: 'text',
+	TOKEN_INDENT: 'INDENT',
+	TOKEN_DEDENT: 'DEDENT',
+	TOKEN_OPTION: '*',
+	TOKEN_STICKY_OPTION: '+',
+	TOKEN_SQR_BRACKET_OPEN: '[',
+	TOKEN_SQR_BRACKET_CLOSE: '',
+	TOKEN_BRACKET_OPEN: '(',
+	TOKEN_BRACKET_CLOSE: ')',
+	TOKEN_EOF: 'EOF',
+	TOKEN_SPEAKER: '<speaker name>:',
+	TOKEN_LINE_ID: '$id',
+	TOKEN_TAG: '#tag',
+	TOKEN_BLOCK: '== <block name>',
+	TOKEN_DIVERT: '-> <target name>',
+	TOKEN_DIVERT_PARENT: '<-',
+	TOKEN_VARIATIONS_MODE: '<variations mode>',
+	TOKEN_BRACE_OPEN: '{',
+	TOKEN_BRACE_CLOSE: '}',
+	TOKEN_AND: '&&, and',
+	TOKEN_OR: '||, or',
+	TOKEN_NOT:' not, !',
+	TOKEN_EQUAL: '==, is',
+	TOKEN_NOT_EQUAL: '!=, isnt',
+	TOKEN_GE: '>=',
+	TOKEN_LE: '<=',
+	TOKEN_GREATER: '>',
+	TOKEN_LESS: '<',
+}
+
+const _keywords = [
+	'is', 'isnt', 'or', 'and', 'not', 'true', 'false', 'null',
+	'set', 'trigger', 'when'
+]
+
+var _input = ""
+var _indent = [0]
+var _position = 0
+var _line = 0
+var _column = 0
+var _length = 0
+var _pending_tokens = []
+var _modes = [ MODE_DEFAULT ]
+
+
+static func get_token_friendly_hint(token):
+	return _token_hints.get(token, token)
+
+
+func init(input):
+	_input = input
+	_indent = [0]
+	_position = 0
+	_line = 0
+	_column = 0
+	_length = input.length()
+	_pending_tokens = []
+
+	return self
+
+func get_all():
+	var tokens = []
+	while _position < _length:
+		var token = _get_next_token()
+		if token:
+			if typeof(token) == TYPE_ARRAY:
+				tokens = tokens + token
+			else:
+				tokens.push_back(token)
+
+	_position += 1
+	tokens.push_back(Token(TOKEN_EOF, _line, _column))
+
+	return tokens
+
+
+func next():
+	if _pending_tokens.size() > 0:
+		return _pending_tokens.pop_front()
+
+	while _position < _length:
+		var token = _get_next_token()
+		if token != null:
+			if typeof(token) == TYPE_ARRAY:
+				_pending_tokens = token
+				return _pending_tokens.pop_front()
+			else:
+				return token
+
+	if _position == _length:
+		_position += 1
+		return Token(TOKEN_EOF, _line, _column)
+
+
+func _stack_mode(mode):
+	_modes.push_front(mode)
+
+
+func _pop_mode():
+	if _modes.size() > 1:
+		_modes.pop_front()
+
+
+func _is_current_mode(mode):
+	return _modes[0] == mode
+
+
+func _get_next_token():
+	if not _is_current_mode(MODE_QSTRING) and _input[_position] == '-' and _input[_position + 1] == '-':
+		return _handle_comments()
+
+	if not _is_current_mode(MODE_QSTRING) and _input[_position] == '\n':
+		return _handle_line_breaks()
+
+	if not _is_current_mode(MODE_LOGIC) and ((_column == 0 and _is_tab_char(_input[_position])) or (_column == 0 and _indent.size() > 1)):
+		return _handle_indent()
+
+	if not _is_current_mode(MODE_QSTRING) and _input[_position] == '{':
+		return _handle_logic_block_start()
+
+	if _is_current_mode(MODE_LOGIC):
+		var response = _handle_logic_block()
+
+		if response:
+			return response
+
+	if _input[_position] == '"':
+		return _handle_quote()
+
+	if _is_current_mode(MODE_QSTRING):
+		return _handle_qtext()
+
+	if _input[_position] == ' ':
+		return _handle_space()
+
+	if _input[_position] == '(':
+		return _handle_start_variations()
+
+	if _input[_position] == ')':
+		return _handle_stop_variations()
+
+	if _column == 0 and _input[_position] == '=' and _input[_position + 1] == '=':
+		return _handle_block()
+
+	if _input[_position] == '-' and _input[_position + 1] == '>':
+		return _handle_divert()
+
+	if _input[_position] == '<' and _input[_position + 1] == '-':
+		return _handle_divert_parent()
+
+	if _is_current_mode(MODE_VARIATIONS) and _input[_position] == '-':
+		return _handle_variation_item()
+
+	if _input[_position] == '*' or _input[_position] == '+':
+		return _handle_options()
+
+	if _is_current_mode(MODE_OPTION) and ['[', ']' ].has(_input[_position]):
+		return _handle_brackets()
+
+	if _input[_position] == '$':
+		return _handle_line_id()
+
+	if _input[_position] == '#':
+		return _handle_tag()
+
+	return _handle_text()
+
+
+func _handle_line_breaks():
+	while _is_valid_position() and _input[_position] == '\n':
+		_line += 1
+		_position += 1
+		_column = 0
+		if _is_current_mode(MODE_OPTION):
+			_pop_mode()
+
+
+func _handle_space():
+	while _input[_position] == ' ':
+		_position += 1
+		_column += 1
+
+
+func _handle_indent():
+	var initial_line = _line
+
+	var indentation = 0
+	while _is_valid_position() and _is_tab_char(_input[_position]):
+		indentation += 1
+		_position += 1
+
+	if indentation > _indent[0]:
+		var previous_indent = _indent[0]
+		_column += indentation
+		_indent.push_front(indentation)
+		return Token(TOKEN_INDENT, initial_line, previous_indent)
+
+	if indentation == _indent[0]:
+		_column = _indent[0]
+		return
+
+	var tokens = []
+	while indentation < _indent[0]:
+		_indent.pop_front()
+		_column = _indent[0]
+		tokens.push_back(Token(TOKEN_DEDENT, _line, _column))
+
+	return tokens
+
+
+func _handle_comments():
+	while _is_valid_position() and _input[_position] != '\n':
+		_position += 1
+
+	_position += 1
+	_line += 1
+
+
+func _handle_text():
+	var initialLine = _line
+	var initial_column = _column
+	var value = []
+
+	while _position < _input.length():
+		var current_char = _input[_position]
+
+		if ['\n', '$', '#', '{' ].has(current_char) or (_is_current_mode(MODE_OPTION) and current_char == ']'):
+			break
+
+		if current_char == "\\" and _input[_position + 1] != 'n':
+			value.push_back(_input[_position + 1])
+			_position += 2
+			_column += 2
+			continue
+
+		if current_char == ':':
+			_position += 1
+			_column += 1
+			return Token(TOKEN_SPEAKER, initialLine, initial_column, _array_join(value).strip_edges())
+
+		value.push_back(current_char)
+
+		_position += 1
+		_column += 1
+
+	return Token(TOKEN_TEXT, initialLine, initial_column, _array_join(value).strip_edges())
+
+
+func _handle_line_id():
+	var initial_column = _column
+	var values = []
+	_position += 1
+	_column += 1
+
+	while (_is_identifier(_input[_position])):
+		values.push_back(_input[_position])
+		_position += 1
+		_column += 1
+
+	return Token(TOKEN_LINE_ID, _line, initial_column, _array_join(values))
+
+
+func _handle_tag():
+	var initial_column = _column
+	var values = []
+	_position += 1
+	_column += 1
+
+	while _is_valid_position() and _is_identifier(_input[_position]):
+		values.push_back(_input[_position])
+		_position += 1
+		_column += 1
+
+	return Token(TOKEN_TAG, _line, initial_column, _array_join(values))
+
+
+func _handle_qtext():
+	var initialLine = _line
+	var initial_column = _column
+	var value = []
+
+	while _position < _input.length():
+		var current_char = _input[_position]
+
+		if current_char == '"':
+			break
+
+		if current_char == '\\' and _input[_position + 1] == '"':
+			value.push_back(_input[_position + 1])
+			_position += 2
+			_column += 2
+			continue
+
+		value.push_back(current_char)
+
+		_position += 1
+		_column += 1
+
+	return Token(TOKEN_TEXT, initialLine, initial_column, _array_join(value).strip_edges())
+
+
+func _handle_quote():
+	_column += 1
+	_position += 1
+	if _is_current_mode(MODE_QSTRING):
+		_pop_mode()
+	else:
+		_stack_mode(MODE_QSTRING)
+
+
+func _handle_options():
+	var token = TOKEN_OPTION if _input[_position] == '*' else TOKEN_STICKY_OPTION
+	var initial_column = _column
+	_column += 1
+	_position += 1
+	_stack_mode(MODE_OPTION)
+	return Token(token, _line, initial_column)
+
+
+func _handle_brackets():
+	var token = TOKEN_SQR_BRACKET_OPEN if _input[_position] == '[' else TOKEN_SQR_BRACKET_CLOSE
+	var initial_column = _column
+	_column += 1
+	_position += 1
+	return Token(token, _line, initial_column)
+
+
+func _handle_block():
+	var initial_column = _column
+	var values = []
+	_position += 2
+	_column += 2
+
+	while _is_valid_position() and _is_block_identifier(_input[_position]):
+		values.push_back(_input[_position])
+		_position += 1
+		_column += 1
+	return Token(TOKEN_BLOCK, _line, initial_column, _array_join(values).strip_edges())
+
+
+func _handle_divert():
+	var initial_column = _column
+	var values = []
+	_position += 2
+	_column += 2
+
+	while _is_valid_position() and _is_block_identifier(_input[_position]):
+		values.push_back(_input[_position])
+		_position += 1
+		_column += 1
+
+	return Token(TOKEN_DIVERT, _line, initial_column, _array_join(values).strip_edges())
+
+
+func _handle_divert_parent():
+	var initial_column = _column
+	_position += 2
+	_column += 2
+
+	return Token(TOKEN_DIVERT_PARENT, _line, initial_column)
+
+
+func _handle_start_variations():
+	var initial_column = _column
+	var values = []
+	_column += 1
+	_position += 1
+	_stack_mode(MODE_VARIATIONS)
+
+	var identifier = RegEx.new()
+	identifier.compile("[A-Z|a-z| ]")
+
+	while _is_valid_position() and identifier.search(_input[_position]) != null:
+		values.push_back(_input[_position])
+		_position += 1
+		_column += 1
+
+	var tokens = [
+		Token(TOKEN_BRACKET_OPEN, _line, initial_column)
+	]
+
+	var value = _array_join(values).strip_edges()
+
+	if value.length() > 0:
+		tokens.push_back(Token(TOKEN_VARIATIONS_MODE, _line, initial_column + 2, value))
+
+	return tokens
+
+
+func _handle_stop_variations():
+	var initial_column = _column
+	_column += 1
+	_position += 1
+	_pop_mode()
+	return Token(TOKEN_BRACKET_CLOSE, _line, initial_column)
+
+
+func _handle_variation_item():
+	var initial_column = _column
+	_column += 1
+	_position += 1
+	return Token(TOKEN_MINUS, _line, initial_column)
+
+
+func _handle_logic_block_start():
+	var initial_column = _column
+	_column += 1
+	_position += 1
+	_stack_mode(MODE_LOGIC)
+	var token = Token(TOKEN_BRACE_OPEN, _line, initial_column)
+	var linebreak = _get_leading_line_break()
+	if linebreak:
+		return [ linebreak, token ]
+
+	return token
+
+
+func _handle_logic_block_stop():
+	var initial_column = _column
+	_column += 1
+	_position += 1
+	_pop_mode()
+	var token = Token(TOKEN_BRACE_CLOSE, _line, initial_column)
+	var linebreak = _get_following_line_break()
+	if linebreak:
+		return [ token, linebreak ]
+
+	return token
+
+
+func _handle_logic_block():
+	if _input[_position] == '"':
+		return _handle_logic_string()
+
+	if _input[_position] == '}':
+		return _handle_logic_block_stop()
+
+	if _check_sequence(_input, _position, '=='):
+		return _handle_logic_operator(TOKEN_EQUAL, 2)
+
+	if _check_sequence(_input, _position, '!='):
+		return _handle_logic_operator(TOKEN_NOT_EQUAL, 2)
+
+	if _check_sequence(_input, _position, '&&'):
+		return _handle_logic_operator(TOKEN_AND, 2)
+
+	if _check_sequence(_input, _position, '||'):
+		return _handle_logic_operator(TOKEN_OR, 2)
+
+	if _check_sequence(_input, _position, '<='):
+		return _handle_logic_operator(TOKEN_LE, 2)
+
+	if _check_sequence(_input, _position, '>='):
+		return _handle_logic_operator(TOKEN_GE, 2)
+
+	if _check_sequence(_input, _position, '<'):
+		return _handle_logic_operator(TOKEN_LESS, 1)
+
+	if _check_sequence(_input, _position, '>'):
+		return _handle_logic_operator(TOKEN_GREATER, 1)
+
+	if _input[_position] == '=':
+		return _create_simple_token(TOKEN_ASSIGN)
+
+	if _check_sequence(_input, _position, '-='):
+		return _create_simple_token(TOKEN_ASSIGN_SUB, 2)
+
+	if _check_sequence(_input, _position, '+='):
+		return _create_simple_token(TOKEN_ASSIGN_SUM, 2)
+
+	if _check_sequence(_input, _position, '*='):
+		return _create_simple_token(TOKEN_ASSIGN_MULT, 2)
+
+	if _check_sequence(_input, _position, '/='):
+		return _create_simple_token(TOKEN_ASSIGN_DIV, 2)
+
+	if _check_sequence(_input, _position, '^='):
+		return _create_simple_token(TOKEN_ASSIGN_POW, 2)
+
+	if _check_sequence(_input, _position, '%='):
+		return _create_simple_token(TOKEN_ASSIGN_MOD, 2)
+
+	if _input[_position] == '+':
+		return _create_simple_token(TOKEN_PLUS, 1)
+
+	if _input[_position] == '-':
+		return _create_simple_token(TOKEN_MINUS, 1)
+
+	if _input[_position] == '*':
+		return _create_simple_token(TOKEN_MULT, 1)
+
+	if _input[_position] == '/':
+		return _create_simple_token(TOKEN_DIV, 1)
+
+	if _input[_position] == '^':
+		return _create_simple_token(TOKEN_POWER, 1)
+
+	if _input[_position] == '%':
+		return _create_simple_token(TOKEN_MOD, 1)
+
+	if _input[_position] == ',':
+		return _create_simple_token(TOKEN_COMMA, 1)
+
+	if _input[_position] == '!':
+		return _handle_logic_not()
+
+	if _input[_position].is_valid_integer():
+		return _handle_logic_number()
+
+	var identifier = RegEx.new()
+	identifier.compile("[A-Z|a-z]")
+	if identifier.search(_input[_position]) != null:
+		return _handle_logic_identifier()
+
+
+func _handle_logic_identifier():
+	var initial_column = _column
+	var values = ''
+
+	while _is_valid_position() and _is_identifier(_input[_position]):
+		values += _input[_position]
+		_position += 1
+		_column += 1
+
+	if _keywords.has(values.to_lower()):
+		return _handle_logic_descpritive_operator(values, initial_column)
+
+
+	return Token(TOKEN_IDENTIFIER, _line, initial_column, values.strip_edges())
+
+
+func _handle_logic_descpritive_operator(value, initial_column):
+	match value.to_lower():
+		'not':
+			return Token(TOKEN_NOT, _line, initial_column)
+		'and':
+			return Token(TOKEN_AND, _line, initial_column)
+		'or':
+			return Token(TOKEN_OR, _line, initial_column)
+		'is':
+			return Token(TOKEN_EQUAL, _line, initial_column)
+		'isnt':
+			return Token(TOKEN_NOT_EQUAL, _line, initial_column)
+		'true':
+			return Token(TOKEN_BOOLEAN_LITERAL, _line, initial_column, value)
+		'false':
+			return Token(TOKEN_BOOLEAN_LITERAL, _line, initial_column, value)
+		'null':
+			return Token(TOKEN_NULL_TOKEN, _line, initial_column)
+		'set':
+			return Token(TOKEN_KEYWORD_SET, _line, initial_column)
+		'trigger':
+			return Token(TOKEN_KEYWORD_TRIGGER, _line, initial_column)
+		'when':
+			return Token(TOKEN_KEYWORD_WHEN, _line, initial_column)
+
+
+func _handle_logic_not():
+	var initial_column = _column
+	_column += 1
+	_position += 1
+	return Token(TOKEN_NOT, _line, initial_column)
+
+
+func _handle_logic_operator(token, length):
+	var initial_column = _column
+	_column += length
+	_position += length
+	return Token(token, _line, initial_column)
+
+
+func _handle_logic_number():
+	var initial_column = _column
+	var values = ''
+
+	while _is_valid_position() and (_input[_position] == '.' or _input[_position].is_valid_integer()):
+		values += _input[_position]
+		_position += 1
+		_column += 1
+
+	return Token(TOKEN_NUMBER_LITERAL, _line, initial_column, values)
+
+
+func _handle_logic_string():
+	var initial_column = _column
+	_column += 1
+	_position += 1
+	var token = _handle_qtext()
+	_column += 1
+	_position += 1
+
+	token.token = TOKEN_STRING_LITERAL
+	token.column = initial_column
+
+	return token
+
+
+func _create_simple_token(token, length = 1):
+	var initial_column = _column
+	_column += length
+	_position += length
+	return Token(token, _line, initial_column)
+
+
+func _get_following_line_break():
+	var lookup_position = _position
+	var lookup_column = _column
+	while _is_valid_position() and _input[lookup_position] == ' ':
+		lookup_position += 1
+		lookup_column += 1
+
+	if  _is_valid_position() and _input[lookup_position] == '\n':
+		return Token(TOKEN_LINE_BREAK, _line, lookup_column)
+
+
+func _get_leading_line_break():
+	var lookup_position = _position - 2
+	while _input[lookup_position] == ' ':
+		lookup_position -= 1
+
+	if _input[lookup_position] == '\n':
+		return Token(TOKEN_LINE_BREAK, _line, 0)
+
+
+static func Token(token, line, column, value = null):
+	return {
+		"token": token,
+		"value": value,
+		"line": line,
+		"column": column
+	}
+
+func _array_join(arr, separator = ""):
+	var output = "";
+	for s in arr:
+		output += str(s) + separator
+	output = output.left(output.length() - separator.length())
+	return output
+
+
+func _is_tab_char(character):
+	var tab = RegEx.new()
+	tab.compile("[\t ]")
+	return tab.search(character) != null
+
+func _is_valid_position():
+	return _position < _input.length() and _input[_position]
+
+func _is_identifier(character):
+	var lineId = RegEx.new()
+	lineId.compile("[A-Z|a-z|0-9|_]")
+	return lineId.search(character) != null
+
+
+func _is_block_identifier(character):
+	var identifier = RegEx.new()
+	identifier.compile("[A-Z|a-z|0-9|_| ]")
+	return identifier.search(character) != null
+
+
+func _check_sequence(string, initial_position, value):
+	var sequence = string.substr(initial_position, value.length())
+	return sequence == value
+

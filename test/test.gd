@@ -1,17 +1,17 @@
 extends Node2D
 
-signal all_tests_finished
+signal all_tests_finished(passed)
 
 var pending_events = []
 var pending_tests = []
-
+var result = true
 
 func _ready():
 	_execute()
 
 func _process(_delta):
 	if (pending_tests.size() == 0 and pending_events.size() == 0):
-		emit_signal("all_tests_finished")
+		emit_signal("all_tests_finished", result)
 
 
 func add_pending_event(event):
@@ -28,38 +28,53 @@ func _execute():
 				pending_tests.remove(method.name)
 
 
-func compare_content(result, expected):
-	if not result:
-		assert(result == expected, 'result is undefined. Expected: %s' % expected)
+func compare_content(received, expected):
+	if not received:
+		expect_assert(received == expected, 'result is undefined. Expected: %s' % expected)
 		return
 
-	assert(result.get("type") == expected.get("type") , 'line type does not match received: %s expected: %s' % [result.get("type") , expected.get("type")])
+	expect_assert(received.get("type") == expected.get("type") , 'line type does not match received: %s expected: %s' % [received.get("type") , expected.get("type")])
 
-	if result.type == 'line':
-		compare_line(result, expected)
+	if received.type == 'line':
+		compare_line(received, expected)
 	else:
-		compare_options(result, expected)
+		compare_options(received, expected)
 
-func compare_line(result, expected):
-	assert(result.get("text")  == expected.get("text"), 'text does not match received: %s expected: %s' % [result.get("text"), expected.get("text")])
-	assert(result.get("speaker")  == expected.get("speaker"), 'line speaker does not match received: %s expected: %s' % [result.get("speaker"), expected.get("speaker")])
-	assert(result.get("id")  == expected.get("id"), 'line id does not match received: %s expected: %s' % [result.get("id"), expected.get("id")])
-
-
-func compare_options(result, expected):
-	assert(result.get("name")  == expected.get("name"), 'name does not match received: %s expected: %s' % [result.get("name"), expected.get("name")])
-	assert(result.get("speaker")  == expected.get("speaker"), 'line speaker does not match received: %s expected: %s' % [result.get("speaker"), expected.get("speaker")])
-	assert(result.get("id")  == expected.get("id"), 'line id does not match received: %s expected: %s' % [result.get("id"), expected.get("id")])
-	assert(result.options.size()  == expected.options.size(), 'number of options does not match: %s expected: %s' % [result.options.size(), expected.options.size()])
-	for index in range(result.options.size()):
-		assert(result.options[index].label  == expected.options[index].label, 'option label does not match: %s expected: %s' % [result.options[index].label, expected.options[index].label])
-		assert(result.options[index].get("speaker")  == expected.options[index].get("speaker"), 'line speaker does not match received: %s expected: %s' % [result.options[index].get("speaker"), expected.options[index].get("speaker")])
-		assert(result.options[index].get("id")  == expected.options[index].get("id"), 'line id does not match received: %s expected: %s' % [result.options[index].get("id"), expected.options[index].get("id")])
+func compare_line(received, expected):
+	expect_assert(received.get("text")  == expected.get("text"), 'text does not match received: %s expected: %s' % [received.get("text"), expected.get("text")])
+	expect_assert(received.get("speaker")  == expected.get("speaker"), 'line speaker does not match received: %s expected: %s' % [received.get("speaker"), expected.get("speaker")])
+	expect_assert(received.get("id")  == expected.get("id"), 'line id does not match received: %s expected: %s' % [received.get("id"), expected.get("id")])
 
 
-func compare_var(received, expected):
-	assert(received == expected, "'%s' is not equal to '%s" % [ received, expected ])
+func compare_options(received, expected):
+	expect_assert(received.get("name")  == expected.get("name"), 'name does not match received: %s expected: %s' % [received.get("name"), expected.get("name")])
+	expect_assert(received.get("speaker")  == expected.get("speaker"), 'line speaker does not match received: %s expected: %s' % [received.get("speaker"), expected.get("speaker")])
+	expect_assert(received.get("id")  == expected.get("id"), 'line id does not match received: %s expected: %s' % [received.get("id"), expected.get("id")])
+	expect_assert(received.options.size()  == expected.options.size(), 'number of options does not match: %s expected: %s' % [received.options.size(), expected.options.size()])
+	for index in range(received.options.size()):
+		expect_assert(received.options[index].label  == expected.options[index].label, 'option label does not match: %s expected: %s' % [received.options[index].label, expected.options[index].label])
+		expect_assert(received.options[index].get("speaker")  == expected.options[index].get("speaker"), 'line speaker does not match received: %s expected: %s' % [received.options[index].get("speaker"), expected.options[index].get("speaker")])
+		expect_assert(received.options[index].get("id")  == expected.options[index].get("id"), 'line id does not match received: %s expected: %s' % [received.options[index].get("id"), expected.options[index].get("id")])
+
+
+func expect(received, expected):
+	if typeof(expected) == TYPE_ARRAY:
+		for index in range(expected.size()):
+			expect(received[index], expected[index])
+	elif typeof(received) == TYPE_DICTIONARY:
+		for key in expected:
+			expect_assert(received[key] == expected[key], "'%s' is not equal to '%s'" % [ received, expected ])
+	else:
+		expect_assert(received == expected, "'%s' is not equal to '%s" % [ received, expected ])
 
 
 func is_in_array(array, element):
-	assert(array.has(element), '%s is not in array' % element)
+	expect_assert(array.has(element), '%s is not in array' % element)
+
+
+func expect_assert(assertion_result, message):
+	if not assertion_result:
+		result = false
+		printerr("Test failed: %s" % message)
+		return false
+	return true
