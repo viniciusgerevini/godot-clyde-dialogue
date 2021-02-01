@@ -8,13 +8,18 @@ func _ready():
 		var node = Node2D.new()
 		node.set_script(load("res://test/%s" % t))
 		node.name = t.get_basename()
+
 		node.connect("all_tests_finished", self, "_on_test_finished", [node])
 		pending.push_back(node)
 		add_child(node)
 
 
 func _on_test_finished(result, test):
-	print("=== %s [%s]" % [test.name, 'SUCCESS' if result else 'FAILED'])
+	if result:
+		print("=== %s [SUCCESS]" % test.name)
+	else:
+		printerr("=== %s [FAILED]" % test.name)
+
 	pending.erase(test)
 	if pending.size() == 0:
 		get_tree().quit(0 if result else 1)

@@ -19,13 +19,16 @@ func add_pending_event(event):
 
 
 func _execute():
+	var _number_of_tests = 0
 	for method in self.get_method_list():
 		if (method.name.begins_with('_test_')):
-			print("%s: %s" % [self.name, method.name])
+			_number_of_tests += 1
+#			print("%s: %s" % [self.name, method.name])
 			pending_tests.push_back(method.name)
 			var res = self.call(method.name)
 			if not res:
 				pending_tests.remove(method.name)
+	print("%s: %s tests" % [self.name, _number_of_tests])
 
 
 func compare_content(received, expected):
@@ -59,11 +62,12 @@ func compare_options(received, expected):
 
 func expect(received, expected):
 	if typeof(expected) == TYPE_ARRAY:
+		expect_assert(received != null && received.size() == expected.size(), "'%s' is not equal to '%s" % [ received, expected ])
 		for index in range(expected.size()):
 			expect(received[index], expected[index])
 	elif typeof(received) == TYPE_DICTIONARY:
 		for key in expected:
-			expect_assert(received[key] == expected[key], "'%s' is not equal to '%s'" % [ received, expected ])
+			expect(received[key], expected[key])
 	else:
 		expect_assert(received == expected, "'%s' is not equal to '%s" % [ received, expected ])
 
@@ -75,6 +79,6 @@ func is_in_array(array, element):
 func expect_assert(assertion_result, message):
 	if not assertion_result:
 		result = false
-		printerr("Test failed: %s" % message)
+		printerr("%s: test failed: %s" % [self.name, message])
 		return false
 	return true
