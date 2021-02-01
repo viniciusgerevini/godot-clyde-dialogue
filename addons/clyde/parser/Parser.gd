@@ -75,29 +75,31 @@ func _document():
 		return
 
 	if next.token == Lexer.TOKEN_EOF:
-			return DocumentNode()
+		return DocumentNode()
+
+
+	if next.token == Lexer.TOKEN_BLOCK:
+		return DocumentNode([], _blocks())
 
 	var result =  DocumentNode([ContentNode(_lines())])
-#			if _tokens.peek([Lexer.TOKEN_BLOCK]):
-#				result.blocks = Blocks()
+
+	if _tokens.peek([Lexer.TOKEN_BLOCK]):
+		result.blocks = _blocks()
+
 	return result
-#		Lexer.TOKEN_BLOCK:
-#			return DocumentNode([], Blocks())
 
 
+func _blocks():
+	_tokens.consume([Lexer.TOKEN_BLOCK])
+	var blocks =  [
+		BlockNode(_tokens.current_token.value, ContentNode(_lines()))
+	]
 
-#  var Blocks():
-#    _tokens.consume([Lexer.TOKEN_BLOCK])
-#    var blocks =  [
-#      BlockNode(_tokens.current_token.value, ContentNode(_lines()))
-#    ]
-#
-#    while _tokens.peek([Lexer.TOKEN_BLOCK]):
-#      blocks = blocks.concat(Blocks())
-#    }
-#
-#    return blocks
-#  }
+	while _tokens.peek([Lexer.TOKEN_BLOCK]):
+		blocks = blocks + _blocks()
+
+	return blocks
+
 
 func _lines():
 	var acceptable_next = [
@@ -125,14 +127,10 @@ func _lines():
 #				lines = [_line_with_action(line)]
 #			else:
 		lines = [line]
-
-#		Lexer.TOKEN_OPTION:
-#		Lexer.TOKEN_STICKY_OPTION:
-#			lines = [Options()]
-#			break
-#		Lexer.TOKEN_DIVERT:
-#		Lexer.TOKEN_DIVERT_PARENT:
-#			lines = [Divert()]
+	elif tk.token == Lexer.TOKEN_OPTION or tk.token == Lexer.TOKEN_STICKY_OPTION:
+		lines = [_options()]
+	elif tk.token == Lexer.TOKEN_DIVERT or tk.token == Lexer.TOKEN_DIVERT_PARENT:
+		lines = [_divert()]
 #			break
 #		Lexer.TOKEN_BRACKET_OPEN:
 #			_tokens.consume([ Lexer.TOKEN_BRACKET_OPEN ])
@@ -193,7 +191,7 @@ func _text_line():
 
 		if _tokens.peek([Lexer.TOKEN_OPTION, Lexer.TOKEN_STICKY_OPTION]):
 			pass
-#			var options = Options()
+#			var options = _options()
 #			options.id = line.id
 #			options.name = line.value
 #			options.tags = line.tags
@@ -248,109 +246,97 @@ func _line_with_tags():
 	return LineNode(null, null, null, [value])
 
 
-#  var Options():
-#    var options = OptionsNode([])
-#
-#    while _tokens.peek([Lexer.TOKEN_OPTION, Lexer.TOKEN_STICKY_OPTION]):
-#      options.content.push_back(Option())
-#    }
-#
-#    if _tokens.peek([ Lexer.TOKEN_DEDENT ]):
-#      _tokens.consume([ Lexer.TOKEN_DEDENT ])
-#    }
-#
-#    return options
-#  }
-#
-#  var Option():
-#    _tokens.consume([Lexer.TOKEN_OPTION, Lexer.TOKEN_STICKY_OPTION])
-#    var type = _tokens.current_token.token == Lexer.TOKEN_OPTION ? 'once' : 'sticky'
-#    var acceptable_next = [Lexer.TOKEN_SPEAKER, Lexer.TOKEN_TEXT, Lexer.TOKEN_INDENT, Lexer.TOKEN_SQR_BRACKET_OPEN, Lexer.TOKEN_BRACE_OPEN]
-#    var lines = []
-#    var mainItem
-#    var useFirstLineAsDisplayOnly = false
-#    var wrapper
-#
-#    _tokens.consume(acceptable_next)
-#
-#    if _tokens.current_token.token == Lexer.TOKEN_BRACE_OPEN:
-#      wrapper = LogicBlock(():})
-#      _tokens.consume(acceptable_next)
-#    }
-#
-#    if _tokens.current_token.token == Lexer.TOKEN_SQR_BRACKET_OPEN:
-#      useFirstLineAsDisplayOnly = true
-#      _tokens.consume(acceptable_next)
-#    }
-#
-#    match _tokens.current_token.token:
-#      Lexer.TOKEN_SPEAKER:
-#      Lexer.TOKEN_TEXT:
-#        _is_multiline_enabled = false
-#        mainItem = _line()
-#        _is_multiline_enabled = true
-#        if useFirstLineAsDisplayOnly:
-#          _tokens.consume([Lexer.TOKEN_SQR_BRACKET_CLOSE])
-#        else:
-#          lines.push_back(mainItem)
-#        }
-#
-#    }
-#
-#    if _tokens.peek([Lexer.TOKEN_BRACE_OPEN]):
-#      _tokens.consume([Lexer.TOKEN_BRACE_OPEN])
-#      if wrapper:
-#        wrapper.content = LogicBlock(():})
-#      else:
-#        wrapper = LogicBlock(():})
-#      }
-#      _tokens.consume([Lexer.TOKEN_LINE_BREAK])
-#    }
-#
-#    if _tokens.current_token.token == Lexer.TOKEN_INDENT || _tokens.peek([Lexer.TOKEN_INDENT]):
-#      if _tokens.current_token.token != Lexer.TOKEN_INDENT:
-#        _tokens.consume([Lexer.TOKEN_INDENT])
-#      }
-#
-#      lines = lines.concat(_lines())
-#      if !mainItem:
-#        mainItem = lines[0]
-#      }
-#      _tokens.consume([Lexer.TOKEN_DEDENT, Lexer.TOKEN_EOF])
-#    }
-#
-#    var node = OptionNode(
-#      ContentNode(lines),
-#      type,
-#      mainItem.value,
-#      mainItem.id,
-#      mainItem.speaker,
-#      mainItem.tags,
-#    )
-#
-#    if wrapper:
-#      if wrapper.content:
-#        wrapper.content.content = node
-#      else:
-#        wrapper.content = node
-#      }
-#      return wrapper
-#    }
-#
-#    return node
-#  }
-#
-#  var Divert():
-#    _tokens.consume([ Lexer.TOKEN_DIVERT, Lexer.TOKEN_DIVERT_PARENT ])
-#    var divert = _tokens.current_token
-#
-#    match divert.token:
-#      Lexer.TOKEN_DIVERT:
-#        return DivertNode(divert.value)
-#      Lexer.TOKEN_DIVERT_PARENT:
-#        return DivertNode('<parent>')
-#    }
-#  }
+func _options():
+	var options = OptionsNode([])
+
+	while _tokens.peek([Lexer.TOKEN_OPTION, Lexer.TOKEN_STICKY_OPTION]):
+		options.content.push_back(_option())
+
+	if _tokens.peek([ Lexer.TOKEN_DEDENT ]):
+		_tokens.consume([ Lexer.TOKEN_DEDENT ])
+
+	return options
+
+
+func _option():
+	_tokens.consume([Lexer.TOKEN_OPTION, Lexer.TOKEN_STICKY_OPTION])
+	var type = 'once' if _tokens.current_token.token == Lexer.TOKEN_OPTION else 'sticky'
+	var acceptable_next = [Lexer.TOKEN_SPEAKER, Lexer.TOKEN_TEXT, Lexer.TOKEN_INDENT, Lexer.TOKEN_SQR_BRACKET_OPEN, Lexer.TOKEN_BRACE_OPEN]
+	var lines = []
+	var main_item
+	var use_first_line_as_display_only = false
+	var wrapper
+
+	_tokens.consume(acceptable_next)
+
+#	if _tokens.current_token.token == Lexer.TOKEN_BRACE_OPEN:
+#		wrapper = LogicBlock(():})
+#		_tokens.consume(acceptable_next)
+#	}
+
+	if _tokens.current_token.token == Lexer.TOKEN_SQR_BRACKET_OPEN:
+		use_first_line_as_display_only = true
+		_tokens.consume(acceptable_next)
+
+	if _tokens.current_token.token == Lexer.TOKEN_SPEAKER or _tokens.current_token.token == Lexer.TOKEN_TEXT:
+			_is_multiline_enabled = false
+			main_item = _line()
+			_is_multiline_enabled = true
+			if use_first_line_as_display_only:
+				_tokens.consume([Lexer.TOKEN_SQR_BRACKET_CLOSE])
+			else:
+				lines.push_back(main_item)
+
+#	if _tokens.peek([Lexer.TOKEN_BRACE_OPEN]):
+#		_tokens.consume([Lexer.TOKEN_BRACE_OPEN])
+#		if wrapper:
+#			wrapper.content = LogicBlock(():})
+#		else:
+#			wrapper = LogicBlock(():})
+#		}
+#		_tokens.consume([Lexer.TOKEN_LINE_BREAK])
+#	}
+
+	if _tokens.current_token.token == Lexer.TOKEN_INDENT || _tokens.peek([Lexer.TOKEN_INDENT]):
+		if _tokens.current_token.token != Lexer.TOKEN_INDENT:
+			_tokens.consume([Lexer.TOKEN_INDENT])
+
+		lines = lines + _lines()
+		if !main_item:
+			main_item = lines[0]
+
+		_tokens.consume([Lexer.TOKEN_DEDENT, Lexer.TOKEN_EOF])
+
+
+	var node = OptionNode(
+		ContentNode(lines),
+		type,
+		main_item.value,
+		main_item.id,
+		main_item.speaker,
+		main_item.tags
+	)
+
+	if wrapper:
+		if wrapper.content:
+			wrapper.content.content = node
+		else:
+			wrapper.content = node
+		return wrapper
+
+	return node
+
+
+func _divert():
+	_tokens.consume([ Lexer.TOKEN_DIVERT, Lexer.TOKEN_DIVERT_PARENT ])
+	var divert = _tokens.current_token
+
+	match divert.token:
+		Lexer.TOKEN_DIVERT:
+			return DivertNode(divert.value)
+		Lexer.TOKEN_DIVERT_PARENT:
+			return DivertNode('<parent>')
+
 #
 #  var Variations():
 #    var variations = VariationsNode('sequence')
@@ -518,7 +504,7 @@ func _line_with_tags():
 #    var content
 #
 #    if _tokens.peek([Lexer.TOKEN_DIVERT, Lexer.TOKEN_DIVERT_PARENT]):
-#      content = Divert()
+#      content = _divert()
 #    elif _tokens.peek([Lexer.TOKEN_LINE_BREAK]):
 #      _tokens.consume([Lexer.TOKEN_LINE_BREAK])
 #      _tokens.consume([Lexer.TOKEN_INDENT])
@@ -670,7 +656,7 @@ func LineNode(value, speaker = null, id = null, tags = null):
 	return { "type": 'line', "value": value, "id": id, "speaker": speaker, "tags": tags }
 
 
-func OptionsNode(content, name, id, speaker, tags):
+func OptionsNode(content, name = null, id = null, speaker = null, tags = null):
 	return { "type": 'options', "name": name, "content": content,"id": id, "speaker": speaker, "tags": tags }
 
 
