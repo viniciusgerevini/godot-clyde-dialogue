@@ -54,6 +54,10 @@ func clear_data():
 
 
 func _load_file(path) -> Dictionary:
+	if path.get_extension() == 'clyde':
+		var container = load(path).instance()
+		return container as Dictionary
+
 	var f := File.new()
 	f.open(path, File.READ)
 	var result := JSON.parse(f.get_as_text())
@@ -75,8 +79,10 @@ func _trigger_event_triggered(name):
 
 func _get_file_path(file_name):
 	var p = file_name
-	if (not file_name.get_extension()):
-		p = "%s.json" % file_name
+	var extension = file_name.get_extension()
+
+	if (not extension):
+		p = "%s.clyde" % file_name
 
 	if p.begins_with('./') or p.begins_with('res://'):
 		return p
