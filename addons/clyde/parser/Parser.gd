@@ -5,10 +5,8 @@ const TokenWalker = preload("./TokenWalker.gd")
 
 var _is_multiline_enabled = true
 
-#import { TOKENS, tokenize, getTokenFriendlyHint } from './lexer.js'
-#
-#
-#const variationsModes = ['sequence', 'once', 'cycle', 'shuffle', 'shuffle sequence', 'shuffle once', 'shuffle cycle' ]
+const _variations_modes = ['sequence', 'once', 'cycle', 'shuffle', 'shuffle sequence', 'shuffle once', 'shuffle cycle' ]
+
 const operators = {
 	Lexer.TOKEN_AND: { "precedence": 1, "associative": 'LEFT' },
 	Lexer.TOKEN_OR: { "precedence": 1, "associative": 'LEFT' },
@@ -51,7 +49,6 @@ func parse(doc):
 		_tokens.consume([ Lexer.TOKEN_EOF ])
 
 	return result
-
 
 
 func _document():
@@ -132,10 +129,9 @@ func _lines():
 	elif tk.token == Lexer.TOKEN_DIVERT or tk.token == Lexer.TOKEN_DIVERT_PARENT:
 		lines = [_divert()]
 #			break
-#		Lexer.TOKEN_BRACKET_OPEN:
-#			_tokens.consume([ Lexer.TOKEN_BRACKET_OPEN ])
-#			lines = [Variations()]
-#			break
+	elif tk.token == Lexer.TOKEN_BRACKET_OPEN:
+			_tokens.consume([ Lexer.TOKEN_BRACKET_OPEN ])
+			lines = [_variations()]
 	elif tk.token == Lexer.TOKEN_LINE_BREAK or tk.token == Lexer.TOKEN_BRACE_OPEN:
 		if tk.token == Lexer.TOKEN_LINE_BREAK:
 			_tokens.consume([ Lexer.TOKEN_LINE_BREAK ])
@@ -334,49 +330,51 @@ func _divert():
 		Lexer.TOKEN_DIVERT_PARENT:
 			return DivertNode('<parent>')
 
-#
-#  var Variations():
-#    var variations = VariationsNode('sequence')
-#
-#    if _tokens.peek([Lexer.TOKEN_VARIATIONS_MODE]):
-#      var mode = _tokens.consume([Lexer.TOKEN_VARIATIONS_MODE])
-#      if !variationsModes.has(mode.value):
-#        throw new Error(`Wrong variation mode set "${mode.value}". Valid modes: ${variationsModes.join(', ')}.`)
-#      }
-#      variations.mode = mode.value
-#    }
-#
-#    while _tokens.peek([Lexer.TOKEN_INDENT, Lexer.TOKEN_MINUS]):
-#      if _tokens.peek([Lexer.TOKEN_INDENT]):
-#        _tokens.consume([Lexer.TOKEN_INDENT])
-#        continue
-#      }
-#      _tokens.consume([Lexer.TOKEN_MINUS])
-#
-#      var startsNextLine = false
-#      if _tokens.peek([Lexer.TOKEN_INDENT]):
-#        _tokens.consume([Lexer.TOKEN_INDENT])
-#        startsNextLine = true
-#      }
-#
-#      variations.content.push_back(ContentNode(_lines()))
-#      if startsNextLine:
-#        var lastVariation = variations.content[variations.content.size() - 1].content
-#        var lastContent = lastVariation[lastVariation.size() - 1]
-#        if lastContent.type != 'options':
-#          _tokens.consume([Lexer.TOKEN_DEDENT])
-#        }
-#      }
-#
-#      if _tokens.peek([Lexer.TOKEN_DEDENT]):
-#        _tokens.consume([Lexer.TOKEN_DEDENT])
-#      }
-#    }
-#    _tokens.consume([Lexer.TOKEN_BRACKET_CLOSE])
-#
-#    return variations
-#  }
-#
+
+func _variations():
+	var variations = VariationsNode('sequence')
+
+	if _tokens.peek([Lexer.TOKEN_VARIATIONS_MODE]):
+		var mode = _tokens.consume([Lexer.TOKEN_VARIATIONS_MODE])
+		if !_variations_modes.has(mode.value):
+			printerr("Wrong variation mode set \"%s\" on line %s column %s. Valid modes: %s." % [
+				mode.value,
+				_tokens.current_token.line,
+				_tokens.current_token.column,
+				_variations_modes
+			])
+			return
+
+		variations.mode = mode.value
+
+	while _tokens.peek([Lexer.TOKEN_INDENT, Lexer.TOKEN_MINUS]):
+		if _tokens.peek([Lexer.TOKEN_INDENT]):
+			_tokens.consume([Lexer.TOKEN_INDENT])
+			continue
+
+		_tokens.consume([Lexer.TOKEN_MINUS])
+
+		var starts_next_line = false
+		if _tokens.peek([Lexer.TOKEN_INDENT]):
+			_tokens.consume([Lexer.TOKEN_INDENT])
+			starts_next_line = true
+
+
+		variations.content.push_back(ContentNode(_lines()))
+		if starts_next_line:
+			var lastVariation = variations.content[variations.content.size() - 1].content
+			var lastContent = lastVariation[lastVariation.size() - 1]
+			if lastContent.type != 'options':
+				_tokens.consume([Lexer.TOKEN_DEDENT])
+
+		if _tokens.peek([Lexer.TOKEN_DEDENT]):
+			_tokens.consume([Lexer.TOKEN_DEDENT])
+
+	_tokens.consume([Lexer.TOKEN_BRACKET_CLOSE])
+
+	return variations
+
+
 func _line_with_action(line = null):
 	var token = _tokens.peek([
 		Lexer.TOKEN_KEYWORD_SET,
