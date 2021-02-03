@@ -7,7 +7,7 @@ Importer and interpreter for [Clyde Dialogue Language](https://github.com/vinici
 
 The importer automatically imports `.clyde` files to be used with the interpreter. This improves performance, as the dialogue is parsed beforehand.
 
-Check the [USAGE.md](./USAGE.md) for how to use ther interpreter.
+Check [USAGE.md](./USAGE.md) for how to use the interpreter.
 
 You can find a simple usage example on [/example/example.gd](./example/example.gd)
 

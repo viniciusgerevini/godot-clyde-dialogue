@@ -7,48 +7,67 @@ class_name ClydeDialogue
 signal variable_changed(name, value, previous_value)
 signal event_triggered(name)
 
+# Folder where the interpreter should look for dialogue files
+# in case just the name is provided.
 var dialogue_folder = 'res://dialogues/'
 
 var _interpreter
 
-func load_dialogue(file_name, _block = null):
+# Load dialogue file
+# file_name: path to the dialogue file.
+#            i.e 'my_dialogue', 'res://my_dialogue.clyde', res://my_dialogue.json
+# block: block name to run. This allows keeping
+#        multiple dialogues in the same file.
+func load_dialogue(file_name, block = null):
 	var file = _load_file(_get_file_path(file_name))
 	_interpreter = Interpreter.new()
 	_interpreter.init(file)
 	_interpreter.connect("variable_changed", self, "_trigger_variable_changed")
 	_interpreter.connect("event_triggered", self, "_trigger_event_triggered")
-	if _block:
-		_interpreter.select_block(_block)
+	if block:
+		_interpreter.select_block(block)
 
 
+# Start or restart dialogue. Variables are not reset.
 func start(block_name = null):
 	_interpreter.select_block(block_name)
 
 
+# Get next dialogue content.
+# The content may be a line, options or null.
+# If null, it means the dialogue reached an end.
 func get_content():
 	return _interpreter.get_content()
 
 
+# Choose one of the available options.
 func choose(option_index):
 	return _interpreter.choose(option_index)
 
 
+# Set variable to be used in the dialogue
 func set_variable(name, value):
 	_interpreter.set_variable(name, value)
 
 
+# Get current value of a variable inside the dialogue.
+# name: variable name
 func get_variable(name):
 	return _interpreter.get_variable(name)
 
 
+# Return all variables and internal variables. Useful for persisting the dialogue's internal
+# data, such as options already choosen and random variations states.
 func get_data():
 	return _interpreter.get_data()
 
 
+# Load internal data
 func load_data(data):
 	return _interpreter.load_data(data)
 
 
+# Clear all internal data
 func clear_data():
 	return _interpreter.clear_data()
 

@@ -18,16 +18,19 @@ func _get_next_dialogue_line():
 		$dialogue_ended.show()
 		return
 
-
 	if content.type == 'line':
+		_set_up_line(content)
 		$line.show()
 		$options.hide()
-		$line/speaker.text = content.get('speaker') if content.get('speaker') != null else ''
-		$line/text.text = content.text
 	else:
 		_set_up_options(content)
 		$options.show()
 		$line.hide()
+
+
+func _set_up_line(content):
+	$line/speaker.text = content.get('speaker') if content.get('speaker') != null else ''
+	$line/text.text = content.text
 
 
 func _set_up_options(options):
