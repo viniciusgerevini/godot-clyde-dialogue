@@ -1,6 +1,6 @@
 extends Node
 
-signal variable_changed(name, value)
+signal variable_changed(name, value, previous_value)
 
 const SPECIAL_VARIABLE_NAMES = [ 'OPTIONS_COUNT' ];
 
@@ -29,7 +29,7 @@ func get_variable(id, default_value = null):
 
 
 func set_variable(id, value):
-	self.emit_signal("variable_changed", id, value)
+	self.emit_signal("variable_changed", id, value, _mem.variables.get(id))
 	_mem.variables[id] = value
 	return value
 

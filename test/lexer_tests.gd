@@ -2,7 +2,6 @@ extends "./test.gd"
 
 const Lexer = preload('res://addons/clyde/parser/Lexer.gd')
 
-# getTokenFriendlyHint } from './lexer';
 
 func _test_text():
 	var lexer = Lexer.new()

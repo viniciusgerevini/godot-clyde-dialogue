@@ -1,6 +1,6 @@
 extends Node
 
-signal variable_changed(name, value)
+signal variable_changed(name, value, previous_value)
 signal event_triggered(event_name)
 
 const Memory = preload("./Memory.gd")
@@ -445,5 +445,5 @@ func _filter(function: FuncRef, array: Array) -> Array:
 	return output
 
 
-func _trigger_variable_changed(name, value):
-	emit_signal("variable_changed", name, value)
+func _trigger_variable_changed(name, value, previous_value):
+	emit_signal("variable_changed", name, value, previous_value)

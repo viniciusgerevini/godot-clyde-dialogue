@@ -2,7 +2,7 @@ extends './test.gd'
 
 func _test_simple_lines_file():
 	var dialogue = ClydeDialogue.new()
-	dialogue.load_dialogue('res://sample/simple_lines.json')
+	dialogue.load_dialogue('simple_lines')
 
 	var lines = [
 		{ "type": "line", "text": "Dinner at Jack Rabbit Slim's:" },
@@ -20,7 +20,7 @@ func _test_simple_lines_file():
 func _test_translate_files():
 	TranslationServer.set_locale("pt_BR")
 	var dialogue = ClydeDialogue.new()
-	dialogue.load_dialogue('res://sample/simple_lines.json')
+	dialogue.load_dialogue('simple_lines')
 
 	var lines = [
 		{ "type": "line", "text": "Dinner at Jack Rabbit Slim's:" },
@@ -39,7 +39,7 @@ func _test_translate_files():
 
 func _test_options():
 	var dialogue = ClydeDialogue.new()
-	dialogue.load_dialogue('res://sample/options.json')
+	dialogue.load_dialogue('options')
 
 
 	var first_part = [
@@ -63,7 +63,7 @@ func _test_options():
 
 func _test_blocks_and_diverts():
 	var dialogue = ClydeDialogue.new()
-	dialogue.load_dialogue('res://sample/diverts.json', 'initial_dialog')
+	dialogue.load_dialogue('diverts', 'initial_dialog')
 
 
 	var initial_dialogue = [
@@ -123,7 +123,7 @@ func _test_blocks_and_diverts():
 
 func _test_variations():
 	var dialogue = ClydeDialogue.new()
-	dialogue.load_dialogue('res://sample/variations.json')
+	dialogue.load_dialogue('variations')
 
 	var sequence = ["Hello", "Hi", "Hey"]
 	var random_sequence = ["Hello", "Hi", "Hey"]
@@ -165,7 +165,7 @@ func _test_variations():
 
 func _test_logic():
 	var dialogue = ClydeDialogue.new()
-	dialogue.load_dialogue('res://sample/logic.json')
+	dialogue.load_dialogue('logic')
 	expect(dialogue.get_content().text, "variable was initialized with 1")
 	expect(dialogue.get_content().text, "setting multiple variables")
 	expect(dialogue.get_content().text, "4 == 4.  3 == 3")
@@ -175,7 +175,7 @@ func _test_logic():
 
 func _test_variables():
 	var dialogue = ClydeDialogue.new()
-	dialogue.load_dialogue('res://sample/variables.json')
+	dialogue.load_dialogue('variables')
 	expect(dialogue.get_content().text, "not")
 	expect(dialogue.get_content().text, "equality")
 	expect(dialogue.get_content().text, "alias equality")
@@ -196,7 +196,7 @@ func _test_variables():
 
 func _test_set_variables():
 	var dialogue = ClydeDialogue.new()
-	dialogue.load_dialogue('res://sample/variables.json')
+	dialogue.load_dialogue('variables')
 	dialogue.set_variable('first_time', true)
 	expect(dialogue.get_content().text, "what do you want to talk about?")
 	dialogue.set_variable('first_time', false)
@@ -206,14 +206,14 @@ func _test_set_variables():
 
 func _test_data_control():
 	var dialogue = ClydeDialogue.new()
-	dialogue.load_dialogue('res://sample/variations.json')
+	dialogue.load_dialogue('variations')
 
 	expect(dialogue.get_content().text, "Hello")
 	dialogue.start()
 	expect(dialogue.get_content().text, "Hi")
 
 	var dialogue2 = ClydeDialogue.new()
-	dialogue2.load_dialogue('res://sample/variations.json')
+	dialogue2.load_dialogue('variations')
 	dialogue2.load_data(dialogue.get_data())
 	expect(dialogue2.get_content().text, "Hey")
 
@@ -226,7 +226,7 @@ func _test_data_control():
 
 func _test_events():
 	var dialogue = ClydeDialogue.new()
-	dialogue.load_dialogue('res://sample/variables.json')
+	dialogue.load_dialogue('variables')
 	dialogue.connect("event_triggered", self, "_on_event_triggered")
 	dialogue.connect("variable_changed", self, "_on_variable_changed")
 
@@ -256,7 +256,7 @@ func _test_events():
 			dialogue.choose(0)
 
 
-func _on_variable_changed(name, value):
+func _on_variable_changed(name, value, _previous_value):
 	for e in pending_events:
 		if e.type == 'variable' and e.name == name and  typeof(e.value) == typeof(value) and  e.value == value:
 			pending_events.erase(e)
@@ -270,7 +270,7 @@ func _on_event_triggered(event_name):
 
 func _test_file_path_without_extension():
 	var dialogue = ClydeDialogue.new()
-	dialogue.load_dialogue('res://sample/simple_lines')
+	dialogue.load_dialogue('simple_lines')
 
 	var lines = [
 		{ "type": "line", "text": "Dinner at Jack Rabbit Slim's:" },
@@ -286,7 +286,7 @@ func _test_file_path_without_extension():
 
 func _test_uses_configured_dialogue_folder():
 	var dialogue = ClydeDialogue.new()
-	dialogue.dialogue_folder = 'res://sample'
+	dialogue.dialogue_folder = 'res://dialogues'
 	dialogue.load_dialogue('simple_lines')
 
 	var lines = [

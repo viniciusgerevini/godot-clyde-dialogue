@@ -4,7 +4,7 @@ const Interpreter = preload('./interpreter/Interpreter.gd')
 
 class_name ClydeDialogue
 
-signal variable_changed(name, value)
+signal variable_changed(name, value, previous_value)
 signal event_triggered(name)
 
 var dialogue_folder = 'res://dialogues/'
@@ -69,8 +69,8 @@ func _load_file(path) -> Dictionary:
 	return result.result as Dictionary
 
 
-func _trigger_variable_changed(name, value):
-	emit_signal("variable_changed", name, value)
+func _trigger_variable_changed(name, value, previous_value):
+	emit_signal("variable_changed", name, value, previous_value)
 
 
 func _trigger_event_triggered(name):
