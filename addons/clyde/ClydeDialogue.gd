@@ -74,7 +74,7 @@ func clear_data():
 
 func _load_file(path) -> Dictionary:
 	if path.get_extension() == 'clyde':
-		var container = load(path).instance()
+		var container = load(path).get_content()
 		return container as Dictionary
 
 	var f := File.new()

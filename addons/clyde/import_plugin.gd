@@ -26,7 +26,7 @@ func get_preset_name(i):
 	return "Default"
 
 func get_import_options(i):
-	return true
+	return []
 
 func get_option_visibility(option, options):
 	return true
@@ -36,6 +36,7 @@ func import(source_file, save_path, options, platform_variants, gen_files):
 	file.open(source_file, File.READ)
 	var clyde = file.get_as_text()
 	var result = parse(clyde)
+	file.close()
 
 	var container = ClydeResult.new()
 	container.set_data(result)
