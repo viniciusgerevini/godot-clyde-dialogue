@@ -213,8 +213,8 @@ func _prepare_option(option, index):
 	if option.type == 'action_content':
 		option.content._index = option._index
 		option.mode = option.content.mode
-		option.content = _prepare_option(option.content, index)
-		if not option.content:
+		var content = _prepare_option(option.content, index)
+		if not content:
 			return
 
 	return option;

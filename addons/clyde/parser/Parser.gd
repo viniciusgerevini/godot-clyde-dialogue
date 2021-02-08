@@ -259,13 +259,17 @@ func _option():
 	var lines = []
 	var main_item
 	var use_first_line_as_display_only = false
+	var root
 	var wrapper
 
 	_tokens.consume(acceptable_next)
 
 	if _tokens.current_token.token == Lexer.TOKEN_BRACE_OPEN:
-		wrapper = _logic_block()
+		var block = _nested_logic_block()
+		root = block.root
+		wrapper = block.wrapper
 		_tokens.consume(acceptable_next)
+
 
 	if _tokens.current_token.token == Lexer.TOKEN_SQR_BRACKET_OPEN:
 		use_first_line_as_display_only = true
@@ -280,12 +284,17 @@ func _option():
 			else:
 				lines.push_back(main_item)
 
+
 	if _tokens.peek([Lexer.TOKEN_BRACE_OPEN]):
 		_tokens.consume([Lexer.TOKEN_BRACE_OPEN])
-		if wrapper:
-			wrapper.content = _logic_block()
+		var block = _nested_logic_block()
+
+		if not root:
+			root = block.root
+			wrapper = block.wrapper
 		else:
-			wrapper = _logic_block()
+			wrapper.content = block.wrapper
+			wrapper = block.wrapper
 
 		_tokens.consume([Lexer.TOKEN_LINE_BREAK])
 
@@ -310,14 +319,32 @@ func _option():
 		main_item.tags
 	)
 
-	if wrapper:
-		if wrapper.content:
-			wrapper.content.content = node
-		else:
-			wrapper.content = node
-		return wrapper
+	if root:
+		wrapper.content = node
+		return root
 
 	return node
+
+
+func _nested_logic_block():
+	var root
+	var wrapper
+	while _tokens.current_token.token == Lexer.TOKEN_BRACE_OPEN:
+		if not root:
+			root = _logic_block()
+			wrapper = root
+		else:
+			var next = _logic_block()
+			wrapper.content = next
+			wrapper = next
+
+		if _tokens.peek([Lexer.TOKEN_BRACE_OPEN]):
+			_tokens.consume([Lexer.TOKEN_BRACE_OPEN])
+
+	return {
+		"root": root,
+		"wrapper": wrapper
+	}
 
 
 func _divert():

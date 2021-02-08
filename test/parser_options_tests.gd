@@ -503,3 +503,166 @@ func _test_options_with_blocks_both_sides():
 		"blocks": [],
 	}
 	expect(result, expected)
+
+
+func _test_options_with_multiple_blocks_on_same_side():
+	var result = parse("""
+* yes { when what } { set yes = true }
+* no {set no = true} { when something }
+* { when what } { set yes = true } yes
+* {set no = true} { when something } no
+* {set yes = true} { when yes } yes { set one_more = true }
+""")
+	var expected = {
+		"type": 'document',
+		"content": [{
+			"type": 'content',
+			"content": [
+				{
+					"type": 'options',
+					"content": [
+						{
+							"type": "conditional_content",
+							"conditions": { "type": "variable", "name": "what" },
+							"content": {
+								"type": "action_content",
+								"action": {
+									"type": 'assignments',
+									"assignments": [
+										{
+											"type": 'assignment',
+											"variable": { "type": 'variable', "name": 'yes', },
+											"operation": 'assign',
+											"value": { "type": 'literal', "name": 'boolean', "value": true, },
+										},
+									],
+								},
+								"content": {
+									"type": 'option',
+									"name": 'yes',
+									"mode":  'once',
+									"content": { "type": 'content', "content": [{ "type": 'line', "value": 'yes' }]},
+								},
+							},
+						},
+
+						{
+							"type": "action_content",
+							"action": {
+								"type": 'assignments',
+								"assignments": [
+									{
+										"type": 'assignment',
+										"variable": { "type": 'variable', "name": 'no', },
+										"operation": 'assign',
+										"value": { "type": 'literal', "name": 'boolean', "value": true, },
+									},
+								],
+							},
+							"content": {
+								"type": "conditional_content",
+								"conditions": { "type": "variable", "name": "something" },
+								"content": {
+									"type": 'option',
+									"name": 'no',
+									"mode":  'once',
+									"content": { "type": 'content', "content": [ { "type": 'line', "value": 'no' }, ]},
+								},
+							},
+						},
+
+						{
+							"type": "conditional_content",
+							"conditions": { "type": "variable", "name": "what" },
+							"content": {
+								"type": "action_content",
+								"action": {
+									"type": 'assignments',
+									"assignments": [
+										{
+											"type": 'assignment',
+											"variable": { "type": 'variable', "name": 'yes', },
+											"operation": 'assign',
+											"value": { "type": 'literal', "name": 'boolean', "value": true, },
+										},
+									],
+								},
+								"content": {
+									"type": 'option',
+									"name": 'yes',
+									"mode":  'once',
+									"content": { "type": 'content', "content": [{ "type": 'line', "value": 'yes' }]},
+								},
+							},
+						},
+
+						{
+							"type": "action_content",
+							"action": {
+								"type": 'assignments',
+								"assignments": [
+									{
+										"type": 'assignment',
+										"variable": { "type": 'variable', "name": 'no', },
+										"operation": 'assign',
+										"value": { "type": 'literal', "name": 'boolean', "value": true, },
+									},
+								],
+							},
+							"content": {
+								"type": "conditional_content",
+								"conditions": { "type": "variable", "name": "something" },
+								"content": {
+									"type": 'option',
+									"name": 'no',
+									"mode":  'once',
+									"content": { "type": 'content', "content": [ { "type": 'line', "value": 'no' }, ]},
+								},
+							},
+						},
+
+						{
+							"type": "action_content",
+							"action": {
+								"type": 'assignments',
+								"assignments": [
+									{
+										"type": 'assignment',
+										"variable": { "type": 'variable', "name": 'yes', },
+										"operation": 'assign',
+										"value": { "type": 'literal', "name": 'boolean', "value": true, },
+									},
+								],
+							},
+							"content": {
+								"type": "conditional_content",
+								"conditions": { "type": "variable", "name": "yes" },
+								"content": {
+									"type": "action_content",
+									"action": {
+										"type": 'assignments',
+										"assignments": [
+											{
+												"type": 'assignment',
+												"variable": { "type": 'variable', "name": 'one_more', },
+												"operation": 'assign',
+												"value": { "type": 'literal', "name": 'boolean', "value": true, },
+											},
+										],
+									},
+									"content": {
+										"type": 'option',
+										"name": 'yes',
+										"mode":  'once',
+										"content": { "type": 'content', "content": [ { "type": 'line', "value": 'yes' }, ]},
+									},
+								},
+							},
+						},
+					],
+				},
+			],
+		}],
+		"blocks": [],
+	}
+	expect(result, expected)
