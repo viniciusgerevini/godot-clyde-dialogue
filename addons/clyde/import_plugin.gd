@@ -2,7 +2,6 @@ tool
 extends EditorImportPlugin
 
 const Parser = preload("./parser/Parser.gd")
-const ClydeResult = preload("./importer/clyde_result.gd")
 
 func get_importer_name():
 	return "clyde.dialogue"
@@ -38,8 +37,8 @@ func import(source_file, save_path, options, platform_variants, gen_files):
 	var result = parse(clyde)
 	file.close()
 
-	var container = ClydeResult.new()
-	container.set_data(result)
+	var container = PackedDataContainer.new()
+	container.__data__ = JSON.print(result).to_utf8()
 
 	return ResourceSaver.save("%s.%s" % [save_path, get_save_extension()], container)
 

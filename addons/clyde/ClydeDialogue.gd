@@ -74,7 +74,7 @@ func clear_data():
 
 func _load_file(path) -> Dictionary:
 	if path.get_extension() == 'clyde':
-		var container = load(path).get_content()
+		var container = _load_clyde_file(path)
 		return container as Dictionary
 
 	var f := File.new()
@@ -86,6 +86,19 @@ func _load_file(path) -> Dictionary:
 		return {}
 
 	return result.result as Dictionary
+
+
+func _load_clyde_file(path):
+	var data = load(path).__data__.get_string_from_utf8()
+	var parsed_json = JSON.parse(data)
+
+	if OK != parsed_json.error:
+		var format = [parsed_json.error_line, parsed_json.error_string]
+		var error_string = "%d: %s" % format
+		printerr("Could not parse json", error_string)
+		return null
+
+	return parsed_json.result
 
 
 func _trigger_variable_changed(name, value, previous_value):

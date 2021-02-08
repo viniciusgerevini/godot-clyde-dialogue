@@ -1,12 +1,12 @@
 
 
-(
+( sequence
   - Hello
   - Hi
   - Hey
 )
 
-( shuffle
+( shuffle sequence
   - Hello
   - Hi
   - Hey

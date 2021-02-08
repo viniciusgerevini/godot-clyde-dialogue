@@ -398,7 +398,7 @@ func _handle_sequence_variation(variations):
 	return current;
 
 
-func _handle_shuffle_variation(variations, mode = 'sequence'):
+func _handle_shuffle_variation(variations, mode = 'cycle'):
 	var SHUFFLE_VISITED_KEY = "%s_shuffle_visited" % variations._index;
 	var LAST_VISITED_KEY = "%s_last_index" % variations._index;
 	var visited_items = _mem.get_internal_variable(SHUFFLE_VISITED_KEY, []);
