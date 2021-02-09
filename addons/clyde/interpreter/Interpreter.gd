@@ -263,7 +263,7 @@ func _handle_conditional_content_node(conditional_node, fallback_node = _stack_h
 	return _handle_next_node(fallback_node)
 
 
-func _handle_variations_node(variations):
+func _handle_variations_node(variations, attempt = 0):
 	if not variations.get("_index"):
 		variations["_index"] = _generate_index()
 		for index in range(variations.content.size()):
@@ -271,12 +271,12 @@ func _handle_variations_node(variations):
 			c._index = _generate_index() * 100 + index
 
 	var next = _handle_variation_mode(variations)
-	if next == -1:
+	if next == -1 or attempt > variations.content.size():
 		return _handle_next_node(_stack_head().current)
 
 	if variations.content[next].content.size() == 1 and variations.content[next].content[0].type == 'conditional_content':
 		if not _logic.check_condition(variations.content[next].content[0].conditions):
-			return _handle_variations_node(variations)
+			return _handle_variations_node(variations, attempt + 1)
 
 	return _handle_next_node(variations.content[next]);
 

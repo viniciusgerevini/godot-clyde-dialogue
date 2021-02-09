@@ -1,5 +1,12 @@
 extends './test.gd'
 
+var Parser = preload("res://addons/clyde/parser/Parser.gd")
+
+func parse(input):
+	var parser = Parser.new()
+	return parser.parse(input)
+
+
 func _test_simple_lines_file():
 	var dialogue = ClydeDialogue.new()
 	dialogue.load_dialogue('simple_lines')
@@ -161,6 +168,13 @@ func _test_variations():
 		random_cycle.erase(rc)
 		if random_cycle.size() == 0:
 			random_cycle = ["multiline example do you think it works?", "yep"]
+
+func _test_all_variations_not_available():
+	var interpreter = ClydeDialogue.Interpreter.new()
+	var content = parse("(\n - { a } A\n -  { b } B\n)\nend\n")
+	interpreter.init(content)
+
+	expect(interpreter.get_content().text, 'end')
 
 
 func _test_logic():
