@@ -1,12 +1,12 @@
 # Clyde Interpreter Usage
 
-For more information about Clyde Language
+For details about Clyde and how to write dialogues, check [Clyde/LANGUAGE.md](https://github.com/viniciusgerevini/clyde/blob/master/LANGUAGE.md)
 
 ## Interpreter's interface
 
 This plugin exposes the interpreter as `ClydeDialogue`.
 
-This is the `ClydeDialogue`'s interface:
+This is `ClydeDialogue`'s interface:
 
 ```gdscript
 extends Node
