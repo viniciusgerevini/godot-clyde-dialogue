@@ -58,6 +58,7 @@ func _document():
 		Lexer.TOKEN_TEXT,
 		Lexer.TOKEN_OPTION,
 		Lexer.TOKEN_STICKY_OPTION,
+		Lexer.TOKEN_FALLBACK_OPTION,
 		Lexer.TOKEN_DIVERT,
 		Lexer.TOKEN_DIVERT_PARENT,
 		Lexer.TOKEN_BRACKET_OPEN,
@@ -104,6 +105,7 @@ func _lines():
 		Lexer.TOKEN_TEXT,
 		Lexer.TOKEN_OPTION,
 		Lexer.TOKEN_STICKY_OPTION,
+		Lexer.TOKEN_FALLBACK_OPTION,
 		Lexer.TOKEN_DIVERT,
 		Lexer.TOKEN_DIVERT_PARENT,
 		Lexer.TOKEN_BRACKET_OPEN,
@@ -124,7 +126,7 @@ func _lines():
 			lines = [_line_with_action(line)]
 		else:
 			lines = [line]
-	elif tk.token == Lexer.TOKEN_OPTION or tk.token == Lexer.TOKEN_STICKY_OPTION:
+	elif tk.token == Lexer.TOKEN_OPTION or tk.token == Lexer.TOKEN_STICKY_OPTION or tk.token == Lexer.TOKEN_FALLBACK_OPTION:
 		lines = [_options()]
 	elif tk.token == Lexer.TOKEN_DIVERT or tk.token == Lexer.TOKEN_DIVERT_PARENT:
 		lines = [_divert()]
@@ -184,7 +186,7 @@ func _text_line():
 	if _is_multiline_enabled && _tokens.peek([Lexer.TOKEN_INDENT]):
 		_tokens.consume([Lexer.TOKEN_INDENT])
 
-		if _tokens.peek([Lexer.TOKEN_OPTION, Lexer.TOKEN_STICKY_OPTION]):
+		if _tokens.peek([Lexer.TOKEN_OPTION, Lexer.TOKEN_STICKY_OPTION, Lexer.TOKEN_FALLBACK_OPTION]):
 			var options = _options()
 			options.id = line.id
 			options.name = line.value
@@ -243,7 +245,7 @@ func _line_with_tags():
 func _options():
 	var options = OptionsNode([])
 
-	while _tokens.peek([Lexer.TOKEN_OPTION, Lexer.TOKEN_STICKY_OPTION]):
+	while _tokens.peek([Lexer.TOKEN_OPTION, Lexer.TOKEN_STICKY_OPTION, Lexer.TOKEN_FALLBACK_OPTION]):
 		options.content.push_back(_option())
 
 	if _tokens.peek([ Lexer.TOKEN_DEDENT ]):
@@ -251,10 +253,15 @@ func _options():
 
 	return options
 
+var option_types = {
+	Lexer.TOKEN_OPTION: 'once',
+	Lexer.TOKEN_STICKY_OPTION: 'sticky',
+	Lexer.TOKEN_FALLBACK_OPTION: 'fallback',
+}
 
 func _option():
-	_tokens.consume([Lexer.TOKEN_OPTION, Lexer.TOKEN_STICKY_OPTION])
-	var type = 'once' if _tokens.current_token.token == Lexer.TOKEN_OPTION else 'sticky'
+	_tokens.consume([Lexer.TOKEN_OPTION, Lexer.TOKEN_STICKY_OPTION, Lexer.TOKEN_FALLBACK_OPTION])
+	var type = option_types[_tokens.current_token.token]
 	var acceptable_next = [Lexer.TOKEN_SPEAKER, Lexer.TOKEN_TEXT, Lexer.TOKEN_INDENT, Lexer.TOKEN_SQR_BRACKET_OPEN, Lexer.TOKEN_BRACE_OPEN]
 	var lines = []
 	var main_item

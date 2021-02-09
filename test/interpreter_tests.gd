@@ -67,6 +67,17 @@ func _test_options():
 	for line in life_option:
 		compare_content(dialogue.get_content(), line)
 
+func _test_fallback_options():
+	var interpreter = ClydeDialogue.Interpreter.new()
+	var content = parse("* a\n> b\nend")
+	interpreter.init(content)
+
+	expect(interpreter.get_content(), { "type": "options", "options": [{ "label": "a" }, { "label": "b" } ] })
+	interpreter.choose(0)
+	expect(interpreter.get_content().text, "a")
+	expect(interpreter.get_content().text, "end")
+	interpreter.select_block()
+	expect(interpreter.get_content(), { "type": "line", "text": "b" })
 
 func _test_blocks_and_diverts():
 	var dialogue = ClydeDialogue.new()

@@ -180,6 +180,10 @@ func _handle_options_node(options_node):
 		_stack_pop()
 		return _handle_next_node(_stack_head().current)
 
+	if options.size() == 1 and options[0].mode == 'fallback':
+		choose(0)
+		return _handle_next_node(_stack_head().current)
+
 	return {
 		"type": "options",
 		"speaker": options_node.get("speaker"),

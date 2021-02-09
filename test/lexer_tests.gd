@@ -193,7 +193,8 @@ this is something
 * [ hello ]
 		hi
 		this is just some text with [ brackets ]
-		and this is some text with * and +
+		and this is some text with * and + and >
+> this is a fallback
 """).get_all()
 
 	expect(tokens, [
@@ -222,8 +223,12 @@ this is something
 		{ "token": Lexer.TOKEN_INDENT, "line": 9, "column": 0 },
 		{ "token": Lexer.TOKEN_TEXT, "value": 'hi', "line": 9, "column": 2 },
 		{ "token": Lexer.TOKEN_TEXT, "value": 'this is just some text with [ brackets ]', "line": 10, "column": 2 },
-		{ "token": Lexer.TOKEN_TEXT, "value": 'and this is some text with * and +', "line": 11, "column": 2 },
-		{ "token": Lexer.TOKEN_EOF, "line": 12, "column": 0 },
+		{ "token": Lexer.TOKEN_TEXT, "value": 'and this is some text with * and + and >', "line": 11, "column": 2 },
+		{ "token": Lexer.TOKEN_DEDENT, "line": 12, "column": 0 },
+		{ "token": Lexer.TOKEN_FALLBACK_OPTION, "line": 12, "column": 0 },
+		{ "token": Lexer.TOKEN_TEXT, "value": 'this is a fallback', "line": 12, "column": 2 },
+		{ "token": Lexer.TOKEN_EOF, "line": 13, "column": 0 },
+
 	])
 
 

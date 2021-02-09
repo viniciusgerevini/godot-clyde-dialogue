@@ -5,6 +5,7 @@ const TOKEN_INDENT = "INDENT"
 const TOKEN_DEDENT = "DEDENT"
 const TOKEN_OPTION = "OPTION"
 const TOKEN_STICKY_OPTION = "STICKY_OPTION"
+const TOKEN_FALLBACK_OPTION = "FALLBACK_OPTION"
 const TOKEN_SQR_BRACKET_OPEN = "SQR_BRACKET_OPEN"
 const TOKEN_SQR_BRACKET_CLOSE = "SQR_BRACKET_CLOSE"
 const TOKEN_BRACKET_OPEN = "BRACKET_OPEN"
@@ -66,6 +67,7 @@ const _token_hints = {
 	TOKEN_DEDENT: 'DEDENT',
 	TOKEN_OPTION: '*',
 	TOKEN_STICKY_OPTION: '+',
+	TOKEN_FALLBACK_OPTION: '>',
 	TOKEN_SQR_BRACKET_OPEN: '[',
 	TOKEN_SQR_BRACKET_CLOSE: '',
 	TOKEN_BRACKET_OPEN: '(',
@@ -214,7 +216,7 @@ func _get_next_token():
 	if _is_current_mode(MODE_VARIATIONS) and _input[_position] == '-':
 		return _handle_variation_item()
 
-	if _input[_position] == '*' or _input[_position] == '+':
+	if _input[_position] == '*' or _input[_position] == '+' or _input[_position] == '>':
 		return _handle_options()
 
 	if _is_current_mode(MODE_OPTION) and ['[', ']' ].has(_input[_position]):
@@ -372,7 +374,14 @@ func _handle_quote():
 
 
 func _handle_options():
-	var token = TOKEN_OPTION if _input[_position] == '*' else TOKEN_STICKY_OPTION
+	var token
+	match _input[_position]:
+		'*':
+			token = TOKEN_OPTION
+		'+':
+			token = TOKEN_STICKY_OPTION
+		'>':
+			token = TOKEN_FALLBACK_OPTION
 	var initial_column = _column
 	_column += 1
 	_position += 1
