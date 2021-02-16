@@ -274,7 +274,7 @@ func _test_line_id():
 speaker1: this is something $123
 * this is another thing $abc
 * [ hello $a1b2 ]
-""").get_all()
+speaker1: this is something $123""").get_all()
 	expect(tokens, [
 		{ "token": Lexer.TOKEN_SPEAKER, "value": 'speaker1', "line": 1, "column": 0 },
 		{ "token": Lexer.TOKEN_TEXT, "value": 'this is something', "line": 1, "column": 10 },
@@ -287,7 +287,10 @@ speaker1: this is something $123
 		{ "token": Lexer.TOKEN_TEXT, "value": 'hello', "line": 3, "column": 4 },
 		{ "token": Lexer.TOKEN_LINE_ID, "value": 'a1b2', "line": 3, "column": 10 },
 		{ "token": Lexer.TOKEN_SQR_BRACKET_CLOSE, "line": 3, "column": 16 },
-		{ "token": Lexer.TOKEN_EOF, "line": 4, "column": 0 },
+		{ "token": Lexer.TOKEN_SPEAKER, "value": 'speaker1', "line": 4, "column": 0 },
+		{ "token": Lexer.TOKEN_TEXT, "value": 'this is something', "line": 4, "column": 10 },
+		{ "token": Lexer.TOKEN_LINE_ID, "value": '123', "line": 4, "column": 28 },
+		{ "token": Lexer.TOKEN_EOF, "line": 4, "column": 32 },
 	])
 
 

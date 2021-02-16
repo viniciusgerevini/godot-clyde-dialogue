@@ -317,7 +317,7 @@ func _handle_line_id():
 	_position += 1
 	_column += 1
 
-	while (_is_identifier(_input[_position])):
+	while (_is_valid_position() and _is_identifier(_input[_position])):
 		values.push_back(_input[_position])
 		_position += 1
 		_column += 1
