@@ -1,4 +1,4 @@
-extends './test.gd'
+extends "res://addons/gut/test.gd"
 
 var Parser = preload("res://addons/clyde/parser/Parser.gd")
 
@@ -7,7 +7,7 @@ func parse(input):
 	return parser.parse(input)
 
 
-func _test_parse_options():
+func test_parse_options():
 	var result = parse("""
 npc: what do you want to talk about?
 * speaker: Life
@@ -22,21 +22,27 @@ npc: what do you want to talk about?
 		"content": [{
 			"type": 'content',
 			"content": [
-				{ "type": 'line', "value": 'what do you want to talk about?', "speaker": 'npc', },
+				{ "type": 'line', "value": 'what do you want to talk about?', "speaker": 'npc', "id": null, "tags": null },
 				{
 					"type": 'options',
+					"name": null,
+					"speaker": null,
+					"id": null,
+					"tags": null,
 					"content": [
 						{
 							"type": 'option',
 							"name": 'Life',
 							"speaker": 'speaker',
+							"id": null,
+							"tags": null,
 							"mode": 'once',
 							"content": {
 								"type": 'content',
 								"content": [
-									{ "type": 'line', "value": 'Life', "speaker": 'speaker' },
-									{ "type": 'line', "value": 'I want to talk about life!', "speaker": 'player', },
-									{ "type": 'line', "value": 'Well! That\'s too complicated...', "speaker": 'npc', },
+									{ "type": 'line', "value": 'Life', "speaker": 'speaker', "id": null, "tags": null },
+									{ "type": 'line', "value": 'I want to talk about life!', "speaker": 'player', "id": null, "tags": null, },
+									{ "type": 'line', "value": 'Well! That\'s too complicated...', "speaker": 'npc', "id": null, "tags": null, },
 								],
 							},
 						},
@@ -44,12 +50,14 @@ npc: what do you want to talk about?
 							"type": 'option',
 							"name": 'Everything else...',
 							"mode": 'once',
+							"speaker": null,
+							"id": null,
 							"content": {
 								"type": 'content',
 								"content": [
-									{ "type": 'line', "value": 'Everything else...', "tags": [ 'some_tag', ] },
-									{ "type": 'line', "value": 'What about everything else?', "speaker": 'player', },
-									{ "type": 'line', "value": 'I don\'t have time for this...', "speaker": 'npc', },
+									{ "type": 'line', "value": 'Everything else...', "tags": [ 'some_tag', ], "id": null, "speaker": null, },
+									{ "type": 'line', "value": 'What about everything else?', "speaker": 'player', "id": null, "tags": null },
+									{ "type": 'line', "value": 'I don\'t have time for this...', "speaker": 'npc', "id": null, "tags": null },
 								],
 							},
 							"tags": [ 'some_tag', ],
@@ -61,10 +69,10 @@ npc: what do you want to talk about?
 		],
 		"blocks": [],
 	}
-	expect(result, expected)
+	assert_eq_deep(result, expected)
 
 
-func _test_parse_sticky_option():
+func test_parse_sticky_option():
 	var result = parse("""
 npc: what do you want to talk about?
 * Life
@@ -77,19 +85,26 @@ npc: what do you want to talk about?
 		"content": [{
 			"type": 'content',
 			"content": [
-				{ "type": 'line', "value": 'what do you want to talk about?', "speaker": 'npc', },
+				{ "type": 'line', "value": 'what do you want to talk about?', "speaker": 'npc', "id": null, "tags": null },
 				{
 					"type": 'options',
+					"name": null,
+					"speaker": null,
+					"id": null,
+					"tags": null,
 					"content": [
 						{
 							"type": 'option',
 							"name": 'Life',
 							"mode": 'once',
+							"speaker": null,
+							"id": null,
+							"tags": null,
 							"content": {
 								"type": 'content',
 								"content": [
-									{ "type": 'line', "value": 'Life' },
-									{ "type": 'line', "value": 'I want to talk about life!', "speaker": 'player', },
+									{ "type": 'line', "value": 'Life', "id": null, "speaker": null, "tags": null },
+									{ "type": 'line', "value": 'I want to talk about life!', "speaker": 'player', "id": null, "tags": null },
 								],
 							},
 						},
@@ -97,11 +112,13 @@ npc: what do you want to talk about?
 							"type": 'option',
 							"name": 'Everything else...',
 							"mode": 'sticky',
+							"speaker": null,
+							"id": null,
 							"content": {
 								"type": 'content',
 								"content": [
-									{ "type": 'line', "value": 'Everything else...', "tags": [ 'some_tag', ] },
-									{ "type": 'line', "value": 'What about everything else?', "speaker": 'player', },
+									{ "type": 'line', "value": 'Everything else...', "tags": [ 'some_tag', ], "id": null, "speaker": null },
+									{ "type": 'line', "value": 'What about everything else?', "speaker": 'player', "id": null, "tags": null },
 								],
 							},
 							"tags": [ 'some_tag', ],
@@ -113,10 +130,10 @@ npc: what do you want to talk about?
 		],
 		"blocks": [],
 	}
-	expect(result, expected)
+	assert_eq_deep(result, expected)
 
 
-func _test_parse_fallback_option():
+func test_parse_fallback_option():
 	var result = parse("""
 npc: what do you want to talk about?
 * Life
@@ -129,19 +146,26 @@ npc: what do you want to talk about?
 		"content": [{
 			"type": 'content',
 			"content": [
-				{ "type": 'line', "value": 'what do you want to talk about?', "speaker": 'npc', },
+				{ "type": 'line', "value": 'what do you want to talk about?', "speaker": 'npc', "id": null, "tags": null },
 				{
 					"type": 'options',
+					"name": null,
+					"speaker": null,
+					"id": null,
+					"tags": null,
 					"content": [
 						{
 							"type": 'option',
 							"name": 'Life',
 							"mode": 'once',
+							"speaker": null,
+							"id": null,
+							"tags": null,
 							"content": {
 								"type": 'content',
 								"content": [
-									{ "type": 'line', "value": 'Life' },
-									{ "type": 'line', "value": 'I want to talk about life!', "speaker": 'player', },
+									{ "type": 'line', "value": 'Life', "id": null, "speaker": null, "tags": null },
+									{ "type": 'line', "value": 'I want to talk about life!', "speaker": 'player', "id": null, "tags": null },
 								],
 							},
 						},
@@ -149,11 +173,13 @@ npc: what do you want to talk about?
 							"type": 'option',
 							"name": 'Everything else...',
 							"mode": 'fallback',
+							"speaker": null,
+							"id": null,
 							"content": {
 								"type": 'content',
 								"content": [
-									{ "type": 'line', "value": 'Everything else...', "tags": [ 'some_tag', ] },
-									{ "type": 'line', "value": 'What about everything else?', "speaker": 'player', },
+									{ "type": 'line', "value": 'Everything else...', "tags": [ 'some_tag', ], "id": null, "speaker": null },
+									{ "type": 'line', "value": 'What about everything else?', "speaker": 'player', "id": null, "tags": null },
 								],
 							},
 							"tags": [ 'some_tag', ],
@@ -165,11 +191,11 @@ npc: what do you want to talk about?
 		],
 		"blocks": [],
 	}
-	expect(result, expected)
+	assert_eq_deep(result, expected)
 
 
 
-func _test_define_label_only_text():
+func test_define_label_only_text():
 	var result = parse("""
 npc: what do you want to talk about?
 * [Life]
@@ -184,31 +210,36 @@ npc: what do you want to talk about?
 		"content": [{
 			"type": 'content',
 			"content": [
-				{ "type": 'line', "value": 'what do you want to talk about?', "speaker": 'npc', },
+				{ "type": 'line', "value": 'what do you want to talk about?', "speaker": 'npc', "id": null, "tags": null },
 				{
 					"type": 'options',
+					"name": null,
+					"speaker": null,
+					"id": null,
+					"tags": null,
 					"content": [
 						{
 							"type": 'option',
 							"name": 'Life',
 							"mode": 'once',
+							"id": null, "tags": null, "speaker": null,
 							"content": {
 								"type": 'content',
 								"content": [
-									{ "type": 'line', "value": 'I want to talk about life!', "speaker": 'player', },
-									{ "type": 'line', "value": 'Well! That\'s too complicated...', "speaker": 'npc', },
+									{ "type": 'line', "value": 'I want to talk about life!', "speaker": 'player', "id": null, "tags": null, },
+									{ "type": 'line', "value": 'Well! That\'s too complicated...', "speaker": 'npc', "id": null, "tags": null, },
 								],
 							},
 						},
 						{
 							"type": 'option',
 							"name": 'Everything else...',
-							"mode": 'once',
+							"mode": 'once', "id": null, "speaker": null,
 							"content": {
 								"type": 'content',
 								"content": [
-									{ "type": 'line', "value": 'What about everything else?', "speaker": 'player', },
-									{ "type": 'line', "value": 'I don\'t have time for this...', "speaker": 'npc', },
+									{ "type": 'line', "value": 'What about everything else?', "speaker": 'player', "id": null, "tags": null, },
+									{ "type": 'line', "value": 'I don\'t have time for this...', "speaker": 'npc', "id": null, "tags": null, },
 								],
 							},
 							"tags": [ 'some_tag', ],
@@ -220,9 +251,9 @@ npc: what do you want to talk about?
 		],
 		"blocks": [],
 	}
-	expect(result, expected)
+	assert_eq_deep(result, expected)
 
-func _test_use_first_line_as_label():
+func test_use_first_line_as_label():
 	var result = parse("""
 *
 	life
@@ -237,17 +268,21 @@ func _test_use_first_line_as_label():
 			"content": [
 				{
 					"type": 'options',
+					"name": null,
+					"speaker": null,
+					"id": null,
+					"tags": null,
 					"content": [
 						{
 							"type": 'option',
 							"name": 'life',
-							"mode": 'once',
+							"mode": 'once', "id": null, "tags": null, "speaker": null,
 							"content": {
 								"type": 'content',
 								"content": [
-									{ "type": 'line', "value": 'life' },
-									{ "type": 'line', "value": 'I want to talk about life!', "speaker": 'player', },
-									{ "type": 'line', "value": 'Well! That\'s too complicated...', "speaker": 'npc', },
+									{ "type": 'line', "value": 'life', "id": null, "speaker": null, "tags": null },
+									{ "type": 'line', "value": 'I want to talk about life!', "speaker": 'player', "id": null, "tags": null },
+									{ "type": 'line', "value": 'Well! That\'s too complicated...', "speaker": 'npc', "id": null, "tags": null },
 								],
 							},
 						},
@@ -258,10 +293,10 @@ func _test_use_first_line_as_label():
 		],
 		"blocks": [],
 	}
-	expect(result, expected)
+	assert_eq_deep(result, expected)
 
 
-func _test_use_previous_line_as_label():
+func test_use_previous_line_as_label():
 	var result = parse("""
 spk: this line will be the label $some_id #some_tag
 	* life
@@ -287,13 +322,13 @@ spk: second try
 						{
 							"type": 'option',
 							"name": 'life',
-							"mode": 'once',
+							"mode": 'once', "id": null, "speaker": null, "tags": null,
 							"content": {
 								"type": 'content',
 								"content": [
-									{ "type": 'line', "value": 'life' },
-									{ "type": 'line', "value": 'I want to talk about life!', "speaker": 'player', },
-									{ "type": 'line', "value": 'Well! That\'s too complicated...', "speaker": 'npc', },
+									{ "type": 'line', "value": 'life', "id": null, "speaker": null, "tags": null },
+									{ "type": 'line', "value": 'I want to talk about life!', "speaker": 'player', "id": null, "tags": null, },
+									{ "type": 'line', "value": 'Well! That\'s too complicated...', "speaker": 'npc', "id": null, "tags": null, },
 								],
 							},
 						},
@@ -303,16 +338,18 @@ spk: second try
 					"type": 'options',
 					"speaker": 'spk',
 					"name": 'second try',
+					"id": null,
+					"tags": null,
 					"content": [
 						{
 							"type": 'option',
 							"name": 'life',
-							"mode": 'once',
+							"mode": 'once', "id": null, "speaker": null, "tags": null,
 							"content": {
 								"type": 'content',
 								"content": [
-									{ "type": 'line', "value": 'life' },
-									{ "type": 'line', "value": 'Well! That\'s too complicated...', "speaker": 'npc', },
+									{ "type": 'line', "value": 'life', "id": null, "speaker": null, "tags": null },
+									{ "type": 'line', "value": 'Well! That\'s too complicated...', "speaker": 'npc', "id": null, "tags": null, },
 								],
 							},
 						},
@@ -323,9 +360,9 @@ spk: second try
 		],
 		"blocks": [],
 	}
-	expect(result, expected)
+	assert_eq_deep(result, expected)
 
-func _test_use_previous_line_in_quotes_as_label():
+func test_use_previous_line_in_quotes_as_label():
 	var result = parse("""
 \"spk: this line will be the label $some_id #some_tag\"
 	* life
@@ -343,17 +380,20 @@ func _test_use_previous_line_in_quotes_as_label():
 			"content": [
 				{
 					"type": 'options',
+					"speaker": null,
+					"id": null,
+					"tags": null,
 					"name": 'spk: this line will be the label $some_id #some_tag',
 					"content": [
 						{
 							"type": 'option',
 							"name": 'life',
-							"mode": 'once',
+							"mode": 'once', "id": null, "tags": null, "speaker": null,
 							"content": {
 								"type": 'content',
 								"content": [
-									{ "type": 'line', "value": 'life' },
-									{ "type": 'line', "value": 'I want to talk about life!', "speaker": 'player', },
+									{ "type": 'line', "value": 'life', "id": null, "speaker": null, "tags": null },
+									{ "type": 'line', "value": 'I want to talk about life!', "speaker": 'player', "id": null, "tags": null, },
 								],
 							},
 						},
@@ -362,16 +402,19 @@ func _test_use_previous_line_in_quotes_as_label():
 				{
 					"type": 'options',
 					"name": 'spk: this line will be the label $some_id #some_tag',
+					"tags": null,
+					"speaker": null,
+					"id": null,
 					"content": [
 						{
 							"type": 'option',
 							"name": 'universe',
-							"mode": 'once',
+							"mode": 'once', "id": null, "speaker": null, "tags": null,
 							"content": {
 								"type": 'content',
 								"content": [
-									{ "type": 'line', "value": 'universe' },
-									{ "type": 'line', "value": 'I want to talk about the universe!', "speaker": 'player', },
+									{ "type": 'line', "value": 'universe', "id": null, "speaker": null, "tags": null },
+									{ "type": 'line', "value": 'I want to talk about the universe!', "speaker": 'player', "id": null, "tags": null, },
 								],
 							},
 						},
@@ -382,10 +425,10 @@ func _test_use_previous_line_in_quotes_as_label():
 		],
 		"blocks": [],
 	}
-	expect(result, expected)
+	assert_eq_deep(result, expected)
 
 
-func _test_ensures_options_ending_worked():
+func test_ensures_options_ending_worked():
 	var result = parse("""
 * yes
 * no
@@ -399,15 +442,20 @@ func _test_ensures_options_ending_worked():
 			"content": [
 				{
 					"type": 'options',
+					"name": null,
+					"speaker": null,
+					"id": null,
+					"tags": null,
 					"content": [
 						{
 							"type": 'option',
 							"name": 'yes',
 							"mode": 'once',
+							"id": null, "speaker": null, "tags": null,
 							"content": {
 								"type": 'content',
 								"content": [
-									{ "type": 'line', "value": 'yes' },
+									{ "type": 'line', "value": 'yes', "id": null, "speaker": null, "tags": null },
 								],
 							},
 						},
@@ -415,10 +463,11 @@ func _test_ensures_options_ending_worked():
 							"type": 'option',
 							"name": 'no',
 							"mode": 'once',
+							"id": null, "speaker": null, "tags": null,
 							"content": {
 								"type": 'content',
 								"content": [
-									{ "type": 'line', "value": 'no' },
+									{ "type": 'line', "value": 'no', "id": null, "speaker": null, "tags": null },
 								],
 							},
 						},
@@ -427,17 +476,17 @@ func _test_ensures_options_ending_worked():
 				{
 					"type": "conditional_content",
 					"conditions": { "type": "variable", "name": "some_check" },
-					"content": { "type": "line", "value": "maybe", }
+					"content": { "type": "line", "value": "maybe", "id": null, "speaker": null, "tags": null }
 				},
 			],
 		},
 		],
 		"blocks": [],
 	}
-	expect(result, expected)
+	assert_eq_deep(result, expected)
 
 
-func _test_ensures_option_item_ending_worked():
+func test_ensures_option_item_ending_worked():
 	var result = parse("""
 * yes { set yes = true }
 * [no]
@@ -450,6 +499,10 @@ func _test_ensures_option_item_ending_worked():
 			"content": [
 				{
 					"type": 'options',
+					"name": null,
+					"speaker": null,
+					"id": null,
+					"tags": null,
 					"content": [
 						{
 							"type": "action_content",
@@ -467,15 +520,15 @@ func _test_ensures_option_item_ending_worked():
 							"content": {
 								"type": 'option',
 								"name": 'yes',
-								"mode": 'once',
-								"content": { "type": 'content', "content": [{ "type": 'line', "value": 'yes' }]},
+								"mode": 'once', "id": null, "speaker": null, "tags": null,
+								"content": { "type": 'content', "content": [{ "type": 'line', "value": 'yes', "id": null, "speaker": null, "tags": null }]},
 							},
 						},
 						{
 							"type": 'option',
 							"name": 'no',
-							"mode": 'once',
-							"content": { "type": 'content', "content": [ { "type": 'line', "value": 'no' }, ]},
+							"mode": 'once', "id": null, "speaker": null, "tags": null,
+							"content": { "type": 'content', "content": [ { "type": 'line', "value": 'no' , "id": null, "speaker": null, "tags": null}, ]},
 						},
 					],
 				},
@@ -483,10 +536,10 @@ func _test_ensures_option_item_ending_worked():
 		}],
 		"blocks": [],
 	}
-	expect(result, expected)
+	assert_eq_deep(result, expected)
 
 
-func _test_options_with_blocks_both_sides():
+func test_options_with_blocks_both_sides():
 	var result = parse("""
 * { what } yes { set yes = true }
 * {set no = true} [no] { when something }
@@ -499,6 +552,10 @@ func _test_options_with_blocks_both_sides():
 			"content": [
 				{
 					"type": 'options',
+					"name": null,
+					"speaker": null,
+					"id": null,
+					"tags": null,
 					"content": [
 						{
 						 "type": "conditional_content",
@@ -519,8 +576,8 @@ func _test_options_with_blocks_both_sides():
 								"content": {
 									"type": 'option',
 									"name": 'yes',
-									"mode": 'once',
-									"content": { "type": 'content', "content": [{ "type": 'line', "value": 'yes' }]},
+									"mode": 'once', "id": null, "speaker": null, "tags": null,
+									"content": { "type": 'content', "content": [{ "type": 'line', "value": 'yes', "id": null, "speaker": null, "tags": null }]},
 								},
 							},
 					 },
@@ -544,8 +601,8 @@ func _test_options_with_blocks_both_sides():
 								"content": {
 									"type": 'option',
 									"name": 'no',
-									"mode": 'once',
-									"content": { "type": 'content', "content": [ { "type": 'line', "value": 'no' }, ]},
+									"mode": 'once', "id": null, "speaker": null, "tags": null,
+									"content": { "type": 'content', "content": [ { "type": 'line', "value": 'no', "id": null, "speaker": null, "tags": null }, ]},
 								},
 							},
 						},
@@ -555,10 +612,10 @@ func _test_options_with_blocks_both_sides():
 		}],
 		"blocks": [],
 	}
-	expect(result, expected)
+	assert_eq_deep(result, expected)
 
 
-func _test_options_with_multiple_blocks_on_same_side():
+func test_options_with_multiple_blocks_on_same_side():
 	var result = parse("""
 * yes { when what } { set yes = true }
 * no {set no = true} { when something }
@@ -573,6 +630,10 @@ func _test_options_with_multiple_blocks_on_same_side():
 			"content": [
 				{
 					"type": 'options',
+					"name": null,
+					"speaker": null,
+					"id": null,
+					"tags": null,
 					"content": [
 						{
 							"type": "conditional_content",
@@ -593,8 +654,8 @@ func _test_options_with_multiple_blocks_on_same_side():
 								"content": {
 									"type": 'option',
 									"name": 'yes',
-									"mode":  'once',
-									"content": { "type": 'content', "content": [{ "type": 'line', "value": 'yes' }]},
+									"mode":  'once', "id": null, "speaker": null, "tags": null,
+									"content": { "type": 'content', "content": [{ "type": 'line', "value": 'yes', "id": null, "speaker": null, "tags": null }]},
 								},
 							},
 						},
@@ -618,8 +679,8 @@ func _test_options_with_multiple_blocks_on_same_side():
 								"content": {
 									"type": 'option',
 									"name": 'no',
-									"mode":  'once',
-									"content": { "type": 'content', "content": [ { "type": 'line', "value": 'no' }, ]},
+									"mode":  'once', "id": null, "speaker": null, "tags": null,
+									"content": { "type": 'content', "content": [ { "type": 'line', "value": 'no', "id": null, "speaker": null, "tags": null }, ]},
 								},
 							},
 						},
@@ -643,8 +704,8 @@ func _test_options_with_multiple_blocks_on_same_side():
 								"content": {
 									"type": 'option',
 									"name": 'yes',
-									"mode":  'once',
-									"content": { "type": 'content', "content": [{ "type": 'line', "value": 'yes' }]},
+									"mode":  'once', "id": null, "speaker": null, "tags": null,
+									"content": { "type": 'content', "content": [{ "type": 'line', "value": 'yes', "id": null, "speaker": null, "tags": null }]},
 								},
 							},
 						},
@@ -668,8 +729,8 @@ func _test_options_with_multiple_blocks_on_same_side():
 								"content": {
 									"type": 'option',
 									"name": 'no',
-									"mode":  'once',
-									"content": { "type": 'content', "content": [ { "type": 'line', "value": 'no' }, ]},
+									"mode":  'once', "id": null, "speaker": null, "tags": null,
+									"content": { "type": 'content', "content": [ { "type": 'line', "value": 'no', "id": null, "speaker": null, "tags": null }, ]},
 								},
 							},
 						},
@@ -706,8 +767,8 @@ func _test_options_with_multiple_blocks_on_same_side():
 									"content": {
 										"type": 'option',
 										"name": 'yes',
-										"mode":  'once',
-										"content": { "type": 'content', "content": [ { "type": 'line', "value": 'yes' }, ]},
+										"mode":  'once', "id": null, "speaker": null, "tags": null,
+										"content": { "type": 'content', "content": [ { "type": 'line', "value": 'yes', "id": null, "speaker": null, "tags": null }, ]},
 									},
 								},
 							},
@@ -718,4 +779,4 @@ func _test_options_with_multiple_blocks_on_same_side():
 		}],
 		"blocks": [],
 	}
-	expect(result, expected)
+	assert_eq_deep(result, expected)

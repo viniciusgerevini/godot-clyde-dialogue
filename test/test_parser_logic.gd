@@ -1,4 +1,4 @@
-extends './test.gd'
+extends "res://addons/gut/test.gd"
 
 var Parser = preload("res://addons/clyde/parser/Parser.gd")
 
@@ -16,18 +16,18 @@ func _create_doc_payload(content = [], blocks = []):
 		"blocks": blocks
 	}
 
-func _test_condition_single_var():
+func test_condition_single_var():
 	var result = parse("{ some_var } This is conditional")
 	var expected = _create_doc_payload([
 		{
 			"type": "conditional_content",
 			"conditions": { "type": "variable", "name": "some_var" },
-			"content": { "type": "line", "value": "This is conditional", }
+			"content": { "type": "line", "value": "This is conditional", "speaker": null, "id": null, "tags": null, }
 		},
 	])
-	expect(result, expected)
+	assert_eq_deep(result, expected)
 
-func _test_condition_with_multiline_dialogue():
+func test_condition_with_multiline_dialogue():
 	var result = parse("""{ another_var } This is conditional
 		multiline
 """)
@@ -35,12 +35,12 @@ func _test_condition_with_multiline_dialogue():
 	var expected = _create_doc_payload([{
 		"type": "conditional_content",
 		"conditions": { "type": "variable", "name": "another_var" },
-		"content": { "type": "line", "value": "This is conditional multiline", }
+		"content": { "type": "line", "value": "This is conditional multiline", "speaker": null, "id": null, "tags": null, }
 	}])
-	expect(result, expected)
+	assert_eq_deep(result, expected)
 
 
-func _test_not_operator():
+func test_not_operator():
 	var result = parse("{ not some_var } This is conditional")
 
 	var expected = _create_doc_payload([
@@ -51,13 +51,13 @@ func _test_not_operator():
 				"name": "not",
 				"elements": [{ "type": "variable", "name": "some_var" }]
 			},
-			"content": { "type": "line", "value": "This is conditional", }
+			"content": { "type": "line", "value": "This is conditional", "speaker": null, "id": null, "tags": null, }
 		}
 	])
-	expect(result, expected)
+	assert_eq_deep(result, expected)
 
 
-func _test_and_operator():
+func test_and_operator():
 	var result = parse("""{ first_time && second_time } npc: what do you want to talk about? """)
 
 	var expected = _create_doc_payload([
@@ -71,13 +71,13 @@ func _test_and_operator():
 					{ "type": 'variable', "name": 'second_time', },
 				],
 			},
-			"content": { "type": 'line', "value": 'what do you want to talk about?', "speaker": 'npc', },
+			"content": { "type": 'line', "value": 'what do you want to talk about?', "speaker": 'npc', "id": null, "tags": null, },
 		}
 	])
-	expect(result, expected)
+	assert_eq_deep(result, expected)
 
 
-func _test_multiple_logical_checks_and_and_or():
+func test_multiple_logical_checks_and_and_or():
 	var result = parse("{ first_time and second_time or third_time } npc: what do you want to talk about?")
 
 	var expected = _create_doc_payload([
@@ -98,13 +98,13 @@ func _test_multiple_logical_checks_and_and_or():
 					{ "type": 'variable', "name": 'third_time', },
 				],
 			},
-			"content": { "type": 'line', "value": 'what do you want to talk about?', "speaker": 'npc', },
+			"content": { "type": 'line', "value": 'what do you want to talk about?', "speaker": 'npc', "id": null, "tags": null, },
 		}
 	])
-	expect(result, expected)
+	assert_eq_deep(result, expected)
 
 
-func _test_multiple_equality_check():
+func test_multiple_equality_check():
 	var result = parse("{ first_time == second_time or third_time != fourth_time } equality")
 
 	var expected = _create_doc_payload([
@@ -132,13 +132,13 @@ func _test_multiple_equality_check():
 					},
 				],
 			},
-			"content": { "type": 'line', "value": 'equality', },
+			"content": { "type": 'line', "value": 'equality', "speaker": null, "id": null, "tags": null, },
 		}
 	])
-	expect(result, expected)
+	assert_eq_deep(result, expected)
 
 
-func _test_multiple_alias_equality_check():
+func test_multiple_alias_equality_check():
 	var result = parse("{ first_time is second_time or third_time isnt fourth_time } alias equality")
 
 	var expected = _create_doc_payload([
@@ -166,13 +166,13 @@ func _test_multiple_alias_equality_check():
 					},
 				],
 			},
-			"content": { "type": 'line', "value": 'alias equality', },
+			"content": { "type": 'line', "value": 'alias equality', "speaker": null, "id": null, "tags": null, },
 		}
 	])
-	expect(result, expected)
+	assert_eq_deep(result, expected)
 
 
-func _test_less_or_greater():
+func test_less_or_greater():
 	var result = parse("{ first_time < second_time or third_time > fourth_time } comparison")
 
 	var expected = _create_doc_payload([
@@ -200,13 +200,13 @@ func _test_less_or_greater():
 					},
 				],
 			},
-			"content": { "type": 'line', "value": 'comparison', },
+			"content": { "type": 'line', "value": 'comparison', "speaker": null, "id": null, "tags": null, },
 		},
 	])
-	expect(result, expected)
+	assert_eq_deep(result, expected)
 
 
-func _test_less_or_equal_and_greater_or_equal():
+func test_less_or_equal_and_greater_or_equal():
 	var result = parse("{ first_time <= second_time and third_time >= fourth_time } second comparison")
 
 	var expected = _create_doc_payload([
@@ -234,14 +234,14 @@ func _test_less_or_equal_and_greater_or_equal():
 					},
 				],
 			},
-			"content": { "type": 'line', "value": 'second comparison', },
+			"content": { "type": 'line', "value": 'second comparison', "speaker": null, "id": null, "tags": null, },
 		}
 	])
-	expect(result, expected)
+	assert_eq_deep(result, expected)
 
 
 
-func _test__complex_precendence_case():
+func test__complex_precendence_case():
 	var result = parse("{ first_time > x + y - z * d / e % b } test")
 
 	var expected = _create_doc_payload([
@@ -290,14 +290,14 @@ func _test__complex_precendence_case():
 					},
 				],
 			},
-			"content": { "type": 'line', "value": 'test', },
+			"content": { "type": 'line', "value": 'test', "speaker": null, "id": null, "tags": null, },
 		},
 	])
-	expect(result, expected)
+	assert_eq_deep(result, expected)
 
 
 
-func _test_number_literal():
+func test_number_literal():
 	var result = parse("{ first_time > 0 } hey")
 
 	var expected = _create_doc_payload([
@@ -308,17 +308,17 @@ func _test_number_literal():
 				"name": 'greater_than',
 				"elements": [
 					{ "type": 'variable', "name": 'first_time', },
-					{ "type": 'literal', "name": 'number', "value": 0, },
+					{ "type": 'literal', "name": 'number', "value": 0.0, },
 				],
 			},
-			"content": { "type": 'line', "value": 'hey', },
+			"content": { "type": 'line', "value": 'hey', "speaker": null, "id": null, "tags": null, },
 		},
 	])
-	expect(result, expected)
+	assert_eq_deep(result, expected)
 
 
 
-func _test__null_token():
+func test__null_token():
 	var result = parse("{ first_time != null } ho")
 
 	var expected = _create_doc_payload([
@@ -332,14 +332,14 @@ func _test__null_token():
 					{ "type": 'null', },
 				],
 			},
-			"content": { "type": 'line', "value": 'ho', },
+			"content": { "type": 'line', "value": 'ho', "speaker": null, "id": null, "tags": null, },
 		}
 	])
-	expect(result, expected)
+	assert_eq_deep(result, expected)
 
 
 
-func _test_boolean_literal():
+func test_boolean_literal():
 	var result = parse("{ first_time is false } let's go")
 
 	var expected = _create_doc_payload([
@@ -353,13 +353,13 @@ func _test_boolean_literal():
 					{ "type": 'literal', "name": 'boolean', "value": false, },
 				],
 			},
-			"content": { "type": 'line', "value": 'let\'s go', },
+			"content": { "type": 'line', "value": 'let\'s go', "speaker": null, "id": null, "tags": null, },
 		}
 	])
-	expect(result, expected)
+	assert_eq_deep(result, expected)
 
 
-func _test_string_literal():
+func test_string_literal():
 	var result = parse("{ first_time is \"hello darkness >= my old friend\" } let's go")
 
 	var expected = _create_doc_payload([
@@ -373,38 +373,38 @@ func _test_string_literal():
 					{ "type": 'literal', "name": 'string', "value": 'hello darkness >= my old friend', },
 				],
 			},
-			"content": { "type": 'line', "value": 'let\'s go', },
+			"content": { "type": 'line', "value": 'let\'s go', "speaker": null, "id": null, "tags": null, },
 		}
 	])
-	expect(result, expected)
+	assert_eq_deep(result, expected)
 
 
-func _test_condition_after_line():
+func test_condition_after_line():
 	var result = parse("This is conditional { when some_var }")
 	var expected = _create_doc_payload([
 		{
 			"type": "conditional_content",
 			"conditions": { "type": "variable", "name": "some_var" },
-			"content": { "type": "line", "value": "This is conditional", }
+			"content": { "type": "line", "value": "This is conditional", "speaker": null, "id": null, "tags": null, }
 		},
 	])
-	expect(result, expected)
+	assert_eq_deep(result, expected)
 
 
-func _test_condition_after_line_without_when():
+func test_condition_after_line_without_when():
 	var result = parse("This is conditional { some_var }")
 	var expected = _create_doc_payload([
 		{
 			"type": "conditional_content",
 			"conditions": { "type": "variable", "name": "some_var" },
-			"content": { "type": "line", "value": "This is conditional", }
+			"content": { "type": "line", "value": "This is conditional", "speaker": null, "id": null, "tags": null, }
 		},
 	])
-	expect(result, expected)
+	assert_eq_deep(result, expected)
 
 
 
-func _test_conditional_divert():
+func test_conditional_divert():
 	var result = parse("{ some_var } -> some_block")
 	var expected = _create_doc_payload([
 		{
@@ -413,10 +413,10 @@ func _test_conditional_divert():
 			"content": { "type": "divert", "target": "some_block", }
 		},
 	])
-	expect(result, expected)
+	assert_eq_deep(result, expected)
 
 
-func _test_conditional_option():
+func test_conditional_option():
 	var result = parse("""
 * { some_var } option 1
 * option 2 { when some_var }
@@ -424,6 +424,8 @@ func _test_conditional_option():
 """)
 	var expected = _create_doc_payload([{
 		"type": 'options',
+		"name": null,
+    "speaker": null, "id": null, "tags": null,
 		"content": [
 			{
 				"type": "conditional_content",
@@ -431,11 +433,11 @@ func _test_conditional_option():
 				"content": {
 					"type": 'option',
 					"name": 'option 1',
-					"mode": 'once',
+					"mode": 'once', "speaker": null, "id": null, "tags": null,
 					"content": {
 						"type": 'content',
 						"content": [
-							{ "type": 'line', "value": 'option 1' },
+							{ "type": 'line', "value": 'option 1', "speaker": null, "id": null, "tags": null, },
 						],
 					},
 				},
@@ -446,11 +448,11 @@ func _test_conditional_option():
 				"content": {
 					"type": 'option',
 					"name": 'option 2',
-					"mode": 'once',
+					"mode": 'once', "speaker": null, "id": null, "tags": null,
 					"content": {
 						"type": 'content',
 						"content": [
-							{ "type": 'line', "value": 'option 2' },
+							{ "type": 'line', "value": 'option 2', "speaker": null, "id": null, "tags": null, },
 						],
 					},
 				},
@@ -461,11 +463,11 @@ func _test_conditional_option():
 				"content": {
 					"type": 'option',
 					"name": 'option 3',
-					"mode": 'once',
+					"mode": 'once', "speaker": null, "id": null, "tags": null,
 					"content": {
 						"type": 'content',
 						"content": [
-							{ "type": 'line', "value": 'option 3' },
+							{ "type": 'line', "value": 'option 3', "speaker": null, "id": null, "tags": null, },
 						],
 					},
 				},
@@ -473,10 +475,10 @@ func _test_conditional_option():
 		],
 			}
 	])
-	expect(result, expected)
+	assert_eq_deep(result, expected)
 
 
-func _test_conditional_indented_block():
+func test_conditional_indented_block():
 	var result = parse("""
 { some_var }
 	This is conditional
@@ -490,14 +492,14 @@ func _test_conditional_indented_block():
 			"content": {
 				"type": 'content',
 				"content": [
-					{ "type": "line", "value": "This is conditional", },
-					{ "type": "line", "value": "This is second conditional", },
-					{ "type": "line", "value": "This is third conditional", }
+					{ "type": "line", "value": "This is conditional", "speaker": null, "id": null, "tags": null, },
+					{ "type": "line", "value": "This is second conditional", "speaker": null, "id": null, "tags": null, },
+					{ "type": "line", "value": "This is third conditional", "speaker": null, "id": null, "tags": null, }
 				]
 			}
 		},
 	])
-	expect(result, expected)
+	assert_eq_deep(result, expected)
 
 
 const assignments = [
@@ -510,7 +512,7 @@ const assignments = [
 	[ '^=', 'assign_pow'],
 ]
 
-func _test_assignments():
+func test_assignments():
 	for a in assignments:
 		_assignment_tests(a[0], a[1])
 
@@ -526,16 +528,16 @@ func _assignment_tests(token, node_name):
 					"type": 'assignment',
 					"variable": { "type": 'variable', "name": 'a', },
 					"operation": node_name,
-					"value": { "type": 'literal', "name": 'number', "value": 2, },
+					"value": { "type": 'literal', "name": 'number', "value": 2.0, },
 				},
 			],
 		},
-		"content": { "type": 'line', "value": 'let\'s go', },
+		"content": { "type": 'line', "value": 'let\'s go', "speaker": null, "id": null, "tags": null, },
 	}])
-	expect(result, expected)
+	assert_eq_deep(result, expected)
 
 
-func _test_assignment_with_expression():
+func test_assignment_with_expression():
 	var result = parse('{ set a -= 4 ^ 2 } let\'s go')
 	var expected = _create_doc_payload([{
 		"type": 'action_content',
@@ -556,24 +558,24 @@ func _test_assignment_with_expression():
 							{
 								"type": 'literal',
 								"name": 'number',
-								"value": 4,
+								"value": 4.0,
 							},
 							{
 								"type": 'literal',
 								"name": 'number',
-								"value": 2,
+								"value": 2.0,
 							},
 						],
 					},
 				},
 			],
 		},
-		"content": { "type": 'line', "value": 'let\'s go', },
+		"content": { "type": 'line', "value": 'let\'s go', "speaker": null, "id": null, "tags": null, },
 	}])
-	expect(result, expected)
+	assert_eq_deep(result, expected)
 
 
-func _test_assignment_with_expression_after():
+func test_assignment_with_expression_after():
 	var result = parse('multiply { set a = a * 2 }')
 	var expected = _create_doc_payload([{
 		"type": 'action_content',
@@ -598,19 +600,19 @@ func _test_assignment_with_expression_after():
 							{
 								"type": 'literal',
 								"name": 'number',
-								"value": 2,
+								"value": 2.0,
 							},
 						],
 					},
 				},
 			],
 		},
-		"content": { "type": 'line', "value": 'multiply', },
+		"content": { "type": 'line', "value": 'multiply', "speaker": null, "id": null, "tags": null, },
 	}])
-	expect(result, expected)
+	assert_eq_deep(result, expected)
 
 
-func _test_chaining_assigments():
+func test_chaining_assigments():
 	var result = parse('{ set a = b = c = d = 3 } let\'s go')
 	var expected = _create_doc_payload([{
 		"type": 'action_content',
@@ -648,7 +650,7 @@ func _test_chaining_assigments():
 								"value": {
 									"type": 'literal',
 									"name": 'number',
-									"value": 3,
+									"value": 3.0,
 								},
 							},
 						},
@@ -656,12 +658,12 @@ func _test_chaining_assigments():
 				},
 			],
 		},
-		"content": { "type": 'line', "value": 'let\'s go', },
+		"content": { "type": 'line', "value": 'let\'s go', "speaker": null, "id": null, "tags": null, },
 	}])
-	expect(result, expected)
+	assert_eq_deep(result, expected)
 
 
-func _test_chaining_assigment_ending_with_variable():
+func test_chaining_assigment_ending_with_variable():
 		var result = parse('{ set a = b = c } let\'s go')
 		var expected = _create_doc_payload([{
 			"type": 'action_content',
@@ -690,12 +692,12 @@ func _test_chaining_assigment_ending_with_variable():
 					},
 				],
 			},
-			"content": { "type": 'line', "value": 'let\'s go', },
+			"content": { "type": 'line', "value": 'let\'s go', "speaker": null, "id": null, "tags": null, },
 		}])
-		expect(result, expected)
+		assert_eq_deep(result, expected)
 
 
-func _test_multiple_assigments_block():
+func test_multiple_assigments_block():
 	var result = parse('{ set a -= 4, b=1, c = "hello" } hey you')
 	var expected = _create_doc_payload([{
 		"type": 'action_content',
@@ -712,7 +714,7 @@ func _test_multiple_assigments_block():
 					"value": {
 						"type": 'literal',
 						"name": 'number',
-						"value": 4,
+						"value": 4.0,
 					},
 				},
 				{
@@ -725,7 +727,7 @@ func _test_multiple_assigments_block():
 					"value": {
 						"type": 'literal',
 						"name": 'number',
-						"value": 1,
+						"value": 1.0,
 					},
 				},
 				{
@@ -743,12 +745,12 @@ func _test_multiple_assigments_block():
 				},
 			],
 		},
-		"content": { "type": 'line', "value": 'hey you' },
+		"content": { "type": 'line', "value": 'hey you', "speaker": null, "id": null, "tags": null, },
 	}])
-	expect(result, expected)
+	assert_eq_deep(result, expected)
 
 
-func _test_assignment_after_line():
+func test_assignment_after_line():
 	var result = parse("let's go { set a = 2 }")
 	var expected = _create_doc_payload([{
 		"type": 'action_content',
@@ -759,16 +761,16 @@ func _test_assignment_after_line():
 					"type": 'assignment',
 					"variable": { "type": 'variable', "name": 'a', },
 					"operation": 'assign',
-					"value": { "type": 'literal', "name": 'number', "value": 2, },
+					"value": { "type": 'literal', "name": 'number', "value": 2.0, },
 				},
 			],
 		},
-		"content": { "type": 'line', "value": 'let\'s go', },
+		"content": { "type": 'line', "value": 'let\'s go', "speaker": null, "id": null, "tags": null, },
 	}])
-	expect(result, expected)
+	assert_eq_deep(result, expected)
 
 
-func _test_standalone_assignment():
+func test_standalone_assignment():
 	var result = parse("""
 { set a = 2 }
 { set b = 3 }""")
@@ -781,7 +783,7 @@ func _test_standalone_assignment():
 					"type": 'assignment',
 					"variable": { "type": 'variable', "name": 'a', },
 					"operation": 'assign',
-					"value": { "type": 'literal', "name": 'number', "value": 2, },
+					"value": { "type": 'literal', "name": 'number', "value": 2.0, },
 				},
 			],
 		},
@@ -792,15 +794,15 @@ func _test_standalone_assignment():
 					"type": 'assignment',
 					"variable": { "type": 'variable', "name": 'b', },
 					"operation": 'assign',
-					"value": { "type": 'literal', "name": 'number', "value": 3, },
+					"value": { "type": 'literal', "name": 'number', "value": 3.0, },
 				},
 			],
 		}
 	])
-	expect(result, expected)
+	assert_eq_deep(result, expected)
 
 
-func _test_options_assignment():
+func test_options_assignment():
 	var result = parse("""
 * { set a = 2 } option 1
 * option 2 { set b = 3 }
@@ -808,18 +810,20 @@ func _test_options_assignment():
 """)
 	var expected = _create_doc_payload([{
 		"type": 'options',
+		"name": null,
+    "speaker": null, "id": null, "tags": null,
 		"content": [
 			{
 				"type": "action_content",
 				"action": {
 					"type": 'assignments',
-					"assignments": [{ "type": 'assignment', "variable": { "type": 'variable', "name": 'a', }, "operation": 'assign', "value": { "type": 'literal', "name": 'number', "value": 2, }, }, ],
+					"assignments": [{ "type": 'assignment', "variable": { "type": 'variable', "name": 'a', }, "operation": 'assign', "value": { "type": 'literal', "name": 'number', "value": 2.0, }, }, ],
 				},
-				"content": { "type": 'option', "name": 'option 1', "mode": 'once',
+				"content": { "type": 'option', "name": 'option 1', "mode": 'once', "speaker": null, "id": null, "tags": null,
 					"content": {
 						"type": 'content',
 						"content": [
-							{ "type": 'line', "value": 'option 1' },
+							{ "type": 'line', "value": 'option 1', "speaker": null, "id": null, "tags": null, },
 						],
 					},
 				},
@@ -828,13 +832,13 @@ func _test_options_assignment():
 				"type": "action_content",
 				"action": {
 					"type": 'assignments',
-					"assignments": [{ "type": 'assignment', "variable": { "type": 'variable', "name": 'b', }, "operation": 'assign', "value": { "type": 'literal', "name": 'number', "value": 3, }, }, ],
+					"assignments": [{ "type": 'assignment', "variable": { "type": 'variable', "name": 'b', }, "operation": 'assign', "value": { "type": 'literal', "name": 'number', "value": 3.0, }, }, ],
 				},
-				"content": { "type": 'option', "name": 'option 2', "mode": 'once',
+				"content": { "type": 'option', "name": 'option 2', "mode": 'once', "speaker": null, "id": null, "tags": null,
 					"content": {
 						"type": 'content',
 						"content": [
-							{ "type": 'line', "value": 'option 2' },
+							{ "type": 'line', "value": 'option 2', "speaker": null, "id": null, "tags": null, },
 						],
 					},
 				},
@@ -843,13 +847,13 @@ func _test_options_assignment():
 				"type": "action_content",
 				"action": {
 					"type": 'assignments',
-					"assignments": [{ "type": 'assignment', "variable": { "type": 'variable', "name": 'c', }, "operation": 'assign', "value": { "type": 'literal', "name": 'number', "value": 4, }, }, ],
+					"assignments": [{ "type": 'assignment', "variable": { "type": 'variable', "name": 'c', }, "operation": 'assign', "value": { "type": 'literal', "name": 'number', "value": 4.0, }, }, ],
 				},
-				"content": { "type": 'option', "name": 'option 3', "mode": 'once',
+				"content": { "type": 'option', "name": 'option 3', "mode": 'once', "speaker": null, "id": null, "tags": null,
 					"content": {
 						"type": 'content',
 						"content": [
-							{ "type": 'line', "value": 'option 3' },
+							{ "type": 'line', "value": 'option 3', "speaker": null, "id": null, "tags": null, },
 						],
 					},
 				},
@@ -857,11 +861,11 @@ func _test_options_assignment():
 		],
 		}
 	])
-	expect(result, expected)
+	assert_eq_deep(result, expected)
 
 
 
-func _test_trigger_event():
+func test_trigger_event():
 	var result = parse("{ trigger some_event } trigger")
 	var expected = _create_doc_payload([{
 		"type": 'action_content',
@@ -871,13 +875,13 @@ func _test_trigger_event():
 		},
 		"content": {
 			"type": 'line',
-			"value": 'trigger',
+			"value": 'trigger', "speaker": null, "id": null, "tags": null,
 		},
 	}])
-	expect(result, expected)
+	assert_eq_deep(result, expected)
 
 
-func _test_trigger_multiple_events_in_one_block():
+func test_trigger_multiple_events_in_one_block():
 	var result = parse("{ trigger some_event, another_event } trigger")
 	var expected = _create_doc_payload([{
 		"type": 'action_content',
@@ -890,13 +894,13 @@ func _test_trigger_multiple_events_in_one_block():
 		},
 		"content": {
 			"type": 'line',
-			"value": 'trigger',
+			"value": 'trigger', "speaker": null, "id": null, "tags": null,
 		},
 	}])
-	expect(result, expected)
+	assert_eq_deep(result, expected)
 
 
-func _test_standalone_trigger_event():
+func test_standalone_trigger_event():
 	var result = parse("{ trigger some_event }")
 	var expected = _create_doc_payload([{
 		"type": 'events',
@@ -904,10 +908,10 @@ func _test_standalone_trigger_event():
 			{ "type": 'event', "name": 'some_event' },
 		],
 	}])
-	expect(result, expected)
+	assert_eq_deep(result, expected)
 
 
-func _test_trigger_event_after_line():
+func test_trigger_event_after_line():
 	var result = parse("trigger { trigger some_event }")
 	var expected = _create_doc_payload([{
 		"type": 'action_content',
@@ -917,13 +921,13 @@ func _test_trigger_event_after_line():
 		},
 		"content": {
 			"type": 'line',
-			"value": 'trigger',
+			"value": 'trigger', "speaker": null, "id": null, "tags": null,
 		},
 	}])
-	expect(result, expected)
+	assert_eq_deep(result, expected)
 
 
-func _test_options_trigger():
+func test_options_trigger():
 	var result = parse("""
 * { trigger a } option 1
 * option 2 { trigger b }
@@ -931,6 +935,8 @@ func _test_options_trigger():
 """)
 	var expected = _create_doc_payload([{
 		"type": 'options',
+		"name": null,
+    "speaker": null, "id": null, "tags": null,
 		"content": [
 			{
 				"type": "action_content",
@@ -938,11 +944,11 @@ func _test_options_trigger():
 					"type": 'events',
 					"events": [{ "type": 'event', "name": 'a' }],
 				},
-				"content": { "type": 'option', "name": 'option 1', "mode": 'once',
+				"content": { "type": 'option', "name": 'option 1', "mode": 'once', "speaker": null, "id": null, "tags": null,
 					"content": {
 						"type": 'content',
 						"content": [
-							{ "type": 'line', "value": 'option 1' },
+							{ "type": 'line', "value": 'option 1', "speaker": null, "id": null, "tags": null, },
 						],
 					},
 				},
@@ -953,11 +959,11 @@ func _test_options_trigger():
 					"type": 'events',
 					"events": [{ "type": 'event', "name": 'b' }],
 				},
-				"content": { "type": 'option', "name": 'option 2', "mode": 'once',
+				"content": { "type": 'option', "name": 'option 2', "mode": 'once', "speaker": null, "id": null, "tags": null,
 					"content": {
 						"type": 'content',
 						"content": [
-							{ "type": 'line', "value": 'option 2' },
+							{ "type": 'line', "value": 'option 2', "speaker": null, "id": null, "tags": null, },
 						],
 					},
 				},
@@ -968,11 +974,11 @@ func _test_options_trigger():
 					"type": 'events',
 					"events": [{ "type": 'event', "name": 'c' }],
 				},
-				"content": { "type": 'option', "name": 'option 3', "mode": 'once',
+				"content": { "type": 'option', "name": 'option 3', "mode": 'once', "speaker": null, "id": null, "tags": null,
 					"content": {
 						"type": 'content',
 						"content": [
-							{ "type": 'line', "value": 'option 3' },
+							{ "type": 'line', "value": 'option 3', "speaker": null, "id": null, "tags": null, },
 						],
 					},
 				},
@@ -980,10 +986,10 @@ func _test_options_trigger():
 		],
 		}
 	])
-	expect(result, expected)
+	assert_eq_deep(result, expected)
 
 
-func _test_multiple_logic_blocks_in_the_same_line():
+func test_multiple_logic_blocks_in_the_same_line():
 	var result = parse("{ some_var } {set something = 1} { trigger event }")
 	var expected = _create_doc_payload([{
 		"type": "conditional_content",
@@ -996,7 +1002,7 @@ func _test_multiple_logic_blocks_in_the_same_line():
 					"type": 'assignment',
 					"variable": { "type": 'variable', "name": 'something' },
 					"operation": 'assign',
-					"value": { "type": 'literal', "name": 'number', "value": 1 },
+					"value": { "type": 'literal', "name": 'number', "value": 1.0 },
 				}],
 			},
 			"content": {
@@ -1005,10 +1011,10 @@ func _test_multiple_logic_blocks_in_the_same_line():
 			},
 		},
 	}])
-	expect(result, expected)
+	assert_eq_deep(result, expected)
 
 
-func _test_multiple_logic_blocks_in_the_same_line_before():
+func test_multiple_logic_blocks_in_the_same_line_before():
 	var result = parse("{ some_var } {set something = 1} { trigger event } hello")
 	var expected = _create_doc_payload([{
 		"type": "conditional_content",
@@ -1021,7 +1027,7 @@ func _test_multiple_logic_blocks_in_the_same_line_before():
 					"type": 'assignment',
 					"variable": { "type": 'variable', "name": 'something' },
 					"operation": 'assign',
-					"value": { "type": 'literal', "name": 'number', "value": 1 },
+					"value": { "type": 'literal', "name": 'number', "value": 1.0 },
 				}],
 			},
 			"content": {
@@ -1032,15 +1038,15 @@ func _test_multiple_logic_blocks_in_the_same_line_before():
 				},
 				"content": {
 					"type": 'line',
-					"value": 'hello',
+					"value": 'hello', "speaker": null, "id": null, "tags": null,
 				},
 			},
 		},
 	}])
-	expect(result, expected)
+	assert_eq_deep(result, expected)
 
 
-func _test_multiple_logic_blocks_in_the_same_line_after():
+func test_multiple_logic_blocks_in_the_same_line_after():
 	var result = parse("hello { when some_var } {set something = 1} { trigger event }")
 	var expected = _create_doc_payload([{
 		"type": "conditional_content",
@@ -1053,7 +1059,7 @@ func _test_multiple_logic_blocks_in_the_same_line_after():
 					"type": 'assignment',
 					"variable": { "type": 'variable', "name": 'something' },
 					"operation": 'assign',
-					"value": { "type": 'literal', "name": 'number', "value": 1 },
+					"value": { "type": 'literal', "name": 'number', "value": 1.0 },
 				}],
 			},
 			"content": {
@@ -1064,15 +1070,15 @@ func _test_multiple_logic_blocks_in_the_same_line_after():
 				},
 				"content": {
 					"type": 'line',
-					"value": 'hello',
+					"value": 'hello', "speaker": null, "id": null, "tags": null,
 				},
 			},
 		},
 	}])
-	expect(result, expected)
+	assert_eq_deep(result, expected)
 
 
-func _test_multiple_logic_blocks_in_the_same_line_around():
+func test_multiple_logic_blocks_in_the_same_line_around():
 	var result = parse("{ some_var } hello {set something = 1} { trigger event }")
 	var expected = _create_doc_payload([{
 		"type": "conditional_content",
@@ -1085,7 +1091,7 @@ func _test_multiple_logic_blocks_in_the_same_line_around():
 					"type": 'assignment',
 					"variable": { "type": 'variable', "name": 'something' },
 					"operation": 'assign',
-					"value": { "type": 'literal', "name": 'number', "value": 1 },
+					"value": { "type": 'literal', "name": 'number', "value": 1.0 },
 				}],
 			},
 			"content": {
@@ -1096,15 +1102,15 @@ func _test_multiple_logic_blocks_in_the_same_line_around():
 				},
 				"content": {
 					"type": 'line',
-					"value": 'hello',
+					"value": 'hello', "speaker": null, "id": null, "tags": null,
 				},
 			},
 		},
 	}])
-	expect(result, expected)
+	assert_eq_deep(result, expected)
 
 
-func _test_multiple_logic_blocks_with_condition_after():
+func test_multiple_logic_blocks_with_condition_after():
 	var result = parse("{set something = 1} { some_var } { trigger event } hello")
 	var expected = _create_doc_payload([{
 		"type": 'action_content',
@@ -1114,7 +1120,7 @@ func _test_multiple_logic_blocks_with_condition_after():
 				"type": 'assignment',
 				"variable": { "type": 'variable', "name": 'something' },
 				"operation": 'assign',
-				"value": { "type": 'literal', "name": 'number', "value": 1 },
+				"value": { "type": 'literal', "name": 'number', "value": 1.0 },
 			}],
 		},
 		"content": {
@@ -1128,20 +1134,21 @@ func _test_multiple_logic_blocks_with_condition_after():
 				},
 				"content": {
 					"type": 'line',
-					"value": 'hello',
+					"value": 'hello', "speaker": null, "id": null, "tags": null,
 				},
 			},
 		},
 	}])
-	expect(result, expected)
+	assert_eq_deep(result, expected)
 
 
-func _test_empty_block():
+func test_empty_block():
 	var result = parse("{} empty")
 	var expected = _create_doc_payload([{
 		"type": 'conditional_content',
-		"content": { "type": 'line', "value": 'empty', },
+		"content": { "type": 'line', "value": 'empty', "speaker": null, "id": null, "tags": null, },
+		"conditions": null,
 	}])
-	expect(result, expected)
+	assert_eq_deep(result, expected)
 
 

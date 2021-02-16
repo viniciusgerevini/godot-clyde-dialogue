@@ -1,4 +1,4 @@
-extends './test.gd'
+extends "res://addons/gut/test.gd"
 
 var Parser = preload("res://addons/clyde/parser/Parser.gd")
 
@@ -7,7 +7,7 @@ func parse(input):
 	return parser.parse(input)
 
 
-func _test_parse_single_line():
+func test_parse_single_line():
 	var result = parse('jules: say what one more time! $first #yelling #mad')
 	var expected = {
 		"type": 'document',
@@ -26,10 +26,10 @@ func _test_parse_single_line():
 		}],
 		"blocks": []
 	}
-	expect(result, expected)
+	assert_eq_deep(result, expected)
 
 
-func _test_parse_lines():
+func test_parse_lines():
 		var result = parse("""
 jules: say what one more time! $first #yelling #mad
 just text
@@ -45,20 +45,20 @@ id last #tag #another_tag $some_id
 				"type": 'content',
 				"content": [
 					{ "type": 'line', "value": 'say what one more time!', "id": 'first', "speaker": 'jules', "tags": [ 'yelling', 'mad' ] },
-					{ "type": 'line', "value": 'just text' },
-					{ "type": 'line', "value": 'just id', "id": 'another' },
-					{ "type": 'line', "value": 'just tags', "tags": [ 'tag' ] },
-					{ "type": 'line', "value": 'just speaker', "speaker": 'speaker' },
-					{ "type": 'line', "value": 'id last', "id": 'some_id', "tags": [ 'tag', 'another_tag' ] },
+					{ "type": 'line', "value": 'just text', "speaker": null, "id": null, "tags": null, },
+					{ "type": 'line', "value": 'just id', "id": 'another', "speaker": null, "tags": null, },
+					{ "type": 'line', "value": 'just tags', "tags": [ 'tag' ], "speaker": null, "id": null },
+					{ "type": 'line', "value": 'just speaker', "speaker": 'speaker', "id": null, "tags": null, },
+					{ "type": 'line', "value": 'id last', "speaker": null, "id": 'some_id', "tags": [ 'tag', 'another_tag' ] },
 				]
 			}],
 			"blocks": []
 		}
 
-		expect(result, expected)
+		assert_eq_deep(result, expected)
 
 
-func _test_parse_multiline():
+func test_parse_multiline():
 	var result = parse("""
 jules: say what one more time!
 	 Just say it $some_id #tag
@@ -71,14 +71,14 @@ hello! $id_on_first_line #and_tags
 			"type": 'content',
 			"content": [
 				{ "type": 'line', "value": 'say what one more time! Just say it', "id": 'some_id', "speaker": 'jules', "tags": [ 'tag' ] },
-				{ "type": 'line', "value": 'hello! Just talking.', "id": 'id_on_first_line', "tags": [ 'and_tags' ] },
+				{ "type": 'line', "value": 'hello! Just talking.', "id": 'id_on_first_line', "tags": [ 'and_tags' ], "speaker": null, },
 			]
 		}],
 		"blocks": []
 	}
-	expect(result, expected)
+	assert_eq_deep(result, expected)
 
-func _test_parse_text_in_quotes():
+func test_parse_text_in_quotes():
 	var result = parse("""
 \"jules: say what one more time!
 	 Just say it $some_id #tag\"
@@ -92,11 +92,11 @@ Just talking.\"
 		"content": [{
 			"type": 'content',
 			"content": [
-				{ "type": 'line', "value": 'jules: say what one more time!\n	 Just say it $some_id #tag' },
-				{ "type": 'line', "value": 'hello! $id_on_first_line #and_tags\nJust talking.' },
-				{ "type": 'line', "value": 'this has $everything:', "id": 'id_on_first_line', "tags": [ 'and_tags' ] },
+				{ "type": 'line', "value": 'jules: say what one more time!\n	 Just say it $some_id #tag', "speaker": null, "id": null, "tags": null,  },
+				{ "type": 'line', "value": 'hello! $id_on_first_line #and_tags\nJust talking.', "speaker": null, "id": null, "tags": null,  },
+				{ "type": 'line', "value": 'this has $everything:', "id": 'id_on_first_line', "tags": [ 'and_tags' ], "speaker": null, },
 			]
 		}],
 		"blocks": []
 	}
-	expect(result, expected)
+	assert_eq_deep(result, expected)
