@@ -1,4 +1,4 @@
-extends Node
+extends Reference
 
 const TOKEN_TEXT = "TEXT"
 const TOKEN_INDENT = "INDENT"

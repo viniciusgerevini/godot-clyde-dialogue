@@ -1,4 +1,4 @@
-extends Node
+extends Reference
 
 const Interpreter = preload('./interpreter/Interpreter.gd')
 

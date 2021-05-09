@@ -1,4 +1,4 @@
-extends Node
+extends Reference
 
 const Lexer = preload('./Lexer.gd')
 
