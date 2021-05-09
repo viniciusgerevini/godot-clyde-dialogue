@@ -1,4 +1,4 @@
-extends Node
+extends Reference
 
 signal variable_changed(name, value, previous_value)
 

@@ -1,4 +1,4 @@
-extends Node
+extends Reference
 
 const SPECIAL_VARIABLE_NAMES = [ 'OPTIONS_COUNT' ];
 
