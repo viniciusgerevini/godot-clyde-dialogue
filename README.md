@@ -13,8 +13,9 @@ You can find a simple usage example on [/example/example.gd](./example/example.g
 
 For more about how to write dialogues using Clyde, check [Clyde/LANGUAGE.md](https://github.com/viniciusgerevini/clyde/blob/master/LANGUAGE.md)
 
+Check [sample project](https://github.com/viniciusgerevini/godot-clyde-sample)
+
 ## Instalation
 
 Follow Godot's [ installing plugins guide ]( https://docs.godotengine.org/en/stable/tutorials/plugins/editor/installing_plugins.html).
-
 
