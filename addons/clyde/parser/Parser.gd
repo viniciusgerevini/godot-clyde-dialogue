@@ -372,6 +372,13 @@ func _divert():
 	if _tokens.peek([Lexer.TOKEN_EOF]):
 		return  token
 
+	if _tokens.peek([Lexer.TOKEN_BRACE_OPEN]):
+		_tokens.consume([Lexer.TOKEN_BRACE_OPEN])
+		token = _line_with_action(token)
+
+
+	return token
+
 
 func _variations():
 	var variations = VariationsNode('sequence')

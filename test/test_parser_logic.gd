@@ -416,6 +416,18 @@ func test_conditional_divert():
 	assert_eq_deep(result, expected)
 
 
+func test_conditional_divert_after():
+	var result = parse("-> some_block { some_var }")
+	var expected = _create_doc_payload([
+		{
+			"type": "conditional_content",
+			"conditions": { "type": "variable", "name": "some_var" },
+			"content": { "type": "divert", "target": "some_block", }
+		},
+	])
+	assert_eq_deep(result, expected)
+
+
 func test_conditional_option():
 	var result = parse("""
 * { some_var } option 1
@@ -863,6 +875,25 @@ func test_options_assignment():
 	])
 	assert_eq_deep(result, expected)
 
+
+func test_divert_with_assignment():
+	var result = parse("-> go { set a = 2 }")
+	var expected = _create_doc_payload([{
+		"type": 'action_content',
+		"action": {
+			"type": 'assignments',
+			"assignments": [
+				{
+					"type": 'assignment',
+					"variable": { "type": 'variable', "name": 'a', },
+					"operation": 'assign',
+					"value": { "type": 'literal', "name": 'number', "value": 2.0, },
+				},
+			],
+		},
+		"content": { "type": 'divert', "target": 'go' },
+	}])
+	assert_eq_deep(result, expected)
 
 
 func test_trigger_event():
