@@ -2,7 +2,15 @@
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
-The Working in Progress (WIP) section is for changes that are already in master, but haven't been published to Godot's asset library yet. Even though the section is called WIP, all changes in master are stable and functional.
+## 1.0.2 (2021-06-04)
+
+### Added
+
+- Condition blocks before line can use the "when" keyword.
+
+### Fixed
+
+- Diverts support conditional blocks before and after line
 
 ## 1.0.1 (2021-05-09)
 
