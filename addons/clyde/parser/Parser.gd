@@ -142,6 +142,8 @@ func _lines():
 		if _tokens.peek([Lexer.TOKEN_KEYWORD_SET, Lexer.TOKEN_KEYWORD_TRIGGER]):
 			lines = [_line_with_action()]
 		else:
+			if _tokens.peek([Lexer.TOKEN_KEYWORD_WHEN]):
+				_tokens.consume([Lexer.TOKEN_KEYWORD_WHEN])
 			lines = [_conditional_line()]
 
 
@@ -358,11 +360,26 @@ func _divert():
 	_tokens.consume([ Lexer.TOKEN_DIVERT, Lexer.TOKEN_DIVERT_PARENT ])
 	var divert = _tokens.current_token
 
+	var token
 	match divert.token:
 		Lexer.TOKEN_DIVERT:
-			return DivertNode(divert.value)
+			token = DivertNode(divert.value)
 		Lexer.TOKEN_DIVERT_PARENT:
-			return DivertNode('<parent>')
+			token = DivertNode('<parent>')
+
+	if _tokens.peek([Lexer.TOKEN_LINE_BREAK]):
+		_tokens.consume([Lexer.TOKEN_LINE_BREAK])
+		return token
+
+	if _tokens.peek([Lexer.TOKEN_EOF]):
+		return  token
+
+	if _tokens.peek([Lexer.TOKEN_BRACE_OPEN]):
+		_tokens.consume([Lexer.TOKEN_BRACE_OPEN])
+		token = _line_with_action(token)
+
+
+	return token
 
 
 func _variations():

@@ -421,7 +421,13 @@ func _handle_divert():
 		_position += 1
 		_column += 1
 
-	return Token(TOKEN_DIVERT, _line, initial_column, _array_join(values).strip_edges())
+	var token =  Token(TOKEN_DIVERT, _line, initial_column, _array_join(values).strip_edges())
+
+	var linebreak = _get_following_line_break()
+	if linebreak:
+		return [ token, linebreak ]
+
+	return token
 
 
 func _handle_divert_parent():
@@ -429,8 +435,13 @@ func _handle_divert_parent():
 	_position += 2
 	_column += 2
 
-	return Token(TOKEN_DIVERT_PARENT, _line, initial_column)
+	var token = Token(TOKEN_DIVERT_PARENT, _line, initial_column)
 
+	var linebreak = _get_following_line_break()
+	if linebreak:
+		return [ token, linebreak ]
+
+	return token
 
 func _handle_start_variations():
 	var initial_column = _column

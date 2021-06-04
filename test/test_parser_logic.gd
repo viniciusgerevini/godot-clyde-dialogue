@@ -378,6 +378,17 @@ func test_string_literal():
 	])
 	assert_eq_deep(result, expected)
 
+func test_condition_before_line_with_keyword():
+	var result = parse("{ when some_var } This is conditional")
+	var expected = _create_doc_payload([
+		{
+			"type": "conditional_content",
+			"conditions": { "type": "variable", "name": "some_var" },
+			"content": { "type": "line", "value": "This is conditional", "speaker": null, "id": null, "tags": null, }
+		},
+	])
+	assert_eq_deep(result, expected)
+
 
 func test_condition_after_line():
 	var result = parse("This is conditional { when some_var }")
@@ -406,6 +417,18 @@ func test_condition_after_line_without_when():
 
 func test_conditional_divert():
 	var result = parse("{ some_var } -> some_block")
+	var expected = _create_doc_payload([
+		{
+			"type": "conditional_content",
+			"conditions": { "type": "variable", "name": "some_var" },
+			"content": { "type": "divert", "target": "some_block", }
+		},
+	])
+	assert_eq_deep(result, expected)
+
+
+func test_conditional_divert_after():
+	var result = parse("-> some_block { some_var }")
 	var expected = _create_doc_payload([
 		{
 			"type": "conditional_content",
@@ -863,6 +886,25 @@ func test_options_assignment():
 	])
 	assert_eq_deep(result, expected)
 
+
+func test_divert_with_assignment():
+	var result = parse("-> go { set a = 2 }")
+	var expected = _create_doc_payload([{
+		"type": 'action_content',
+		"action": {
+			"type": 'assignments',
+			"assignments": [
+				{
+					"type": 'assignment',
+					"variable": { "type": 'variable', "name": 'a', },
+					"operation": 'assign',
+					"value": { "type": 'literal', "name": 'number', "value": 2.0, },
+				},
+			],
+		},
+		"content": { "type": 'divert', "target": 'go' },
+	}])
+	assert_eq_deep(result, expected)
 
 
 func test_trigger_event():
