@@ -358,11 +358,19 @@ func _divert():
 	_tokens.consume([ Lexer.TOKEN_DIVERT, Lexer.TOKEN_DIVERT_PARENT ])
 	var divert = _tokens.current_token
 
+	var token
 	match divert.token:
 		Lexer.TOKEN_DIVERT:
-			return DivertNode(divert.value)
+			token = DivertNode(divert.value)
 		Lexer.TOKEN_DIVERT_PARENT:
-			return DivertNode('<parent>')
+			token = DivertNode('<parent>')
+
+	if _tokens.peek([Lexer.TOKEN_LINE_BREAK]):
+		_tokens.consume([Lexer.TOKEN_LINE_BREAK])
+		return token
+
+	if _tokens.peek([Lexer.TOKEN_EOF]):
+		return  token
 
 
 func _variations():

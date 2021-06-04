@@ -343,12 +343,16 @@ hello
 	assert_eq_deep(tokens, [
 		{ "token": Lexer.TOKEN_TEXT, "value": 'hello', "line": 1, "column": 0, },
 		{ "token": Lexer.TOKEN_DIVERT, "value": 'first divert', "line": 2, "column": 0, },
+		{ "token": Lexer.TOKEN_LINE_BREAK, "value": null, "line": 2, "column": 15, },
 		{ "token": Lexer.TOKEN_OPTION, "line": 4, "column": 0, "value": null },
 		{ "token": Lexer.TOKEN_TEXT, "value": 'test', "line": 4, "column": 2 },
 		{ "token": Lexer.TOKEN_INDENT, "line": 5, "column": 0, "value": null },
 		{ "token": Lexer.TOKEN_DIVERT, "value": 'divert', "line": 5, "column": 2 },
+		{ "token": Lexer.TOKEN_LINE_BREAK, "value": null, "line": 5, "column": 11, },
 		{ "token": Lexer.TOKEN_DIVERT_PARENT, "line": 6, "column": 2, "value": null },
+		{ "token": Lexer.TOKEN_LINE_BREAK, "value": null, "line": 6, "column": 4, },
 		{ "token": Lexer.TOKEN_DIVERT, "value": 'END', "line": 7, "column": 2 },
+		{ "token": Lexer.TOKEN_LINE_BREAK, "value": null, "line": 7, "column": 8, },
 		{ "token": Lexer.TOKEN_EOF, "line": 8, "column": 0, "value": null},
 	])
 
@@ -390,6 +394,7 @@ func test_variations():
 		{ "token": Lexer.TOKEN_INDENT, "line": 7, "column": 0, "value": null },
 		{ "token": Lexer.TOKEN_MINUS, "line": 7, "column": 2, "value": null },
 		{ "token": Lexer.TOKEN_DIVERT, "value": 'nope', "line": 7, "column": 4 },
+		{ "token": Lexer.TOKEN_LINE_BREAK, "value": null, "line": 7, "column": 11, },
 		{ "token": Lexer.TOKEN_MINUS, "line": 8, "column": 2, "value": null, },
 		{ "token": Lexer.TOKEN_TEXT, "value": 'yep', "line": 8, "column": 4 },
 		{ "token": Lexer.TOKEN_DEDENT, "line": 9, "column": 0, "value": null },
