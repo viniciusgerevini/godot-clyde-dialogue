@@ -357,6 +357,24 @@ hello
 	])
 
 
+func test_divert_on_eof():
+	var lexer = Lexer.new()
+	var tokens = lexer.init("-> div").get_all()
+	assert_eq_deep(tokens, [
+		{ "token": Lexer.TOKEN_DIVERT, "value": 'div', "line": 0, "column": 0, },
+		{ "token": Lexer.TOKEN_EOF, "line": 0, "column": 6, "value": null},
+	])
+
+
+func test_divert_parent_on_eof():
+	var lexer = Lexer.new()
+	var tokens = lexer.init("<-").get_all()
+	assert_eq_deep(tokens, [
+		{ "token": Lexer.TOKEN_DIVERT_PARENT, "value": null, "line": 0, "column": 0, },
+		{ "token": Lexer.TOKEN_EOF, "line": 0, "column": 2, "value": null},
+	])
+
+
 func test_variations():
 	var lexer = Lexer.new()
 	var tokens = lexer.init("""
