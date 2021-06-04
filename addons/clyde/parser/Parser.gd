@@ -142,6 +142,8 @@ func _lines():
 		if _tokens.peek([Lexer.TOKEN_KEYWORD_SET, Lexer.TOKEN_KEYWORD_TRIGGER]):
 			lines = [_line_with_action()]
 		else:
+			if _tokens.peek([Lexer.TOKEN_KEYWORD_WHEN]):
+				_tokens.consume([Lexer.TOKEN_KEYWORD_WHEN])
 			lines = [_conditional_line()]
 
 

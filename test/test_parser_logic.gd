@@ -378,6 +378,17 @@ func test_string_literal():
 	])
 	assert_eq_deep(result, expected)
 
+func test_condition_before_line_with_keyword():
+	var result = parse("{ when some_var } This is conditional")
+	var expected = _create_doc_payload([
+		{
+			"type": "conditional_content",
+			"conditions": { "type": "variable", "name": "some_var" },
+			"content": { "type": "line", "value": "This is conditional", "speaker": null, "id": null, "tags": null, }
+		},
+	])
+	assert_eq_deep(result, expected)
+
 
 func test_condition_after_line():
 	var result = parse("This is conditional { when some_var }")
