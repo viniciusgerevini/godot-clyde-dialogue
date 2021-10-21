@@ -106,7 +106,7 @@ var _column = 0
 var _length = 0
 var _pending_tokens = []
 var _modes = [ MODE_DEFAULT ]
-
+var _current_quote = ""
 
 static func get_token_friendly_hint(token):
 	return _token_hints.get(token, token)
@@ -189,8 +189,13 @@ func _get_next_token():
 		if response:
 			return response
 
-	if _input[_position] == '"':
-		return _handle_quote()
+	if _input[_position] == '"' or _input[_position] == "'":
+		if _current_quote:
+			if _input[_position] == _current_quote:
+				return _handle_quote()
+		else:
+			_current_quote = _input[_position]
+			return _handle_quote()
 
 	if _is_current_mode(MODE_QSTRING):
 		return _handle_qtext()
@@ -347,10 +352,10 @@ func _handle_qtext():
 	while _position < _input.length():
 		var current_char = _input[_position]
 
-		if current_char == '"':
+		if current_char == _current_quote:
 			break
 
-		if current_char == '\\' and _input[_position + 1] == '"':
+		if current_char == '\\' and _input[_position + 1] == _current_quote:
 			value.push_back(_input[_position + 1])
 			_position += 2
 			_column += 2
@@ -368,6 +373,7 @@ func _handle_quote():
 	_column += 1
 	_position += 1
 	if _is_current_mode(MODE_QSTRING):
+		_current_quote = ""
 		_pop_mode()
 	else:
 		_stack_mode(MODE_QSTRING)
@@ -512,8 +518,13 @@ func _handle_logic_block_stop():
 
 
 func _handle_logic_block():
-	if _input[_position] == '"':
-		return _handle_logic_string()
+	if _input[_position] == '"' or _input[_position] == "'":
+		if _current_quote:
+			if _input[_position] == _current_quote:
+				return _handle_logic_string()
+		else:
+			_current_quote = _input[_position]
+			return _handle_logic_string()
 
 	if _input[_position] == '}':
 		return _handle_logic_block_stop()

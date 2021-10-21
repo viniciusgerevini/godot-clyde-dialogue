@@ -44,6 +44,45 @@ func test_text_with_quotes():
 		{ "token": Lexer.TOKEN_EOF, "line": 0, "column": 53, "value": null },
 	])
 
+
+func test_text_with_both_quote_types():
+	var lexer = Lexer.new()
+	var tokens = lexer.init("\"this is a 'line'\"").get_all()
+	assert_eq_deep(tokens, [
+		{
+			"token": Lexer.TOKEN_TEXT,
+			"value": "this is a 'line'",
+			"line": 0,
+			"column": 1,
+		},
+		{ "token": Lexer.TOKEN_EOF, "line": 0, "column": 18, "value": null },
+	])
+	tokens = lexer.init('\'this is a "line"\'').get_all()
+	assert_eq_deep(tokens, [
+		{
+			"token": Lexer.TOKEN_TEXT,
+			"value": 'this is a "line"',
+			"line": 0,
+			"column": 1,
+		},
+		{ "token": Lexer.TOKEN_EOF, "line": 0, "column": 18, "value": null },
+	])
+
+
+func test_variable_with_both_quote_types():
+	var lexer = Lexer.new()
+	var tokens = lexer.init("{ set characters = '{\"name\": \"brain\"}' }").get_all()
+	assert_eq_deep(tokens, [
+		{"column":0, "line":0, "token":Lexer.TOKEN_BRACE_OPEN, "value": null},
+		{"column":2, "line":0, "token":Lexer.TOKEN_KEYWORD_SET, "value": null},
+		{"column":6, "line":0, "token":Lexer.TOKEN_IDENTIFIER, "value":"characters"},
+		{"column":17, "line":0, "token":Lexer.TOKEN_ASSIGN, "value": null},
+		{"column":19, "line":0, "token":Lexer.TOKEN_STRING_LITERAL, "value": '{"name": "brain"}' },
+		{"column":39, "line":0, "token":Lexer.TOKEN_BRACE_CLOSE, "value": null},
+		{"column":40, "line":0, "token":Lexer.TOKEN_EOF, "value":null}
+	])
+
+
 func test_escape_characters_in_regular_text():
 	var lexer = Lexer.new()
 	var tokens = lexer.init('this is a line with\\: special\\# characters \\$.\\" Enjoy').get_all()
