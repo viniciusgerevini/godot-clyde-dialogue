@@ -519,12 +519,9 @@ func _handle_logic_block_stop():
 
 func _handle_logic_block():
 	if _input[_position] == '"' or _input[_position] == "'":
-		if _current_quote:
-			if _input[_position] == _current_quote:
-				return _handle_logic_string()
-		else:
+		if not _current_quote:
 			_current_quote = _input[_position]
-			return _handle_logic_string()
+		return _handle_logic_string()
 
 	if _input[_position] == '}':
 		return _handle_logic_block_stop()
