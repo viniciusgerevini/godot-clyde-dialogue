@@ -44,18 +44,31 @@ func test_text_with_quotes():
 		{ "token": Lexer.TOKEN_EOF, "line": 0, "column": 53, "value": null },
 	])
 
-
-func test_text_with_both_quote_types():
+func test_text_with_single_quotes():
 	var lexer = Lexer.new()
-	var tokens = lexer.init("\"this is a 'line'\"").get_all()
+	var tokens = lexer.init("'this is a line with: special# characters $.\\' Enjoy'").get_all()
 	assert_eq_deep(tokens, [
 		{
 			"token": Lexer.TOKEN_TEXT,
-			"value": "this is a 'line'",
+			"value": "this is a line with: special# characters $.' Enjoy",
 			"line": 0,
 			"column": 1,
 		},
-		{ "token": Lexer.TOKEN_EOF, "line": 0, "column": 18, "value": null },
+		{ "token": Lexer.TOKEN_EOF, "line": 0, "column": 53, "value": null },
+	])
+
+
+func test_text_with_both_leading_quote_types():
+	var lexer = Lexer.new()
+	var tokens = lexer.init("\"'this' is a 'line'\"").get_all()
+	assert_eq_deep(tokens, [
+		{
+			"token": Lexer.TOKEN_TEXT,
+			"value": "'this' is a 'line'",
+			"line": 0,
+			"column": 1,
+		},
+		{ "token": Lexer.TOKEN_EOF, "line": 0, "column": 20, "value": null },
 	])
 	tokens = lexer.init('\'this is a "line"\'').get_all()
 	assert_eq_deep(tokens, [
