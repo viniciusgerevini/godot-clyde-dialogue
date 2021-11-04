@@ -2,6 +2,20 @@
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## 2.0.1 (2021-11-04)
+
+### Fixed
+
+- Used Options and Variations were not loaded correctly after loading previously stringified internal memory.
+
+There is a known related issue with variables that will be fixed in the next major version. Variable names should be string,
+but currently their type is not validated. If you define a variable with a number as name, you will only be able to recover it
+as string. i.e `dialogue.set_variable(1, "blah")`, after persistence will only be available through `dialogue.get_variable("1")`.
+
+### Thanks
+
+Thanks to @jcandres for spotting this issue.
+
 ## 2.0.0 (2021-10-21)
 
 ### Breaking Changes
