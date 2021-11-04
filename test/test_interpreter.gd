@@ -37,6 +37,13 @@ func _option(option):
 	}
 
 
+func _get_next_options_content(dialogue):
+	var content = dialogue.get_content()
+	while content.type != "options":
+		content = dialogue.get_content()
+	return content
+
+
 func test_simple_lines_file():
 	var dialogue = ClydeDialogue.new()
 	dialogue.load_dialogue('simple_lines')
@@ -97,6 +104,7 @@ func test_options():
 	for line in life_option:
 		assert_eq_deep(dialogue.get_content(), line)
 
+
 func test_fallback_options():
 	var interpreter = ClydeDialogue.Interpreter.new()
 	var content = parse("* a\n> b\nend")
@@ -108,6 +116,7 @@ func test_fallback_options():
 	assert_eq_deep(interpreter.get_content().text, "end")
 	interpreter.select_block()
 	assert_eq_deep(interpreter.get_content(), _line({ "type": "line", "text": "b" }))
+
 
 func test_blocks_and_diverts():
 	var dialogue = ClydeDialogue.new()
@@ -250,6 +259,7 @@ func test_logic():
 	assert_eq_deep(dialogue.get_content().text, "inside a condition")
 	assert_eq_deep(dialogue.get_content(), null)
 
+
 func test_variables():
 	var dialogue = ClydeDialogue.new()
 	dialogue.load_dialogue('variables')
@@ -270,6 +280,7 @@ func test_variables():
 	assert_eq_deep(dialogue.get_content(), _line({ "type": "line", "text": "I'm in trouble" }))
 	assert_eq_deep(dialogue.get_content(), null)
 	assert_eq_deep(dialogue.get_variable('xx'), true)
+
 
 func test_set_variables():
 	var dialogue = ClydeDialogue.new()
@@ -297,6 +308,47 @@ func test_data_control():
 	dialogue.clear_data()
 	dialogue.start()
 	assert_eq_deep(dialogue.get_content().text, "Hello")
+
+
+func test_persisted_data_control_options():
+	var dialogue = ClydeDialogue.new()
+	dialogue.load_dialogue('options')
+
+	var content = _get_next_options_content(dialogue)
+	assert_eq(content.options.size(), 3)
+
+	dialogue.choose(0)
+	dialogue.start()
+
+	content = _get_next_options_content(dialogue)
+	assert_eq(content.options.size(), 2)
+
+	var stringified_data = to_json(dialogue.get_data())
+
+	var dialogue2 = ClydeDialogue.new()
+	dialogue2.load_dialogue('options')
+	dialogue2.load_data(parse_json(stringified_data))
+
+	var content2 = _get_next_options_content(dialogue)
+	assert_eq(content2.options.size(), 2)
+	assert_eq_deep(content2, content)
+
+
+func test_persisted_data_control_variations():
+	var dialogue = ClydeDialogue.new()
+	dialogue.load_dialogue('variations')
+
+	assert_eq_deep(dialogue.get_content().text, "Hello")
+	dialogue.start()
+	assert_eq_deep(dialogue.get_content().text, "Hi")
+
+	var dialogue2 = ClydeDialogue.new()
+	dialogue2.load_dialogue('variations')
+
+	var stringified_data = to_json(dialogue.get_data())
+
+	dialogue2.load_data(parse_json(stringified_data))
+	assert_eq_deep(dialogue2.get_content().text, "Hey")
 
 
 var pending_events = []
