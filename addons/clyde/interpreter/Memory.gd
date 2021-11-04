@@ -11,11 +11,11 @@ var _mem = {
 }
 
 func set_as_accessed(id):
-	_mem.access[id] = true
+	_mem.access[str(id)] = true
 
 
 func was_already_accessed(id):
-	return _mem.access.has(id)
+	return _mem.access.has(str(id))
 
 
 func get_variable(id, default_value = null):
