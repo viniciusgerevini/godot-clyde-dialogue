@@ -35,12 +35,12 @@ func set_variable(id, value):
 
 
 func set_internal_variable(id, value):
-	_mem.internal[id] = value
+	_mem.internal[str(id)] = value
 	return value
 
 
 func get_internal_variable(id, default_value):
-	var value = _mem.internal.get(id);
+	var value = _mem.internal.get(str(id));
 	if value == null:
 		return default_value;
 	return value

@@ -334,6 +334,23 @@ func test_persisted_data_control_options():
 	assert_eq_deep(content2, content)
 
 
+func test_persisted_data_control_variations():
+	var dialogue = ClydeDialogue.new()
+	dialogue.load_dialogue('variations')
+
+	assert_eq_deep(dialogue.get_content().text, "Hello")
+	dialogue.start()
+	assert_eq_deep(dialogue.get_content().text, "Hi")
+
+	var dialogue2 = ClydeDialogue.new()
+	dialogue2.load_dialogue('variations')
+
+	var stringified_data = to_json(dialogue.get_data())
+
+	dialogue2.load_data(parse_json(stringified_data))
+	assert_eq_deep(dialogue2.get_content().text, "Hey")
+
+
 var pending_events = []
 
 func test_events():
