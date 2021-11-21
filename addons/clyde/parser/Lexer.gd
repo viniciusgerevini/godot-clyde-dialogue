@@ -6,8 +6,6 @@ const TOKEN_DEDENT = "DEDENT"
 const TOKEN_OPTION = "OPTION"
 const TOKEN_STICKY_OPTION = "STICKY_OPTION"
 const TOKEN_FALLBACK_OPTION = "FALLBACK_OPTION"
-const TOKEN_SQR_BRACKET_OPEN = "SQR_BRACKET_OPEN"
-const TOKEN_SQR_BRACKET_CLOSE = "SQR_BRACKET_CLOSE"
 const TOKEN_BRACKET_OPEN = "BRACKET_OPEN"
 const TOKEN_BRACKET_CLOSE = "BRACKET_CLOSE"
 const TOKEN_EOF = "EOF"
@@ -68,8 +66,6 @@ const _token_hints = {
 	TOKEN_OPTION: '*',
 	TOKEN_STICKY_OPTION: '+',
 	TOKEN_FALLBACK_OPTION: '>',
-	TOKEN_SQR_BRACKET_OPEN: '[',
-	TOKEN_SQR_BRACKET_CLOSE: '',
 	TOKEN_BRACKET_OPEN: '(',
 	TOKEN_BRACKET_CLOSE: ')',
 	TOKEN_EOF: 'EOF',
@@ -224,8 +220,8 @@ func _get_next_token():
 	if _input[_position] == '*' or _input[_position] == '+' or _input[_position] == '>':
 		return _handle_options()
 
-	if _is_current_mode(MODE_OPTION) and ['[', ']' ].has(_input[_position]):
-		return _handle_brackets()
+	if _is_current_mode(MODE_OPTION) and _input[_position] == '=':
+		return _handle_option_display_char()
 
 	if _input[_position] == '$':
 		return _handle_line_id()
@@ -294,7 +290,7 @@ func _handle_text():
 	while _position < _input.length():
 		var current_char = _input[_position]
 
-		if ['\n', '$', '#', '{' ].has(current_char) or (_is_current_mode(MODE_OPTION) and current_char == ']'):
+		if ['\n', '$', '#', '{' ].has(current_char):
 			break
 
 		if current_char == "\\" and _input[_position + 1] != 'n':
@@ -395,12 +391,11 @@ func _handle_options():
 	return Token(token, _line, initial_column)
 
 
-func _handle_brackets():
-	var token = TOKEN_SQR_BRACKET_OPEN if _input[_position] == '[' else TOKEN_SQR_BRACKET_CLOSE
+func _handle_option_display_char():
 	var initial_column = _column
 	_column += 1
 	_position += 1
-	return Token(token, _line, initial_column)
+	return Token(TOKEN_ASSIGN, _line, initial_column)
 
 
 func _handle_block():

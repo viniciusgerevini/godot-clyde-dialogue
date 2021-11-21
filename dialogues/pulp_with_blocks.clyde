@@ -6,11 +6,11 @@
 
 { not introductionMade } Jules: Okay now, tell me about that. { set introductionMade =  true, europeTopicsTalked = 0 }
 Vincent: What do you want to know?
-  * [Is hash legal there?]
+  * Is hash legal there?
     -> about hash <-
-  + [Something about Europe.] { when europeTopicsTalked < 4 }
+  + Something about Europe. { when europeTopicsTalked < 4 }
     -> about europe <-
-  + [Nah, maybe another time] { when OPTIONS_COUNT > 1 }
+  + Nah, maybe another time { when OPTIONS_COUNT > 1 }
     ( shuffle
        - Vincent: Alright!
        - Vincent: No problem!
@@ -49,15 +49,15 @@ Jules: That did it, man - I'm f**n' goin', that's all there is to it.
   - Jules: Tell me more about Europe.
 )
 About Europe...
-  * [You can buy beer in movie theatres.]
+  * You can buy beer in movie theatres.
     -> beer in theathres <-
-  * [What they call a Quarter Pounder in Paris]
+  * What they call a Quarter Pounder in Paris
     -> quarter pounder talk <-
-  * [What they call a Whopper] { when quarterPounderTalkCompleted }
+  * What they call a Whopper { when quarterPounderTalkCompleted }
     -> whopper talk <-
-  * [What they put on the french fries instead of ketchup.]
+  * What they put on the french fries instead of ketchup.
     -> french fries talk <-
-  + { OPTIONS_COUNT > 1 } [I'm suddenly not interested anymore.]
+  + { OPTIONS_COUNT > 1 } I'm suddenly not interested anymore.
     Jules: We talk about this another time.
 { set europeTalkCompleted = true }
 <-

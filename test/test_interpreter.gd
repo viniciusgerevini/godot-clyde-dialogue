@@ -107,7 +107,7 @@ func test_options():
 
 func test_fallback_options():
 	var interpreter = ClydeDialogue.Interpreter.new()
-	var content = parse("* a\n> b\nend")
+	var content = parse("*= a\n>= b\nend")
 	interpreter.init(content)
 
 	assert_eq_deep(interpreter.get_content(), _options({ "options": [_option({ "label": "a" }), _option({ "label": "b" }) ] }))

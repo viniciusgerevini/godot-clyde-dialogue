@@ -126,15 +126,15 @@ func _mode_test(mode):
 func test_variations_with_options():
 	var result = parse("""
 (
-- * works?
+- *= works?
 		yes
-	* [yep?]
+	* yep?
 		yes
 - nice
 -
-	* works?
+	*= works?
 		yes
-	* [yep?]
+	* yep?
 		yes
 )
 """)

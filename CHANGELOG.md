@@ -2,6 +2,51 @@
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## 3.0.0 (2021-11-22)
+
+### Breaking Changes
+
+- Options won´t print first line as before.
+- Brackets (`[]`) used for display-only options are not supported anymore.
+- To reproduce previous behaviour, options should contain the new display-option symbol (`=`)
+
+Here is a sample on how to fix your dialogues for this new version:
+
+Old way:
+```
++ This will be displayed
+* This will be displayed
+> This will be displayed
+
++ [This won't be displayed]
+  some text...
+* [This won't be displayed]
+  some text...
+> [This won't be displayed]
+  some text...
+```
+New way:
+```
++= This will be displayed
+*= This will be displayed
+>= This will be displayed
+
++ This won't be displayed
+  some text...
+* This won't be displayed
+  some text...
+> This won't be displayed
+  some text...
+```
+
+### Changed
+
+- Changed options default behaviour. (check breaking changes)
+
+### Thanks
+
+Thanks to @jcandres and @verillious for suggestions and input.
+
 ## 2.0.1 (2021-11-04)
 
 ### Fixed

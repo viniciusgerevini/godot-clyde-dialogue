@@ -8,30 +8,30 @@ I come to show you this line with id $SCENE_1_LINE002
 NPC: This is a dialogue with speaker and id $SCENE_1_LINE001
 player: This is a line with another speaker
 
-* this is the first topic
+*= this is the first topic
   NPC: just a normal line inside the topic #sad #happy #some_tag
   player: another line inside the first topic
-* the second topic
+*= the second topic
   player: a line in the second topic, with speaker defined.
 
 "Those are the topics available:"
-* another topic
+*= another topic
   player: line inside a topic
   NPC: another line inside a topic
   a line without speaker inside the topic
   a line with id inside the topic $this_is_an_id
   <-
-* one more topic
+*= one more topic
   speaker: love is all you need
   <-
-* this is a topic pointing to another block
+*= this is a topic pointing to another block
   -> another_block
-+ this is a sticky topic, with redirect to the beginning of the topics block
++= this is a sticky topic, with redirect to the beginning of the topics block
   just a line
   <-
 
 == another_block
-* straight to the topic
+*= straight to the topic
   player: Go, johnny go.
 <-
 

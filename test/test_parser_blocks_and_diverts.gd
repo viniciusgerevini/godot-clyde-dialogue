@@ -87,10 +87,10 @@ func test_parse_diverts():
 -> one
 -> END
 <-
-* [thats it]
+* thats it
 	-> somewhere
 	<-
-* [ does it work this way? ]
+* does it work this way?
 	-> go
 """)
 	var expected = {

@@ -441,14 +441,14 @@ func test_conditional_divert_after():
 
 func test_conditional_option():
 	var result = parse("""
-* { some_var } option 1
-* option 2 { when some_var }
-* { some_other_var } option 3
+*= { some_var } option 1
+*= option 2 { when some_var }
+*= { some_other_var } option 3
 """)
 	var expected = _create_doc_payload([{
 		"type": 'options',
 		"name": null,
-    "speaker": null, "id": null, "tags": null,
+		"speaker": null, "id": null, "tags": null,
 		"content": [
 			{
 				"type": "conditional_content",
@@ -827,14 +827,14 @@ func test_standalone_assignment():
 
 func test_options_assignment():
 	var result = parse("""
-* { set a = 2 } option 1
-* option 2 { set b = 3 }
-* { set c = 4 } option 3
+*= { set a = 2 } option 1
+*= option 2 { set b = 3 }
+*= { set c = 4 } option 3
 """)
 	var expected = _create_doc_payload([{
 		"type": 'options',
 		"name": null,
-    "speaker": null, "id": null, "tags": null,
+		"speaker": null, "id": null, "tags": null,
 		"content": [
 			{
 				"type": "action_content",
@@ -971,14 +971,14 @@ func test_trigger_event_after_line():
 
 func test_options_trigger():
 	var result = parse("""
-* { trigger a } option 1
-* option 2 { trigger b }
-* { trigger c } option 3
+*= { trigger a } option 1
+*= option 2 { trigger b }
+*= { trigger c } option 3
 """)
 	var expected = _create_doc_payload([{
 		"type": 'options',
 		"name": null,
-    "speaker": null, "id": null, "tags": null,
+		"speaker": null, "id": null, "tags": null,
 		"content": [
 			{
 				"type": "action_content",

@@ -3,13 +3,13 @@
 == initial_dialog
 npc: what do you want to talk about?
 
-* [Life]
+* Life
   -> about_life <-
-* [The universe]
+* The universe
   -> about_universe <-
-* [Everything else...]
+* Everything else...
   -> about_everything_else <-
-* [Goodbye!]
+* Goodbye!
   -> goodbye <-
 
 -> END
