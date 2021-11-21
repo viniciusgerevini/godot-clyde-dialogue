@@ -3,11 +3,11 @@
 == initial_dialogue
 <> intro
 
-* [Life]
+* Life
   -> about_life
-* [The universe]
+* The universe
   -> about_universe
-* [Everything else...]
+* Everything else...
   -> about_everything_else
 
 == intro

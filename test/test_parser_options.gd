@@ -40,7 +40,6 @@ npc: what do you want to talk about?
 							"content": {
 								"type": 'content',
 								"content": [
-									{ "type": 'line', "value": 'Life', "speaker": 'speaker', "id": null, "tags": null },
 									{ "type": 'line', "value": 'I want to talk about life!', "speaker": 'player', "id": null, "tags": null, },
 									{ "type": 'line', "value": 'Well! That\'s too complicated...', "speaker": 'npc', "id": null, "tags": null, },
 								],
@@ -55,7 +54,6 @@ npc: what do you want to talk about?
 							"content": {
 								"type": 'content',
 								"content": [
-									{ "type": 'line', "value": 'Everything else...', "tags": [ 'some_tag', ], "id": null, "speaker": null, },
 									{ "type": 'line', "value": 'What about everything else?', "speaker": 'player', "id": null, "tags": null },
 									{ "type": 'line', "value": 'I don\'t have time for this...', "speaker": 'npc', "id": null, "tags": null },
 								],
@@ -103,7 +101,6 @@ npc: what do you want to talk about?
 							"content": {
 								"type": 'content',
 								"content": [
-									{ "type": 'line', "value": 'Life', "id": null, "speaker": null, "tags": null },
 									{ "type": 'line', "value": 'I want to talk about life!', "speaker": 'player', "id": null, "tags": null },
 								],
 							},
@@ -117,7 +114,6 @@ npc: what do you want to talk about?
 							"content": {
 								"type": 'content',
 								"content": [
-									{ "type": 'line', "value": 'Everything else...', "tags": [ 'some_tag', ], "id": null, "speaker": null },
 									{ "type": 'line', "value": 'What about everything else?', "speaker": 'player', "id": null, "tags": null },
 								],
 							},
@@ -164,7 +160,6 @@ npc: what do you want to talk about?
 							"content": {
 								"type": 'content',
 								"content": [
-									{ "type": 'line', "value": 'Life', "id": null, "speaker": null, "tags": null },
 									{ "type": 'line', "value": 'I want to talk about life!', "speaker": 'player', "id": null, "tags": null },
 								],
 							},
@@ -178,7 +173,6 @@ npc: what do you want to talk about?
 							"content": {
 								"type": 'content',
 								"content": [
-									{ "type": 'line', "value": 'Everything else...', "tags": [ 'some_tag', ], "id": null, "speaker": null },
 									{ "type": 'line', "value": 'What about everything else?', "speaker": 'player', "id": null, "tags": null },
 								],
 							},
@@ -195,13 +189,13 @@ npc: what do you want to talk about?
 
 
 
-func test_define_label_only_text():
+func test_define_label_to_display_as_content():
 	var result = parse("""
 npc: what do you want to talk about?
-* [Life]
+*= Life
 	player: I want to talk about life!
 	npc: Well! That's too complicated...
-* [Everything else... #some_tag]
+*= Everything else... #some_tag
 	player: What about everything else?
 	npc: I don't have time for this...
 """ )
@@ -226,6 +220,7 @@ npc: what do you want to talk about?
 							"content": {
 								"type": 'content',
 								"content": [
+									{ "type": 'line', "value": 'Life', "speaker": null, "id": null, "tags": null, },
 									{ "type": 'line', "value": 'I want to talk about life!', "speaker": 'player', "id": null, "tags": null, },
 									{ "type": 'line', "value": 'Well! That\'s too complicated...', "speaker": 'npc', "id": null, "tags": null, },
 								],
@@ -238,6 +233,7 @@ npc: what do you want to talk about?
 							"content": {
 								"type": 'content',
 								"content": [
+									{ "type": 'line', "value": 'Everything else...', "speaker": null, "id": null, "tags": [ 'some_tag', ], },
 									{ "type": 'line', "value": 'What about everything else?', "speaker": 'player', "id": null, "tags": null, },
 									{ "type": 'line', "value": 'I don\'t have time for this...', "speaker": 'npc', "id": null, "tags": null, },
 								],
@@ -326,7 +322,6 @@ spk: second try
 							"content": {
 								"type": 'content',
 								"content": [
-									{ "type": 'line', "value": 'life', "id": null, "speaker": null, "tags": null },
 									{ "type": 'line', "value": 'I want to talk about life!', "speaker": 'player', "id": null, "tags": null, },
 									{ "type": 'line', "value": 'Well! That\'s too complicated...', "speaker": 'npc', "id": null, "tags": null, },
 								],
@@ -348,7 +343,6 @@ spk: second try
 							"content": {
 								"type": 'content',
 								"content": [
-									{ "type": 'line', "value": 'life', "id": null, "speaker": null, "tags": null },
 									{ "type": 'line', "value": 'Well! That\'s too complicated...', "speaker": 'npc', "id": null, "tags": null, },
 								],
 							},
@@ -392,7 +386,6 @@ func test_use_previous_line_in_quotes_as_label():
 							"content": {
 								"type": 'content',
 								"content": [
-									{ "type": 'line', "value": 'life', "id": null, "speaker": null, "tags": null },
 									{ "type": 'line', "value": 'I want to talk about life!', "speaker": 'player', "id": null, "tags": null, },
 								],
 							},
@@ -413,7 +406,6 @@ func test_use_previous_line_in_quotes_as_label():
 							"content": {
 								"type": 'content',
 								"content": [
-									{ "type": 'line', "value": 'universe', "id": null, "speaker": null, "tags": null },
 									{ "type": 'line', "value": 'I want to talk about the universe!', "speaker": 'player', "id": null, "tags": null, },
 								],
 							},
@@ -430,8 +422,8 @@ func test_use_previous_line_in_quotes_as_label():
 
 func test_ensures_options_ending_worked():
 	var result = parse("""
-* yes
-* no
+*= yes
+*= no
 
 { some_check } maybe
 """ )
@@ -488,8 +480,8 @@ func test_ensures_options_ending_worked():
 
 func test_ensures_option_item_ending_worked():
 	var result = parse("""
-* yes { set yes = true }
-* [no]
+*= yes { set yes = true }
+* no
 	no
 """ )
 	var expected = {
@@ -541,8 +533,8 @@ func test_ensures_option_item_ending_worked():
 
 func test_options_with_blocks_both_sides():
 	var result = parse("""
-* { what } yes { set yes = true }
-* {set no = true} [no] { when something }
+*= { what } yes { set yes = true }
+* {set no = true} no { when something }
 	no
 """ )
 	var expected = {
@@ -617,11 +609,11 @@ func test_options_with_blocks_both_sides():
 
 func test_options_with_multiple_blocks_on_same_side():
 	var result = parse("""
-* yes { when what } { set yes = true }
-* no {set no = true} { when something }
-* { when what } { set yes = true } yes
-* {set no = true} { when something } no
-* {set yes = true} { when yes } yes { set one_more = true }
+*= yes { when what } { set yes = true }
+*= no {set no = true} { when something }
+*= { when what } { set yes = true } yes
+*= {set no = true} { when something } no
+*= {set yes = true} { when yes } yes { set one_more = true }
 """)
 	var expected = {
 		"type": 'document',

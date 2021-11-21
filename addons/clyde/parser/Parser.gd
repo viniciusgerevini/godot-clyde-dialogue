@@ -264,35 +264,31 @@ var option_types = {
 func _option():
 	_tokens.consume([Lexer.TOKEN_OPTION, Lexer.TOKEN_STICKY_OPTION, Lexer.TOKEN_FALLBACK_OPTION])
 	var type = option_types[_tokens.current_token.token]
-	var acceptable_next = [Lexer.TOKEN_SPEAKER, Lexer.TOKEN_TEXT, Lexer.TOKEN_INDENT, Lexer.TOKEN_SQR_BRACKET_OPEN, Lexer.TOKEN_BRACE_OPEN]
+	var acceptable_next = [Lexer.TOKEN_SPEAKER, Lexer.TOKEN_TEXT, Lexer.TOKEN_INDENT, Lexer.TOKEN_ASSIGN, Lexer.TOKEN_BRACE_OPEN]
 	var lines = []
 	var main_item
-	var use_first_line_as_display_only = false
+	var include_label_as_content = false
 	var root
 	var wrapper
 
 	_tokens.consume(acceptable_next)
-
+	
+	if _tokens.current_token.token == Lexer.TOKEN_ASSIGN:
+		include_label_as_content = true
+		_tokens.consume(acceptable_next)
+		
 	if _tokens.current_token.token == Lexer.TOKEN_BRACE_OPEN:
 		var block = _nested_logic_block()
 		root = block.root
 		wrapper = block.wrapper
 		_tokens.consume(acceptable_next)
 
-
-	if _tokens.current_token.token == Lexer.TOKEN_SQR_BRACKET_OPEN:
-		use_first_line_as_display_only = true
-		_tokens.consume(acceptable_next)
-
 	if _tokens.current_token.token == Lexer.TOKEN_SPEAKER or _tokens.current_token.token == Lexer.TOKEN_TEXT:
 			_is_multiline_enabled = false
 			main_item = _line()
 			_is_multiline_enabled = true
-			if use_first_line_as_display_only:
-				_tokens.consume([Lexer.TOKEN_SQR_BRACKET_CLOSE])
-			else:
+			if include_label_as_content:
 				lines.push_back(main_item)
-
 
 	if _tokens.peek([Lexer.TOKEN_BRACE_OPEN]):
 		_tokens.consume([Lexer.TOKEN_BRACE_OPEN])
