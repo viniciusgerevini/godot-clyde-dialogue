@@ -907,6 +907,25 @@ func test_divert_with_assignment():
 	assert_eq_deep(result, expected)
 
 
+func test_standalone_assignment_with_standalone_variable():
+	var result = parse("{ set a }")
+
+	var expected = _create_doc_payload([
+		{
+			"type": "assignments",
+			"assignments": [
+				{
+					"type": "assignment",
+					"variable": { "type": "variable", "name": "a", },
+					"operation": "assign",
+					"value": { "type": "literal", "name": "boolean", "value": true, },
+				},
+			],
+		},
+	])
+	assert_eq_deep(result, expected)
+
+
 func test_trigger_event():
 	var result = parse("{ trigger some_event } trigger")
 	var expected = _create_doc_payload([{

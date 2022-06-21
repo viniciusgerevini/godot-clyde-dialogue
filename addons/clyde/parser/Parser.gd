@@ -570,6 +570,15 @@ func _condition():
 
 
 func _assignment_expression():
+	var assignment = _assignment_expression_internal()
+
+	if assignment.type == "variable":
+		return AssignmentNode(assignment, _assignment_operators[Lexer.TOKEN_ASSIGN], BooleanLiteralNode('true'))
+	else:
+		return assignment
+
+
+func _assignment_expression_internal():
 	_tokens.consume([Lexer.TOKEN_IDENTIFIER])
 	var variable = VariableNode(_tokens.current_token.value)
 
@@ -581,7 +590,7 @@ func _assignment_expression():
 	_tokens.consume(operators)
 
 	if _tokens.peek([Lexer.TOKEN_IDENTIFIER]) && _tokens.peek(operators + [Lexer.TOKEN_BRACE_CLOSE], 1):
-		return AssignmentNode(variable, _assignment_operators[_tokens.current_token.token], _assignment_expression())
+		return AssignmentNode(variable, _assignment_operators[_tokens.current_token.token], _assignment_expression_internal())
 	return AssignmentNode(variable, _assignment_operators[_tokens.current_token.token], _expression())
 
 
