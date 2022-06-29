@@ -2,6 +2,8 @@ extends "res://addons/gut/test.gd"
 
 var Parser = preload("res://addons/clyde/parser/Parser.gd")
 
+const SAMPLES_FOLDER = "res://test/dialogue_samples/"
+
 func parse(input):
 	var parser = Parser.new()
 	return parser.parse(input)
@@ -9,7 +11,7 @@ func parse(input):
 func test_samples():
 	var files = []
 	var dir = Directory.new()
-	dir.open('res://dialogues/')
+	dir.open(SAMPLES_FOLDER)
 	dir.list_dir_begin()
 
 	while true:
@@ -25,12 +27,12 @@ func test_samples():
 	for file_name in files:
 		var result_filename = file_name.replace('.clyde', '.json')
 		var source_file = File.new()
-		source_file.open("res://dialogues/%s" % file_name, File.READ)
+		source_file.open("%s%s" % [ SAMPLES_FOLDER, file_name ], File.READ)
 		var source = source_file.get_as_text()
 		source_file.close()
 
 		var result_file = File.new()
-		result_file.open("res://dialogues/%s" % result_filename, File.READ)
+		result_file.open("%s%s" % [ SAMPLES_FOLDER, result_filename ], File.READ)
 		var result = result_file.get_as_text()
 
 		expect(parse(source), JSON.parse(result).get_result())

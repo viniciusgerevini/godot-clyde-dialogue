@@ -23,9 +23,13 @@ _global_script_class_icons={
 config/name="clyde-plugin"
 config/icon="res://icon.png"
 
+[dialogue]
+
+source_folder="res://test/dialogue_samples"
+
 [editor_plugins]
 
-enabled=PoolStringArray( "clyde", "gut" )
+enabled=PoolStringArray( "res://addons/clyde/plugin.cfg", "res://addons/gut/plugin.cfg" )
 
 [locale]
 

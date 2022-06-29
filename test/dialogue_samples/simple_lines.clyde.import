@@ -1,0 +1,13 @@
+[remap]
+
+importer="clyde.dialogue"
+type="PackedDataContainer"
+path="res://.import/simple_lines.clyde-98fe219190b436758a9f898c27848bed.res"
+
+[deps]
+
+source_file="res://test/dialogue_samples/simple_lines.clyde"
+dest_files=[ "res://.import/simple_lines.clyde-98fe219190b436758a9f898c27848bed.res" ]
+
+[params]
+
