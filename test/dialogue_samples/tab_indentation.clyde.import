@@ -1,0 +1,13 @@
+[remap]
+
+importer="clyde.dialogue"
+type="PackedDataContainer"
+path="res://.import/tab_indentation.clyde-8ee8cc9bb5cb2115aafff97867b41e61.res"
+
+[deps]
+
+source_file="res://test/dialogue_samples/tab_indentation.clyde"
+dest_files=[ "res://.import/tab_indentation.clyde-8ee8cc9bb5cb2115aafff97867b41e61.res" ]
+
+[params]
+

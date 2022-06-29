@@ -14,11 +14,6 @@ extends Node
 signal variable_changed(variable_name, value, previous_vale)
 signal event_triggered(event_name)
 
-# Folder where the interpreter should look for dialogue files
-# in case just the name is provided.
-var dialogue_folder = 'res://dialogues/'
-
-
 # Load dialogue file
 # file_name: path to the dialogue file.
 #            i.e 'my_dialogue', 'res://my_dialogue.clyde', res://my_dialogue.json
@@ -80,7 +75,7 @@ var dialogue = ClydeDialogue.new()
 
 The interpreter supports loading parsed JSON files, as well as `.clyde` files imported in the project.
 
-When only the file name is provided, the interpreter will look into the default folder defined on `dialogue.dialogue_folder`.
+When only the file name is provided, the interpreter will look into the default folder defined on `Project > Project Settings > Dialogue > Source Folder`.
 
 ``` gdscript
 dialogue.load_dialogue('my_dialogue')
@@ -252,15 +247,7 @@ In case there is no translation for the id provided, the interpreter will return
 
 ## Dialogue folder and organisation
 
-By default, the interpreter will look for files under `res://dialogues/`. In case you want to specify a different default folder, you need to change the `dialogue_folder` variable.
-
-```gdscript
-var dialogue = ClydeDialogue.new()
-dialogue.dialogue_folder = "res://samples"
-
-dialogue.load_dialogue("banana") # this line will load res://samples/banana.clyde
-
-```
+By default, the interpreter will look for files under `res://dialogues/`. In case you want to specify a different default folder, you need to change the configuration in `Project > Project Settings > Dialogue > Source Folder`.
 
 Alternatively, you can use the full path when loading dialogues:
 

@@ -7,9 +7,10 @@ class_name ClydeDialogue
 signal variable_changed(name, value, previous_value)
 signal event_triggered(name)
 
-# Folder where the interpreter should look for dialogue files
+# Custom folder where the interpreter should look for dialogue files
 # in case just the name is provided.
-var dialogue_folder = 'res://dialogues/'
+# by default, it loads from ProjectSettings dialogue/source_folder
+var dialogue_folder = null
 
 var _interpreter
 
@@ -119,4 +120,11 @@ func _get_file_path(file_name):
 	if p.begins_with('./') or p.begins_with('res://'):
 		return p
 
-	return dialogue_folder.plus_file(p)
+	return _get_source_folder().plus_file(p)
+
+
+func _get_source_folder():
+	var folder = dialogue_folder if dialogue_folder else ProjectSettings.get_setting("dialogue/source_folder")
+	# https://github.com/godotengine/godot/issues/56598
+	return folder if folder else "res://dialogues/"
+
