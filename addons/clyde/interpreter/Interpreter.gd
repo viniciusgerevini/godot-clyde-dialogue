@@ -12,14 +12,19 @@ var _doc
 var _stack = []
 var _handlers = {}
 var _anchors = {}
+var _config
 
-func init(document):
+func init(document, interpreter_options = {}):
 	_doc = document
 	_doc._index = 1
 	_mem = Memory.new()
 	_mem.connect("variable_changed", self, "_trigger_variable_changed")
 	_logic = LogicInterpreter.new()
 	_logic.init(_mem)
+
+	_config = {
+		"id_suffix_lookup_separator": interpreter_options.get("id_suffix_lookup_separator", "&"),
+	}
 
 	_initialise_blocks(_doc)
 	_initialise_stack(_doc)
@@ -163,7 +168,7 @@ func _handle_line_node(line_node):
 		"tags": line_node.get("tags"),
 		"id": line_node.get("id"),
 		"speaker": line_node.get("speaker"),
-		"text": _replace_variables(_translate_text(line_node.get("id"), line_node.get("value")))
+		"text": _replace_variables(_translate_text(line_node.get("id"), line_node.get("value"), line_node.get("id_suffixes")))
 	}
 
 
@@ -189,7 +194,7 @@ func _handle_options_node(options_node):
 		"speaker": options_node.get("speaker"),
 		"id": options_node.get("id"),
 		"tags": options_node.get("tags"),
-		"name": _replace_variables(_translate_text(options_node.get("id"), options_node.get("name"))),
+		"name": _replace_variables(_translate_text(options_node.get("id"), options_node.get("name"), options_node.get("id_suffixes"))),
 		"options": _map(funcref(self, "_map_option"), options),
 	}
 
@@ -234,7 +239,7 @@ func _map_option(option, _index):
 		"speaker": o.get("speaker"),
 		"id": o.get("id"),
 		"tags": o.get("tags"),
-		"label": _replace_variables(_translate_text(o.get("id"), o.get("name"))),
+		"label": _replace_variables(_translate_text(o.get("id"), o.get("name"), o.get("id_suffixes"))),
 	}
 
 
@@ -332,9 +337,21 @@ func _handle_next_node(node):
 		printerr("Unkown node type '%s'" % node.type)
 
 
-func _translate_text(key, text):
+func _translate_text(key, text, id_suffixes = null):
 	if not key:
 		return text
+
+	if id_suffixes:
+		var lookup_key = key
+		for ids in id_suffixes:
+			var value = _mem.get_variable(ids)
+			if value:
+				lookup_key += "%s%s" % [_config.id_suffix_lookup_separator, value]
+		var translation = tr(lookup_key)
+
+		if translation != lookup_key:
+			return translation
+
 	var translation = tr(key)
 	if translation == key:
 		return text
