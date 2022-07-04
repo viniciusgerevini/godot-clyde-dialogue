@@ -6,6 +6,9 @@ const ImportPlugin = preload("import_plugin.gd")
 const SETTING_SOURCE_FOLDER := "dialogue/source_folder"
 const DEFAULT_SOURCE_FOLDER := "res://dialogues/"
 
+const SETTING_ID_SUFFIX_LOOKUP_SEPARATOR := "dialogue/id_suffix_lookup_separator"
+const DEFAULT_ID_SUFFIX_LOOKUP_SEPARATOR := "&"
+
 var _import_plugin
 
 func _enter_tree():
@@ -29,6 +32,15 @@ func _setup_project_settings():
 		"type": TYPE_STRING,
 		"hint": PROPERTY_HINT_DIR,
 	})
+
+	if not ProjectSettings.has_setting(SETTING_ID_SUFFIX_LOOKUP_SEPARATOR):
+		ProjectSettings.set_setting(SETTING_ID_SUFFIX_LOOKUP_SEPARATOR, DEFAULT_ID_SUFFIX_LOOKUP_SEPARATOR)
+	ProjectSettings.set_initial_value(SETTING_ID_SUFFIX_LOOKUP_SEPARATOR, DEFAULT_ID_SUFFIX_LOOKUP_SEPARATOR)
+	ProjectSettings.add_property_info({
+		"name": DEFAULT_ID_SUFFIX_LOOKUP_SEPARATOR,
+		"type": TYPE_STRING,
+	})
+
 	ProjectSettings.save()
 
 
