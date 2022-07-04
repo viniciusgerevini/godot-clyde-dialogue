@@ -357,6 +357,9 @@ func _handle_qtext():
 			_column += 2
 			continue
 
+		if current_char == '\n':
+			_line += 1
+
 		value.push_back(current_char)
 
 		_position += 1

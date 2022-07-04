@@ -110,6 +110,26 @@ func test_escape_characters_in_regular_text():
 	])
 
 
+func test_count_lines_correctly_in_quotted_text_with_line_breaks():
+	var lexer = Lexer.new()
+	var tokens = lexer.init('"this is a line with\nline break"\nthis should be on line 2').get_all()
+	assert_eq_deep(tokens, [
+		{
+			"token": Lexer.TOKEN_TEXT,
+			"value": 'this is a line with\nline break',
+			"line": 0,
+			"column": 1,
+			},
+		{
+			"token": Lexer.TOKEN_TEXT,
+			"value": 'this should be on line 2',
+			"line": 2,
+			"column": 0,
+			},
+		{ "token": Lexer.TOKEN_EOF, "line": 2, "column": 24, "value": null },
+	])
+
+
 func test_ignores_comments():
 	var lexer = Lexer.new()
 	var tokens = lexer.init("""-- this is a comment
