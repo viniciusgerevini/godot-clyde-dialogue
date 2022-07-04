@@ -448,7 +448,7 @@ func test_conditional_option():
 	var expected = _create_doc_payload([{
 		"type": 'options',
 		"name": null,
-		"speaker": null, "id": null, "tags": null,
+		"speaker": null, "id": null, "tags": null, "id_suffixes": null,
 		"content": [
 			{
 				"type": "conditional_content",
@@ -456,7 +456,7 @@ func test_conditional_option():
 				"content": {
 					"type": 'option',
 					"name": 'option 1',
-					"mode": 'once', "speaker": null, "id": null, "tags": null,
+					"mode": 'once', "speaker": null, "id": null, "tags": null, "id_suffixes": null,
 					"content": {
 						"type": 'content',
 						"content": [
@@ -471,7 +471,7 @@ func test_conditional_option():
 				"content": {
 					"type": 'option',
 					"name": 'option 2',
-					"mode": 'once', "speaker": null, "id": null, "tags": null,
+					"mode": 'once', "speaker": null, "id": null, "tags": null, "id_suffixes": null,
 					"content": {
 						"type": 'content',
 						"content": [
@@ -486,7 +486,7 @@ func test_conditional_option():
 				"content": {
 					"type": 'option',
 					"name": 'option 3',
-					"mode": 'once', "speaker": null, "id": null, "tags": null,
+					"mode": 'once', "speaker": null, "id": null, "tags": null, "id_suffixes": null,
 					"content": {
 						"type": 'content',
 						"content": [
@@ -834,7 +834,7 @@ func test_options_assignment():
 	var expected = _create_doc_payload([{
 		"type": 'options',
 		"name": null,
-		"speaker": null, "id": null, "tags": null,
+		"speaker": null, "id": null, "tags": null, "id_suffixes": null,
 		"content": [
 			{
 				"type": "action_content",
@@ -842,7 +842,7 @@ func test_options_assignment():
 					"type": 'assignments',
 					"assignments": [{ "type": 'assignment', "variable": { "type": 'variable', "name": 'a', }, "operation": 'assign', "value": { "type": 'literal', "name": 'number', "value": 2.0, }, }, ],
 				},
-				"content": { "type": 'option', "name": 'option 1', "mode": 'once', "speaker": null, "id": null, "tags": null,
+				"content": { "type": 'option', "name": 'option 1', "mode": 'once', "speaker": null, "id": null, "tags": null, "id_suffixes": null,
 					"content": {
 						"type": 'content',
 						"content": [
@@ -857,7 +857,7 @@ func test_options_assignment():
 					"type": 'assignments',
 					"assignments": [{ "type": 'assignment', "variable": { "type": 'variable', "name": 'b', }, "operation": 'assign', "value": { "type": 'literal', "name": 'number', "value": 3.0, }, }, ],
 				},
-				"content": { "type": 'option', "name": 'option 2', "mode": 'once', "speaker": null, "id": null, "tags": null,
+				"content": { "type": 'option', "name": 'option 2', "mode": 'once', "speaker": null, "id": null, "tags": null, "id_suffixes": null,
 					"content": {
 						"type": 'content',
 						"content": [
@@ -872,7 +872,7 @@ func test_options_assignment():
 					"type": 'assignments',
 					"assignments": [{ "type": 'assignment', "variable": { "type": 'variable', "name": 'c', }, "operation": 'assign', "value": { "type": 'literal', "name": 'number', "value": 4.0, }, }, ],
 				},
-				"content": { "type": 'option', "name": 'option 3', "mode": 'once', "speaker": null, "id": null, "tags": null,
+				"content": { "type": 'option', "name": 'option 3', "mode": 'once', "speaker": null, "id": null, "tags": null, "id_suffixes": null,
 					"content": {
 						"type": 'content',
 						"content": [
@@ -997,7 +997,7 @@ func test_options_trigger():
 	var expected = _create_doc_payload([{
 		"type": 'options',
 		"name": null,
-		"speaker": null, "id": null, "tags": null,
+		"speaker": null, "id": null, "tags": null, "id_suffixes": null,
 		"content": [
 			{
 				"type": "action_content",
@@ -1005,7 +1005,7 @@ func test_options_trigger():
 					"type": 'events',
 					"events": [{ "type": 'event', "name": 'a' }],
 				},
-				"content": { "type": 'option', "name": 'option 1', "mode": 'once', "speaker": null, "id": null, "tags": null,
+				"content": { "type": 'option', "name": 'option 1', "mode": 'once', "speaker": null, "id": null, "tags": null, "id_suffixes": null,
 					"content": {
 						"type": 'content',
 						"content": [
@@ -1020,7 +1020,7 @@ func test_options_trigger():
 					"type": 'events',
 					"events": [{ "type": 'event', "name": 'b' }],
 				},
-				"content": { "type": 'option', "name": 'option 2', "mode": 'once', "speaker": null, "id": null, "tags": null,
+				"content": { "type": 'option', "name": 'option 2', "mode": 'once', "speaker": null, "id": null, "tags": null, "id_suffixes": null,
 					"content": {
 						"type": 'content',
 						"content": [
@@ -1035,7 +1035,7 @@ func test_options_trigger():
 					"type": 'events',
 					"events": [{ "type": 'event', "name": 'c' }],
 				},
-				"content": { "type": 'option', "name": 'option 3', "mode": 'once', "speaker": null, "id": null, "tags": null,
+				"content": { "type": 'option', "name": 'option 3', "mode": 'once', "speaker": null, "id": null, "tags": null, "id_suffixes": null,
 					"content": {
 						"type": 'content',
 						"content": [

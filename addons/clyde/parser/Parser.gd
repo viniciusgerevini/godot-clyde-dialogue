@@ -193,17 +193,19 @@ func _text_line():
 			options.id = line.id
 			options.name = line.value
 			options.tags = line.tags
+			options.id_suffixes = line.id_suffixes
 			line = options
 		else:
 			while !_tokens.peek([Lexer.TOKEN_DEDENT, Lexer.TOKEN_EOF]):
 				_tokens.consume([Lexer.TOKEN_TEXT])
-				var nextLine = _text_line()
-				line.value += " %s" % nextLine.value
-				if nextLine.id:
-					line.id = nextLine.id
+				var next_line = _text_line()
+				line.value += " %s" % next_line.value
+				if next_line.id:
+					line.id = next_line.id
+					line.id_suffixes = next_line.id_suffixes
 
-				if nextLine.tags:
-					line.tags = nextLine.tags
+				if next_line.tags:
+					line.tags = next_line.tags
 
 			_tokens.consume([Lexer.TOKEN_DEDENT, Lexer.TOKEN_EOF])
 
@@ -335,7 +337,8 @@ func _option():
 		main_item.value,
 		main_item.id,
 		main_item.speaker,
-		main_item.tags
+		main_item.tags,
+		main_item.id_suffixes
 	)
 
 	if root:
@@ -701,12 +704,12 @@ func LineNode(value, speaker = null, id = null, tags = null, id_suffixes = null)
 	return { "type": 'line', "value": value, "id": id, "speaker": speaker, "tags": tags, "id_suffixes": id_suffixes }
 
 
-func OptionsNode(content, name = null, id = null, speaker = null, tags = null):
-	return { "type": 'options', "name": name, "content": content,"id": id, "speaker": speaker, "tags": tags }
+func OptionsNode(content, name = null, id = null, speaker = null, tags = null, id_suffixes = null):
+	return { "type": 'options', "name": name, "content": content,"id": id, "speaker": speaker, "tags": tags, "id_suffixes": id_suffixes }
 
 
-func OptionNode(content, mode, name, id, speaker, tags):
-	return { "type": 'option', "name": name, "mode": mode, "content": content, "id": id, "speaker": speaker, "tags": tags }
+func OptionNode(content, mode, name, id, speaker, tags, id_suffixes = null):
+	return { "type": 'option', "name": name, "mode": mode, "content": content, "id": id, "speaker": speaker, "tags": tags, "id_suffixes": id_suffixes }
 
 
 func DivertNode(target):

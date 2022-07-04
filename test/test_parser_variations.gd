@@ -147,22 +147,22 @@ func test_variations_with_options():
 			"content": [
 				{ "type": 'variations', "mode": 'sequence', "content": [
 					{ "type": 'content', "content": [
-						{ "type": 'options', "name": null, "id": null, "speaker": null, "tags": null, "content": [
-							{ "type": 'option', "name": 'works?', "mode": 'once', "id": null, "speaker": null, "tags": null, "content": {
+						{ "type": 'options', "name": null, "id": null, "speaker": null, "tags": null, "id_suffixes": null, "content": [
+							{ "type": 'option', "name": 'works?', "mode": 'once', "id": null, "speaker": null, "tags": null, "id_suffixes": null, "content": {
 									"type": 'content', "content": [ { "type": 'line', "value": 'works?', "id": null, "speaker": null, "tags": null, "id_suffixes": null, }, { "type": 'line', "value": 'yes', "id": null, "speaker": null, "tags": null, "id_suffixes": null, }, ],
 								},
 							},
-							{ "type": 'option', "name": 'yep?', "mode": 'once', "id": null, "speaker": null, "tags": null, "content": { "type": 'content', "content": [ { "type": 'line', "value": 'yes', "id": null, "speaker": null, "tags": null, "id_suffixes": null, }, ], }, },
+							{ "type": 'option', "name": 'yep?', "mode": 'once', "id": null, "speaker": null, "tags": null, "id_suffixes": null, "content": { "type": 'content', "content": [ { "type": 'line', "value": 'yes', "id": null, "speaker": null, "tags": null, "id_suffixes": null, }, ], }, },
 						]},
 					], },
 					{ "type": 'content', "content": [ { "type": 'line', "value": 'nice', "id": null, "speaker": null, "tags": null, "id_suffixes": null, }, ], },
 					{ "type": 'content', "content": [
-						{ "type": 'options', "name": null, "id": null, "speaker": null, "tags": null, "content": [
-							{ "type": 'option', "name": 'works?', "mode": 'once', "id": null, "speaker": null, "tags": null, "content": {
+						{ "type": 'options', "name": null, "id": null, "speaker": null, "tags": null, "id_suffixes": null, "content": [
+							{ "type": 'option', "name": 'works?', "mode": 'once', "id": null, "speaker": null, "tags": null, "id_suffixes": null, "content": {
 									"type": 'content', "content": [ { "type": 'line', "value": 'works?', "id": null, "speaker": null, "tags": null, "id_suffixes": null, }, { "type": 'line', "value": 'yes', "id": null, "speaker": null, "tags": null, "id_suffixes": null, }, ],
 								},
 							},
-							{ "type": 'option', "name": 'yep?', "mode": 'once', "id": null, "speaker": null, "tags": null, "content": { "type": 'content', "content": [ { "type": 'line', "value": 'yes', "id": null, "speaker": null, "tags": null, "id_suffixes": null, }, ], }, },
+							{ "type": 'option', "name": 'yep?', "mode": 'once', "id": null, "speaker": null, "tags": null, "id_suffixes": null, "content": { "type": 'content', "content": [ { "type": 'line', "value": 'yes', "id": null, "speaker": null, "tags": null, "id_suffixes": null, }, ], }, },
 						]},
 					], },
 				],},

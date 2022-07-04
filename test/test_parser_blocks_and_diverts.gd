@@ -101,15 +101,15 @@ func test_parse_diverts():
 				{ "type": 'divert', "target": 'one' },
 				{ "type": 'divert', "target": '<end>' },
 				{ "type": 'divert', "target": '<parent>' },
-				{ "type": 'options', "speaker": null, "id": null, "tags": null, "name": null, "content": [
-						{ "type": 'option', "name": 'thats it', "mode": 'once', "speaker": null, "id": null, "tags": null, "content": {
+				{ "type": 'options', "speaker": null, "id": null, "tags": null, "name": null, "id_suffixes": null, "content": [
+						{ "type": 'option', "name": 'thats it', "mode": 'once', "speaker": null, "id": null, "tags": null, "id_suffixes": null, "content": {
 								"type": 'content',
 								"content": [
 									{ "type": 'divert', "target": 'somewhere' },
 									{ "type": 'divert', "target": '<parent>' },
 								],
 						}},
-						{ "type": 'option', "name": 'does it work this way?', "mode": 'once', "speaker": null, "id": null, "tags": null, "content": {
+						{ "type": 'option', "name": 'does it work this way?', "mode": 'once', "speaker": null, "id": null, "tags": null, "id_suffixes": null, "content": {
 								"type": 'content',
 								"content": [
 									{ "type": 'divert', "target": 'go' },
