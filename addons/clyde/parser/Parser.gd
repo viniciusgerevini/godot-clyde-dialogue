@@ -219,14 +219,28 @@ func _line_with_metadata():
 
 func _line_with_id():
 	var value = _tokens.current_token.value
-	var next = _tokens.peek([Lexer.TOKEN_TAG])
-	if next:
+	var suffixes
+
+	if _tokens.peek([Lexer.TOKEN_ID_SUFFIX]):
+		suffixes = _id_suffixes()
+
+
+	if _tokens.peek([Lexer.TOKEN_TAG]):
 		_tokens.consume([Lexer.TOKEN_TAG])
 		var line = _line_with_tags()
 		line.id = value
+		line.id_suffixes = suffixes
 		return line
 
-	return LineNode(null, null, value)
+	return LineNode(null, null, value, null, suffixes)
+
+
+func _id_suffixes():
+	var suffixes = []
+	while _tokens.peek([Lexer.TOKEN_ID_SUFFIX]):
+		var token = _tokens.consume([Lexer.TOKEN_ID_SUFFIX])
+		suffixes.push_back(token.value)
+	return suffixes
 
 
 func _line_with_tags():
@@ -683,8 +697,8 @@ func BlockNode(blockName, content):
 	return { "type": 'block', "name": blockName, "content": content }
 
 
-func LineNode(value, speaker = null, id = null, tags = null):
-	return { "type": 'line', "value": value, "id": id, "speaker": speaker, "tags": tags }
+func LineNode(value, speaker = null, id = null, tags = null, id_suffixes = null):
+	return { "type": 'line', "value": value, "id": id, "speaker": speaker, "tags": tags, "id_suffixes": id_suffixes }
 
 
 func OptionsNode(content, name = null, id = null, speaker = null, tags = null):

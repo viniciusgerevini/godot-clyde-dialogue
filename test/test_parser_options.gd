@@ -22,7 +22,7 @@ npc: what do you want to talk about?
 		"content": [{
 			"type": 'content',
 			"content": [
-				{ "type": 'line', "value": 'what do you want to talk about?', "speaker": 'npc', "id": null, "tags": null },
+				{ "type": 'line', "value": 'what do you want to talk about?', "speaker": 'npc', "id": null, "tags": null, "id_suffixes": null, },
 				{
 					"type": 'options',
 					"name": null,
@@ -40,8 +40,8 @@ npc: what do you want to talk about?
 							"content": {
 								"type": 'content',
 								"content": [
-									{ "type": 'line', "value": 'I want to talk about life!', "speaker": 'player', "id": null, "tags": null, },
-									{ "type": 'line', "value": 'Well! That\'s too complicated...', "speaker": 'npc', "id": null, "tags": null, },
+									{ "type": 'line', "value": 'I want to talk about life!', "speaker": 'player', "id": null, "tags": null, "id_suffixes": null, },
+									{ "type": 'line', "value": 'Well! That\'s too complicated...', "speaker": 'npc', "id": null, "tags": null, "id_suffixes": null, },
 								],
 							},
 						},
@@ -54,8 +54,8 @@ npc: what do you want to talk about?
 							"content": {
 								"type": 'content',
 								"content": [
-									{ "type": 'line', "value": 'What about everything else?', "speaker": 'player', "id": null, "tags": null },
-									{ "type": 'line', "value": 'I don\'t have time for this...', "speaker": 'npc', "id": null, "tags": null },
+									{ "type": 'line', "value": 'What about everything else?', "speaker": 'player', "id": null, "tags": null, "id_suffixes": null, },
+									{ "type": 'line', "value": 'I don\'t have time for this...', "speaker": 'npc', "id": null, "tags": null, "id_suffixes": null, },
 								],
 							},
 							"tags": [ 'some_tag', ],
@@ -83,7 +83,7 @@ npc: what do you want to talk about?
 		"content": [{
 			"type": 'content',
 			"content": [
-				{ "type": 'line', "value": 'what do you want to talk about?', "speaker": 'npc', "id": null, "tags": null },
+				{ "type": 'line', "value": 'what do you want to talk about?', "speaker": 'npc', "id": null, "tags": null, "id_suffixes": null, },
 				{
 					"type": 'options',
 					"name": null,
@@ -101,7 +101,7 @@ npc: what do you want to talk about?
 							"content": {
 								"type": 'content',
 								"content": [
-									{ "type": 'line', "value": 'I want to talk about life!', "speaker": 'player', "id": null, "tags": null },
+									{ "type": 'line', "value": 'I want to talk about life!', "speaker": 'player', "id": null, "tags": null, "id_suffixes": null, },
 								],
 							},
 						},
@@ -114,7 +114,7 @@ npc: what do you want to talk about?
 							"content": {
 								"type": 'content',
 								"content": [
-									{ "type": 'line', "value": 'What about everything else?', "speaker": 'player', "id": null, "tags": null },
+									{ "type": 'line', "value": 'What about everything else?', "speaker": 'player', "id": null, "tags": null, "id_suffixes": null, },
 								],
 							},
 							"tags": [ 'some_tag', ],
@@ -142,7 +142,7 @@ npc: what do you want to talk about?
 		"content": [{
 			"type": 'content',
 			"content": [
-				{ "type": 'line', "value": 'what do you want to talk about?', "speaker": 'npc', "id": null, "tags": null },
+				{ "type": 'line', "value": 'what do you want to talk about?', "speaker": 'npc', "id": null, "tags": null, "id_suffixes": null, },
 				{
 					"type": 'options',
 					"name": null,
@@ -160,7 +160,7 @@ npc: what do you want to talk about?
 							"content": {
 								"type": 'content',
 								"content": [
-									{ "type": 'line', "value": 'I want to talk about life!', "speaker": 'player', "id": null, "tags": null },
+									{ "type": 'line', "value": 'I want to talk about life!', "speaker": 'player', "id": null, "tags": null, "id_suffixes": null, },
 								],
 							},
 						},
@@ -173,7 +173,7 @@ npc: what do you want to talk about?
 							"content": {
 								"type": 'content',
 								"content": [
-									{ "type": 'line', "value": 'What about everything else?', "speaker": 'player', "id": null, "tags": null },
+									{ "type": 'line', "value": 'What about everything else?', "speaker": 'player', "id": null, "tags": null, "id_suffixes": null, },
 								],
 							},
 							"tags": [ 'some_tag', ],
@@ -204,7 +204,7 @@ npc: what do you want to talk about?
 		"content": [{
 			"type": 'content',
 			"content": [
-				{ "type": 'line', "value": 'what do you want to talk about?', "speaker": 'npc', "id": null, "tags": null },
+				{ "type": 'line', "value": 'what do you want to talk about?', "speaker": 'npc', "id": null, "tags": null, "id_suffixes": null, },
 				{
 					"type": 'options',
 					"name": null,
@@ -220,9 +220,9 @@ npc: what do you want to talk about?
 							"content": {
 								"type": 'content',
 								"content": [
-									{ "type": 'line', "value": 'Life', "speaker": null, "id": null, "tags": null, },
-									{ "type": 'line', "value": 'I want to talk about life!', "speaker": 'player', "id": null, "tags": null, },
-									{ "type": 'line', "value": 'Well! That\'s too complicated...', "speaker": 'npc', "id": null, "tags": null, },
+									{ "type": 'line', "value": 'Life', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
+									{ "type": 'line', "value": 'I want to talk about life!', "speaker": 'player', "id": null, "tags": null, "id_suffixes": null, },
+									{ "type": 'line', "value": 'Well! That\'s too complicated...', "speaker": 'npc', "id": null, "tags": null, "id_suffixes": null, },
 								],
 							},
 						},
@@ -233,9 +233,9 @@ npc: what do you want to talk about?
 							"content": {
 								"type": 'content',
 								"content": [
-									{ "type": 'line', "value": 'Everything else...', "speaker": null, "id": null, "tags": [ 'some_tag', ], },
-									{ "type": 'line', "value": 'What about everything else?', "speaker": 'player', "id": null, "tags": null, },
-									{ "type": 'line', "value": 'I don\'t have time for this...', "speaker": 'npc', "id": null, "tags": null, },
+									{ "type": 'line', "value": 'Everything else...', "speaker": null, "id": null, "tags": [ 'some_tag', ], "id_suffixes": null, },
+									{ "type": 'line', "value": 'What about everything else?', "speaker": 'player', "id": null, "tags": null, "id_suffixes": null, },
+									{ "type": 'line', "value": 'I don\'t have time for this...', "speaker": 'npc', "id": null, "tags": null, "id_suffixes": null, },
 								],
 							},
 							"tags": [ 'some_tag', ],
@@ -276,9 +276,9 @@ func test_use_first_line_as_label():
 							"content": {
 								"type": 'content',
 								"content": [
-									{ "type": 'line', "value": 'life', "id": null, "speaker": null, "tags": null },
-									{ "type": 'line', "value": 'I want to talk about life!', "speaker": 'player', "id": null, "tags": null },
-									{ "type": 'line', "value": 'Well! That\'s too complicated...', "speaker": 'npc', "id": null, "tags": null },
+									{ "type": 'line', "value": 'life', "id": null, "speaker": null, "tags": null, "id_suffixes": null, },
+									{ "type": 'line', "value": 'I want to talk about life!', "speaker": 'player', "id": null, "tags": null, "id_suffixes": null, },
+									{ "type": 'line', "value": 'Well! That\'s too complicated...', "speaker": 'npc', "id": null, "tags": null, "id_suffixes": null, },
 								],
 							},
 						},
@@ -322,8 +322,8 @@ spk: second try
 							"content": {
 								"type": 'content',
 								"content": [
-									{ "type": 'line', "value": 'I want to talk about life!', "speaker": 'player', "id": null, "tags": null, },
-									{ "type": 'line', "value": 'Well! That\'s too complicated...', "speaker": 'npc', "id": null, "tags": null, },
+									{ "type": 'line', "value": 'I want to talk about life!', "speaker": 'player', "id": null, "tags": null, "id_suffixes": null, },
+									{ "type": 'line', "value": 'Well! That\'s too complicated...', "speaker": 'npc', "id": null, "tags": null, "id_suffixes": null, },
 								],
 							},
 						},
@@ -343,7 +343,7 @@ spk: second try
 							"content": {
 								"type": 'content',
 								"content": [
-									{ "type": 'line', "value": 'Well! That\'s too complicated...', "speaker": 'npc', "id": null, "tags": null, },
+									{ "type": 'line', "value": 'Well! That\'s too complicated...', "speaker": 'npc', "id": null, "tags": null, "id_suffixes": null, },
 								],
 							},
 						},
@@ -386,7 +386,7 @@ func test_use_previous_line_in_quotes_as_label():
 							"content": {
 								"type": 'content',
 								"content": [
-									{ "type": 'line', "value": 'I want to talk about life!', "speaker": 'player', "id": null, "tags": null, },
+									{ "type": 'line', "value": 'I want to talk about life!', "speaker": 'player', "id": null, "tags": null, "id_suffixes": null, },
 								],
 							},
 						},
@@ -406,7 +406,7 @@ func test_use_previous_line_in_quotes_as_label():
 							"content": {
 								"type": 'content',
 								"content": [
-									{ "type": 'line', "value": 'I want to talk about the universe!', "speaker": 'player', "id": null, "tags": null, },
+									{ "type": 'line', "value": 'I want to talk about the universe!', "speaker": 'player', "id": null, "tags": null, "id_suffixes": null, },
 								],
 							},
 						},
@@ -447,7 +447,7 @@ func test_ensures_options_ending_worked():
 							"content": {
 								"type": 'content',
 								"content": [
-									{ "type": 'line', "value": 'yes', "id": null, "speaker": null, "tags": null },
+									{ "type": 'line', "value": 'yes', "id": null, "speaker": null, "tags": null, "id_suffixes": null, },
 								],
 							},
 						},
@@ -459,7 +459,7 @@ func test_ensures_options_ending_worked():
 							"content": {
 								"type": 'content',
 								"content": [
-									{ "type": 'line', "value": 'no', "id": null, "speaker": null, "tags": null },
+									{ "type": 'line', "value": 'no', "id": null, "speaker": null, "tags": null, "id_suffixes": null, },
 								],
 							},
 						},
@@ -468,7 +468,7 @@ func test_ensures_options_ending_worked():
 				{
 					"type": "conditional_content",
 					"conditions": { "type": "variable", "name": "some_check" },
-					"content": { "type": "line", "value": "maybe", "id": null, "speaker": null, "tags": null }
+					"content": { "type": "line", "value": "maybe", "id": null, "speaker": null, "tags": null, "id_suffixes": null, }
 				},
 			],
 		},
@@ -513,14 +513,14 @@ func test_ensures_option_item_ending_worked():
 								"type": 'option',
 								"name": 'yes',
 								"mode": 'once', "id": null, "speaker": null, "tags": null,
-								"content": { "type": 'content', "content": [{ "type": 'line', "value": 'yes', "id": null, "speaker": null, "tags": null }]},
+								"content": { "type": 'content', "content": [{ "type": 'line', "value": 'yes', "id": null, "speaker": null, "tags": null, "id_suffixes": null, }]},
 							},
 						},
 						{
 							"type": 'option',
 							"name": 'no',
 							"mode": 'once', "id": null, "speaker": null, "tags": null,
-							"content": { "type": 'content', "content": [ { "type": 'line', "value": 'no' , "id": null, "speaker": null, "tags": null}, ]},
+							"content": { "type": 'content', "content": [ { "type": 'line', "value": 'no' , "id": null, "speaker": null, "tags": null, "id_suffixes": null, }, ]},
 						},
 					],
 				},
@@ -569,7 +569,7 @@ func test_options_with_blocks_both_sides():
 									"type": 'option',
 									"name": 'yes',
 									"mode": 'once', "id": null, "speaker": null, "tags": null,
-									"content": { "type": 'content', "content": [{ "type": 'line', "value": 'yes', "id": null, "speaker": null, "tags": null }]},
+									"content": { "type": 'content', "content": [{ "type": 'line', "value": 'yes', "id": null, "speaker": null, "tags": null, "id_suffixes": null, }]},
 								},
 							},
 					 },
@@ -594,7 +594,7 @@ func test_options_with_blocks_both_sides():
 									"type": 'option',
 									"name": 'no',
 									"mode": 'once', "id": null, "speaker": null, "tags": null,
-									"content": { "type": 'content', "content": [ { "type": 'line', "value": 'no', "id": null, "speaker": null, "tags": null }, ]},
+									"content": { "type": 'content', "content": [ { "type": 'line', "value": 'no', "id": null, "speaker": null, "tags": null, "id_suffixes": null, }, ]},
 								},
 							},
 						},
@@ -647,7 +647,7 @@ func test_options_with_multiple_blocks_on_same_side():
 									"type": 'option',
 									"name": 'yes',
 									"mode":  'once', "id": null, "speaker": null, "tags": null,
-									"content": { "type": 'content', "content": [{ "type": 'line', "value": 'yes', "id": null, "speaker": null, "tags": null }]},
+									"content": { "type": 'content', "content": [{ "type": 'line', "value": 'yes', "id": null, "speaker": null, "tags": null, "id_suffixes": null, }]},
 								},
 							},
 						},
@@ -672,7 +672,7 @@ func test_options_with_multiple_blocks_on_same_side():
 									"type": 'option',
 									"name": 'no',
 									"mode":  'once', "id": null, "speaker": null, "tags": null,
-									"content": { "type": 'content', "content": [ { "type": 'line', "value": 'no', "id": null, "speaker": null, "tags": null }, ]},
+									"content": { "type": 'content', "content": [ { "type": 'line', "value": 'no', "id": null, "speaker": null, "tags": null, "id_suffixes": null, }, ]},
 								},
 							},
 						},
@@ -697,7 +697,7 @@ func test_options_with_multiple_blocks_on_same_side():
 									"type": 'option',
 									"name": 'yes',
 									"mode":  'once', "id": null, "speaker": null, "tags": null,
-									"content": { "type": 'content', "content": [{ "type": 'line', "value": 'yes', "id": null, "speaker": null, "tags": null }]},
+									"content": { "type": 'content', "content": [{ "type": 'line', "value": 'yes', "id": null, "speaker": null, "tags": null, "id_suffixes": null, }]},
 								},
 							},
 						},
@@ -722,7 +722,7 @@ func test_options_with_multiple_blocks_on_same_side():
 									"type": 'option',
 									"name": 'no',
 									"mode":  'once', "id": null, "speaker": null, "tags": null,
-									"content": { "type": 'content', "content": [ { "type": 'line', "value": 'no', "id": null, "speaker": null, "tags": null }, ]},
+									"content": { "type": 'content', "content": [ { "type": 'line', "value": 'no', "id": null, "speaker": null, "tags": null, "id_suffixes": null, }, ]},
 								},
 							},
 						},
@@ -760,7 +760,7 @@ func test_options_with_multiple_blocks_on_same_side():
 										"type": 'option',
 										"name": 'yes',
 										"mode":  'once', "id": null, "speaker": null, "tags": null,
-										"content": { "type": 'content', "content": [ { "type": 'line', "value": 'yes', "id": null, "speaker": null, "tags": null }, ]},
+										"content": { "type": 'content', "content": [ { "type": 'line', "value": 'yes', "id": null, "speaker": null, "tags": null, "id_suffixes": null, }, ]},
 									},
 								},
 							},

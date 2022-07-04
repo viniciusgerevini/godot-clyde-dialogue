@@ -22,7 +22,7 @@ func test_condition_single_var():
 		{
 			"type": "conditional_content",
 			"conditions": { "type": "variable", "name": "some_var" },
-			"content": { "type": "line", "value": "This is conditional", "speaker": null, "id": null, "tags": null, }
+			"content": { "type": "line", "value": "This is conditional", "speaker": null, "id": null, "tags": null, "id_suffixes": null, }
 		},
 	])
 	assert_eq_deep(result, expected)
@@ -35,7 +35,7 @@ func test_condition_with_multiline_dialogue():
 	var expected = _create_doc_payload([{
 		"type": "conditional_content",
 		"conditions": { "type": "variable", "name": "another_var" },
-		"content": { "type": "line", "value": "This is conditional multiline", "speaker": null, "id": null, "tags": null, }
+		"content": { "type": "line", "value": "This is conditional multiline", "speaker": null, "id": null, "tags": null, "id_suffixes": null, }
 	}])
 	assert_eq_deep(result, expected)
 
@@ -51,7 +51,7 @@ func test_not_operator():
 				"name": "not",
 				"elements": [{ "type": "variable", "name": "some_var" }]
 			},
-			"content": { "type": "line", "value": "This is conditional", "speaker": null, "id": null, "tags": null, }
+			"content": { "type": "line", "value": "This is conditional", "speaker": null, "id": null, "tags": null, "id_suffixes": null, }
 		}
 	])
 	assert_eq_deep(result, expected)
@@ -71,7 +71,7 @@ func test_and_operator():
 					{ "type": 'variable', "name": 'second_time', },
 				],
 			},
-			"content": { "type": 'line', "value": 'what do you want to talk about?', "speaker": 'npc', "id": null, "tags": null, },
+			"content": { "type": 'line', "value": 'what do you want to talk about?', "speaker": 'npc', "id": null, "tags": null, "id_suffixes": null, },
 		}
 	])
 	assert_eq_deep(result, expected)
@@ -98,7 +98,7 @@ func test_multiple_logical_checks_and_and_or():
 					{ "type": 'variable', "name": 'third_time', },
 				],
 			},
-			"content": { "type": 'line', "value": 'what do you want to talk about?', "speaker": 'npc', "id": null, "tags": null, },
+			"content": { "type": 'line', "value": 'what do you want to talk about?', "speaker": 'npc', "id": null, "tags": null, "id_suffixes": null, },
 		}
 	])
 	assert_eq_deep(result, expected)
@@ -132,7 +132,7 @@ func test_multiple_equality_check():
 					},
 				],
 			},
-			"content": { "type": 'line', "value": 'equality', "speaker": null, "id": null, "tags": null, },
+			"content": { "type": 'line', "value": 'equality', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
 		}
 	])
 	assert_eq_deep(result, expected)
@@ -166,7 +166,7 @@ func test_multiple_alias_equality_check():
 					},
 				],
 			},
-			"content": { "type": 'line', "value": 'alias equality', "speaker": null, "id": null, "tags": null, },
+			"content": { "type": 'line', "value": 'alias equality', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
 		}
 	])
 	assert_eq_deep(result, expected)
@@ -200,7 +200,7 @@ func test_less_or_greater():
 					},
 				],
 			},
-			"content": { "type": 'line', "value": 'comparison', "speaker": null, "id": null, "tags": null, },
+			"content": { "type": 'line', "value": 'comparison', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
 		},
 	])
 	assert_eq_deep(result, expected)
@@ -234,7 +234,7 @@ func test_less_or_equal_and_greater_or_equal():
 					},
 				],
 			},
-			"content": { "type": 'line', "value": 'second comparison', "speaker": null, "id": null, "tags": null, },
+			"content": { "type": 'line', "value": 'second comparison', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
 		}
 	])
 	assert_eq_deep(result, expected)
@@ -290,7 +290,7 @@ func test__complex_precendence_case():
 					},
 				],
 			},
-			"content": { "type": 'line', "value": 'test', "speaker": null, "id": null, "tags": null, },
+			"content": { "type": 'line', "value": 'test', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
 		},
 	])
 	assert_eq_deep(result, expected)
@@ -311,7 +311,7 @@ func test_number_literal():
 					{ "type": 'literal', "name": 'number', "value": 0.0, },
 				],
 			},
-			"content": { "type": 'line', "value": 'hey', "speaker": null, "id": null, "tags": null, },
+			"content": { "type": 'line', "value": 'hey', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
 		},
 	])
 	assert_eq_deep(result, expected)
@@ -332,7 +332,7 @@ func test__null_token():
 					{ "type": 'null', },
 				],
 			},
-			"content": { "type": 'line', "value": 'ho', "speaker": null, "id": null, "tags": null, },
+			"content": { "type": 'line', "value": 'ho', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
 		}
 	])
 	assert_eq_deep(result, expected)
@@ -353,7 +353,7 @@ func test_boolean_literal():
 					{ "type": 'literal', "name": 'boolean', "value": false, },
 				],
 			},
-			"content": { "type": 'line', "value": 'let\'s go', "speaker": null, "id": null, "tags": null, },
+			"content": { "type": 'line', "value": 'let\'s go', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
 		}
 	])
 	assert_eq_deep(result, expected)
@@ -373,7 +373,7 @@ func test_string_literal():
 					{ "type": 'literal', "name": 'string', "value": 'hello darkness >= my old friend', },
 				],
 			},
-			"content": { "type": 'line', "value": 'let\'s go', "speaker": null, "id": null, "tags": null, },
+			"content": { "type": 'line', "value": 'let\'s go', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
 		}
 	])
 	assert_eq_deep(result, expected)
@@ -384,7 +384,7 @@ func test_condition_before_line_with_keyword():
 		{
 			"type": "conditional_content",
 			"conditions": { "type": "variable", "name": "some_var" },
-			"content": { "type": "line", "value": "This is conditional", "speaker": null, "id": null, "tags": null, }
+			"content": { "type": "line", "value": "This is conditional", "speaker": null, "id": null, "tags": null, "id_suffixes": null, }
 		},
 	])
 	assert_eq_deep(result, expected)
@@ -396,7 +396,7 @@ func test_condition_after_line():
 		{
 			"type": "conditional_content",
 			"conditions": { "type": "variable", "name": "some_var" },
-			"content": { "type": "line", "value": "This is conditional", "speaker": null, "id": null, "tags": null, }
+			"content": { "type": "line", "value": "This is conditional", "speaker": null, "id": null, "tags": null, "id_suffixes": null, }
 		},
 	])
 	assert_eq_deep(result, expected)
@@ -408,7 +408,7 @@ func test_condition_after_line_without_when():
 		{
 			"type": "conditional_content",
 			"conditions": { "type": "variable", "name": "some_var" },
-			"content": { "type": "line", "value": "This is conditional", "speaker": null, "id": null, "tags": null, }
+			"content": { "type": "line", "value": "This is conditional", "speaker": null, "id": null, "tags": null, "id_suffixes": null, }
 		},
 	])
 	assert_eq_deep(result, expected)
@@ -460,7 +460,7 @@ func test_conditional_option():
 					"content": {
 						"type": 'content',
 						"content": [
-							{ "type": 'line', "value": 'option 1', "speaker": null, "id": null, "tags": null, },
+							{ "type": 'line', "value": 'option 1', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
 						],
 					},
 				},
@@ -475,7 +475,7 @@ func test_conditional_option():
 					"content": {
 						"type": 'content',
 						"content": [
-							{ "type": 'line', "value": 'option 2', "speaker": null, "id": null, "tags": null, },
+							{ "type": 'line', "value": 'option 2', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
 						],
 					},
 				},
@@ -490,7 +490,7 @@ func test_conditional_option():
 					"content": {
 						"type": 'content',
 						"content": [
-							{ "type": 'line', "value": 'option 3', "speaker": null, "id": null, "tags": null, },
+							{ "type": 'line', "value": 'option 3', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
 						],
 					},
 				},
@@ -515,9 +515,9 @@ func test_conditional_indented_block():
 			"content": {
 				"type": 'content',
 				"content": [
-					{ "type": "line", "value": "This is conditional", "speaker": null, "id": null, "tags": null, },
-					{ "type": "line", "value": "This is second conditional", "speaker": null, "id": null, "tags": null, },
-					{ "type": "line", "value": "This is third conditional", "speaker": null, "id": null, "tags": null, }
+					{ "type": "line", "value": "This is conditional", "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
+					{ "type": "line", "value": "This is second conditional", "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
+					{ "type": "line", "value": "This is third conditional", "speaker": null, "id": null, "tags": null, "id_suffixes": null, }
 				]
 			}
 		},
@@ -555,7 +555,7 @@ func _assignment_tests(token, node_name):
 				},
 			],
 		},
-		"content": { "type": 'line', "value": 'let\'s go', "speaker": null, "id": null, "tags": null, },
+		"content": { "type": 'line', "value": 'let\'s go', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
 	}])
 	assert_eq_deep(result, expected)
 
@@ -593,7 +593,7 @@ func test_assignment_with_expression():
 				},
 			],
 		},
-		"content": { "type": 'line', "value": 'let\'s go', "speaker": null, "id": null, "tags": null, },
+		"content": { "type": 'line', "value": 'let\'s go', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
 	}])
 	assert_eq_deep(result, expected)
 
@@ -630,7 +630,7 @@ func test_assignment_with_expression_after():
 				},
 			],
 		},
-		"content": { "type": 'line', "value": 'multiply', "speaker": null, "id": null, "tags": null, },
+		"content": { "type": 'line', "value": 'multiply', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
 	}])
 	assert_eq_deep(result, expected)
 
@@ -681,7 +681,7 @@ func test_chaining_assigments():
 				},
 			],
 		},
-		"content": { "type": 'line', "value": 'let\'s go', "speaker": null, "id": null, "tags": null, },
+		"content": { "type": 'line', "value": 'let\'s go', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
 	}])
 	assert_eq_deep(result, expected)
 
@@ -715,7 +715,7 @@ func test_chaining_assigment_ending_with_variable():
 					},
 				],
 			},
-			"content": { "type": 'line', "value": 'let\'s go', "speaker": null, "id": null, "tags": null, },
+			"content": { "type": 'line', "value": 'let\'s go', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
 		}])
 		assert_eq_deep(result, expected)
 
@@ -768,7 +768,7 @@ func test_multiple_assigments_block():
 				},
 			],
 		},
-		"content": { "type": 'line', "value": 'hey you', "speaker": null, "id": null, "tags": null, },
+		"content": { "type": 'line', "value": 'hey you', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
 	}])
 	assert_eq_deep(result, expected)
 
@@ -788,7 +788,7 @@ func test_assignment_after_line():
 				},
 			],
 		},
-		"content": { "type": 'line', "value": 'let\'s go', "speaker": null, "id": null, "tags": null, },
+		"content": { "type": 'line', "value": 'let\'s go', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
 	}])
 	assert_eq_deep(result, expected)
 
@@ -846,7 +846,7 @@ func test_options_assignment():
 					"content": {
 						"type": 'content',
 						"content": [
-							{ "type": 'line', "value": 'option 1', "speaker": null, "id": null, "tags": null, },
+							{ "type": 'line', "value": 'option 1', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
 						],
 					},
 				},
@@ -861,7 +861,7 @@ func test_options_assignment():
 					"content": {
 						"type": 'content',
 						"content": [
-							{ "type": 'line', "value": 'option 2', "speaker": null, "id": null, "tags": null, },
+							{ "type": 'line', "value": 'option 2', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
 						],
 					},
 				},
@@ -876,7 +876,7 @@ func test_options_assignment():
 					"content": {
 						"type": 'content',
 						"content": [
-							{ "type": 'line', "value": 'option 3', "speaker": null, "id": null, "tags": null, },
+							{ "type": 'line', "value": 'option 3', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
 						],
 					},
 				},
@@ -936,7 +936,7 @@ func test_trigger_event():
 		},
 		"content": {
 			"type": 'line',
-			"value": 'trigger', "speaker": null, "id": null, "tags": null,
+			"value": 'trigger', "speaker": null, "id": null, "tags": null, "id_suffixes": null,
 		},
 	}])
 	assert_eq_deep(result, expected)
@@ -955,7 +955,7 @@ func test_trigger_multiple_events_in_one_block():
 		},
 		"content": {
 			"type": 'line',
-			"value": 'trigger', "speaker": null, "id": null, "tags": null,
+			"value": 'trigger', "speaker": null, "id": null, "tags": null, "id_suffixes": null,
 		},
 	}])
 	assert_eq_deep(result, expected)
@@ -982,7 +982,7 @@ func test_trigger_event_after_line():
 		},
 		"content": {
 			"type": 'line',
-			"value": 'trigger', "speaker": null, "id": null, "tags": null,
+			"value": 'trigger', "speaker": null, "id": null, "tags": null, "id_suffixes": null,
 		},
 	}])
 	assert_eq_deep(result, expected)
@@ -1009,7 +1009,7 @@ func test_options_trigger():
 					"content": {
 						"type": 'content',
 						"content": [
-							{ "type": 'line', "value": 'option 1', "speaker": null, "id": null, "tags": null, },
+							{ "type": 'line', "value": 'option 1', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
 						],
 					},
 				},
@@ -1024,7 +1024,7 @@ func test_options_trigger():
 					"content": {
 						"type": 'content',
 						"content": [
-							{ "type": 'line', "value": 'option 2', "speaker": null, "id": null, "tags": null, },
+							{ "type": 'line', "value": 'option 2', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
 						],
 					},
 				},
@@ -1039,7 +1039,7 @@ func test_options_trigger():
 					"content": {
 						"type": 'content',
 						"content": [
-							{ "type": 'line', "value": 'option 3', "speaker": null, "id": null, "tags": null, },
+							{ "type": 'line', "value": 'option 3', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
 						],
 					},
 				},
@@ -1099,7 +1099,7 @@ func test_multiple_logic_blocks_in_the_same_line_before():
 				},
 				"content": {
 					"type": 'line',
-					"value": 'hello', "speaker": null, "id": null, "tags": null,
+					"value": 'hello', "speaker": null, "id": null, "tags": null, "id_suffixes": null,
 				},
 			},
 		},
@@ -1131,7 +1131,7 @@ func test_multiple_logic_blocks_in_the_same_line_after():
 				},
 				"content": {
 					"type": 'line',
-					"value": 'hello', "speaker": null, "id": null, "tags": null,
+					"value": 'hello', "speaker": null, "id": null, "tags": null, "id_suffixes": null,
 				},
 			},
 		},
@@ -1163,7 +1163,7 @@ func test_multiple_logic_blocks_in_the_same_line_around():
 				},
 				"content": {
 					"type": 'line',
-					"value": 'hello', "speaker": null, "id": null, "tags": null,
+					"value": 'hello', "speaker": null, "id": null, "tags": null, "id_suffixes": null,
 				},
 			},
 		},
@@ -1195,7 +1195,7 @@ func test_multiple_logic_blocks_with_condition_after():
 				},
 				"content": {
 					"type": 'line',
-					"value": 'hello', "speaker": null, "id": null, "tags": null,
+					"value": 'hello', "speaker": null, "id": null, "tags": null, "id_suffixes": null,
 				},
 			},
 		},
@@ -1207,7 +1207,7 @@ func test_empty_block():
 	var result = parse("{} empty")
 	var expected = _create_doc_payload([{
 		"type": 'conditional_content',
-		"content": { "type": 'line', "value": 'empty', "speaker": null, "id": null, "tags": null, },
+		"content": { "type": 'line', "value": 'empty', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
 		"conditions": null,
 	}])
 	assert_eq_deep(result, expected)

@@ -21,7 +21,8 @@ func test_parse_single_line():
 				"tags": [
 					'yelling',
 					'mad'
-				]
+				],
+				"id_suffixes": null,
 			}]
 		}],
 		"blocks": []
@@ -33,7 +34,7 @@ func test_parse_lines():
 		var result = parse("""
 jules: say what one more time! $first #yelling #mad
 just text
-just id $another
+just id $another&var1&var2
 just tags #tag
 speaker: just speaker
 id last #tag #another_tag $some_id
@@ -44,12 +45,12 @@ id last #tag #another_tag $some_id
 			"content": [{
 				"type": 'content',
 				"content": [
-					{ "type": 'line', "value": 'say what one more time!', "id": 'first', "speaker": 'jules', "tags": [ 'yelling', 'mad' ] },
-					{ "type": 'line', "value": 'just text', "speaker": null, "id": null, "tags": null, },
-					{ "type": 'line', "value": 'just id', "id": 'another', "speaker": null, "tags": null, },
-					{ "type": 'line', "value": 'just tags', "tags": [ 'tag' ], "speaker": null, "id": null },
-					{ "type": 'line', "value": 'just speaker', "speaker": 'speaker', "id": null, "tags": null, },
-					{ "type": 'line', "value": 'id last', "speaker": null, "id": 'some_id', "tags": [ 'tag', 'another_tag' ] },
+					{ "type": 'line', "value": 'say what one more time!', "id": 'first', "speaker": 'jules', "tags": [ 'yelling', 'mad' ], "id_suffixes": null },
+					{ "type": 'line', "value": 'just text', "speaker": null, "id": null, "tags": null, "id_suffixes": null },
+					{ "type": 'line', "value": 'just id', "id": 'another', "speaker": null, "tags": null, "id_suffixes": [ "var1", "var2" ] },
+					{ "type": 'line', "value": 'just tags', "tags": [ 'tag' ], "speaker": null, "id": null, "id_suffixes": null },
+					{ "type": 'line', "value": 'just speaker', "speaker": 'speaker', "id": null, "tags": null, "id_suffixes": null },
+					{ "type": 'line', "value": 'id last', "speaker": null, "id": 'some_id', "tags": [ 'tag', 'another_tag' ], "id_suffixes": null },
 				]
 			}],
 			"blocks": []
@@ -70,8 +71,8 @@ hello! $id_on_first_line #and_tags
 		"content": [{
 			"type": 'content',
 			"content": [
-				{ "type": 'line', "value": 'say what one more time! Just say it', "id": 'some_id', "speaker": 'jules', "tags": [ 'tag' ] },
-				{ "type": 'line', "value": 'hello! Just talking.', "id": 'id_on_first_line', "tags": [ 'and_tags' ], "speaker": null, },
+				{ "type": 'line', "value": 'say what one more time! Just say it', "id": 'some_id', "speaker": 'jules', "tags": [ 'tag' ], "id_suffixes": null },
+				{ "type": 'line', "value": 'hello! Just talking.', "id": 'id_on_first_line', "tags": [ 'and_tags' ], "speaker": null, "id_suffixes": null },
 			]
 		}],
 		"blocks": []
@@ -92,9 +93,9 @@ Just talking.\"
 		"content": [{
 			"type": 'content',
 			"content": [
-				{ "type": 'line', "value": 'jules: say what one more time!\n	 Just say it $some_id #tag', "speaker": null, "id": null, "tags": null,  },
-				{ "type": 'line', "value": 'hello! $id_on_first_line #and_tags\nJust talking.', "speaker": null, "id": null, "tags": null,  },
-				{ "type": 'line', "value": 'this has $everything:', "id": 'id_on_first_line', "tags": [ 'and_tags' ], "speaker": null, },
+				{ "type": 'line', "value": 'jules: say what one more time!\n	 Just say it $some_id #tag', "speaker": null, "id": null, "tags": null, "id_suffixes": null },
+				{ "type": 'line', "value": 'hello! $id_on_first_line #and_tags\nJust talking.', "speaker": null, "id": null, "tags": null, "id_suffixes": null },
+				{ "type": 'line', "value": 'this has $everything:', "id": 'id_on_first_line', "tags": [ 'and_tags' ], "speaker": null, "id_suffixes": null },
 			]
 		}],
 		"blocks": []

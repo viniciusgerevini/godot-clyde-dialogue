@@ -11,6 +11,7 @@ const TOKEN_BRACKET_CLOSE = "BRACKET_CLOSE"
 const TOKEN_EOF = "EOF"
 const TOKEN_SPEAKER = "SPEAKER"
 const TOKEN_LINE_ID = "LINE_ID"
+const TOKEN_ID_SUFFIX = "ID_SUFFIX"
 const TOKEN_TAG = "TAG"
 const TOKEN_BLOCK = "BLOCK"
 const TOKEN_DIVERT = "DIVERT"
@@ -71,6 +72,7 @@ const _token_hints = {
 	TOKEN_EOF: 'EOF',
 	TOKEN_SPEAKER: '<speaker name>:',
 	TOKEN_LINE_ID: '$id',
+	TOKEN_ID_SUFFIX: '&id_suffix',
 	TOKEN_TAG: '#tag',
 	TOKEN_BLOCK: '== <block name>',
 	TOKEN_DIVERT: '-> <target name>',
@@ -334,7 +336,27 @@ func _handle_line_id():
 		_position += 1
 		_column += 1
 
-	return Token(TOKEN_LINE_ID, _line, initial_column, _array_join(values))
+	var id = Token(TOKEN_LINE_ID, _line, initial_column, _array_join(values))
+	var tokens = [id]
+
+	while _is_valid_position() and  _input[_position] == '&':
+		tokens.push_back(_handle_id_suffix())
+
+	return tokens
+
+
+func _handle_id_suffix():
+	var initial_column = _column
+	var values = []
+	_position += 1
+	_column += 1
+
+	while (_is_valid_position() and _is_identifier(_input[_position])):
+		values.push_back(_input[_position])
+		_position += 1
+		_column += 1
+
+	return Token(TOKEN_ID_SUFFIX, _line, initial_column, _array_join(values))
 
 
 func _handle_tag():
