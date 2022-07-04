@@ -1006,3 +1006,30 @@ func test_does_not_fail_when_leaving_mode():
 	lexer.init('))').get_all()
 	pass_test("didn't fail")
 
+
+func test_produces_same_blocks_for_tabbed_and_spaced_indentation():
+	var lexer = Lexer.new()
+	var tokens = lexer.init("""
+Pick an option.
+ + Quest test
+  { QUEST_STARTED } How's that quest going? (you should see this line at some point)
+  { not QUEST_STARTED } I have a quest for you! {set QUEST_STARTED = true}
+  <-
+{no QUEST_STARTED}
+ blah { not QUEST_STARTED} 
+ bleh { QUEST_STARTED}
+""").get_all()
+
+	var tab_tokens = lexer.init("""
+Pick an option.
+	+ Quest test
+		{ QUEST_STARTED } How's that quest going? (you should see this line at some point)
+		{ not QUEST_STARTED } I have a quest for you! {set QUEST_STARTED = true}
+		<-
+{no QUEST_STARTED}
+	blah { not QUEST_STARTED}	
+	bleh { QUEST_STARTED}
+""").get_all()
+
+	assert_eq_deep(tab_tokens, tokens)
+
