@@ -42,3 +42,12 @@ Check [sample project](https://github.com/viniciusgerevini/godot-clyde-sample)
 
 Follow Godot's [ installing plugins guide ]( https://docs.godotengine.org/en/stable/tutorials/plugins/editor/installing_plugins.html).
 
+
+## Settings
+
+Go to `Project > Project Settings > General > Dialogue`.
+
+| Field                   | Description |
+| ----------------------- | ----------- |
+| Source Folder: | Default folder where the interpreter will look for `.clyde` files when just the filename is provided. Default: `res://dialogues/` |
+| Id Suffix Lookup Separator: | When using id suffixes, this is the separator used in the translation keys. Default. `&`.|
