@@ -199,6 +199,9 @@ func _get_next_token():
 	if _input[_position] == ' ':
 		return _handle_space()
 
+	if _is_tab_char(_input[_position]):
+		return _handle_rogue_tab()
+
 	if _input[_position] == '(':
 		return _handle_start_variations()
 
@@ -243,6 +246,14 @@ func _handle_line_breaks():
 
 func _handle_space():
 	while _input[_position] == ' ':
+		_position += 1
+		_column += 1
+
+
+func _handle_rogue_tab():
+	var tab = RegEx.new()
+	tab.compile("[\t]")
+	while tab.search(_input[_position]) != null:
 		_position += 1
 		_column += 1
 
@@ -356,6 +367,9 @@ func _handle_qtext():
 			_position += 2
 			_column += 2
 			continue
+
+		if current_char == '\n':
+			_line += 1
 
 		value.push_back(current_char)
 
@@ -691,7 +705,8 @@ func _create_simple_token(token, length = 1):
 func _get_following_line_break():
 	var lookup_position = _position
 	var lookup_column = _column
-	while _is_valid_position() and _input[lookup_position] == ' ':
+
+	while _is_valid_position() and _is_tab_char(_input[lookup_position]):
 		lookup_position += 1
 		lookup_column += 1
 
@@ -701,7 +716,7 @@ func _get_following_line_break():
 
 func _get_leading_line_break():
 	var lookup_position = _position - 2
-	while _input[lookup_position] == ' ':
+	while _is_tab_char(_input[lookup_position]):
 		lookup_position -= 1
 
 	if _input[lookup_position] == '\n':

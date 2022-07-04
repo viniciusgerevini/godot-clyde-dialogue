@@ -110,6 +110,26 @@ func test_escape_characters_in_regular_text():
 	])
 
 
+func test_count_lines_correctly_in_quotted_text_with_line_breaks():
+	var lexer = Lexer.new()
+	var tokens = lexer.init('"this is a line with\nline break"\nthis should be on line 2').get_all()
+	assert_eq_deep(tokens, [
+		{
+			"token": Lexer.TOKEN_TEXT,
+			"value": 'this is a line with\nline break',
+			"line": 0,
+			"column": 1,
+			},
+		{
+			"token": Lexer.TOKEN_TEXT,
+			"value": 'this should be on line 2',
+			"line": 2,
+			"column": 0,
+			},
+		{ "token": Lexer.TOKEN_EOF, "line": 2, "column": 24, "value": null },
+	])
+
+
 func test_ignores_comments():
 	var lexer = Lexer.new()
 	var tokens = lexer.init("""-- this is a comment
@@ -985,4 +1005,31 @@ func test_does_not_fail_when_leaving_mode():
 	var lexer = Lexer.new()
 	lexer.init('))').get_all()
 	pass_test("didn't fail")
+
+
+func test_produces_same_blocks_for_tabbed_and_spaced_indentation():
+	var lexer = Lexer.new()
+	var tokens = lexer.init("""
+Pick an option.
+ + Quest test
+  { QUEST_STARTED } How's that quest going? (you should see this line at some point)
+  { not QUEST_STARTED } I have a quest for you! {set QUEST_STARTED = true}
+  <-
+{no QUEST_STARTED}
+ blah { not QUEST_STARTED} 
+ bleh { QUEST_STARTED}
+""").get_all()
+
+	var tab_tokens = lexer.init("""
+Pick an option.
+	+ Quest test
+		{ QUEST_STARTED } How's that quest going? (you should see this line at some point)
+		{ not QUEST_STARTED } I have a quest for you! {set QUEST_STARTED = true}
+		<-
+{no QUEST_STARTED}
+	blah { not QUEST_STARTED}	
+	bleh { QUEST_STARTED}
+""").get_all()
+
+	assert_eq_deep(tab_tokens, tokens)
 
