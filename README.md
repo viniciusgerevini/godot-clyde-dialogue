@@ -1,5 +1,7 @@
 # Clyde Dialogue Plugin for Godot
 
+<p align="center"><img src="icon.png" alt=/></p>
+
 Importer and interpreter for [Clyde Dialogue Language](https://github.com/viniciusgerevini/clyde). Completely written in GDScript. No external dependencies.
 
 > Clyde is a language for writing game dialogues. It supports branching dialogues, translations and interfacing with your game through variables and events.
