@@ -4,19 +4,22 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Unreleased
 
-## Added
+### Added
 
 - Implemented support for id suffixes. `dialogue line $id&variable_1&variable_2`.
 - Id Suffix Lookup Separator project setttings. `Project > Project Settings > General > Dialogue > Id Suffix Lookup Separator`.
 
+### Fixed
+- Remove prop check warning in Output console
+
 ## 3.1.0
 
-## Added
+### Added
 
 - Dialogue source folder project setttings. `Project > Project Settings > General > Dialogue > Source Folder`.
   When only the file name is provided, the interpreter will look for files in the folder set on `dialogue/source_folder`.
 
-## Fixed
+### Fixed
 
 - Standalone `{set a}` would pass parser, but break on interpreter. Now, this is equivalent to `{ set a = true }`.
 - Fix inconsistencies with logic blocks in tab indented files.

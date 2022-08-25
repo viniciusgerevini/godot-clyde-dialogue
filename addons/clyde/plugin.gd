@@ -25,25 +25,26 @@ func disable_plugin():
 
 func _setup_project_settings():
 	if not ProjectSettings.has_setting(SETTING_SOURCE_FOLDER):
-		ProjectSettings.set_setting(SETTING_SOURCE_FOLDER, DEFAULT_SOURCE_FOLDER)
-	ProjectSettings.set_initial_value(SETTING_SOURCE_FOLDER, DEFAULT_SOURCE_FOLDER)
-	ProjectSettings.add_property_info({
-		"name": SETTING_SOURCE_FOLDER,
-		"type": TYPE_STRING,
-		"hint": PROPERTY_HINT_DIR,
-	})
+		ProjectSettings.set(SETTING_SOURCE_FOLDER, DEFAULT_SOURCE_FOLDER)
+		ProjectSettings.set_initial_value(SETTING_SOURCE_FOLDER, DEFAULT_SOURCE_FOLDER)
+		ProjectSettings.add_property_info({
+			"name": SETTING_SOURCE_FOLDER,
+			"type": TYPE_STRING,
+			"hint": PROPERTY_HINT_DIR,
+		})
 
 	if not ProjectSettings.has_setting(SETTING_ID_SUFFIX_LOOKUP_SEPARATOR):
-		ProjectSettings.set_setting(SETTING_ID_SUFFIX_LOOKUP_SEPARATOR, DEFAULT_ID_SUFFIX_LOOKUP_SEPARATOR)
-	ProjectSettings.set_initial_value(SETTING_ID_SUFFIX_LOOKUP_SEPARATOR, DEFAULT_ID_SUFFIX_LOOKUP_SEPARATOR)
-	ProjectSettings.add_property_info({
-		"name": DEFAULT_ID_SUFFIX_LOOKUP_SEPARATOR,
-		"type": TYPE_STRING,
-	})
+		ProjectSettings.set(SETTING_ID_SUFFIX_LOOKUP_SEPARATOR, DEFAULT_ID_SUFFIX_LOOKUP_SEPARATOR)
+		ProjectSettings.set_initial_value(SETTING_ID_SUFFIX_LOOKUP_SEPARATOR, DEFAULT_ID_SUFFIX_LOOKUP_SEPARATOR)
+		ProjectSettings.add_property_info({
+			"name": SETTING_ID_SUFFIX_LOOKUP_SEPARATOR,
+			"type": TYPE_STRING,
+		})
 
 	ProjectSettings.save()
 
 
 func _clear_project_settings():
 	ProjectSettings.clear(SETTING_SOURCE_FOLDER)
+	ProjectSettings.clear(SETTING_ID_SUFFIX_LOOKUP_SEPARATOR)
 	ProjectSettings.save()
