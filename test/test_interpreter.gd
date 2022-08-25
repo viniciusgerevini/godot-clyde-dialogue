@@ -81,6 +81,102 @@ func test_translate_files():
 	TranslationServer.set_locale("en")
 
 
+func _initialize_dictionary():
+	var t = Translation.new()
+	t.locale = "en"
+	t.add_message("abc", "simple key")
+	t.add_message("abc&P", "simple key with suffix 1")
+	t.add_message("abc&P&S", "simple key with suffix 1 and 2")
+	t.add_message("abc&S", "simple key with only suffix 2")
+	t.add_message("abc__P", "this uses custom suffix")
+	TranslationServer.add_translation(t)
+	TranslationServer.set_locale("en")
+
+
+func _initialize_interpreter_for_suffix_test():
+	var interpreter = ClydeDialogue.Interpreter.new()
+	var content = parse("This should be replaced $abc&suffix_1&suffix_2")
+	interpreter.init(content)
+	return interpreter
+
+
+func test_id_suffix_returns_line_with_suffix_value():
+	var interpreter = _initialize_interpreter_for_suffix_test()
+	_initialize_dictionary()
+	interpreter.set_variable("suffix_1", "P");
+
+	assert_eq(interpreter.get_content().text, "simple key with suffix 1")
+
+
+func test_id_suffix_returns_line_with_multiple_suffixes_value():
+	var interpreter = _initialize_interpreter_for_suffix_test()
+	_initialize_dictionary()
+	interpreter.set_variable("suffix_1", "P");
+	interpreter.set_variable("suffix_2", "S");
+
+	assert_eq(interpreter.get_content().text, "simple key with suffix 1 and 2")
+
+
+func test_id_suffix_ignores_suffix_if_variable_is_not_set():
+	var interpreter = _initialize_interpreter_for_suffix_test()
+	_initialize_dictionary()
+	interpreter.set_variable("suffix_1", "S");
+
+	assert_eq(interpreter.get_content().text, "simple key with only suffix 2")
+
+
+func test_id_suffix_ignores_all_suffixes_when_variables_not_set():
+	var interpreter = _initialize_interpreter_for_suffix_test()
+	_initialize_dictionary()
+
+	assert_eq(interpreter.get_content().text, "simple key")
+
+
+func test_id_suffix_fallsback_to_id_without_prefix_when_not_found():
+	var interpreter = _initialize_interpreter_for_suffix_test()
+	_initialize_dictionary()
+
+	interpreter.set_variable("suffix_1", "banana");
+
+	assert_eq(interpreter.get_content().text, "simple key")
+
+
+func test_id_suffix_works_with_options():
+	var interpreter = ClydeDialogue.Interpreter.new()
+	var content = parse("""
+first topics $abc&suffix1
+	* option 1 $abc&suffix2
+		blah
+*
+	blah $abc&suffix1&suffix2""")
+	interpreter.init(content)
+
+	_initialize_dictionary()
+
+	interpreter.set_variable("suffix1", "P");
+	interpreter.set_variable("suffix2", "S");
+	var first_options = interpreter.get_content();
+	assert_eq(first_options.name, "simple key with suffix 1")
+	assert_eq(first_options.options[0].label, "simple key with only suffix 2")
+
+	interpreter.choose(0);
+	interpreter.get_content()
+
+	var second_options = interpreter.get_content();
+	assert_eq(second_options.options[0].label, "simple key with suffix 1 and 2")
+
+
+func test_interpreter_option_id_lookup_suffix():
+	_initialize_dictionary()
+
+	var interpreter = ClydeDialogue.Interpreter.new()
+	var content = parse("This should be replaced $abc&suffix_1&suffix_2")
+	interpreter.init(content, { "id_suffix_lookup_separator": "__" })
+	interpreter.set_variable("suffix_1", "P");
+
+	assert_eq(interpreter.get_content().text, "this uses custom suffix")
+
+
 func test_options():
 	var dialogue = ClydeDialogue.new()
 	dialogue.load_dialogue('options')

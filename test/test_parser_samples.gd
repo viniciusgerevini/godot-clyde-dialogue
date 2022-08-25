@@ -8,6 +8,7 @@ func parse(input):
 	var parser = Parser.new()
 	return parser.parse(input)
 
+
 func test_samples():
 	var files = []
 	var dir = Directory.new()
@@ -37,6 +38,7 @@ func test_samples():
 
 		expect(parse(source), JSON.parse(result).get_result())
 		pass_test("passed")
+
 
 func expect(received, expected):
 	if typeof(expected) == TYPE_ARRAY:

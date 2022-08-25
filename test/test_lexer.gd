@@ -362,6 +362,33 @@ speaker1: this is something $123""").get_all()
 	])
 
 
+func test_id_suffixes():
+	var lexer = Lexer.new()
+	var tokens = lexer.init("""
+speaker1: this is something $123&var1
+* this is another thing $abc&var1&var2
+*= hello $a1b2&var1 #tag""").get_all()
+
+	assert_eq_deep(tokens, [
+		{ "token": Lexer.TOKEN_SPEAKER, "value": 'speaker1', "line": 1, "column": 0 },
+		{ "token": Lexer.TOKEN_TEXT, "value": 'this is something', "line": 1, "column": 10 },
+		{ "token": Lexer.TOKEN_LINE_ID, "value": '123', "line": 1, "column": 28 },
+		{ "token": Lexer.TOKEN_ID_SUFFIX, "value": 'var1', "line": 1, "column": 32 },
+		{ "token": Lexer.TOKEN_OPTION, "line": 2, "column": 0, "value": null },
+		{ "token": Lexer.TOKEN_TEXT, "value": 'this is another thing', "line": 2, "column": 2 },
+		{ "token": Lexer.TOKEN_LINE_ID, "value": 'abc', "line": 2, "column": 24 },
+		{ "token": Lexer.TOKEN_ID_SUFFIX, "value": 'var1', "line": 2, "column": 28 },
+		{ "token": Lexer.TOKEN_ID_SUFFIX, "value": 'var2', "line": 2, "column": 33 },
+		{ "token": Lexer.TOKEN_OPTION, "line": 3, "column": 0, "value": null },
+		{ "token": Lexer.TOKEN_ASSIGN, "line": 3, "column": 1, "value": null },
+		{ "token": Lexer.TOKEN_TEXT, "value": 'hello', "line": 3, "column": 3 },
+		{ "token": Lexer.TOKEN_LINE_ID, "value": 'a1b2', "line": 3, "column": 9 },
+		{ "token": Lexer.TOKEN_ID_SUFFIX, "value": 'var1', "line": 3, "column": 14 },
+		{ "token": Lexer.TOKEN_TAG, "value": 'tag', "line": 3, "column": 20 },
+		{ "token": Lexer.TOKEN_EOF, "line": 3, "column": 24, "value": null },
+	]);
+
+
 func test_tags():
 	var lexer = Lexer.new()
 	var tokens = lexer.init("""

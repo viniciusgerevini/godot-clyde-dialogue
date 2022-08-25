@@ -24,15 +24,15 @@ line 4
 			{ "type": 'block', "name": 'first block', "content": {
 				"type": 'content',
 				"content": [
-					{ "type": 'line', "value": 'line 1', "speaker": null, "id": null, "tags": null, },
-					{ "type": 'line', "value": 'line 2', "speaker": null, "id": null, "tags": null, },
+					{ "type": 'line', "value": 'line 1', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
+					{ "type": 'line', "value": 'line 2', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
 				]
 			}},
 			{ "type": 'block', "name": 'second_block', "content": {
 				"type": 'content',
 				"content": [
-					{ "type": 'line', "value": 'line 3', "speaker": null, "id": null, "tags": null, },
-					{ "type": 'line', "value": 'line 4', "speaker": null, "id": null, "tags": null, },
+					{ "type": 'line', "value": 'line 3', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
+					{ "type": 'line', "value": 'line 4', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
 				]
 			}},
 		]
@@ -58,23 +58,23 @@ line 4
 		"content": [{
 			"type": 'content',
 			"content": [
-				{ "type": 'line', "value": 'line outside block 1', "speaker": null, "id": null, "tags": null, },
-				{ "type": 'line', "value": 'line outside block 2', "speaker": null, "id": null, "tags": null, },
+				{ "type": 'line', "value": 'line outside block 1', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
+				{ "type": 'line', "value": 'line outside block 2', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
 			]
 		}],
 		"blocks": [
 			{ "type": 'block', "name": 'first block', "content": {
 				"type": 'content',
 				"content": [
-					{ "type": 'line', "value": 'line 1', "speaker": null, "id": null, "tags": null, },
-					{ "type": 'line', "value": 'line 2', "speaker": null, "id": null, "tags": null, },
+					{ "type": 'line', "value": 'line 1', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
+					{ "type": 'line', "value": 'line 2', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
 				]
 			}},
 			{ "type": 'block', "name": 'second_block', "content": {
 				"type": 'content',
 				"content": [
-					{ "type": 'line', "value": 'line 3', "speaker": null, "id": null, "tags": null, },
-					{ "type": 'line', "value": 'line 4', "speaker": null, "id": null, "tags": null, },
+					{ "type": 'line', "value": 'line 3', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
+					{ "type": 'line', "value": 'line 4', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
 				]
 			}},
 		]
@@ -101,15 +101,15 @@ func test_parse_diverts():
 				{ "type": 'divert', "target": 'one' },
 				{ "type": 'divert', "target": '<end>' },
 				{ "type": 'divert', "target": '<parent>' },
-				{ "type": 'options', "speaker": null, "id": null, "tags": null, "name": null, "content": [
-						{ "type": 'option', "name": 'thats it', "mode": 'once', "speaker": null, "id": null, "tags": null, "content": {
+				{ "type": 'options', "speaker": null, "id": null, "tags": null, "name": null, "id_suffixes": null, "content": [
+						{ "type": 'option', "name": 'thats it', "mode": 'once', "speaker": null, "id": null, "tags": null, "id_suffixes": null, "content": {
 								"type": 'content',
 								"content": [
 									{ "type": 'divert', "target": 'somewhere' },
 									{ "type": 'divert', "target": '<parent>' },
 								],
 						}},
-						{ "type": 'option', "name": 'does it work this way?', "mode": 'once', "speaker": null, "id": null, "tags": null, "content": {
+						{ "type": 'option', "name": 'does it work this way?', "mode": 'once', "speaker": null, "id": null, "tags": null, "id_suffixes": null, "content": {
 								"type": 'content',
 								"content": [
 									{ "type": 'divert', "target": 'go' },

@@ -22,7 +22,9 @@ var _interpreter
 func load_dialogue(file_name, block = null):
 	var file = _load_file(_get_file_path(file_name))
 	_interpreter = Interpreter.new()
-	_interpreter.init(file)
+	_interpreter.init(file, {
+		"id_suffix_lookup_separator": _config_id_suffix_lookup_separator(),
+	})
 	_interpreter.connect("variable_changed", self, "_trigger_variable_changed")
 	_interpreter.connect("event_triggered", self, "_trigger_event_triggered")
 	if block:
@@ -124,7 +126,13 @@ func _get_file_path(file_name):
 
 
 func _get_source_folder():
-	var folder = dialogue_folder if dialogue_folder else ProjectSettings.get_setting("dialogue/source_folder")
+	var cfg_folder = ProjectSettings.get_setting("dialogue/source_folder") if ProjectSettings.has_setting("dialogue/source_folder") else null
+	var folder = dialogue_folder if dialogue_folder else cfg_folder
 	# https://github.com/godotengine/godot/issues/56598
 	return folder if folder else "res://dialogues/"
+
+
+func _config_id_suffix_lookup_separator():
+	var lookup_separator = ProjectSettings.get_setting("dialogue/id_suffix_lookup_separator") if ProjectSettings.has_setting("dialogue/id_suffix_lookup_separator") else null
+	return lookup_separator if lookup_separator else "&"
 
