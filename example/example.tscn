@@ -1,95 +1,55 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=2 format=3 uid="uid://blv1whd6mrfkg"]
 
-[ext_resource path="res://example/example.gd" type="Script" id=1]
+[ext_resource type="Script" path="res://example/example.gd" id="1"]
 
 [node name="example" type="MarginContainer"]
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 size_flags_stretch_ratio = 0.0
-custom_constants/margin_right = 20
-custom_constants/margin_top = 20
-custom_constants/margin_left = 20
-custom_constants/margin_bottom = 20
-script = ExtResource( 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+script = ExtResource("1")
 
 [node name="line" type="VBoxContainer" parent="."]
-margin_left = 20.0
-margin_top = 20.0
-margin_right = 1004.0
-margin_bottom = 580.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
+layout_mode = 2
 
 [node name="speaker" type="Label" parent="line"]
-margin_right = 984.0
-margin_bottom = 14.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
+layout_mode = 2
 
 [node name="text" type="Label" parent="line"]
-margin_top = 18.0
-margin_right = 984.0
-margin_bottom = 66.0
+layout_mode = 2
 text = "Click to start
 
 "
-autowrap = true
 
 [node name="options" type="VBoxContainer" parent="."]
 visible = false
-margin_left = 20.0
-margin_top = 20.0
-margin_right = 1004.0
-margin_bottom = 580.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
+layout_mode = 2
 
 [node name="speaker" type="Label" parent="options"]
-margin_left = -15.0
-margin_top = -15.0
-margin_right = 65.0
-margin_bottom = -1.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
+layout_mode = 2
 
 [node name="name" type="Label" parent="options"]
-margin_right = 50.0
-margin_bottom = 14.0
+layout_mode = 2
 text = "Speaker"
-autowrap = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="items" type="VBoxContainer" parent="options"]
-margin_top = 18.0
-margin_right = 50.0
-margin_bottom = 18.0
+layout_mode = 2
 
 [node name="dialogue_ended" type="VBoxContainer" parent="."]
 visible = false
-margin_left = 20.0
-margin_top = 20.0
-margin_right = 1004.0
-margin_bottom = 580.0
+layout_mode = 2
 
 [node name="Label" type="Label" parent="dialogue_ended"]
-margin_right = 984.0
-margin_bottom = 31.0
+layout_mode = 2
 text = "Dialogue ended
 "
 
 [node name="restart" type="Button" parent="dialogue_ended"]
-margin_top = 35.0
-margin_right = 984.0
-margin_bottom = 55.0
+layout_mode = 2
 text = "Restart"
 
 [connection signal="pressed" from="dialogue_ended/restart" to="." method="_on_restart_pressed"]

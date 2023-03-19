@@ -6,21 +6,12 @@
 ;   [section] ; section goes between []
 ;   param=value ; assign values to parameters
 
-config_version=4
-
-_global_script_classes=[ {
-"base": "Reference",
-"class": "ClydeDialogue",
-"language": "GDScript",
-"path": "res://addons/clyde/ClydeDialogue.gd"
-} ]
-_global_script_class_icons={
-"ClydeDialogue": ""
-}
+config_version=5
 
 [application]
 
 config/name="clyde-plugin"
+config/features=PackedStringArray("4.0")
 config/icon="res://icon.png"
 
 [dialogue]
@@ -29,12 +20,16 @@ source_folder="res://test/dialogue_samples"
 
 [editor_plugins]
 
-enabled=PoolStringArray( "res://addons/clyde/plugin.cfg", "res://addons/gut/plugin.cfg" )
+enabled=PackedStringArray("res://addons/clyde/plugin.cfg", "res://addons/gut/plugin.cfg")
+
+[internationalization]
+
+locale/translations=PackedStringArray("res://test/translation.pt_BR.translation")
 
 [locale]
 
-translations=PoolStringArray( "res://test/translation.pt_BR.translation" )
+translations=PackedStringArray("res://test/translation.pt_BR.translation")
 
 [rendering]
 
-environment/default_environment="res://default_env.tres"
+environment/defaults/default_environment="res://default_env.tres"

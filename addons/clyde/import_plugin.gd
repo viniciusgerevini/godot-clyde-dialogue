@@ -1,46 +1,57 @@
-tool
+@tool
 extends EditorImportPlugin
 
 const Parser = preload("./parser/Parser.gd")
 
-func get_importer_name():
-	return "clyde.dialogue"
-
-func get_visible_name():
-	return "Clyde Dialogue Importer"
-
-func get_recognized_extensions():
-	return ["clyde"]
-
-func get_save_extension():
-	return "res"
-
-func get_resource_type():
-	return "PackedDataContainer"
-
-func get_preset_count():
+func _get_import_order():
 	return 1
 
-func get_preset_name(i):
+func _get_importer_name():
+	return "clyde.dialogue"
+
+
+func _get_visible_name():
+	return "Clyde Dialogue Importer"
+
+
+func _get_recognized_extensions():
+	return ["clyde"]
+
+
+func _get_save_extension():
+	return "res"
+
+
+func _get_resource_type():
+	return "PackedDataContainer"
+
+
+func _get_preset_count():
+	return 1
+
+
+func _get_preset_name(i):
 	return "Default"
 
-func get_import_options(i):
+
+func _get_import_options(_path, _i):
 	return []
 
-func get_option_visibility(option, options):
+
+func _get_option_visibility(_path, _option, _options):
 	return true
 
-func import(source_file, save_path, options, platform_variants, gen_files):
-	var file = File.new()
-	file.open(source_file, File.READ)
+
+func _import(source_file, save_path, options, platform_variants, gen_files):
+	var file = FileAccess.open(source_file, FileAccess.READ)
 	var clyde = file.get_as_text()
 	var result = parse(clyde)
 	file.close()
 
 	var container = PackedDataContainer.new()
-	container.__data__ = JSON.print(result).to_utf8()
+	container.__data__ = JSON.stringify(result).to_utf8_buffer()
 
-	return ResourceSaver.save("%s.%s" % [save_path, get_save_extension()], container)
+	return ResourceSaver.save(container, "%s.%s" % [save_path, _get_save_extension()])
 
 
 func parse(input):

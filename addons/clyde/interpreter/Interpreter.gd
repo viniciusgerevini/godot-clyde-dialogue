@@ -1,4 +1,4 @@
-extends Reference
+extends RefCounted
 
 signal variable_changed(name, value, previous_value)
 signal event_triggered(event_name)
@@ -18,7 +18,7 @@ func init(document, interpreter_options = {}):
 	_doc = document
 	_doc._index = 1
 	_mem = Memory.new()
-	_mem.connect("variable_changed", self, "_trigger_variable_changed")
+	_mem.connect("variable_changed",Callable(self,"_trigger_variable_changed"))
 	_logic = LogicInterpreter.new()
 	_logic.init(_mem)
 
@@ -37,6 +37,7 @@ func get_content():
 
 func choose(option_index):
 	var node = _stack_head()
+
 	if node.current.type == 'options':
 		var content = _get_visible_options(node.current.content)
 
@@ -61,7 +62,7 @@ func choose(option_index):
 
 
 func select_block(block_name = null):
-	if block_name:
+	if block_name != null:
 		_initialise_stack(_anchors[block_name])
 	else:
 		_initialise_stack(_doc)
@@ -122,18 +123,18 @@ func _generate_index():
 
 func _initialize_handlers():
 	_handlers = {
-		"document": funcref(self, "_handle_document_node"),
-		"content": funcref(self, "_handle_content_node"),
-		"line": funcref(self, "_handle_line_node"),
-		"options": funcref(self, "_handle_options_node"),
-		"option": funcref(self, "_handle_option_node"),
-		"action_content": funcref(self, "_handle_action_content_node"),
-		"conditional_content": funcref(self, "_handle_conditional_content_node"),
-		"variations": funcref(self, "_handle_variations_node"),
-		"block": funcref(self, "_handle_block_node"),
-		"divert": funcref(self, "_handle_divert_node"),
-		"assignments": funcref(self, "_handle_assignments_node"),
-		"events": funcref(self, "_handle_events_node"),
+		"document": _handle_document_node,
+		"content": _handle_content_node,
+		"line": _handle_line_node,
+		"options": _handle_options_node,
+		"option": _handle_option_node,
+		"action_content": _handle_action_content_node,
+		"conditional_content": _handle_conditional_content_node,
+		"variations": _handle_variations_node,
+		"block": _handle_block_node,
+		"divert": _handle_divert_node,
+		"assignments": _handle_assignments_node,
+		"events": _handle_events_node,
 	}
 
 
@@ -146,7 +147,7 @@ func _handle_document_node(_node):
 
 
 func _handle_content_node(content_node):
-	if not content_node.get("_index"):
+	if content_node.get("_index") == null:
 		content_node["_index"] = _generate_index()
 	_add_to_stack(content_node)
 
@@ -160,7 +161,7 @@ func _handle_content_node(content_node):
 
 
 func _handle_line_node(line_node):
-	if not line_node.get("_index"):
+	if line_node.get("_index") == null:
 		line_node["_index"] = _generate_index()
 
 	return {
@@ -173,7 +174,7 @@ func _handle_line_node(line_node):
 
 
 func _handle_options_node(options_node):
-	if not options_node.get("_index"):
+	if options_node.get("_index") == null:
 		options_node["_index"] = _generate_index()
 		_mem.set_internal_variable('OPTIONS_COUNT', options_node.content.size())
 	_add_to_stack(options_node)
@@ -195,42 +196,38 @@ func _handle_options_node(options_node):
 		"id": options_node.get("id"),
 		"tags": options_node.get("tags"),
 		"name": _replace_variables(_translate_text(options_node.get("id"), options_node.get("name"), options_node.get("id_suffixes"))),
-		"options": _map(funcref(self, "_map_option"), options),
+		"options": options.map(func(e): return _map_option(e, options.find(e))),
 	}
 
 
 func _get_visible_options(options):
-	return _filter(
-		funcref(self, "_check_if_option_not_accessed"),
-		_map(
-			funcref(self, "_prepare_option"),
-			options
-		)
-	)
+	return options.map(func (e):
+		return _prepare_option(e, options.find(e))
+	).filter(_check_if_option_not_accessed)
 
 
 func _prepare_option(option, index):
-	if not option.get("index"):
+	if option.get("index") == null:
 		option._index = _generate_index() * 100 + index
 
 	if option.type == 'conditional_content':
 		option.content._index = option._index;
 		if _logic.check_condition(option.conditions):
 			return _prepare_option(option.content, index)
-		return;
+		return
 
 	if option.type == 'action_content':
 		option.content._index = option._index
 		option.mode = option.content.mode
 		var content = _prepare_option(option.content, index)
-		if not content:
+		if content == null:
 			return
 
-	return option;
+	return option
 
 
 func _check_if_option_not_accessed(option):
-	return option and not (option.mode == 'once' and _mem.was_already_accessed(option._index))
+	return option != null and not (option.mode == 'once' and _mem.was_already_accessed(option._index))
 
 
 func _map_option(option, _index):
@@ -273,7 +270,7 @@ func _handle_conditional_content_node(conditional_node, fallback_node = _stack_h
 
 
 func _handle_variations_node(variations, attempt = 0):
-	if not variations.get("_index"):
+	if variations.get("_index") == null:
 		variations["_index"] = _generate_index()
 		for index in range(variations.content.size()):
 			var c = variations.content[index]
@@ -332,40 +329,40 @@ func _handle_events_node(events):
 
 func _handle_next_node(node):
 	if _handlers.has(node.type):
-		return _handlers[node.type].call_func(node)
+		return _handlers[node.type].call(node)
 	else:
 		printerr("Unkown node type '%s'" % node.type)
 
 
 func _translate_text(key, text, id_suffixes = null):
-	if not key:
+	if key == null:
 		return text
 
-	if id_suffixes:
+	if id_suffixes != null:
 		var lookup_key = key
 		for ids in id_suffixes:
 			var value = _mem.get_variable(ids)
-			if value:
+			if value != null:
 				lookup_key += "%s%s" % [_config.id_suffix_lookup_separator, value]
-		var translation = tr(lookup_key)
+		var position = tr(lookup_key)
 
-		if translation != lookup_key:
-			return translation
+		if position != lookup_key:
+			return position
 
-	var translation = tr(key)
-	if translation == key:
+	var position = tr(key)
+	if position == key:
 		return text
-	return translation
+	return position
 
 
 func _replace_variables(text):
-	if not text:
+	if text == null or text == "":
 		return text
 	var regex = RegEx.new()
 	regex.compile("\\%(?<variable>[A-z0-9]*)\\%")
 	for result in regex.search_all(text):
 		var value = _mem.get_variable(result.get_string("variable"))
-		text = text.replace(result.get_string(), value if value else "")
+		text = text.replace(result.get_string(), str(value) if value != null else "")
 
 	return text
 
@@ -447,23 +444,6 @@ func _handle_shuffle_variation(variations, mode = 'cycle'):
 	_mem.set_internal_variable(SHUFFLE_VISITED_KEY, visited_items);
 
 	return index;
-
-
-func _map(function: FuncRef, array: Array) -> Array:
-	var output = []
-	var index = 0
-	for item in array:
-		output.append(function.call_func(item, index))
-		index += 1
-	return output
-
-
-func _filter(function: FuncRef, array: Array) -> Array:
-	var output = []
-	for item in array:
-		if function.call_func(item):
-			output.append(item)
-	return output
 
 
 func _trigger_variable_changed(name, value, previous_value):

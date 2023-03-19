@@ -13,8 +13,8 @@ func _line(line):
 		"text": line.get("text"),
 		"speaker": line.get("speaker"),
 		"id": line.get("id"),
-		"tags": line.get("tags")
-	 }
+		"tags": line.get("tags", [])
+	}
 
 
 func _options(options):
@@ -22,10 +22,10 @@ func _options(options):
 		"type": "options",
 		"name": options.get("name"),
 		"id": options.get("id"),
-		"tags": options.get("tags"),
+		"tags": options.get("tags", []),
 		"speaker": options.get("speaker"),
 		"options": options.get("options")
-	 }
+	}
 
 
 func _option(option):
@@ -33,7 +33,7 @@ func _option(option):
 		"label": option.get("label"),
 		"speaker": option.get("speaker"),
 		"id": option.get("id"),
-		"tags": option.get("tags")
+		"tags": option.get("tags", [])
 	}
 
 
@@ -419,11 +419,13 @@ func test_persisted_data_control_options():
 	content = _get_next_options_content(dialogue)
 	assert_eq(content.options.size(), 2)
 
-	var stringified_data = to_json(dialogue.get_data())
+	var stringified_data = JSON.stringify(dialogue.get_data())
 
 	var dialogue2 = ClydeDialogue.new()
 	dialogue2.load_dialogue('options')
-	dialogue2.load_data(parse_json(stringified_data))
+	var test_json_conv = JSON.new()
+	test_json_conv.parse(stringified_data)
+	dialogue2.load_data(test_json_conv.get_data())
 
 	var content2 = _get_next_options_content(dialogue)
 	assert_eq(content2.options.size(), 2)
@@ -441,9 +443,11 @@ func test_persisted_data_control_variations():
 	var dialogue2 = ClydeDialogue.new()
 	dialogue2.load_dialogue('variations')
 
-	var stringified_data = to_json(dialogue.get_data())
+	var stringified_data = JSON.stringify(dialogue.get_data())
 
-	dialogue2.load_data(parse_json(stringified_data))
+	var test_json_conv = JSON.new()
+	test_json_conv.parse(stringified_data)
+	dialogue2.load_data(test_json_conv.get_data())
 	assert_eq_deep(dialogue2.get_content().text, "Hey")
 
 
@@ -452,8 +456,8 @@ var pending_events = []
 func test_events():
 	var dialogue = ClydeDialogue.new()
 	dialogue.load_dialogue('variables')
-	dialogue.connect("event_triggered", self, "_on_event_triggered")
-	dialogue.connect("variable_changed", self, "_on_variable_changed")
+	dialogue.connect("event_triggered",Callable(self,"_on_event_triggered"))
+	dialogue.connect("variable_changed",Callable(self,"_on_variable_changed"))
 
 	pending_events.push_back({ "type": "variable", "name": "xx", "value": true })
 	pending_events.push_back({ "type": "variable", "name": "first_time", "value": 2.0 })
@@ -475,7 +479,7 @@ func test_events():
 
 	while true:
 		var res = dialogue.get_content()
-		if not res:
+		if res == null:
 			break;
 		if res.type == 'options':
 			dialogue.choose(0)
@@ -484,9 +488,9 @@ func test_events():
 
 
 
-func _on_variable_changed(name, value, _previous_value):
+func _on_variable_changed(var_name, value, _previous_value):
 	for e in pending_events:
-		if e.type == 'variable' and e.name == name and  typeof(e.value) == typeof(value) and  e.value == value:
+		if e.type == 'variable' and e.name == var_name and  typeof(e.value) == typeof(value) and  e.value == value:
 			pending_events.erase(e)
 
 

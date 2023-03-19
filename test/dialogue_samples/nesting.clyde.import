@@ -2,12 +2,13 @@
 
 importer="clyde.dialogue"
 type="PackedDataContainer"
-path="res://.import/nesting.clyde-cad5b2b960e17938d55c34fa0091f958.res"
+uid="uid://b2yxx54k2t47a"
+path="res://.godot/imported/nesting.clyde-cad5b2b960e17938d55c34fa0091f958.res"
 
 [deps]
 
 source_file="res://test/dialogue_samples/nesting.clyde"
-dest_files=[ "res://.import/nesting.clyde-cad5b2b960e17938d55c34fa0091f958.res" ]
+dest_files=["res://.godot/imported/nesting.clyde-cad5b2b960e17938d55c34fa0091f958.res"]
 
 [params]
 

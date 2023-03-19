@@ -2,12 +2,13 @@
 
 importer="clyde.dialogue"
 type="PackedDataContainer"
-path="res://.import/empty.clyde-65e9908f583bc7b65a2ba68bc6fb64ec.res"
+uid="uid://ckgxwshta1ser"
+path="res://.godot/imported/empty.clyde-65e9908f583bc7b65a2ba68bc6fb64ec.res"
 
 [deps]
 
 source_file="res://test/dialogue_samples/empty.clyde"
-dest_files=[ "res://.import/empty.clyde-65e9908f583bc7b65a2ba68bc6fb64ec.res" ]
+dest_files=["res://.godot/imported/empty.clyde-65e9908f583bc7b65a2ba68bc6fb64ec.res"]
 
 [params]
 

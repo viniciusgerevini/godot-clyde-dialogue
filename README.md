@@ -29,6 +29,8 @@ The Wolf:   If I'm curt with you, it's because time is
             sugar on top, clean the f****n' car.
 ```
 
+_This branch has the source code for Godot 4. For Godot 3 check the [godot_3](https://github.com/viniciusgerevini/godot-clyde-dialogue/tree/godot_3) branch._
+
 ## Usage
 
 The importer automatically imports `.clyde` files to be used with the interpreter. This improves performance, as the dialogue is parsed beforehand.

@@ -1,4 +1,4 @@
-extends Reference
+extends RefCounted
 
 signal variable_changed(name, value, previous_value)
 

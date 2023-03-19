@@ -1,10 +1,10 @@
-extends Reference
+extends RefCounted
 
 const Lexer = preload('./Lexer.gd')
 
 var _tokens
-var current_token;
-var _lookadhed_tokens = [];
+var current_token
+var _lookadhed_tokens = []
 
 
 func set_tokens(tokens):
@@ -12,12 +12,12 @@ func set_tokens(tokens):
 
 
 func consume(expected = null):
-	if !_lookadhed_tokens.size():
+	if _lookadhed_tokens.size() == 0:
 		_lookadhed_tokens.push_back(_tokens.next())
 
 	var lookahead = _lookadhed_tokens.pop_front()
 
-	if expected != null and (not lookahead or not expected.has(lookahead.token)):
+	if expected != null and (lookahead == null or not expected.has(lookahead.token)):
 		_wrong_token_error(lookahead, expected)
 
 	current_token = lookahead;
@@ -34,8 +34,12 @@ func peek(expected = null, offset = 0):
 
 	var lookahead = _lookadhed_tokens[offset] if _lookadhed_tokens.size() > offset else null
 
-	if not expected || (lookahead != null and expected.has(lookahead.token)):
+	if expected == null || (lookahead != null and expected.has(lookahead.token)):
 		return lookahead
+
+
+func has_next(expected = null, offset = 0) -> bool:
+	return peek(expected, offset) != null
 
 
 func _wrong_token_error(token, expected):

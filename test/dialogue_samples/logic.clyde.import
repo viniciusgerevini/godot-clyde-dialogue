@@ -2,12 +2,13 @@
 
 importer="clyde.dialogue"
 type="PackedDataContainer"
-path="res://.import/logic.clyde-22ebb89f1f3db48630e0b4d4432b0875.res"
+uid="uid://15id66ewkcot"
+path="res://.godot/imported/logic.clyde-22ebb89f1f3db48630e0b4d4432b0875.res"
 
 [deps]
 
 source_file="res://test/dialogue_samples/logic.clyde"
-dest_files=[ "res://.import/logic.clyde-22ebb89f1f3db48630e0b4d4432b0875.res" ]
+dest_files=["res://.godot/imported/logic.clyde-22ebb89f1f3db48630e0b4d4432b0875.res"]
 
 [params]
 
