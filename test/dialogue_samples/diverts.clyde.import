@@ -2,12 +2,13 @@
 
 importer="clyde.dialogue"
 type="PackedDataContainer"
-path="res://.import/diverts.clyde-14a57a89544777adabd16596a7f2041d.res"
+uid="uid://cq4stub8pjctc"
+path="res://.godot/imported/diverts.clyde-14a57a89544777adabd16596a7f2041d.res"
 
 [deps]
 
 source_file="res://test/dialogue_samples/diverts.clyde"
-dest_files=[ "res://.import/diverts.clyde-14a57a89544777adabd16596a7f2041d.res" ]
+dest_files=["res://.godot/imported/diverts.clyde-14a57a89544777adabd16596a7f2041d.res"]
 
 [params]
 

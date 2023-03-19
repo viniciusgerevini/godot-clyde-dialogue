@@ -46,10 +46,10 @@ id last #tag #another_tag $some_id
 				"type": 'content',
 				"content": [
 					{ "type": 'line', "value": 'say what one more time!', "id": 'first', "speaker": 'jules', "tags": [ 'yelling', 'mad' ], "id_suffixes": null },
-					{ "type": 'line', "value": 'just text', "speaker": null, "id": null, "tags": null, "id_suffixes": null },
-					{ "type": 'line', "value": 'just id', "id": 'another', "speaker": null, "tags": null, "id_suffixes": [ "var1", "var2" ] },
+					{ "type": 'line', "value": 'just text', "speaker": null, "id": null, "tags": [], "id_suffixes": null },
+					{ "type": 'line', "value": 'just id', "id": 'another', "speaker": null, "tags": [], "id_suffixes": [ "var1", "var2" ] },
 					{ "type": 'line', "value": 'just tags', "tags": [ 'tag' ], "speaker": null, "id": null, "id_suffixes": null },
-					{ "type": 'line', "value": 'just speaker', "speaker": 'speaker', "id": null, "tags": null, "id_suffixes": null },
+					{ "type": 'line', "value": 'just speaker', "speaker": 'speaker', "id": null, "tags": [], "id_suffixes": null },
 					{ "type": 'line', "value": 'id last', "speaker": null, "id": 'some_id', "tags": [ 'tag', 'another_tag' ], "id_suffixes": null },
 				]
 			}],
@@ -79,6 +79,7 @@ hello! $id_on_first_line #and_tags
 	}
 	assert_eq_deep(result, expected)
 
+
 func test_parse_text_in_quotes():
 	var result = parse("""
 \"jules: say what one more time!
@@ -93,8 +94,8 @@ Just talking.\"
 		"content": [{
 			"type": 'content',
 			"content": [
-				{ "type": 'line', "value": 'jules: say what one more time!\n	 Just say it $some_id #tag', "speaker": null, "id": null, "tags": null, "id_suffixes": null },
-				{ "type": 'line', "value": 'hello! $id_on_first_line #and_tags\nJust talking.', "speaker": null, "id": null, "tags": null, "id_suffixes": null },
+				{ "type": 'line', "value": 'jules: say what one more time!\n	 Just say it $some_id #tag', "speaker": null, "id": null, "tags": [], "id_suffixes": null },
+				{ "type": 'line', "value": 'hello! $id_on_first_line #and_tags\nJust talking.', "speaker": null, "id": null, "tags": [], "id_suffixes": null },
 				{ "type": 'line', "value": 'this has $everything:', "id": 'id_on_first_line', "tags": [ 'and_tags' ], "speaker": null, "id_suffixes": null },
 			]
 		}],

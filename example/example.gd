@@ -6,8 +6,8 @@ func _ready():
 	_dialogue = ClydeDialogue.new()
 	_dialogue.load_dialogue('pulp_with_blocks')
 
-	_dialogue.connect("event_triggered", self, '_on_event_triggered')
-	_dialogue.connect("variable_changed", self, '_on_variable_changed')
+	_dialogue.connect("event_triggered",Callable(self,'_on_event_triggered'))
+	_dialogue.connect("variable_changed",Callable(self,'_on_variable_changed'))
 
 
 func _get_next_dialogue_line():
@@ -44,7 +44,7 @@ func _set_up_options(options):
 	for option in options.options:
 		var btn = Button.new()
 		btn.text = option.label
-		btn.connect("button_down", self, "_on_option_selected", [index])
+		btn.connect("button_down",Callable(self,"_on_option_selected").bind(index))
 		$options/items.add_child(btn)
 		index += 1
 

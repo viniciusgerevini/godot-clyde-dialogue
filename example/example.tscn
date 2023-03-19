@@ -6,35 +6,35 @@
 anchor_right = 1.0
 anchor_bottom = 1.0
 size_flags_stretch_ratio = 0.0
-custom_constants/margin_right = 20
-custom_constants/margin_top = 20
-custom_constants/margin_left = 20
-custom_constants/margin_bottom = 20
+custom_constants/offset_right = 20
+custom_constants/offset_top = 20
+custom_constants/offset_left = 20
+custom_constants/offset_bottom = 20
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="line" type="VBoxContainer" parent="."]
-margin_left = 20.0
-margin_top = 20.0
-margin_right = 1004.0
-margin_bottom = 580.0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 1004.0
+offset_bottom = 580.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="speaker" type="Label" parent="line"]
-margin_right = 984.0
-margin_bottom = 14.0
+offset_right = 984.0
+offset_bottom = 14.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="text" type="Label" parent="line"]
-margin_top = 18.0
-margin_right = 984.0
-margin_bottom = 66.0
+offset_top = 18.0
+offset_right = 984.0
+offset_bottom = 66.0
 text = "Click to start
 
 "
@@ -42,26 +42,26 @@ autowrap = true
 
 [node name="options" type="VBoxContainer" parent="."]
 visible = false
-margin_left = 20.0
-margin_top = 20.0
-margin_right = 1004.0
-margin_bottom = 580.0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 1004.0
+offset_bottom = 580.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="speaker" type="Label" parent="options"]
-margin_left = -15.0
-margin_top = -15.0
-margin_right = 65.0
-margin_bottom = -1.0
+offset_left = -15.0
+offset_top = -15.0
+offset_right = 65.0
+offset_bottom = -1.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="name" type="Label" parent="options"]
-margin_right = 50.0
-margin_bottom = 14.0
+offset_right = 50.0
+offset_bottom = 14.0
 text = "Speaker"
 autowrap = true
 __meta__ = {
@@ -69,27 +69,27 @@ __meta__ = {
 }
 
 [node name="items" type="VBoxContainer" parent="options"]
-margin_top = 18.0
-margin_right = 50.0
-margin_bottom = 18.0
+offset_top = 18.0
+offset_right = 50.0
+offset_bottom = 18.0
 
 [node name="dialogue_ended" type="VBoxContainer" parent="."]
 visible = false
-margin_left = 20.0
-margin_top = 20.0
-margin_right = 1004.0
-margin_bottom = 580.0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 1004.0
+offset_bottom = 580.0
 
 [node name="Label" type="Label" parent="dialogue_ended"]
-margin_right = 984.0
-margin_bottom = 31.0
+offset_right = 984.0
+offset_bottom = 31.0
 text = "Dialogue ended
 "
 
 [node name="restart" type="Button" parent="dialogue_ended"]
-margin_top = 35.0
-margin_right = 984.0
-margin_bottom = 55.0
+offset_top = 35.0
+offset_right = 984.0
+offset_bottom = 55.0
 text = "Restart"
 
 [connection signal="pressed" from="dialogue_ended/restart" to="." method="_on_restart_pressed"]
