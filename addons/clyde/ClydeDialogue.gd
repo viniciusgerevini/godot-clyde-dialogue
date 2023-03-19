@@ -1,8 +1,9 @@
-extends Reference
+extends RefCounted
+
+class_name ClydeDialogue
 
 const Interpreter = preload('./interpreter/Interpreter.gd')
 
-class_name ClydeDialogue
 
 signal variable_changed(name, value, previous_value)
 signal event_triggered(name)
@@ -21,12 +22,16 @@ var _interpreter
 #        multiple dialogues in the same file.
 func load_dialogue(file_name, block = null):
 	var file = _load_file(_get_file_path(file_name))
+
+	if file.is_empty():
+		return
+
 	_interpreter = Interpreter.new()
 	_interpreter.init(file, {
 		"id_suffix_lookup_separator": _config_id_suffix_lookup_separator(),
 	})
-	_interpreter.connect("variable_changed", self, "_trigger_variable_changed")
-	_interpreter.connect("event_triggered", self, "_trigger_event_triggered")
+	_interpreter.connect("variable_changed",Callable(self,"_trigger_variable_changed"))
+	_interpreter.connect("event_triggered",Callable(self,"_trigger_event_triggered"))
 	if block:
 		_interpreter.select_block(block)
 
@@ -80,28 +85,29 @@ func _load_file(path) -> Dictionary:
 		var container = _load_clyde_file(path)
 		return container as Dictionary
 
-	var f := File.new()
-	f.open(path, File.READ)
-	var result := JSON.parse(f.get_as_text())
+	var f := FileAccess.open(path, FileAccess.READ)
+	var test_json_conv = JSON.new()
+	var parse_error = test_json_conv.parse(f.get_as_text())
 	f.close()
-	if result.error:
-		printerr("Failed to parse file: ", f.get_error())
+	if parse_error != OK or typeof(test_json_conv.data) != TYPE_DICTIONARY:
+		printerr("Failed to parse file: ", test_json_conv.get_error_message())
 		return {}
+	
+	return test_json_conv.data
 
-	return result.result as Dictionary
 
-
-func _load_clyde_file(path):
+func _load_clyde_file(path) -> Dictionary:
 	var data = load(path).__data__.get_string_from_utf8()
-	var parsed_json = JSON.parse(data)
+	var test_json_conv = JSON.new()
+	var parse_error = test_json_conv.parse(data)
 
-	if OK != parsed_json.error:
-		var format = [parsed_json.error_line, parsed_json.error_string]
+	if parse_error != OK or typeof(test_json_conv.data) != TYPE_DICTIONARY:
+		var format = [test_json_conv.get_error_line(), test_json_conv.get_error_message()]
 		var error_string = "%d: %s" % format
 		printerr("Could not parse json", error_string)
-		return null
+		return {}
 
-	return parsed_json.result
+	return test_json_conv.data
 
 
 func _trigger_variable_changed(name, value, previous_value):
@@ -116,13 +122,13 @@ func _get_file_path(file_name):
 	var p = file_name
 	var extension = file_name.get_extension()
 
-	if (not extension):
+	if (extension == ""):
 		p = "%s.clyde" % file_name
 
 	if p.begins_with('./') or p.begins_with('res://'):
 		return p
 
-	return _get_source_folder().plus_file(p)
+	return _get_source_folder().path_join(p)
 
 
 func _get_source_folder():

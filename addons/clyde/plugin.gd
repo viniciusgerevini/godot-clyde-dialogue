@@ -1,4 +1,4 @@
-tool
+@tool
 extends EditorPlugin
 
 const ImportPlugin = preload("import_plugin.gd")
@@ -17,7 +17,7 @@ func _enter_tree():
 	_setup_project_settings()
 
 
-func disable_plugin():
+func _disable_plugin():
 	remove_import_plugin(_import_plugin)
 	_import_plugin = null
 	_clear_project_settings()

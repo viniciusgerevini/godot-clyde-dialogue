@@ -1,5 +1,6 @@
 {
  "background_color": "ff262626",
+ "compact_mode": false,
  "config_file": "res://.gutconfig.json",
  "dirs": [
   "res://test"
@@ -9,6 +10,7 @@
  "font_color": "ffcccccc",
  "font_name": "CourierPrime",
  "font_size": 16,
+ "gut_on_top": true,
  "hide_orphans": false,
  "ignore_pause": false,
  "include_subdirs": false,
@@ -17,6 +19,15 @@
  "junit_xml_timestamp": false,
  "log_level": 1,
  "opacity": 100,
+ "paint_after": 0.1,
+ "panel_options": {
+  "font_name": "CourierPrime",
+  "font_size": 30,
+  "hide_output_text": false,
+  "hide_result_tree": false,
+  "hide_settings": false,
+  "use_colors": false
+ },
  "post_run_script": "",
  "pre_run_script": "",
  "prefix": "test_",

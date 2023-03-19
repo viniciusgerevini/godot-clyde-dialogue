@@ -1,4 +1,4 @@
-extends Reference
+extends RefCounted
 
 const TOKEN_TEXT = "TEXT"
 const TOKEN_INDENT = "INDENT"
@@ -550,7 +550,7 @@ func _handle_logic_block_stop():
 
 func _handle_logic_block():
 	if _input[_position] == '"' or _input[_position] == "'":
-		if not _current_quote:
+		if _current_quote != null:
 			_current_quote = _input[_position]
 		return _handle_logic_string()
 
@@ -626,7 +626,7 @@ func _handle_logic_block():
 	if _input[_position] == '!':
 		return _handle_logic_not()
 
-	if _input[_position].is_valid_integer():
+	if _input[_position].is_valid_int():
 		return _handle_logic_number()
 
 	var identifier = RegEx.new()
@@ -695,7 +695,7 @@ func _handle_logic_number():
 	var initial_column = _column
 	var values = ''
 
-	while _is_valid_position() and (_input[_position] == '.' or _input[_position].is_valid_integer()):
+	while _is_valid_position() and (_input[_position] == '.' or _input[_position].is_valid_int()):
 		values += _input[_position]
 		_position += 1
 		_column += 1

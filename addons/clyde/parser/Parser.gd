@@ -1,4 +1,4 @@
-extends Reference
+extends RefCounted
 
 const Lexer = preload("./Lexer.gd")
 const TokenWalker = preload("./TokenWalker.gd")
@@ -45,7 +45,7 @@ func parse(doc):
 #	print(l.init(doc).get_all())
 
 	var result = _document()
-	if _tokens.peek():
+	if _tokens.has_next():
 		_tokens.consume([ Lexer.TOKEN_EOF ])
 
 	return result
@@ -81,7 +81,7 @@ func _document():
 
 	var result =  DocumentNode([ContentNode(_lines())])
 
-	if _tokens.peek([Lexer.TOKEN_BLOCK]):
+	if _tokens.has_next([Lexer.TOKEN_BLOCK]):
 		result.blocks = _blocks()
 
 	return result
@@ -93,7 +93,7 @@ func _blocks():
 		BlockNode(_tokens.current_token.value, ContentNode(_lines()))
 	]
 
-	while _tokens.peek([Lexer.TOKEN_BLOCK]):
+	while _tokens.has_next([Lexer.TOKEN_BLOCK]):
 		blocks = blocks + _blocks()
 
 	return blocks
@@ -115,13 +115,13 @@ func _lines():
 	var lines
 	var tk = _tokens.peek(acceptable_next)
 
-	if !tk:
+	if tk == null:
 		return []
 
 	if tk.token == Lexer.TOKEN_SPEAKER or tk.token == Lexer.TOKEN_TEXT:
 		_tokens.consume([ Lexer.TOKEN_SPEAKER, Lexer.TOKEN_TEXT ])
 		var line = _line()
-		if _tokens.peek([Lexer.TOKEN_BRACE_OPEN]):
+		if _tokens.has_next([Lexer.TOKEN_BRACE_OPEN]):
 			_tokens.consume([Lexer.TOKEN_BRACE_OPEN])
 			lines = [_line_with_action(line)]
 		else:
@@ -130,7 +130,6 @@ func _lines():
 		lines = [_options()]
 	elif tk.token == Lexer.TOKEN_DIVERT or tk.token == Lexer.TOKEN_DIVERT_PARENT:
 		lines = [_divert()]
-#			break
 	elif tk.token == Lexer.TOKEN_BRACKET_OPEN:
 			_tokens.consume([ Lexer.TOKEN_BRACKET_OPEN ])
 			lines = [_variations()]
@@ -139,15 +138,15 @@ func _lines():
 			_tokens.consume([ Lexer.TOKEN_LINE_BREAK ])
 
 		_tokens.consume([Lexer.TOKEN_BRACE_OPEN])
-		if _tokens.peek([Lexer.TOKEN_KEYWORD_SET, Lexer.TOKEN_KEYWORD_TRIGGER]):
+		if _tokens.has_next([Lexer.TOKEN_KEYWORD_SET, Lexer.TOKEN_KEYWORD_TRIGGER]):
 			lines = [_line_with_action()]
 		else:
-			if _tokens.peek([Lexer.TOKEN_KEYWORD_WHEN]):
+			if _tokens.has_next([Lexer.TOKEN_KEYWORD_WHEN]):
 				_tokens.consume([Lexer.TOKEN_KEYWORD_WHEN])
 			lines = [_conditional_line()]
 
 
-	if _tokens.peek(acceptable_next):
+	if _tokens.has_next(acceptable_next):
 		lines = lines + _lines()
 
 	return lines
@@ -164,6 +163,7 @@ func _dialogue_line():
 		Lexer.TOKEN_TEXT:
 			return _text_line()
 
+
 func _line_with_speaker():
 	var value = _tokens.current_token.value
 	_tokens.consume([Lexer.TOKEN_TEXT])
@@ -177,7 +177,7 @@ func _text_line():
 	var next = _tokens.peek([Lexer.TOKEN_LINE_ID, Lexer.TOKEN_TAG])
 	var line
 
-	if next:
+	if next != null:
 		_tokens.consume([Lexer.TOKEN_LINE_ID, Lexer.TOKEN_TAG])
 		line = _line_with_metadata()
 		line.value = value
@@ -185,10 +185,10 @@ func _text_line():
 		line = LineNode(value)
 
 
-	if _is_multiline_enabled && _tokens.peek([Lexer.TOKEN_INDENT]):
+	if _is_multiline_enabled && _tokens.has_next([Lexer.TOKEN_INDENT]):
 		_tokens.consume([Lexer.TOKEN_INDENT])
 
-		if _tokens.peek([Lexer.TOKEN_OPTION, Lexer.TOKEN_STICKY_OPTION, Lexer.TOKEN_FALLBACK_OPTION]):
+		if _tokens.has_next([Lexer.TOKEN_OPTION, Lexer.TOKEN_STICKY_OPTION, Lexer.TOKEN_FALLBACK_OPTION]):
 			var options = _options()
 			options.id = line.id
 			options.name = line.value
@@ -196,15 +196,15 @@ func _text_line():
 			options.id_suffixes = line.id_suffixes
 			line = options
 		else:
-			while !_tokens.peek([Lexer.TOKEN_DEDENT, Lexer.TOKEN_EOF]):
+			while not _tokens.has_next([Lexer.TOKEN_DEDENT, Lexer.TOKEN_EOF]):
 				_tokens.consume([Lexer.TOKEN_TEXT])
 				var next_line = _text_line()
 				line.value += " %s" % next_line.value
-				if next_line.id:
+				if next_line.id != null:
 					line.id = next_line.id
 					line.id_suffixes = next_line.id_suffixes
 
-				if next_line.tags:
+				if not next_line.tags.is_empty():
 					line.tags = next_line.tags
 
 			_tokens.consume([Lexer.TOKEN_DEDENT, Lexer.TOKEN_EOF])
@@ -223,23 +223,23 @@ func _line_with_id():
 	var value = _tokens.current_token.value
 	var suffixes
 
-	if _tokens.peek([Lexer.TOKEN_ID_SUFFIX]):
+	if _tokens.has_next([Lexer.TOKEN_ID_SUFFIX]):
 		suffixes = _id_suffixes()
 
 
-	if _tokens.peek([Lexer.TOKEN_TAG]):
+	if _tokens.has_next([Lexer.TOKEN_TAG]):
 		_tokens.consume([Lexer.TOKEN_TAG])
 		var line = _line_with_tags()
 		line.id = value
 		line.id_suffixes = suffixes
 		return line
 
-	return LineNode(null, null, value, null, suffixes)
+	return LineNode(null, null, value, [], suffixes)
 
 
 func _id_suffixes():
 	var suffixes = []
-	while _tokens.peek([Lexer.TOKEN_ID_SUFFIX]):
+	while _tokens.has_next([Lexer.TOKEN_ID_SUFFIX]):
 		var token = _tokens.consume([Lexer.TOKEN_ID_SUFFIX])
 		suffixes.push_back(token.value)
 	return suffixes
@@ -247,13 +247,10 @@ func _id_suffixes():
 
 func _line_with_tags():
 	var value = _tokens.current_token.value
-	var next = _tokens.peek([Lexer.TOKEN_LINE_ID, Lexer.TOKEN_TAG])
+	var next = _tokens.has_next([Lexer.TOKEN_LINE_ID, Lexer.TOKEN_TAG])
 	if next:
 		_tokens.consume([Lexer.TOKEN_LINE_ID, Lexer.TOKEN_TAG])
 		var line = _line_with_metadata()
-		if not line.tags:
-			line.tags = []
-
 		line.tags.push_front(value)
 		return line
 
@@ -263,10 +260,10 @@ func _line_with_tags():
 func _options():
 	var options = OptionsNode([])
 
-	while _tokens.peek([Lexer.TOKEN_OPTION, Lexer.TOKEN_STICKY_OPTION, Lexer.TOKEN_FALLBACK_OPTION]):
+	while _tokens.has_next([Lexer.TOKEN_OPTION, Lexer.TOKEN_STICKY_OPTION, Lexer.TOKEN_FALLBACK_OPTION]):
 		options.content.push_back(_option())
 
-	if _tokens.peek([ Lexer.TOKEN_DEDENT ]):
+	if _tokens.has_next([ Lexer.TOKEN_DEDENT ]):
 		_tokens.consume([ Lexer.TOKEN_DEDENT ])
 
 	return options
@@ -306,11 +303,11 @@ func _option():
 			if include_label_as_content:
 				lines.push_back(main_item)
 
-	if _tokens.peek([Lexer.TOKEN_BRACE_OPEN]):
+	if _tokens.has_next([Lexer.TOKEN_BRACE_OPEN]):
 		_tokens.consume([Lexer.TOKEN_BRACE_OPEN])
 		var block = _nested_logic_block()
 
-		if not root:
+		if root == null:
 			root = block.root
 			wrapper = block.wrapper
 		else:
@@ -320,12 +317,12 @@ func _option():
 		_tokens.consume([Lexer.TOKEN_LINE_BREAK])
 
 
-	if _tokens.current_token.token == Lexer.TOKEN_INDENT || _tokens.peek([Lexer.TOKEN_INDENT]):
+	if _tokens.current_token.token == Lexer.TOKEN_INDENT || _tokens.has_next([Lexer.TOKEN_INDENT]):
 		if _tokens.current_token.token != Lexer.TOKEN_INDENT:
 			_tokens.consume([Lexer.TOKEN_INDENT])
 
 		lines = lines + _lines()
-		if !main_item:
+		if main_item == null:
 			main_item = lines[0]
 
 		_tokens.consume([Lexer.TOKEN_DEDENT, Lexer.TOKEN_EOF])
@@ -352,7 +349,7 @@ func _nested_logic_block():
 	var root
 	var wrapper
 	while _tokens.current_token.token == Lexer.TOKEN_BRACE_OPEN:
-		if not root:
+		if root == null:
 			root = _logic_block()
 			wrapper = root
 		else:
@@ -360,7 +357,7 @@ func _nested_logic_block():
 			wrapper.content = next
 			wrapper = next
 
-		if _tokens.peek([Lexer.TOKEN_BRACE_OPEN]):
+		if _tokens.has_next([Lexer.TOKEN_BRACE_OPEN]):
 			_tokens.consume([Lexer.TOKEN_BRACE_OPEN])
 
 	return {
@@ -380,14 +377,14 @@ func _divert():
 		Lexer.TOKEN_DIVERT_PARENT:
 			token = DivertNode('<parent>')
 
-	if _tokens.peek([Lexer.TOKEN_LINE_BREAK]):
+	if _tokens.has_next([Lexer.TOKEN_LINE_BREAK]):
 		_tokens.consume([Lexer.TOKEN_LINE_BREAK])
 		return token
 
-	if _tokens.peek([Lexer.TOKEN_EOF]):
+	if _tokens.has_next([Lexer.TOKEN_EOF]):
 		return  token
 
-	if _tokens.peek([Lexer.TOKEN_BRACE_OPEN]):
+	if _tokens.has_next([Lexer.TOKEN_BRACE_OPEN]):
 		_tokens.consume([Lexer.TOKEN_BRACE_OPEN])
 		token = _line_with_action(token)
 
@@ -398,7 +395,7 @@ func _divert():
 func _variations():
 	var variations = VariationsNode('sequence')
 
-	if _tokens.peek([Lexer.TOKEN_VARIATIONS_MODE]):
+	if _tokens.has_next([Lexer.TOKEN_VARIATIONS_MODE]):
 		var mode = _tokens.consume([Lexer.TOKEN_VARIATIONS_MODE])
 		if !_variations_modes.has(mode.value):
 			printerr("Wrong variation mode set \"%s\" on line %s column %s. Valid modes: %s." % [
@@ -411,15 +408,15 @@ func _variations():
 
 		variations.mode = mode.value
 
-	while _tokens.peek([Lexer.TOKEN_INDENT, Lexer.TOKEN_MINUS]):
-		if _tokens.peek([Lexer.TOKEN_INDENT]):
+	while _tokens.has_next([Lexer.TOKEN_INDENT, Lexer.TOKEN_MINUS]):
+		if _tokens.has_next([Lexer.TOKEN_INDENT]):
 			_tokens.consume([Lexer.TOKEN_INDENT])
 			continue
 
 		_tokens.consume([Lexer.TOKEN_MINUS])
 
 		var starts_next_line = false
-		if _tokens.peek([Lexer.TOKEN_INDENT]):
+		if _tokens.has_next([Lexer.TOKEN_INDENT]):
 			_tokens.consume([Lexer.TOKEN_INDENT])
 			starts_next_line = true
 
@@ -431,7 +428,7 @@ func _variations():
 			if lastContent.type != 'options':
 				_tokens.consume([Lexer.TOKEN_DEDENT])
 
-		if _tokens.peek([Lexer.TOKEN_DEDENT]):
+		if _tokens.has_next([Lexer.TOKEN_DEDENT]):
 			_tokens.consume([Lexer.TOKEN_DEDENT])
 
 	_tokens.consume([Lexer.TOKEN_BRACKET_CLOSE])
@@ -449,55 +446,55 @@ func _line_with_action(line = null):
 	if line:
 		var content = line
 
-		if _tokens.peek([Lexer.TOKEN_BRACE_OPEN]):
+		if _tokens.has_next([Lexer.TOKEN_BRACE_OPEN]):
 			_tokens.consume([Lexer.TOKEN_BRACE_OPEN])
 			content = _line_with_action(line)
 
 
-		if _tokens.peek([Lexer.TOKEN_LINE_BREAK]):
+		if _tokens.has_next([Lexer.TOKEN_LINE_BREAK]):
 			_tokens.consume([Lexer.TOKEN_LINE_BREAK])
 
 
-		if !token || token.token == Lexer.TOKEN_KEYWORD_WHEN:
+		if token == null or token.token == Lexer.TOKEN_KEYWORD_WHEN:
 			return ConditionalContentNode(expression, content)
 
 		return ActionContentNode(expression, content)
 
 
-	if _tokens.peek([Lexer.TOKEN_LINE_BREAK]):
+	if _tokens.has_next([Lexer.TOKEN_LINE_BREAK]):
 		_tokens.consume([Lexer.TOKEN_LINE_BREAK])
 		return expression
 
 
-	if _tokens.peek([Lexer.TOKEN_EOF]):
+	if _tokens.has_next([Lexer.TOKEN_EOF]):
 		return  expression
 
 
-	if _tokens.peek([Lexer.TOKEN_BRACE_OPEN]):
+	if _tokens.has_next([Lexer.TOKEN_BRACE_OPEN]):
 		_tokens.consume([Lexer.TOKEN_BRACE_OPEN])
-		if !token:
+		if token == null:
 			return ConditionalContentNode(expression, _line_with_action())
 		return ActionContentNode(expression, _line_with_action())
 
 
 	_tokens.consume([Lexer.TOKEN_SPEAKER, Lexer.TOKEN_TEXT])
 
-	if !token:
+	if token == null:
 		return ConditionalContentNode(expression, _line())
 	return ActionContentNode(expression, _line())
 
 
 func _logic_element():
-	if _tokens.peek([Lexer.TOKEN_KEYWORD_SET]):
+	if _tokens.has_next([Lexer.TOKEN_KEYWORD_SET]):
 		var assignments = _assignments()
 		return assignments
 
 
-	if _tokens.peek([Lexer.TOKEN_KEYWORD_TRIGGER]):
+	if _tokens.has_next([Lexer.TOKEN_KEYWORD_TRIGGER]):
 		var events = _events()
 		return events
 
-	if _tokens.peek([Lexer.TOKEN_KEYWORD_WHEN]):
+	if _tokens.has_next([Lexer.TOKEN_KEYWORD_WHEN]):
 		_tokens.consume([Lexer.TOKEN_KEYWORD_WHEN])
 
 	var condition = _condition()
@@ -505,15 +502,15 @@ func _logic_element():
 
 
 func _logic_block():
-	if _tokens.peek([Lexer.TOKEN_KEYWORD_SET]):
+	if _tokens.has_next([Lexer.TOKEN_KEYWORD_SET]):
 		var assignments = _assignments()
 		return ActionContentNode(assignments)
 
-	if _tokens.peek([Lexer.TOKEN_KEYWORD_TRIGGER]):
+	if _tokens.has_next([Lexer.TOKEN_KEYWORD_TRIGGER]):
 		var events = _events()
 		return ActionContentNode(events)
 
-	if _tokens.peek([Lexer.TOKEN_KEYWORD_WHEN]):
+	if _tokens.has_next([Lexer.TOKEN_KEYWORD_WHEN]):
 		_tokens.consume([Lexer.TOKEN_KEYWORD_WHEN])
 
 	var condition = _condition()
@@ -523,7 +520,7 @@ func _logic_block():
 func _assignments():
 	_tokens.consume([Lexer.TOKEN_KEYWORD_SET])
 	var assignments = [_assignment_expression()]
-	while _tokens.peek([Lexer.TOKEN_COMMA]):
+	while _tokens.has_next([Lexer.TOKEN_COMMA]):
 		_tokens.consume([Lexer.TOKEN_COMMA])
 		assignments.push_back(_assignment_expression())
 
@@ -536,7 +533,7 @@ func _events():
 	_tokens.consume([Lexer.TOKEN_IDENTIFIER])
 	var events = [EventNode(_tokens.current_token.value)]
 
-	while _tokens.peek([Lexer.TOKEN_COMMA]):
+	while _tokens.has_next([Lexer.TOKEN_COMMA]):
 		_tokens.consume([Lexer.TOKEN_COMMA])
 		_tokens.consume([Lexer.TOKEN_IDENTIFIER])
 		events.push_back(EventNode(_tokens.current_token.value))
@@ -550,20 +547,20 @@ func _conditional_line():
 	var expression = _condition()
 	var content
 
-	if _tokens.peek([Lexer.TOKEN_DIVERT, Lexer.TOKEN_DIVERT_PARENT]):
+	if _tokens.has_next([Lexer.TOKEN_DIVERT, Lexer.TOKEN_DIVERT_PARENT]):
 		content = _divert()
-	elif _tokens.peek([Lexer.TOKEN_LINE_BREAK]):
+	elif _tokens.has_next([Lexer.TOKEN_LINE_BREAK]):
 		_tokens.consume([Lexer.TOKEN_LINE_BREAK])
 		_tokens.consume([Lexer.TOKEN_INDENT])
 		content = ContentNode(_lines())
 		_tokens.consume([Lexer.TOKEN_DEDENT, Lexer.TOKEN_EOF])
-	elif _tokens.peek([Lexer.TOKEN_BRACE_OPEN]):
+	elif _tokens.has_next([Lexer.TOKEN_BRACE_OPEN]):
 		_tokens.consume([Lexer.TOKEN_BRACE_OPEN])
 		content = _line_with_action()
 	else:
 		_tokens.consume([Lexer.TOKEN_SPEAKER, Lexer.TOKEN_TEXT])
 		content = _line()
-		if _tokens.peek([Lexer.TOKEN_BRACE_OPEN]):
+		if _tokens.has_next([Lexer.TOKEN_BRACE_OPEN]):
 			_tokens.consume([Lexer.TOKEN_BRACE_OPEN])
 			content = _line_with_action(content)
 
@@ -579,7 +576,7 @@ func _condition():
 		Lexer.TOKEN_NOT,
 	])
 	var expression
-	if token:
+	if token != null:
 		expression = _expression()
 
 	_tokens.consume([Lexer.TOKEN_BRACE_CLOSE])
@@ -599,14 +596,14 @@ func _assignment_expression_internal():
 	_tokens.consume([Lexer.TOKEN_IDENTIFIER])
 	var variable = VariableNode(_tokens.current_token.value)
 
-	if _tokens.peek([Lexer.TOKEN_BRACE_CLOSE]):
+	if _tokens.has_next([Lexer.TOKEN_BRACE_CLOSE]):
 		return variable
 
 	var operators = _assignment_operators.keys()
 
 	_tokens.consume(operators)
 
-	if _tokens.peek([Lexer.TOKEN_IDENTIFIER]) && _tokens.peek(operators + [Lexer.TOKEN_BRACE_CLOSE], 1):
+	if _tokens.has_next([Lexer.TOKEN_IDENTIFIER]) && _tokens.has_next(operators + [Lexer.TOKEN_BRACE_CLOSE], 1):
 		return AssignmentNode(variable, _assignment_operators[_tokens.current_token.token], _assignment_expression_internal())
 	return AssignmentNode(variable, _assignment_operators[_tokens.current_token.token], _expression())
 
@@ -616,7 +613,7 @@ func _expression(min_precedence = 1):
 
 	var lhs = _operand()
 
-	if !_tokens.peek(operator_tokens):
+	if !_tokens.has_next(operator_tokens):
 		return lhs
 
 	_tokens.consume(operator_tokens)
@@ -700,11 +697,11 @@ func BlockNode(blockName, content):
 	return { "type": 'block', "name": blockName, "content": content }
 
 
-func LineNode(value, speaker = null, id = null, tags = null, id_suffixes = null):
+func LineNode(value, speaker = null, id = null, tags = [], id_suffixes = null):
 	return { "type": 'line', "value": value, "id": id, "speaker": speaker, "tags": tags, "id_suffixes": id_suffixes }
 
 
-func OptionsNode(content, name = null, id = null, speaker = null, tags = null, id_suffixes = null):
+func OptionsNode(content, name = null, id = null, speaker = null, tags = [], id_suffixes = null):
 	return { "type": 'options', "name": name, "content": content,"id": id, "speaker": speaker, "tags": tags, "id_suffixes": id_suffixes }
 
 

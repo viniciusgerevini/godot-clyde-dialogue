@@ -1,4 +1,4 @@
-extends Reference
+extends RefCounted
 
 const SPECIAL_VARIABLE_NAMES = [ 'OPTIONS_COUNT' ];
 
