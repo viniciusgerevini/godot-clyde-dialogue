@@ -86,28 +86,28 @@ func _load_file(path) -> Dictionary:
 		return container as Dictionary
 
 	var f := FileAccess.open(path, FileAccess.READ)
-	var test_json_conv = JSON.new()
-	var parse_error = test_json_conv.parse(f.get_as_text())
+	var json_file = JSON.new()
+	var parse_error = json_file.parse(f.get_as_text())
 	f.close()
-	if parse_error != OK or typeof(test_json_conv.data) != TYPE_DICTIONARY:
-		printerr("Failed to parse file: ", test_json_conv.get_error_message())
+	if parse_error != OK or typeof(json_file.data) != TYPE_DICTIONARY:
+		printerr("Failed to parse file: ", json_file.get_error_message())
 		return {}
 	
-	return test_json_conv.data
+	return json_file.data
 
 
 func _load_clyde_file(path) -> Dictionary:
 	var data = load(path).__data__.get_string_from_utf8()
-	var test_json_conv = JSON.new()
-	var parse_error = test_json_conv.parse(data)
+	var json_file = JSON.new()
+	var parse_error = json_file.parse(data)
 
-	if parse_error != OK or typeof(test_json_conv.data) != TYPE_DICTIONARY:
-		var format = [test_json_conv.get_error_line(), test_json_conv.get_error_message()]
+	if parse_error != OK or typeof(json_file.data) != TYPE_DICTIONARY:
+		var format = [json_file.get_error_line(), json_file.get_error_message()]
 		var error_string = "%d: %s" % format
 		printerr("Could not parse json", error_string)
 		return {}
 
-	return test_json_conv.data
+	return json_file.data
 
 
 func _trigger_variable_changed(name, value, previous_value):
