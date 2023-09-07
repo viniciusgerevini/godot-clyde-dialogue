@@ -2,6 +2,16 @@
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## 3.2.1 (2023-09-07)
+
+### Fixed
+
+- Added an override to the importer priority as it seems this was breaking the importer in some machines.
+
+### Thanks
+
+Thanks to @RogerRandomDev for reporting and fixing this issue.
+
 ## 3.2.0 (2022-08-25)
 
 ### Added
