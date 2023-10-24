@@ -351,6 +351,8 @@ func test_logic():
 	assert_eq_deep(dialogue.get_content().text, "variable was initialized with 1")
 	assert_eq_deep(dialogue.get_content().text, "setting multiple variables")
 	assert_eq_deep(dialogue.get_content().text, "4 == 4.  3 == 3")
+	assert_eq_deep(dialogue.get_content().text, "variable was initialized with 3")
+	assert_eq_deep(dialogue.get_content().text, "variable remains as 3 when init assign")
 	assert_eq_deep(dialogue.get_content().text, "This is a block")
 	assert_eq_deep(dialogue.get_content().text, "inside a condition")
 	assert_eq_deep(dialogue.get_content(), null)

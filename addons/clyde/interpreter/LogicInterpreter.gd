@@ -32,6 +32,9 @@ func _handle_assignment_operation(assignment, var_name, value):
 			return _mem.set_variable(var_name, pow(_mem.get_variable(var_name), value))
 		"assign_mod":
 			return _mem.set_variable(var_name, _mem.get_variable(var_name) % value)
+		"assign_init":
+			var current = _mem.get_variable(var_name)
+			return current if current != null else _mem.set_variable(var_name, value)
 		_:
 			printerr("Unknown operation %s" % assignment.operation)
 
