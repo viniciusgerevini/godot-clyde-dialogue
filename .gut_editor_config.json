@@ -32,7 +32,7 @@
  "pre_run_script": "",
  "prefix": "test_",
  "selected": null,
- "should_exit": false,
+ "should_exit": true,
  "should_exit_on_success": true,
  "should_maximize": false,
  "show_help": false,
