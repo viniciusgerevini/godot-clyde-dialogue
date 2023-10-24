@@ -116,11 +116,11 @@ A dialogue line (`Dictionary`).
 
 ```gdscript
 {
-    "type": "line",
-    "text": "Ahoy!",
-    "speaker": "Captain", # optional
-    "id": "123", # optional
-    "tags": ["happy"] # optional
+	"type": "line",
+	"text": "Ahoy!",
+	"speaker": "Captain", # optional
+	"id": "123", # optional
+	"tags": ["happy"] # optional
 }
 ```
 
@@ -130,18 +130,18 @@ Options list with options/topics the player may choose from (`Dictionary`).
 
 ```gdscript
 {
-    "type": "options",
-    "name": "What do you want to talk about?", # optional
-    "speaker": "NPC", # optional
-    "options": [
-      {
-        "label": "option display text",
-        "speaker": "NPC", # optional
-        "id": "abc", # optional
-        "tags": [ "some_tag" ], # optional
-      },
-      ...
-    ]
+	"type": "options",
+	"name": "What do you want to talk about?", # optional
+	"speaker": "NPC", # optional
+	"options": [
+	  {
+		"label": "option display text",
+		"speaker": "NPC", # optional
+		"id": "abc", # optional
+		"tags": [ "some_tag" ], # optional
+	  },
+	  ...
+	]
 }
 ```
 
@@ -161,8 +161,8 @@ You can listen to variable changes by observing the `variable_changed` signal.
 
 
 func _on_variable_changed(variable_name, value, previous_vale):
-    if variable_name == 'hp' and value < previous_value:
-        print('damage taken')
+	if variable_name == 'hp' and value < previous_value:
+		print('damage taken')
 
 ```
 
@@ -177,9 +177,9 @@ You can listen to events triggered by the dialogue by observing the `event_trigg
 
 
 func _on_event_triggered(event_name):
-    if event_name == 'self_destruction_activated':
-        _shake_screen()
-        _play_explosion()
+	if event_name == 'self_destruction_activated':
+		_shake_screen()
+		_play_explosion()
 
 ```
 

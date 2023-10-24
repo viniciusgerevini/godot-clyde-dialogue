@@ -764,6 +764,18 @@ func test_variables_indent():
 		{ "token": Lexer.TOKEN_EOF, "line": 4, "column": 0, "value": null },
 	])
 
+func test_variable_init_assignment():
+	var lexer = Lexer.new()
+	var tokens = lexer.init("{ set variable ?= 1 }").get_all()
+	assert_eq_deep(tokens, [
+		{ "token": Lexer.TOKEN_BRACE_OPEN, "line": 0, "column": 0, "value": null, },
+		{ "token": Lexer.TOKEN_KEYWORD_SET, "line": 0, "column": 2, "value": null, },
+		{ "token": Lexer.TOKEN_IDENTIFIER, "value": 'variable', "line": 0, "column": 6, },
+		{ "token": Lexer.TOKEN_ASSIGN_INIT, "line": 0, "column": 15, "value": null, },
+		{ "token": Lexer.TOKEN_NUMBER_LITERAL, "value": '1', "line": 0, "column": 18, },
+		{ "token": Lexer.TOKEN_BRACE_CLOSE, "line": 0, "column": 20, "value": null, },
+		{ "token": Lexer.TOKEN_EOF, "line": 0, "column": 21, "value": null },
+	])
 
 func test_variables_assignements():
 	var lexer = Lexer.new()
@@ -1043,7 +1055,7 @@ Pick an option.
   { not QUEST_STARTED } I have a quest for you! {set QUEST_STARTED = true}
   <-
 {no QUEST_STARTED}
- blah { not QUEST_STARTED} 
+ blah { not QUEST_STARTED}
  bleh { QUEST_STARTED}
 """).get_all()
 
@@ -1054,7 +1066,7 @@ Pick an option.
 		{ not QUEST_STARTED } I have a quest for you! {set QUEST_STARTED = true}
 		<-
 {no QUEST_STARTED}
-	blah { not QUEST_STARTED}	
+	blah { not QUEST_STARTED}
 	bleh { QUEST_STARTED}
 """).get_all()
 
