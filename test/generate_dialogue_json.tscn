@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://coo4rjd6iq8i7"]
+
+[ext_resource type="Script" path="res://test/generate_dialogue_json.gd" id="1_nvm03"]
+
+[node name="generate_dialogue_json" type="Node2D"]
+script = ExtResource("1_nvm03")
