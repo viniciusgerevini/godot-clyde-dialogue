@@ -358,6 +358,50 @@ func test_logic():
 	assert_eq_deep(dialogue.get_content(), null)
 
 
+func test_assigments():
+	var interpreter = ClydeDialogue.Interpreter.new()
+	var content = parse("""
+{ set a = 1, a += 1} this should be %a%
+{ set b = 1, b -= 2} this should be %b%
+{ set c = 1, c *= 3} this should be %c%
+{ set d = 1, d /= 4} this should be %d%
+{ set e = 1, e %= 5} this should be %e%
+{ set f = 2, f ^= 2} this should be %f%
+{ set a = "abc", a += "def"} this should be %a%
+""")
+	interpreter.init(content)
+	assert_eq_deep(interpreter.get_content().text, 'this should be 2')
+	assert_eq_deep(interpreter.get_content().text, 'this should be -1')
+	assert_eq_deep(interpreter.get_content().text, 'this should be 3')
+	assert_eq_deep(interpreter.get_content().text, 'this should be 0.25')
+	assert_eq_deep(interpreter.get_content().text, 'this should be 1')
+	assert_eq_deep(interpreter.get_content().text, 'this should be 4')
+	assert_eq_deep(interpreter.get_content().text, 'this should be abcdef')
+	assert_eq_deep(interpreter.get_content(), null)
+
+
+func test_uninitialized_increment_assigment():
+	var interpreter = ClydeDialogue.Interpreter.new()
+	var content = parse("""
+{ set a += 1} this should be %a%
+{ set b -= 2} this should be %b%
+{ set c *= 3} this should be %c%
+{ set d /= 4} this should be %d%
+{ set e %= 5} this should be %e%
+{ set f ^= 5} this should be %f%
+{ set g += "b"} this should be %g%
+""")
+	interpreter.init(content)
+	assert_eq_deep(interpreter.get_content().text, 'this should be 1')
+	assert_eq_deep(interpreter.get_content().text, 'this should be -2')
+	assert_eq_deep(interpreter.get_content().text, 'this should be 0')
+	assert_eq_deep(interpreter.get_content().text, 'this should be 0')
+	assert_eq_deep(interpreter.get_content().text, 'this should be 0')
+	assert_eq_deep(interpreter.get_content().text, 'this should be 0')
+	assert_eq_deep(interpreter.get_content().text, 'this should be b')
+	assert_eq_deep(interpreter.get_content(), null)
+
+
 func test_variables():
 	var dialogue = ClydeDialogue.new()
 	dialogue.load_dialogue('variables')

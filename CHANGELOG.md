@@ -2,6 +2,21 @@
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## Unreleased
+
+### Added
+
+- Assignment initializer operator `?=`. It only assigns if variable was not set before.
+
+### Changed
+
+- Increment assigment now have default values. i.e. If you run `set a += 1` when `a` is not set, it will be set to 1. Before it would break because value was null.
+    - As `+` is also used for strings, this `set a += "abc"` also works.
+
+### Fixed
+
+- Use correct `fmod` for `a %=` operations.
+
 ## 3.2.1 (2023-09-07)
 
 ### Fixed
