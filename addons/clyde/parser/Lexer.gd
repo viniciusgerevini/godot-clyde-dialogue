@@ -50,6 +50,7 @@ const TOKEN_ASSIGN_MULT = "*="
 const TOKEN_ASSIGN_POW = "^="
 const TOKEN_ASSIGN_MOD = "%="
 const TOKEN_ASSIGN_INIT = "?="
+const TOKEN_ASSIGN_TYPE_SAFE = ":="
 const TOKEN_COMMA = ","
 const TOKEN_LINE_BREAK = "line break"
 
@@ -587,6 +588,9 @@ func _handle_logic_block():
 
 	if _check_sequence(_input, _position, '?='):
 		return _handle_logic_operator(TOKEN_ASSIGN_INIT, 2)
+
+	if _check_sequence(_input, _position, ':='):
+		return _handle_logic_operator(TOKEN_ASSIGN_TYPE_SAFE, 2)
 
 	if _check_sequence(_input, _position, '-='):
 		return _create_simple_token(TOKEN_ASSIGN_SUB, 2)

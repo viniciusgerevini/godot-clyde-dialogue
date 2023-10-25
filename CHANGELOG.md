@@ -7,6 +7,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### Added
 
 - Assignment initializer operator `?=`. It only assigns if variable was not set before.
+- Type safe assignment operator `:=`. If used it will only assign if new value has the same type as the current one. It prints an error otherwise.
 
 ### Changed
 

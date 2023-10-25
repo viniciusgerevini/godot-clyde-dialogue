@@ -33,6 +33,7 @@ const _assignment_operators = {
 	Lexer.TOKEN_ASSIGN_POW: 'assign_pow',
 	Lexer.TOKEN_ASSIGN_MOD: 'assign_mod',
 	Lexer.TOKEN_ASSIGN_INIT: 'assign_init',
+	Lexer.TOKEN_ASSIGN_TYPE_SAFE: 'assign_type_safe',
 }
 
 var _tokens
