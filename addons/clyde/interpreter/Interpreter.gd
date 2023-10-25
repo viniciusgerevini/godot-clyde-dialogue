@@ -365,7 +365,7 @@ func _replace_variables(text):
 	regex.compile("\\%(?<variable>[A-z0-9]*)\\%")
 	for result in regex.search_all(text):
 		var value = _mem.get_variable(result.get_string("variable"))
-		text = text.replace(result.get_string(), value if value else "")
+		text = text.replace(result.get_string(), value if value != null else "")
 
 	return text
 
