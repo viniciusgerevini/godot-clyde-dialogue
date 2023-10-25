@@ -4,6 +4,8 @@
 { set some_value = 1 } variable was initialized with %some_value%
 { set a = 1, b = 2, c = 3 } setting multiple variables
 { set some_value += a += b } %some_value% == 4.  %a% == 3
+{ set some_new_value ?= 3 } variable was initialized with %some_new_value%
+{ set some_new_value ?= 4 } variable remains as %some_new_value% when init assign
 
 --  conditions
 { a == 1 } Hello!
