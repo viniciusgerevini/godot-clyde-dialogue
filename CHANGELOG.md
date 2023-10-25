@@ -2,6 +2,23 @@
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## Unreleased
+
+### Added
+
+- Assignment initializer operator `?=`. It only assigns if variable was not set before.
+- Type safe assignment operator `:=`. If used it will only assign if new value has the same type as the current one. It prints an error otherwise.
+
+### Changed
+
+- Increment assigment now have default values. i.e. If you run `set a += 1` when `a` is not set, it will be set to 1. Before it would break because value was null.
+    - As `+` is also used for strings, this `set a += "abc"` also works.
+
+### Fixed
+
+- Use correct `fmod` for `a %=` operations.
+- variable interpolation with value "0" was not being printed, as godot interprets it as falsy
+
 ## 3.2.0 (2022-08-25)
 
 ### Added

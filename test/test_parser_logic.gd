@@ -533,6 +533,8 @@ const assignments = [
 	[ '/=', 'assign_div'],
 	[ '%=', 'assign_mod'],
 	[ '^=', 'assign_pow'],
+	[ '?=', 'assign_init'],
+	[ ':=', 'assign_type_safe'],
 ]
 
 func test_assignments():

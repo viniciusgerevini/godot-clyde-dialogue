@@ -32,6 +32,8 @@ const _assignment_operators = {
 	Lexer.TOKEN_ASSIGN_DIV: 'assign_div',
 	Lexer.TOKEN_ASSIGN_POW: 'assign_pow',
 	Lexer.TOKEN_ASSIGN_MOD: 'assign_mod',
+	Lexer.TOKEN_ASSIGN_INIT: 'assign_init',
+	Lexer.TOKEN_ASSIGN_TYPE_SAFE: 'assign_type_safe',
 }
 
 var _tokens
@@ -288,11 +290,11 @@ func _option():
 	var wrapper
 
 	_tokens.consume(acceptable_next)
-	
+
 	if _tokens.current_token.token == Lexer.TOKEN_ASSIGN:
 		include_label_as_content = true
 		_tokens.consume(acceptable_next)
-		
+
 	if _tokens.current_token.token == Lexer.TOKEN_BRACE_OPEN:
 		var block = _nested_logic_block()
 		root = block.root
