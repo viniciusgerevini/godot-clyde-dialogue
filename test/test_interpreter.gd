@@ -402,21 +402,6 @@ func test_uninitialized_increment_assigment():
 	assert_eq_deep(interpreter.get_content(), null)
 
 
-func test_type_safe_assignment():
-	var interpreter = ClydeDialogue.Interpreter.new()
-	var content = parse("""
-{ set a := 1 } this should be safely assigned %a%
-{ set b := true } this should be safely assigned %b%
-{ set c := "something" } this should be safely assigned %c%
-{ set a := "something" } cannot re-assign value with different current type. Still %a%
-""")
-	interpreter.init(content)
-	assert_eq_deep(interpreter.get_content().text, 'this should be safely assigned 1')
-	assert_eq_deep(interpreter.get_content().text, 'this should be safely assigned true')
-	assert_eq_deep(interpreter.get_content().text, 'this should be safely assigned something')
-	assert_eq_deep(interpreter.get_content().text, 'cannot re-assign value with different current type. Still 1')
-	assert_eq_deep(interpreter.get_content(), null)
-
 func test_variables():
 	var dialogue = ClydeDialogue.new()
 	dialogue.load_dialogue('variables')

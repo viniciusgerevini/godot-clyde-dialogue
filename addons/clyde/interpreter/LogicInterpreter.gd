@@ -37,12 +37,6 @@ func _handle_assignment_operation(assignment, var_name, value):
 		"assign_init":
 			var current = _mem.get_variable(var_name)
 			return current if current != null else _mem.set_variable(var_name, value)
-		"assign_type_safe":
-			var current = _mem.get_variable(var_name)
-			if current != null and typeof(current) != typeof(value):
-				printerr("Trying to assign wrong type to variable %s" % var_name)
-				return
-			return _mem.set_variable(var_name, value)
 		_:
 			printerr("Unknown operation %s" % assignment.operation)
 
