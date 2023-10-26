@@ -247,7 +247,7 @@ func test_blocks_and_diverts():
 
 	var goodbye_option = [
 		_line({ "type": "line", "text": "See you next time!", "speaker": "player" }),
-		null
+		{ "type": "end" },
 	]
 
 	for line in initial_dialogue:
@@ -353,7 +353,7 @@ func test_logic():
 	assert_eq_deep(dialogue.get_content().text, "4 == 4.  3 == 3")
 	assert_eq_deep(dialogue.get_content().text, "This is a block")
 	assert_eq_deep(dialogue.get_content().text, "inside a condition")
-	assert_eq_deep(dialogue.get_content(), null)
+	assert_eq_deep(dialogue.get_content().type, "end")
 
 
 func test_assigments():
@@ -375,7 +375,7 @@ func test_assigments():
 	assert_eq_deep(interpreter.get_content().text, 'this should be 1')
 	assert_eq_deep(interpreter.get_content().text, 'this should be 4')
 	assert_eq_deep(interpreter.get_content().text, 'this should be abcdef')
-	assert_eq_deep(interpreter.get_content(), null)
+	assert_eq_deep(interpreter.get_content().type, "end")
 
 
 func test_uninitialized_increment_assigment():
@@ -397,7 +397,7 @@ func test_uninitialized_increment_assigment():
 	assert_eq_deep(interpreter.get_content().text, 'this should be 0')
 	assert_eq_deep(interpreter.get_content().text, 'this should be 0')
 	assert_eq_deep(interpreter.get_content().text, 'this should be b')
-	assert_eq_deep(interpreter.get_content(), null)
+	assert_eq_deep(interpreter.get_content().type, "end")
 
 
 func test_variables():
@@ -418,7 +418,7 @@ func test_variables():
 	assert_eq_deep(dialogue.get_content(), _line({ "type": "line", "text": "I want to talk about the universe!", "speaker": "player" }))
 	assert_eq_deep(dialogue.get_content(), _line({ "type": "line", "text": "That's too complex!", "speaker": "npc" }))
 	assert_eq_deep(dialogue.get_content(), _line({ "type": "line", "text": "I'm in trouble" }))
-	assert_eq_deep(dialogue.get_content(), null)
+	assert_eq_deep(dialogue.get_content().type, "end")
 	assert_eq_deep(dialogue.get_variable('xx'), true)
 
 
@@ -519,7 +519,7 @@ func test_events():
 
 	while true:
 		var res = dialogue.get_content()
-		if not res:
+		if res.type == "end":
 			break;
 		if res.type == 'options':
 			dialogue.choose(0)
