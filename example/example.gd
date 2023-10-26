@@ -12,7 +12,7 @@ func _ready():
 
 func _get_next_dialogue_line():
 	var content = _dialogue.get_content()
-	if content == null:
+	if content.type == "end":
 		$line.hide()
 		$options.hide()
 		$dialogue_ended.show()

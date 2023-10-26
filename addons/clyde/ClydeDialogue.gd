@@ -92,7 +92,7 @@ func _load_file(path) -> Dictionary:
 	if parse_error != OK or typeof(json_file.data) != TYPE_DICTIONARY:
 		printerr("Failed to parse file: ", json_file.get_error_message())
 		return {}
-	
+
 	return json_file.data
 
 
