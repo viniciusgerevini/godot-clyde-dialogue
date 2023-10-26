@@ -145,6 +145,8 @@ func _handle_document_node(_node):
 		node.content_index = content_index
 		return _handle_next_node(node.current.content[content_index]);
 
+	return { "type": "end" }
+
 
 func _handle_content_node(content_node):
 	if content_node.get("_index") == null:
@@ -296,6 +298,8 @@ func _handle_block_node(block):
 		node.content_index = content_index
 		return _handle_next_node(node.current.content.content[content_index]);
 
+	return { "type": "end" }
+
 
 func _handle_divert_node(divert):
 	if divert.target == '<parent>':
@@ -307,11 +311,15 @@ func _handle_divert_node(divert):
 		if _stack.size() > 1:
 			_stack_pop()
 			return _handle_next_node(_stack_head().current)
-	elif divert.target == '<end>':
+
+		return { "type": "end" }
+
+	if divert.target == '<end>':
 		_initialise_stack(_doc)
 		_stack_head().content_index = _stack_head().current.content.size();
-	else:
-		return _handle_next_node(_anchors[divert.target])
+		return { "type": "end" }
+
+	return _handle_next_node(_anchors[divert.target])
 
 
 func _handle_assignments_node(assignment_node):

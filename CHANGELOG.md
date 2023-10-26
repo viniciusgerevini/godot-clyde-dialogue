@@ -12,6 +12,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 - Increment assigment now have default values. i.e. If you run `set a += 1` when `a` is not set, it will be set to 1. Before it would break because value was null.
     - As `+` is also used for strings, this `set a += "abc"` also works.
+- Return end object (`{ "type": "end" }`) instead of null on dialogue end.
 
 ### Fixed
 
