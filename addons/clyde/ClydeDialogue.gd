@@ -19,11 +19,14 @@ signal variable_changed(name, value, previous_value)
 ## Emits when an event is triggered inside the dialogue.
 signal event_triggered(name)
 
+
 ## Custom folder where the interpreter should look for dialogue files in case just the name is provided.
 ## By default, it loads from ProjectSettings dialogue/source_folder
 var dialogue_folder = null
 
+
 var _interpreter
+
 
 ## Load dialogue file. [br]
 ## file_name: path to the dialogue file. I.e 'my_dialogue', 'res://my_dialogue.clyde', res://my_dialogue.json [br]
