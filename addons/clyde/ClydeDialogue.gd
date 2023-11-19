@@ -1,25 +1,36 @@
 extends RefCounted
 
-class_name ClydeDialogue
 
+class_name ClydeDialogue
+## Interface for the Clyde interpreter.
+##
+## Clyde is a language for writing game dialogues.
+## It supports branching dialogues, translations and interfacing with your game through variables and events.
+##
+## @tutorial: https://github.com/viniciusgerevini/godot-clyde-dialogue/blob/godot_4/USAGE.md
+
+
+## The interpreter used to run the dialogue.
 const Interpreter = preload('./interpreter/Interpreter.gd')
 
 
+## Emits when a variable is changed inside the dialogue.
 signal variable_changed(name, value, previous_value)
+## Emits when an event is triggered inside the dialogue.
 signal event_triggered(name)
 
-# Custom folder where the interpreter should look for dialogue files
-# in case just the name is provided.
-# by default, it loads from ProjectSettings dialogue/source_folder
+
+## Custom folder where the interpreter should look for dialogue files in case just the name is provided.
+## By default, it loads from ProjectSettings dialogue/source_folder
 var dialogue_folder = null
+
 
 var _interpreter
 
-# Load dialogue file
-# file_name: path to the dialogue file.
-#            i.e 'my_dialogue', 'res://my_dialogue.clyde', res://my_dialogue.json
-# block: block name to run. This allows keeping
-#        multiple dialogues in the same file.
+
+## Load dialogue file. [br]
+## file_name: path to the dialogue file. I.e 'my_dialogue', 'res://my_dialogue.clyde', res://my_dialogue.json [br]
+## block: block name to run. This allows keeping multiple dialogues in the same file. [br]
 func load_dialogue(file_name, block = null):
 	var file = _load_file(_get_file_path(file_name))
 
@@ -36,46 +47,45 @@ func load_dialogue(file_name, block = null):
 		_interpreter.select_block(block)
 
 
-# Start or restart dialogue. Variables are not reset.
+## Start or restart dialogue. Variables are not reset.
 func start(block_name = null):
 	_interpreter.select_block(block_name)
 
 
-# Get next dialogue content.
-# The content may be a line, options or null.
-# If null, it means the dialogue reached an end.
+## Get next dialogue content. [br]
+## The content may be a line, options or null. If null, it means the dialogue reached an end.
 func get_content():
 	return _interpreter.get_content()
 
 
-# Choose one of the available options.
+## Choose one of the available options.
 func choose(option_index):
 	return _interpreter.choose(option_index)
 
 
-# Set variable to be used in the dialogue
+## Set variable to be used in the dialogue.
 func set_variable(name, value):
 	_interpreter.set_variable(name, value)
 
 
-# Get current value of a variable inside the dialogue.
-# name: variable name
+## Get current value of a variable inside the dialogue. [br]
+## name: variable name
 func get_variable(name):
 	return _interpreter.get_variable(name)
 
 
-# Return all variables and internal variables. Useful for persisting the dialogue's internal
-# data, such as options already choosen and random variations states.
+## Return all variables and internal variables. Useful for persisting the dialogue's internal
+## data, such as options already choosen and random variations states.
 func get_data():
 	return _interpreter.get_data()
 
 
-# Load internal data
+## Load internal data
 func load_data(data):
 	return _interpreter.load_data(data)
 
 
-# Clear all internal data
+## Clear all internal data
 func clear_data():
 	return _interpreter.clear_data()
 
