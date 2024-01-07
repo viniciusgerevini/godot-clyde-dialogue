@@ -48,3 +48,9 @@ func _clear_project_settings():
 	ProjectSettings.clear(SETTING_SOURCE_FOLDER)
 	ProjectSettings.clear(SETTING_ID_SUFFIX_LOOKUP_SEPARATOR)
 	ProjectSettings.save()
+
+
+func _exit_tree() -> void:
+	if is_instance_valid(_import_plugin):
+		remove_import_plugin(_import_plugin)
+		_import_plugin = null
