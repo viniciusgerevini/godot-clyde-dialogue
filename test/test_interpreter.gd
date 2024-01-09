@@ -37,6 +37,12 @@ func _option(option):
 	}
 
 
+func _option_with_visibility_prop(option):
+	var o = _option(option)
+	o.is_visible = option.get("is_visible")
+	return o
+
+
 func _get_next_options_content(dialogue):
 	var content = dialogue.get_content()
 	while content.type != "options":
@@ -212,6 +218,35 @@ func test_fallback_options():
 	assert_eq_deep(interpreter.get_content().text, "end")
 	interpreter.select_block()
 	assert_eq_deep(interpreter.get_content(), _line({ "type": "line", "text": "b" }))
+
+
+func test_include_hidden_options():
+	var interpreter = ClydeDialogue.Interpreter.new()
+	var content = parse("""
+* a { this_condition_is_false }
+  line a
+* b
+  line b
+""")
+	interpreter.init(content, { "include_hidden_options": true })
+
+	var options = interpreter.get_content()
+
+	assert_eq(options.options.size(), 2)
+	assert_eq_deep(
+		options.options,
+		[
+			_option_with_visibility_prop({ "label": "a", "is_visible": false }),
+			_option_with_visibility_prop({ "label": "b", "is_visible": true })
+		]
+	)
+
+	# does not change options when choosing an invisible option
+	interpreter.choose(0)
+	assert_eq(interpreter.get_content().type, "options")
+
+	interpreter.choose(1)
+	assert_eq(interpreter.get_content().text, "line b")
 
 
 func test_blocks_and_diverts():

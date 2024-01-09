@@ -24,6 +24,7 @@ func init(document, interpreter_options = {}):
 
 	_config = {
 		"id_suffix_lookup_separator": interpreter_options.get("id_suffix_lookup_separator", "&"),
+		"include_hidden_options": interpreter_options.get("include_hidden_options", false)
 	}
 
 	_initialise_blocks(_doc)
@@ -43,6 +44,9 @@ func choose(option_index):
 
 		if option_index >= content.size():
 			printerr("Index %s not available." % option_index)
+			return
+
+		if (not content[option_index].get("is_visible", true)):
 			return
 
 		_mem.set_as_accessed(content[option_index]._index)
@@ -182,13 +186,15 @@ func _handle_options_node(options_node):
 	_add_to_stack(options_node)
 
 	var options = _get_visible_options(options_node.content)
+
 	_mem.set_internal_variable('OPTIONS_COUNT', options.size())
 
 	if options.size() == 0:
 		_stack_pop()
 		return _handle_next_node(_stack_head().current)
 
-	if options.size() == 1 and options[0].mode == 'fallback':
+	# fallback only works when hidden options are not shown
+	if options.size() == 1 and not _config.include_hidden_options and options[0].mode == "fallback":
 		choose(0)
 		return _handle_next_node(_stack_head().current)
 
@@ -198,32 +204,36 @@ func _handle_options_node(options_node):
 		"id": options_node.get("id"),
 		"tags": options_node.get("tags"),
 		"name": _replace_variables(_translate_text(options_node.get("id"), options_node.get("name"), options_node.get("id_suffixes"))),
-		"options": options.map(func(e): return _map_option(e, options.find(e))),
+		"options": options.map(func(e): return _map_option(e, options.find(e), _config.include_hidden_options)),
 	}
 
 
 func _get_visible_options(options):
 	return options.map(func (e):
-		return _prepare_option(e, options.find(e))
+		return _prepare_option(e, options.find(e), _config.include_hidden_options)
 	).filter(_check_if_option_not_accessed)
 
 
-func _prepare_option(option, index):
+func _prepare_option(option, index, should_include_hidden = false, is_visible = true):
 	if option.get("index") == null:
 		option._index = _generate_index() * 100 + index
 
 	if option.type == 'conditional_content':
 		option.content._index = option._index;
-		if _logic.check_condition(option.conditions):
-			return _prepare_option(option.content, index)
-		return
+
+		var is_visible_option = !!_logic.check_condition(option.conditions)
+		if should_include_hidden or is_visible_option:
+			return _prepare_option(option.content, index, should_include_hidden, is_visible_option)
+		return null
 
 	if option.type == 'action_content':
 		option.content._index = option._index
 		option.mode = option.content.mode
-		var content = _prepare_option(option.content, index)
+		var content = _prepare_option(option.content, index, should_include_hidden)
 		if content == null:
-			return
+			return null
+
+	option.is_visible = is_visible
 
 	return option
 
@@ -232,14 +242,18 @@ func _check_if_option_not_accessed(option):
 	return option != null and not (option.mode == 'once' and _mem.was_already_accessed(option._index))
 
 
-func _map_option(option, _index):
+func _map_option(option, _index, include_visibility_prop = false):
 	var o = option if option.type == 'option' else option.content
-	return {
+	var result = {
 		"speaker": o.get("speaker"),
 		"id": o.get("id"),
 		"tags": o.get("tags"),
 		"label": _replace_variables(_translate_text(o.get("id"), o.get("name"), o.get("id_suffixes"))),
 	}
+
+	if include_visibility_prop:
+		result.is_visible = o.get("is_visible", false)
+	return result
 
 
 func _handle_option_node(_option_node):
