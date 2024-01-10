@@ -30,7 +30,7 @@ var _interpreter
 
 ## Set optional settings for current interpreter. [br]
 ## Options:
-##   include_hidden_options (boolean, default false): Returns conditional options that failed the check.
+##   include_hidden_options (boolean, default false): Returns conditional options even when check resulted in false.
 ##
 func configure(options):
 	_options = options

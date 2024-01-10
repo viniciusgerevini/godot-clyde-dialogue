@@ -4,6 +4,10 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Unreleased
 
+### Breaking changes
+
+Dialogues now return an object when ended.
+
 ### Added
 
 - Assignment initializer operator `?=`. It only assigns if variable was not set before.
@@ -17,6 +21,12 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### Fixed
 
 - Use correct `fmod` for `a %=` operations.
+- Fixed crash when exiting editor started via command line (@Rubonnek)
+
+### Thanks
+
+- Thanks to @Rubonnek for finding and fixing the exit crash.
+- Thanks to @ThePat02 for updating the doc comments to be Godot 4's doc comments.
 
 ## 3.2.1 (2023-09-07)
 
