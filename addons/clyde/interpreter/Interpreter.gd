@@ -24,6 +24,7 @@ func init(document, interpreter_options = {}):
 
 	_config = {
 		"id_suffix_lookup_separator": interpreter_options.get("id_suffix_lookup_separator", "&"),
+		"include_hidden_options": interpreter_options.get("include_hidden_options", false),
 	}
 
 	_initialise_blocks(_doc)
@@ -42,6 +43,9 @@ func choose(option_index):
 
 		if option_index >= content.size():
 			printerr("Index %s not available." % option_index)
+			return
+
+		if not content[option_index].get("is_visible", true):
 			return
 
 		_mem.set_as_accessed(content[option_index]._index)
@@ -146,6 +150,7 @@ func _handle_document_node(_node):
 
 	return { "type": "end" }
 
+
 func _handle_content_node(content_node):
 	if not content_node.get("_index"):
 		content_node["_index"] = _generate_index()
@@ -186,7 +191,8 @@ func _handle_options_node(options_node):
 		_stack_pop()
 		return _handle_next_node(_stack_head().current)
 
-	if options.size() == 1 and options[0].mode == 'fallback':
+	# fallback only works when hidden options are not shown
+	if options.size() == 1 and not _config.include_hidden_options and options[0].mode == "fallback":
 		choose(0)
 		return _handle_next_node(_stack_head().current)
 
@@ -210,22 +216,27 @@ func _get_visible_options(options):
 	)
 
 
-func _prepare_option(option, index):
+func _prepare_option(option, index, is_visible = true):
+	var should_include_hidden = _config.include_hidden_options
+
 	if not option.get("index"):
 		option._index = _generate_index() * 100 + index
 
 	if option.type == 'conditional_content':
 		option.content._index = option._index;
-		if _logic.check_condition(option.conditions):
-			return _prepare_option(option.content, index)
-		return;
+		var is_visible_option = !!_logic.check_condition(option.conditions)
+		if should_include_hidden or is_visible_option:
+			return _prepare_option(option.content, index, is_visible_option)
+		return null
 
 	if option.type == 'action_content':
 		option.content._index = option._index
 		option.mode = option.content.mode
 		var content = _prepare_option(option.content, index)
 		if not content:
-			return
+			return null
+
+	option.is_visible = is_visible
 
 	return option;
 
@@ -235,13 +246,17 @@ func _check_if_option_not_accessed(option):
 
 
 func _map_option(option, _index):
+	var include_visibility_prop = _config.include_hidden_options
 	var o = option if option.type == 'option' else option.content
-	return {
+	var result = {
 		"speaker": o.get("speaker"),
 		"id": o.get("id"),
 		"tags": o.get("tags"),
 		"label": _replace_variables(_translate_text(o.get("id"), o.get("name"), o.get("id_suffixes"))),
 	}
+	if include_visibility_prop:
+		result.is_visible = o.get("is_visible", false)
+	return result
 
 
 func _handle_option_node(_option_node):

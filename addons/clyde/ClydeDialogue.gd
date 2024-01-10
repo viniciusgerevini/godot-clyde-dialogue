@@ -12,7 +12,16 @@ signal event_triggered(name)
 # by default, it loads from ProjectSettings dialogue/source_folder
 var dialogue_folder = null
 
+var _options = {}
 var _interpreter
+
+
+# Set optional settings for current interpreter. [br]
+# Options:
+#   include_hidden_options (boolean, default false): Returns conditional options even when check resulted in false.
+#
+func configure(options):
+	_options = options
 
 # Load dialogue file
 # file_name: path to the dialogue file.
@@ -24,6 +33,7 @@ func load_dialogue(file_name, block = null):
 	_interpreter = Interpreter.new()
 	_interpreter.init(file, {
 		"id_suffix_lookup_separator": _config_id_suffix_lookup_separator(),
+		"include_hidden_options": _options.get("include_hidden_options", false)
 	})
 	_interpreter.connect("variable_changed", self, "_trigger_variable_changed")
 	_interpreter.connect("event_triggered", self, "_trigger_event_triggered")
@@ -37,8 +47,7 @@ func start(block_name = null):
 
 
 # Get next dialogue content.
-# The content may be a line, options or null.
-# If null, it means the dialogue reached an end.
+# The content may be a line, options or end of dialogue.
 func get_content():
 	return _interpreter.get_content()
 
