@@ -532,6 +532,48 @@ func test_persisted_data_control_variations():
 	assert_eq_deep(dialogue2.get_content().text, "Hey")
 
 
+func test_changing_block_order_does_not_affect_persistence():
+	var interpreter = ClydeDialogue.Interpreter.new()
+	var dialogue_block_1 = """
+== block_1
+* option 1
+	line
+* option 2
+	line
+"""
+	var dialogue_block_2 = """
+== block_2
+* option 1
+	line
+* option 2
+	line
+"""
+
+	var content = parse(dialogue_block_1 + dialogue_block_2)
+	interpreter.init(content)
+	interpreter.select_block("block_1")
+
+	interpreter.get_content()
+	interpreter.choose(0)
+
+	var data = interpreter.get_data()
+
+	var inverted_content = parse(dialogue_block_2 + dialogue_block_1)
+	interpreter.init(inverted_content)
+	interpreter.load_data(data)
+
+	interpreter.select_block("block_1")
+
+	var block_1_options = interpreter.get_content()
+
+	interpreter.select_block("block_2")
+	var block_2_options = interpreter.get_content()
+
+
+	assert_eq_deep(block_1_options, _options({ "options": [_option({ "label": "option 2" })] }))
+	assert_eq_deep(block_2_options, _options({ "options": [_option({ "label": "option 1" }), _option({ "label": "option 2" })] }))
+
+
 var pending_events = []
 
 func test_events():
