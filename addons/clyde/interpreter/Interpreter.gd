@@ -16,7 +16,7 @@ var _config
 
 func init(document, interpreter_options = {}):
 	_doc = document
-	_doc._index = 1
+	_doc._index = "r"
 	_mem = Memory.new()
 	_mem.connect("variable_changed", self, "_trigger_variable_changed")
 	_logic = LogicInterpreter.new()
@@ -100,7 +100,7 @@ func _initialise_stack(root):
 
 func _initialise_blocks(doc):
 	for i in range(doc.blocks.size()):
-		doc.blocks[i]._index = i + 2
+		doc.blocks[i]._index = "b_%s" % doc.blocks[i].name
 		_anchors[doc.blocks[i].name] = doc.blocks[i]
 
 
@@ -121,7 +121,7 @@ func _add_to_stack(node):
 
 
 func _generate_index():
-	return (10 * _stack_head().current._index) + _stack_head().content_index
+	return "%s_%s" % [_stack_head().current._index, _stack_head().content_index]
 
 
 func _initialize_handlers():
@@ -220,7 +220,7 @@ func _prepare_option(option, index, is_visible = true):
 	var should_include_hidden = _config.include_hidden_options
 
 	if not option.get("index"):
-		option._index = _generate_index() * 100 + index
+		option._index = "%s_%s" % [_generate_index(), index]
 
 	if option.type == 'conditional_content':
 		option.content._index = option._index;
@@ -293,7 +293,7 @@ func _handle_variations_node(variations, attempt = 0):
 		variations["_index"] = _generate_index()
 		for index in range(variations.content.size()):
 			var c = variations.content[index]
-			c._index = _generate_index() * 100 + index
+			c._index = "%s_%s" % [_generate_index(), index]
 
 	var next = _handle_variation_mode(variations)
 	if next == -1 or attempt > variations.content.size():
@@ -441,9 +441,9 @@ func _handle_sequence_variation(variations):
 
 
 func _handle_shuffle_variation(variations, mode = 'cycle'):
-	var SHUFFLE_VISITED_KEY = "%s_shuffle_visited" % variations._index;
-	var LAST_VISITED_KEY = "%s_last_index" % variations._index;
-	var visited_items = _mem.get_internal_variable(SHUFFLE_VISITED_KEY, []);
+	var SHUFFLE_VISITED_KEY = "%s_shuffle_visited" % variations._index
+	var LAST_VISITED_KEY = "%s_last_index" % variations._index
+	var visited_items = _mem.get_internal_variable(SHUFFLE_VISITED_KEY, [])
 	var remaining_options = []
 	for o in variations.content:
 		if not visited_items.has(o._index):
@@ -460,12 +460,12 @@ func _handle_shuffle_variation(variations, mode = 'cycle'):
 
 	randomize()
 	var random = randi() % remaining_options.size()
-	var index = variations.content.find(remaining_options[random]);
+	var index = variations.content.find(remaining_options[random])
 
-	visited_items.push_back(remaining_options[random]._index);
+	visited_items.push_back(remaining_options[random]._index)
 
-	_mem.set_internal_variable(LAST_VISITED_KEY, index);
-	_mem.set_internal_variable(SHUFFLE_VISITED_KEY, visited_items);
+	_mem.set_internal_variable(LAST_VISITED_KEY, index)
+	_mem.set_internal_variable(SHUFFLE_VISITED_KEY, visited_items)
 
 	return index;
 
