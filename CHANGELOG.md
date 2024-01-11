@@ -6,7 +6,8 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ### Breaking changes
 
-Dialogues now return an object when ended.
+- Dialogues now return an object when ended. This impacts how you determined if the dialogue has ended.
+- Changed identifier for blocks when persisting so changing block order does not impact already saved files. This will impact variations and single use options on all existing save files.
 
 ### Added
 
@@ -21,7 +22,8 @@ Dialogues now return an object when ended.
 ### Fixed
 
 - Use correct `fmod` for `a %=` operations.
-- Fixed crash when exiting editor started via command line (@Rubonnek)
+- Fixed crash when exiting editor started via command line (@Rubonnek).
+- Changing block order in file does not impact persisted options and variations anymore.
 
 ### Thanks
 
