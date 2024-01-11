@@ -60,6 +60,13 @@ func load_data(data)
 # Clear all internal data
 func clear_data()
 
+
+# Set optional settings for current interpreter. [br]
+# Options:
+#   include_hidden_options (boolean, default false): Returns conditional options event when check resulted in false.
+#
+func configure(options)
+
 ```
 
 ### Creating an object
@@ -145,10 +152,13 @@ Options list with options/topics the player may choose from (`Dictionary`).
 }
 ```
 
-#### Null
+#### End
 
-If `dialogue.get_content()` returns `Null`, it means the dialogue reached an end.
+Returned when the dialogue reached its end. Any new subsequent call will return an end object.
 
+```gdscript
+{ "type": "end" }
+```
 
 ### Listening to variable changes
 
