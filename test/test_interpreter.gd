@@ -350,26 +350,16 @@ func test_variations():
 			random_cycle = ["multiline example do you think it works?", "yep"]
 
 
-func _test_variation_default_shuffle_is_cycle():
+func test_variation_default_shuffle():
 	var interpreter = ClydeDialogue.Interpreter.new()
-	var content = parse("( shuffle \n- { a } A\n -  { b } B\n)\nend\n")
+	var content = parse("( shuffle \n - A\n - B\n)\nend\n")
 	interpreter.init(content)
 
-	var random_default_cycle = ["a", "b"]
-	for _i in range(2):
+	var random_default_cycle = ["A", "B"]
+	for _i in range(5):
 		var rdc = interpreter.get_content().text
+		interpreter.select_block()
 		assert_has(random_default_cycle, rdc)
-		random_default_cycle.erase(rdc)
-
-	assert_eq(random_default_cycle.size(), 0)
-	# should re-shuffle after exausting all options
-	random_default_cycle = ["a", "b"]
-	for _i in range(2):
-		var rdc = interpreter.get_content().text
-		assert_has(random_default_cycle, rdc)
-		random_default_cycle.erase(rdc)
-
-	assert_eq(random_default_cycle.size(), 0)
 
 
 func test_all_variations_not_available():
