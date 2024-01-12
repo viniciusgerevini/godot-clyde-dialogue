@@ -398,7 +398,7 @@ func _handle_variation_mode(variations):
 		"once":
 			return _handle_once_variation(variations)
 		"shuffle":
-			return _handle_shuffle_variation(variations)
+			return _handle_real_shuffle_variation(variations)
 		"shuffle sequence":
 			return _handle_shuffle_variation(variations, "sequence")
 		"shuffle once":
@@ -466,6 +466,11 @@ func _handle_shuffle_variation(variations, mode = 'cycle'):
 	_mem.set_internal_variable(SHUFFLE_VISITED_KEY, visited_items)
 
 	return index;
+
+
+func _handle_real_shuffle_variation(variations):
+	randomize()
+	return randi() % variations.content.size()
 
 
 func _trigger_variable_changed(name, value, previous_value):

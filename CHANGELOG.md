@@ -8,6 +8,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 - Dialogues now return an object when ended. This impacts how you determined if the dialogue has ended.
 - Changed identifier for blocks when persisting so changing block order does not impact already saved files. This will impact variations and single use options on all existing save files.
+- Variation standalone `shuffle` option does simple random and has no guarantee every item will be returned.
 
 ### Added
 
@@ -18,6 +19,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Increment assigment now have default values. i.e. If you run `set a += 1` when `a` is not set, it will be set to 1. Before it would break because value was null.
     - As `+` is also used for strings, this `set a += "abc"` also works.
 - Return end object (`{ "type": "end" }`) instead of null on dialogue end.
+- Make variation `shuffle` option be really random. There is no guarantee all items will be executed.
 
 ### Fixed
 
