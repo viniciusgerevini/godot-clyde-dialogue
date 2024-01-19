@@ -1,0 +1,12 @@
+id,en
+NO_DIALOGUE,No dialogue
+DEFAULT_BLOCK,Default
+PLAYER_BLOCK_SELECTION_TOOLTIP,"Selected block"
+PLAYER_RESTART_TOOLTIP,Restart dialogue
+PLAYER_NEXT_LINE_TOOLTIP,Next line
+PLAYER_FORWARD_TOOLTIP,Foward to next choice
+PLAYER_POLTERGEIST_TOOLTIP,Poltergeist mode (auto-select)
+PLAYER_CLEAR_MEM_TOOLTIP,Clear memory
+PLAYER_BALLOONS_TOOLTIP,Toggle multi-bubble mode
+PLAYER_SHOW_META_TOOLTIP,Show metadata
+PLAYER_SHOW_DEBUG_TOOLTIP,Show debug panel

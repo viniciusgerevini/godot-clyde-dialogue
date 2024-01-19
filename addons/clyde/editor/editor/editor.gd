@@ -1,0 +1,91 @@
+@tool
+extends VBoxContainer
+
+signal parsing_finished(result)
+signal content_changed
+signal toggle_interface_lists_requested
+
+const ParseWorker = preload("../parse_worker.gd")
+
+@onready var editor = $DialogueEditor
+@onready var status_bar = $StatusBar
+
+@onready var parse_worker = ParseWorker.new()
+
+var _parsed_document
+
+func _ready():
+	parse_worker.processing_finished.connect(_on_parsing_finished)
+	parse_worker.processing_failed.connect(_on_parsing_failed)
+
+
+func _exit_tree():
+	parse_worker.stop_worker()
+
+
+func _on_dialogue_editor_finished_change():
+	status_bar.clear_errors()
+	status_bar.set_loading()
+	parse_worker.parse(editor.text)
+
+
+func _on_dialogue_editor_caret_changed():
+	status_bar.set_caret_position(editor.get_caret_line(), editor.get_caret_column())
+
+
+func _on_dialogue_editor_text_changed():
+	status_bar.set_loading()
+	content_changed.emit()
+
+
+func _on_status_bar_error_hint_clicked(line, column):
+	editor.go_to_position(line, column)
+
+
+func go_to_position(line: int, column: int):
+	editor.go_to_position(line, column)
+
+
+func _on_parsing_finished():
+	_parsed_document = parse_worker.get_parse_result()
+	status_bar.call_deferred("clear_errors")
+	editor.call_deferred("clear_errors")
+	editor.call_deferred("set_parsed_document", _parsed_document)
+	status_bar.call_deferred("clear_status")
+	call_deferred("_notify_parsing_finished", _parsed_document)
+
+
+func _notify_parsing_finished(parsed_doc):
+	parsing_finished.emit(_parsed_document)
+
+
+func _on_parsing_failed(result):
+	status_bar.call_deferred("add_error", result)
+	editor.call_deferred("add_error", result)
+
+
+func get_parsed_document():
+	return _parsed_document
+
+
+func get_content():
+	return editor.text
+
+
+func set_content(content: String):
+	if content != editor.text:
+		editor.text = content
+		_on_dialogue_editor_finished_change()
+
+
+func _on_dialogue_editor_toggle_interface_lists_requested():
+	toggle_interface_lists_requested.emit()
+
+
+func set_executing_line(line: int):
+	clear_executing_lines()
+	editor.set_line_as_executing(line, true)
+
+
+func clear_executing_lines():
+	editor.clear_executing_lines()

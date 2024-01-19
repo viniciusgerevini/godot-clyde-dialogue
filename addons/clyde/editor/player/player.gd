@@ -1,0 +1,286 @@
+@tool
+extends MarginContainer
+
+signal content_finished_changing(dialogue_key: String, content: Dictionary)
+signal dialogue_reset(dialogue_key)
+signal position_selected(dialogue_key: String, line: int, column: int)
+
+const InterfaceText = preload("../config/interface_text.gd")
+const DialogueBubble = preload("./dialogue_bubble.tscn")
+const DialogueEventBubble = preload("./dialogue_event_bubble.tscn")
+
+@onready var _dialogue_title_field = $HBoxContainer/VBoxContainer/dialogue_name
+@onready var _lines_container = $HBoxContainer/VBoxContainer/LinesMargin/lines/dialogue_lines
+@onready var _scroll_container = $HBoxContainer/VBoxContainer/LinesMargin/lines
+
+@onready var _restart_btn = $HBoxContainer/VBoxContainer/actions/restart
+@onready var _next_line_btn = $HBoxContainer/VBoxContainer/actions/next_line
+@onready var _forward_btn = $HBoxContainer/VBoxContainer/actions/forward
+@onready var _polterigeist_btn = $HBoxContainer/VBoxContainer/actions/poltergeist
+@onready var _clear_mem_btn = $HBoxContainer/VBoxContainer/actions/clear_mem
+@onready var _multi_single_btn := $HBoxContainer/VBoxContainer/actions/multi_single
+@onready var _show_meta_btn = $HBoxContainer/VBoxContainer/actions/show_meta
+@onready var _show_debug_btn = $HBoxContainer/VBoxContainer/actions/show_debug
+
+@onready var _block_selection_field = $HBoxContainer/VBoxContainer/actions/Block
+@onready var _scrollbar: VScrollBar = _scroll_container.get_v_scroll_bar()
+
+var _dialogue: ClydeDialogue
+var _dialogue_key: String
+var _dialogue_has_ended = false
+var _dialogue_data = {}
+
+func _ready():
+	_scrollbar.changed.connect(_on_scrollbar_changed)
+	_setup_actions()
+
+
+func _setup_actions():
+	_setup_strings()
+	_setup_icons()
+	_setup_shortcuts()
+	clear_dialogue()
+
+
+func _setup_strings():
+	_restart_btn.tooltip_text = InterfaceText.get_string(InterfaceText.KEY_PLAYER_RESTART_TOOLTIP)
+	_next_line_btn.tooltip_text = InterfaceText.get_string(InterfaceText.KEY_PLAYER_NEXT_LINE_TOOLTIP)
+	_forward_btn.tooltip_text = InterfaceText.get_string(InterfaceText.KEY_PLAYER_FORWARD_TOOLTIP)
+	_polterigeist_btn.tooltip_text = InterfaceText.get_string(InterfaceText.KEY_PLAYER_POLTERGEIST_TOOLTIP)
+	_clear_mem_btn.tooltip_text = InterfaceText.get_string(InterfaceText.KEY_PLAYER_CLEAR_MEM_TOOLTIP)
+	_multi_single_btn.tooltip_text = InterfaceText.get_string(InterfaceText.KEY_PLAYER_BALLOONS_TOOLTIP)
+	_show_meta_btn.tooltip_text = InterfaceText.get_string(InterfaceText.KEY_PLAYER_SHOW_META_TOOLTIP)
+	_show_debug_btn.tooltip_text = InterfaceText.get_string(InterfaceText.KEY_PLAYER_SHOW_DEBUG_TOOLTIP)
+
+	_block_selection_field.add_item(InterfaceText.get_string(InterfaceText.KEY_DEFAULT_BLOCK))
+	_block_selection_field.tooltip_text = InterfaceText.get_string(InterfaceText.KEY_PLAYER_BLOCK_SELECTION_TOOLTIP)
+
+	_dialogue_title_field.text = InterfaceText.get_string(InterfaceText.KEY_NO_DIALOGUE)
+
+
+func _setup_icons():
+	_restart_btn.icon = get_theme_icon("RotateLeft", "EditorIcons")
+	_next_line_btn.icon = get_theme_icon("Play", "EditorIcons")
+	_forward_btn.icon = get_theme_icon("TransitionEnd", "EditorIcons")
+	_polterigeist_btn.icon = get_theme_icon("Joypad", "EditorIcons") # TODO custom icon ghost
+	_clear_mem_btn.icon = get_theme_icon("History", "EditorIcons")
+	_multi_single_btn.icon = get_theme_icon("MakeFloating", "EditorIcons")
+	_show_meta_btn.icon = get_theme_icon("GuiEllipsis", "EditorIcons")
+	_show_debug_btn.icon = get_theme_icon("Debug", "EditorIcons")
+
+
+func _setup_shortcuts():
+	pass
+
+# TODO
+# - top actions
+#    - show/hide metadata
+#    - show / hide debug panel
+
+# debug panel
+# - show variables (name, value, last update)
+# - show events (name, last update)
+# - set variable action
+# - change variable value
+
+# - option: print dialogue on output console
+
+# - system messages
+# - dialogue changed
+# - dialogue started: timestamp
+
+
+
+func set_dialogue(key: String, parsed_document: Dictionary):
+	# persist previous data
+	if _dialogue != null:
+		_dialogue_data[_dialogue_key] = _dialogue.get_data()
+
+	_dialogue_key = key
+	_dialogue_title_field.text = key.get_file()
+	_dialogue = ClydeDialogue.new()
+	_dialogue._load_parsed_doc(parsed_document)
+	_restart_btn.disabled = false
+	_next_line_btn.disabled = false
+	_forward_btn.disabled = false
+	_polterigeist_btn.disabled = false
+	_block_selection_field.disabled = false
+	_dialogue_has_ended = false
+	_load_blocks(parsed_document)
+
+	if _dialogue_data.has(key):
+		_dialogue.load_data(_dialogue_data[key])
+
+	_remove_lines()
+	_add_dialogue_loaded_line()
+
+
+func _load_blocks(parsed_document: Dictionary):
+	_block_selection_field.clear()
+
+	_block_selection_field.add_item(InterfaceText.get_string(InterfaceText.KEY_DEFAULT_BLOCK))
+	for b in parsed_document.blocks:
+		_block_selection_field.add_item(b.name)
+
+
+func clear_dialogue():
+	_dialogue = null
+	_restart_btn.disabled = true
+	_next_line_btn.disabled = true
+	_forward_btn.disabled = true
+	_polterigeist_btn.disabled = true
+	_block_selection_field.disabled = true
+	_dialogue_has_ended = false
+
+
+func _on_block_item_selected(index):
+	if _dialogue == null:
+		return
+
+	if index == 0:
+		_add_start_dialogue_line(null)
+		_dialogue.start()
+		return
+	var block_name = _block_selection_field.get_item_text(index)
+	_dialogue.start(block_name)
+	_add_start_dialogue_line(block_name)
+
+
+func _on_restart_pressed():
+	dialogue_reset.emit(_dialogue_key)
+	_remove_lines()
+	_on_block_item_selected(_block_selection_field.selected)
+
+
+func _on_next_line_pressed():
+	var content = _dialogue.get_content()
+	_add_dialogue_bubble(content)
+	content_finished_changing.emit(_dialogue_key, content)
+
+
+func _on_forward_pressed():
+	var content = _dialogue.get_content()
+	_add_dialogue_bubble(content)
+
+	if content.type == "line":
+		_on_forward_pressed()
+	else:
+		content_finished_changing.emit(_dialogue_key, content)
+
+
+func _on_poltergeist_pressed():
+	var content = _dialogue.get_content()
+	_add_dialogue_bubble(content)
+
+	if content.type == "line":
+		_on_poltergeist_pressed()
+	elif content.type == "options":
+		_dialogue.choose(randi() % content.options.size())
+		_on_poltergeist_pressed()
+	else:
+		content_finished_changing.emit(_dialogue_key, content)
+
+
+
+func _on_clear_mem_pressed():
+	_dialogue_data = {}
+	if _dialogue != null:
+		_dialogue.clear_data()
+	_on_restart_pressed()
+
+
+func _on_multi_single_toggled(toggled_on):
+	if toggled_on:
+		_show_all_lines()
+	else:
+		_hide_previous_lines()
+
+
+func _on_show_meta_toggled(toggled_on):
+	# TODO meta option
+	pass # Replace with function body.
+
+
+func _on_show_debug_toggled(toggled_on):
+	# TODO debug panel
+	pass # Replace with function body.
+
+
+func _add_start_dialogue_line(block_name):
+	_dialogue_has_ended = false
+	var message = InterfaceText.get_string(InterfaceText.KEY_PLAYER_DIALOGUE_STARTED)
+
+	_add_event_line(message, block_name)
+
+
+func _add_dialogue_loaded_line():
+	var message = InterfaceText.get_string(InterfaceText.KEY_DIALOGUE_LOADED)
+	_add_event_line(message)
+
+
+func _add_dialogue_bubble(content: Dictionary):
+	if content.type == "end":
+		if not _dialogue_has_ended:
+			_add_dialogue_ended_line()
+		return
+
+	_adjust_previous_line_visibility()
+
+	var bubble = DialogueBubble.instantiate()
+	_lines_container.add_child(bubble)
+	bubble.set_content(content)
+	bubble.bubble_clicked.connect(_on_bubble_clicked)
+	#var s = HSeparator.new()
+	#_lines_container.add_child(s)
+
+	# TODO line bubble
+	# TODO option bubble
+	# TODO end bubble
+	pass
+
+
+func _on_scrollbar_changed():
+	var scroll_value = _scrollbar.max_value
+	if scroll_value != _scroll_container.scroll_vertical:
+		_scroll_container.scroll_vertical = scroll_value
+
+
+func _show_all_lines():
+	for c in _lines_container.get_children():
+		c.show()
+
+
+func _hide_previous_lines():
+	if _lines_container.get_child_count() < 2:
+		return
+	var last
+	for c in _lines_container.get_children():
+		last = c
+		c.hide()
+	last.show()
+
+
+func _adjust_previous_line_visibility():
+	if not _multi_single_btn.button_pressed and _lines_container.get_child_count() > 0:
+		_lines_container.get_child(_lines_container.get_child_count() -1).hide()
+
+
+func _add_dialogue_ended_line():
+	_dialogue_has_ended = true
+	_add_event_line(InterfaceText.get_string(InterfaceText.KEY_DIALOGUE_END))
+
+
+func _add_event_line(text: String, second_line = null):
+	_adjust_previous_line_visibility()
+	var bubble = DialogueEventBubble.instantiate()
+	_lines_container.add_child(bubble)
+	bubble.set_label(text, second_line)
+
+
+func _remove_lines():
+	for c in _lines_container.get_children():
+		c.queue_free()
+
+
+func _on_bubble_clicked(line: int, column: int):
+	position_selected.emit(_dialogue_key, line, column)

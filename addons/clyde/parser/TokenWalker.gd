@@ -1,5 +1,7 @@
 extends RefCounted
 
+signal unexpected_token_detected(message: Dictionary)
+
 const Lexer = preload('./Lexer.gd')
 
 var _tokens
@@ -47,11 +49,20 @@ func _wrong_token_error(token, expected):
 	for e in expected:
 		expected_hints.push_back(Lexer.get_token_friendly_hint(e))
 
-	assert(false,
-		"Unexpected token \"%s\" on line %s column %s. Expected %s" % [
-			Lexer.get_token_friendly_hint(token.token),
-			token.line+1,
-			token.column+1,
-			expected_hints
-		]
-	)
+	var error = "Unexpected token \"%s\" on line %s column %s. Expected %s" % [
+		Lexer.get_token_friendly_hint(token.token),
+		token.line+1,
+		token.column+1,
+		expected_hints
+	]
+
+	unexpected_token_detected.emit({
+		"reason": "unexpected_token",
+		"message": error,
+		"line": token.line,
+		"column": token.column,
+		"friendly_token_name": Lexer.get_token_friendly_hint(token.token),
+		"expected_hints": expected_hints,
+	})
+
+	assert(false, error)

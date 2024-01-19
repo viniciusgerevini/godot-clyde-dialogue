@@ -1,0 +1,82 @@
+[gd_scene load_steps=7 format=3 uid="uid://cux0i1kt0tw3u"]
+
+[ext_resource type="Script" path="res://addons/clyde/editor/MainPanel.gd" id="1_xwtbw"]
+[ext_resource type="PackedScene" uid="uid://c1vmpgpv2jrpx" path="res://addons/clyde/editor/TopBar.tscn" id="2_7f2jg"]
+[ext_resource type="PackedScene" uid="uid://po7pmftb1orn" path="res://addons/clyde/editor/player/player.tscn" id="2_08cag"]
+[ext_resource type="PackedScene" uid="uid://y4xxgq3fdok8" path="res://addons/clyde/editor/FileList.tscn" id="2_yhcsr"]
+[ext_resource type="PackedScene" uid="uid://xw1w6iil2jcw" path="res://addons/clyde/editor/BlockList.tscn" id="3_lfkp5"]
+[ext_resource type="PackedScene" uid="uid://b07csfwvymaeu" path="res://addons/clyde/editor/editor/multi_editor.tscn" id="4_1if4e"]
+
+[node name="MainPanel" type="MarginContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+script = ExtResource("1_xwtbw")
+
+[node name="HSplitContainer" type="HSplitContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TopBar" parent="HSplitContainer/VBoxContainer" instance=ExtResource("2_7f2jg")]
+layout_mode = 2
+
+[node name="HSplitContainer" type="HSplitContainer" parent="HSplitContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Lists" type="VBoxContainer" parent="HSplitContainer/VBoxContainer/HSplitContainer"]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+
+[node name="VSplitContainer" type="VSplitContainer" parent="HSplitContainer/VBoxContainer/HSplitContainer/Lists"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="FileList" parent="HSplitContainer/VBoxContainer/HSplitContainer/Lists/VSplitContainer" instance=ExtResource("2_yhcsr")]
+layout_mode = 2
+
+[node name="BlockList" parent="HSplitContainer/VBoxContainer/HSplitContainer/Lists/VSplitContainer" instance=ExtResource("3_lfkp5")]
+layout_mode = 2
+
+[node name="MultiEditor" parent="HSplitContainer/VBoxContainer/HSplitContainer" instance=ExtResource("4_1if4e")]
+layout_mode = 2
+
+[node name="Player" parent="HSplitContainer" instance=ExtResource("2_08cag")]
+visible = false
+layout_mode = 2
+
+[connection signal="close_all_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_close_all_triggered"]
+[connection signal="close_file_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_close_file_triggered"]
+[connection signal="close_other_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_close_other_triggered"]
+[connection signal="execute_dialogue" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_execute_dialogue"]
+[connection signal="new_file_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_new_file_triggered"]
+[connection signal="open_file_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_open_file_triggered"]
+[connection signal="reload_from_disk" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_reload_from_disk"]
+[connection signal="save_all_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_save_all_triggered"]
+[connection signal="save_as_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_save_as_triggered"]
+[connection signal="save_file_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_save_file_triggered"]
+[connection signal="show_in_filesystem_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_show_in_filesystem_triggered"]
+[connection signal="toggle_file_list_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_toggle_file_list_triggered"]
+[connection signal="toggle_player_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_toggle_player_triggered"]
+[connection signal="file_selected" from="HSplitContainer/VBoxContainer/HSplitContainer/Lists/VSplitContainer/FileList" to="." method="_on_file_list_file_selected"]
+[connection signal="block_selected" from="HSplitContainer/VBoxContainer/HSplitContainer/Lists/VSplitContainer/BlockList" to="." method="_on_block_list_block_selected"]
+[connection signal="content_changed" from="HSplitContainer/VBoxContainer/HSplitContainer/MultiEditor" to="." method="_on_multi_editor_content_changed"]
+[connection signal="editor_removed" from="HSplitContainer/VBoxContainer/HSplitContainer/MultiEditor" to="." method="_on_multi_editor_editor_removed"]
+[connection signal="editor_switched" from="HSplitContainer/VBoxContainer/HSplitContainer/MultiEditor" to="." method="_on_multi_editor_editor_switched"]
+[connection signal="parsing_finished" from="HSplitContainer/VBoxContainer/HSplitContainer/MultiEditor" to="." method="_on_multi_editor_parsing_finished"]
+[connection signal="toggle_interface_lists_requested" from="HSplitContainer/VBoxContainer/HSplitContainer/MultiEditor" to="." method="_on_multi_editor_toggle_interface_lists_requested"]
+[connection signal="content_finished_changing" from="HSplitContainer/Player" to="." method="_on_player_content_finished_changing"]
+[connection signal="dialogue_reset" from="HSplitContainer/Player" to="." method="_on_player_dialogue_reset"]
+[connection signal="position_selected" from="HSplitContainer/Player" to="." method="_on_player_position_selected"]

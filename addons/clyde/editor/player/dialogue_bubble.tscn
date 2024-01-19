@@ -1,0 +1,43 @@
+[gd_scene load_steps=3 format=3 uid="uid://dhxsbppxl8v7a"]
+
+[ext_resource type="Script" path="res://addons/clyde/editor/player/dialogue_bubble.gd" id="1_gkd1v"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_utdpc"]
+bg_color = Color(0.09, 0.09, 0.09, 0.6)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[node name="DialogueBubble" type="PanelContainer"]
+custom_minimum_size = Vector2(40, 40)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_utdpc")
+script = ExtResource("1_gkd1v")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="speaker" type="Label" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Speaker"
+autowrap_mode = 2
+
+[node name="content" type="Label" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "-"
+autowrap_mode = 2

@@ -2,9 +2,9 @@ extends "res://addons/gut/test.gd"
 
 var Parser = preload("res://addons/clyde/parser/Parser.gd")
 
-func parse(input):
+func parse(input, include_meta = false):
 	var parser = Parser.new()
-	return parser.parse(input)
+	return parser.parse(input, include_meta)
 
 
 func _line(line):
@@ -653,3 +653,26 @@ func test_has_blocks():
 	dialogue.load_dialogue('blocks')
 	assert_true(dialogue.has_block("intro"), "Should have block")
 	assert_false(dialogue.has_block("some-block-that-definitely-doesnt-exist"), "Should not have block")
+
+
+func test_returning_meta_when_available():
+	var interpreter = ClydeDialogue.Interpreter.new()
+	var content = parse("""
+first line
+* first option
+second option
+	* option
+""", true)
+	interpreter.init(content)
+
+	var first_line = _line({ "type": "line", "text": "first line" })
+	first_line.meta = { "line": 1, "column": 0 }
+	var first_option = _options({ "options": [_option({"label": "first option"})] })
+	first_option.meta = { "line": 2, "column": 0 }
+	var second_option = _options({ "name": "second option", "options": [_option({"label": "option"})] })
+	second_option.meta = { "line": 3, "column": 0 }
+
+	assert_eq_deep(interpreter.get_content(), first_line)
+	assert_eq_deep(interpreter.get_content(), first_option)
+	interpreter.choose(0)
+	assert_eq_deep(interpreter.get_content(), second_option)

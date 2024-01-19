@@ -174,13 +174,16 @@ func _handle_line_node(line_node):
 	if line_node.get("_index") == null:
 		line_node["_index"] = _generate_index()
 
-	return {
+	var line = {
 		"type": "line",
 		"tags": line_node.get("tags"),
 		"id": line_node.get("id"),
 		"speaker": line_node.get("speaker"),
 		"text": _replace_variables(_translate_text(line_node.get("id"), line_node.get("value"), line_node.get("id_suffixes")))
 	}
+	if line_node.has("meta"):
+		line.meta = line_node.meta
+	return line
 
 
 func _handle_options_node(options_node):
@@ -202,7 +205,7 @@ func _handle_options_node(options_node):
 		choose(0)
 		return _handle_next_node(_stack_head().current)
 
-	return {
+	var o = {
 		"type": "options",
 		"speaker": options_node.get("speaker"),
 		"id": options_node.get("id"),
@@ -210,6 +213,9 @@ func _handle_options_node(options_node):
 		"name": _replace_variables(_translate_text(options_node.get("id"), options_node.get("name"), options_node.get("id_suffixes"))),
 		"options": options.map(func(e): return _map_option(e, options.find(e), _config.include_hidden_options)),
 	}
+	if options_node.has("meta"):
+		o.meta = options_node.meta
+	return o
 
 
 func _get_visible_options(options):

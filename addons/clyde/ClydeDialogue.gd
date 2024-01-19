@@ -45,8 +45,12 @@ func load_dialogue(file_name, block = null):
 	if file.is_empty():
 		return
 
+	_load_parsed_doc(file, block)
+
+
+func _load_parsed_doc(doc: Dictionary, block = null):
 	_interpreter = Interpreter.new()
-	_interpreter.init(file, {
+	_interpreter.init(doc, {
 		"id_suffix_lookup_separator": _config_id_suffix_lookup_separator(),
 		"include_hidden_options": _options.get("include_hidden_options", false)
 	})
