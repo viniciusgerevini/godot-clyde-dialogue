@@ -79,6 +79,10 @@ func _on_multi_editor_editor_removed(key: String):
 
 func _on_multi_editor_parsing_finished(result):
 	block_list.call_deferred("load_file", _current_file_path, result.blocks)
+	# TODO config to stop this
+	if player.visible:
+		_on_top_bar_execute_dialogue()
+
 
 
 func _on_multi_editor_editor_switched(key):
@@ -193,7 +197,6 @@ func _open_file_dialog():
 	file_dialog.set_filters(PackedStringArray(["*.clyde"]))
 
 	get_parent().add_child(file_dialog)
-
 	# TODO open in dialogue folder by default
 	#if _source != "":
 		#_file_dialog_aseprite.current_dir = ProjectSettings.globalize_path(_source.get_base_dir())

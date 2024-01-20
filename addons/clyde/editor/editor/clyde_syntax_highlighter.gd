@@ -216,8 +216,7 @@ func _get_regions(content: String, line_number: int) -> Dictionary:
 			regions[current_column] = _text_region()
 			was_last_region_text = true
 
-		if is_speaker_allowed:
-			uninterrupted_text += content[current_column]
+		uninterrupted_text += content[current_column]
 
 		if content[current_column] != " " and content[current_column] != "\t":
 			is_first_content_in_line = false
@@ -401,8 +400,7 @@ func _handle_quote_mode(content: String, current_column: int, regions: Dictionar
 func _handle_variation_mode_start(content: String, current_column: int, regions: Dictionary) -> Dictionary:
 	regions[current_column] = _symbol_region()
 	current_column += 1
-
-	if current_column < content.length() - 7:
+	if current_column < content.length() - 4:
 		var s = content.substr(current_column)
 		var result = _variations_mode_regex.search(s)
 		if result != null:
@@ -413,8 +411,8 @@ func _handle_variation_mode_start(content: String, current_column: int, regions:
 		"current_column": current_column,
 	}
 
-func _handle_tag(content: String, current_column: int, regions: Dictionary) -> Dictionary:
 
+func _handle_tag(content: String, current_column: int, regions: Dictionary) -> Dictionary:
 	regions[current_column] = _tag_region()
 	current_column += 1
 	while (current_column < content.length()):

@@ -28,7 +28,9 @@ const DialogueEventBubble = preload("./dialogue_event_bubble.tscn")
 var _dialogue: ClydeDialogue
 var _dialogue_key: String
 var _dialogue_has_ended = false
+var _is_waiting_for_choice = false
 var _dialogue_data = {}
+
 
 func _ready():
 	_scrollbar.changed.connect(_on_scrollbar_changed)
@@ -74,7 +76,6 @@ func _setup_shortcuts():
 
 # TODO
 # - top actions
-#    - show/hide metadata
 #    - show / hide debug panel
 
 # debug panel
@@ -82,14 +83,6 @@ func _setup_shortcuts():
 # - show events (name, last update)
 # - set variable action
 # - change variable value
-
-# - option: print dialogue on output console
-
-# - system messages
-# - dialogue changed
-# - dialogue started: timestamp
-
-
 
 func set_dialogue(key: String, parsed_document: Dictionary):
 	# persist previous data
@@ -106,6 +99,7 @@ func set_dialogue(key: String, parsed_document: Dictionary):
 	_polterigeist_btn.disabled = false
 	_block_selection_field.disabled = false
 	_dialogue_has_ended = false
+	_is_waiting_for_choice = false
 	_load_blocks(parsed_document)
 
 	if _dialogue_data.has(key):
@@ -131,6 +125,7 @@ func clear_dialogue():
 	_polterigeist_btn.disabled = true
 	_block_selection_field.disabled = true
 	_dialogue_has_ended = false
+	_is_waiting_for_choice = false
 
 
 func _on_block_item_selected(index):
@@ -153,12 +148,17 @@ func _on_restart_pressed():
 
 
 func _on_next_line_pressed():
+	if _is_waiting_for_choice:
+		return
 	var content = _dialogue.get_content()
 	_add_dialogue_bubble(content)
 	content_finished_changing.emit(_dialogue_key, content)
 
 
 func _on_forward_pressed():
+	if _is_waiting_for_choice:
+		return
+
 	var content = _dialogue.get_content()
 	_add_dialogue_bubble(content)
 
@@ -170,12 +170,14 @@ func _on_forward_pressed():
 
 func _on_poltergeist_pressed():
 	var content = _dialogue.get_content()
-	_add_dialogue_bubble(content)
+	var bubble = _add_dialogue_bubble(content)
 
 	if content.type == "line":
 		_on_poltergeist_pressed()
 	elif content.type == "options":
-		_dialogue.choose(randi() % content.options.size())
+		var choice = randi() % content.options.size()
+		_dialogue.choose(choice)
+		bubble.set_chosen(choice)
 		_on_poltergeist_pressed()
 	else:
 		content_finished_changing.emit(_dialogue_key, content)
@@ -197,8 +199,13 @@ func _on_multi_single_toggled(toggled_on):
 
 
 func _on_show_meta_toggled(toggled_on):
-	# TODO meta option
-	pass # Replace with function body.
+	if toggled_on:
+		for c in get_tree().get_nodes_in_group("clyde_dialogue_line_meta"):
+			if c.get_child_count() > 0:
+				c.show()
+	else:
+		for c in get_tree().get_nodes_in_group("clyde_dialogue_line_meta"):
+			c.hide()
 
 
 func _on_show_debug_toggled(toggled_on):
@@ -208,6 +215,7 @@ func _on_show_debug_toggled(toggled_on):
 
 func _add_start_dialogue_line(block_name):
 	_dialogue_has_ended = false
+	_is_waiting_for_choice = false
 	var message = InterfaceText.get_string(InterfaceText.KEY_PLAYER_DIALOGUE_STARTED)
 
 	_add_event_line(message, block_name)
@@ -224,19 +232,17 @@ func _add_dialogue_bubble(content: Dictionary):
 			_add_dialogue_ended_line()
 		return
 
+	if content.type == "options":
+		_is_waiting_for_choice = true
+
 	_adjust_previous_line_visibility()
 
 	var bubble = DialogueBubble.instantiate()
 	_lines_container.add_child(bubble)
-	bubble.set_content(content)
+	bubble.set_content(content, _show_meta_btn.button_pressed)
 	bubble.bubble_clicked.connect(_on_bubble_clicked)
-	#var s = HSeparator.new()
-	#_lines_container.add_child(s)
-
-	# TODO line bubble
-	# TODO option bubble
-	# TODO end bubble
-	pass
+	bubble.option_selected.connect(_on_option_selected)
+	return bubble
 
 
 func _on_scrollbar_changed():
@@ -267,7 +273,7 @@ func _adjust_previous_line_visibility():
 
 func _add_dialogue_ended_line():
 	_dialogue_has_ended = true
-	_add_event_line(InterfaceText.get_string(InterfaceText.KEY_DIALOGUE_END))
+	_add_event_line(InterfaceText.get_string(InterfaceText.KEY_DIALOGUE_END), null)
 
 
 func _add_event_line(text: String, second_line = null):
@@ -284,3 +290,17 @@ func _remove_lines():
 
 func _on_bubble_clicked(line: int, column: int):
 	position_selected.emit(_dialogue_key, line, column)
+
+
+func _on_option_selected(index):
+	_is_waiting_for_choice = false
+	_dialogue.choose(index)
+	_on_next_line_pressed()
+
+
+func _gui_input(event):
+	if not self.visible:
+		return
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed() and not event.is_echo():
+		get_viewport().set_input_as_handled()
+		_on_next_line_pressed()
