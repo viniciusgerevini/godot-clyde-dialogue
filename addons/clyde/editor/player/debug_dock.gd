@@ -212,6 +212,10 @@ func _on_action_edit_pressed(var_name: String):
 
 func _on_action_delete_pressed(var_name: String):
 	variable_changed.emit(var_name, null)
+	_remove_var(var_name)
+
+
+func _remove_var(var_name):
 	var fields = _variables[var_name]
 	fields.name.queue_free()
 	fields.type.queue_free()
@@ -223,8 +227,10 @@ func _on_action_delete_pressed(var_name: String):
 
 
 func _on_action_cancel_pressed(var_name: String):
-	#_set_fields_normal_mode(var_name)
-	pass
+	if var_name == ADD_VAR_TEMP_NAME:
+		_remove_var(var_name)
+		_is_adding = false
+		_add_btn.disabled = false
 
 
 func _on_type_item_selected(index: int, var_name: String):
@@ -350,7 +356,7 @@ func _on_add_btn_pressed():
 	_add_btn.disabled = true
 	_create_variable_fields(ADD_VAR_TEMP_NAME)
 	var name_field = _variables[ADD_VAR_TEMP_NAME].name
-	_variables[ADD_VAR_TEMP_NAME].actions._save_mode()
+	_variables[ADD_VAR_TEMP_NAME].actions.save_mode(true)
 	_set_fields_edit_mode(ADD_VAR_TEMP_NAME)
 	name_field.focus_mode = name_field.FOCUS_ALL
 	name_field.editable = true
