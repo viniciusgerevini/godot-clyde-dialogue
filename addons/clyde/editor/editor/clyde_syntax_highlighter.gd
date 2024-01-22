@@ -21,7 +21,7 @@ var _config = {}
 func _clear_highlighting_cache():
 	_cache = {}
 
-# TODO fix leaky hightlight (set, boolean, variations)
+# FIXME fix leaky hightlight (set, boolean, variations)
 func _get_line_syntax_highlighting(line: int) -> Dictionary:
 	var editor: TextEdit = get_text_edit()
 	var content: String = editor.get_line(line)

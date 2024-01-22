@@ -2,8 +2,6 @@
 extends CodeEdit
 
 signal finished_change
-# TODO remove it. not in use, menu hijacks this
-signal toggle_interface_lists_requested
 
 const Settings = preload("../config/settings.gd")
 const Shortcuts = preload("../config/shortcuts.gd")
@@ -80,14 +78,6 @@ func _load_shortcuts():
 		{
 			"shortcut": shortcuts.get_shortcut_for_command(Shortcuts.CMD_EDITOR_TOGGLE_COMMENT),
 			"handler": _toggle_comment,
-		},
-		#{
-			#"shortcut": shortcuts.get_shortcut_for_command(Shortcuts.CMD_EDITOR_EXECUTE_DIALOGUE),
-			#"handler": emit_signal.bind("toggle_interface_lists_requested"),
-		#},
-		{
-			"shortcut": shortcuts.get_shortcut_for_command(Shortcuts.CMD_EDITOR_EXECUTE_DIALOGUE),
-			"handler": _execute_dialogue,
 		},
 	]
 
@@ -280,8 +270,3 @@ func _toggle_comment():
 				set_line(line, line_text.substr(comment_symbol.length()))
 
 	end_complex_operation()
-
-
-func _execute_dialogue():
-	print("execute")
-	pass

@@ -64,6 +64,7 @@ func _exit_tree() -> void:
 
 func _setup_main_panel() -> void:
 	_main_panel = MainPanel.instantiate()
+	_main_panel.editor_plugin = self
 	get_editor_interface().get_editor_main_screen().add_child(_main_panel)
 	_make_visible(false)
 

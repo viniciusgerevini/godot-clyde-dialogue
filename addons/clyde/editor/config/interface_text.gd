@@ -32,9 +32,24 @@ const KEY_TOOL_MENU_EDITOR_SECTION = "TOOL_MENU_EDITOR_SECTION"
 const KEY_TOOL_MENU_PLAYER_SECTION = "TOOL_MENU_PLAYER_SECTION"
 const KEY_TOOL_MENU_SHOW_LISTS = "TOOL_MENU_SHOW_LISTS"
 const KEY_TOOL_MENU_SHOW_PLAYER = "TOOL_MENU_SHOW_PLAYER"
+const KEY_TOOL_MENU_PLAYER_SYNC = "TOOL_MENU_PLAYER_SYNC"
 const KEY_MENU_FILE = "MENU_FILE"
 const KEY_MENU_TOOL = "MENU_TOOL"
 const KEY_MENU_HELP = "MENU_HELP"
+const KEY_DEBUG_PANEL_NAME = "DEBUG_PANEL_NAME"
+const KEY_DEBUG_VARIABLES_LABEL = "DEBUG_VARIABLES_LABEL"
+const KEY_DEBUG_HISTORY_LABEL = "DEBUG_HISTORY_LABEL"
+const KEY_DEBUG_EVENT_LABEL = "DEBUG_EVENT_LABEL"
+const KEY_DEBUG_VARIABLE_LABEL = "DEBUG_VARIABLE_LABEL"
+const KEY_DEBUG_TIME = "DEBUG_TIME"
+const KEY_DEBUG_TYPE = "DEBUG_TYPE"
+const KEY_DEBUG_NAME = "DEBUG_NAME"
+const KEY_DEBUG_VALUE = "DEBUG_VALUE"
+const KEY_DEBUG_PREVIOUS_VALUE = "DEBUG_PREVIOUS_VALUE"
+const KEY_DEBUG_EDIT = "DEBUG_EDIT"
+const KEY_DEBUG_SAVE = "DEBUG_SAVE"
+const KEY_DEBUG_REMOVE = "DEBUG_REMOVE"
+
 
 static var _loaded_locale := "en"
 static var _default_locale := "en"
@@ -69,6 +84,20 @@ static func get_string(key: String) -> String:
 		"MENU_HELP": "Help",
 		"TOOL_MENU_PLAYER_SECTION": "Player",
 		"TOOL_MENU_EDITOR_SECTION": "Editor",
+		"TOOL_MENU_PLAYER_SYNC": "Sync changes with player",
+		"DEBUG_PANEL_NAME": "Clyde Debug",
+		"DEBUG_VARIABLES_LABEL": "Variables",
+		"DEBUG_HISTORY_LABEL": "History",
+		"DEBUG_EVENT_LABEL": "event",
+		"DEBUG_VARIABLE_LABEL": "variable",
+		"DEBUG_TIME": "Time",
+		"DEBUG_TYPE": "Type",
+		"DEBUG_NAME": "Name",
+		"DEBUG_VALUE": "Value",
+		"DEBUG_PREVIOUS_VALUE": "Previous value",
+		"DEBUG_EDIT": "Edit",
+		"DEBUG_SAVE": "Save",
+		"DEBUG_REMOVE": "Remove",
 	}
 	_load_strings()
 	if _entries.has(key):
@@ -99,7 +128,6 @@ static func _load_entries_for_locale(locale: String, dictionary: Dictionary) -> 
 
 	while file.get_position() < file.get_length():
 		var line = file.get_csv_line()
-		print(line)
 		if line.size() < 2:
 			continue
 		dictionary[line[0]] = line[1]

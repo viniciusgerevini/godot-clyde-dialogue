@@ -4,6 +4,10 @@ extends MarginContainer
 signal content_finished_changing(dialogue_key: String, content: Dictionary)
 signal dialogue_reset(dialogue_key)
 signal position_selected(dialogue_key: String, line: int, column: int)
+signal toggle_debug_panel(is_visible: bool)
+signal dialogue_mem_clean
+signal variable_changed(var_name, value, old_value)
+signal event_triggered(event_name)
 
 const InterfaceText = preload("../config/interface_text.gd")
 const DialogueBubble = preload("./dialogue_bubble.tscn")
@@ -105,6 +109,9 @@ func set_dialogue(key: String, parsed_document: Dictionary):
 	if _dialogue_data.has(key):
 		_dialogue.load_data(_dialogue_data[key])
 
+	_dialogue.variable_changed.connect(_on_variable_changed)
+	_dialogue.event_triggered.connect(_on_event_triggered)
+
 	_remove_lines()
 	_add_dialogue_loaded_line()
 
@@ -183,11 +190,11 @@ func _on_poltergeist_pressed():
 		content_finished_changing.emit(_dialogue_key, content)
 
 
-
 func _on_clear_mem_pressed():
 	_dialogue_data = {}
 	if _dialogue != null:
 		_dialogue.clear_data()
+		dialogue_mem_clean.emit()
 	_on_restart_pressed()
 
 
@@ -209,8 +216,7 @@ func _on_show_meta_toggled(toggled_on):
 
 
 func _on_show_debug_toggled(toggled_on):
-	# TODO debug panel
-	pass # Replace with function body.
+	toggle_debug_panel.emit(toggled_on)
 
 
 func _add_start_dialogue_line(block_name):
@@ -304,3 +310,22 @@ func _gui_input(event):
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed() and not event.is_echo():
 		get_viewport().set_input_as_handled()
 		_on_next_line_pressed()
+
+
+func get_data() -> Dictionary:
+	if _dialogue != null:
+		return _dialogue.get_data().variables
+	return {}
+
+
+func set_variable(var_name: String, value):
+	if _dialogue != null:
+		_dialogue.set_variable(var_name, value)
+
+
+func _on_variable_changed(var_name: String, value, old_value):
+	variable_changed.emit(var_name, value, old_value)
+
+
+func _on_event_triggered(event_name: String):
+	event_triggered.emit(event_name)

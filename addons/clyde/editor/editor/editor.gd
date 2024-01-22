@@ -3,7 +3,6 @@ extends VBoxContainer
 
 signal parsing_finished(result)
 signal content_changed
-signal toggle_interface_lists_requested
 
 const ParseWorker = preload("../parse_worker.gd")
 
@@ -76,10 +75,6 @@ func set_content(content: String):
 	if content != editor.text:
 		editor.text = content
 		_on_dialogue_editor_finished_change()
-
-
-func _on_dialogue_editor_toggle_interface_lists_requested():
-	toggle_interface_lists_requested.emit()
 
 
 func set_executing_line(line: int):

@@ -1,6 +1,9 @@
 @tool
 extends MarginContainer
 
+const DebugPanel = preload("./player/debug_dock.tscn")
+const InterfaceText = preload("./config/interface_text.gd")
+
 @onready
 var editor = $HSplitContainer/VBoxContainer/HSplitContainer/MultiEditor
 @onready
@@ -20,6 +23,12 @@ var player = $HSplitContainer/Player
 var _current_file_path = ""
 var _open_files = []
 
+var _should_sync_editor_and_player = true
+
+var editor_plugin: EditorPlugin
+
+var _debug_panel
+
 # TODO save layout
 # TODO save open files
 # TODO save config
@@ -32,10 +41,6 @@ var _open_files = []
 # TODO drag and drop from filesystem to file list
 # TODO re-order opened files in list
 # TODO double click open from filesystem, is it possible?
-# TODO notify when editor and player are out of sync
-# TODO auto execute option
-
-# TODO config: should validate dialogue?
 
 # TODO fix current problems (it seems partial dialogues can cause an infinite loop (i.e. -)
 #   -- lexer has a bunch of issues with lookups
@@ -47,6 +52,8 @@ func _ready():
 		file_list.add_file(key)
 
 	editor.switch_editor(_current_file_path)
+
+	self.tree_exiting.connect(_on_tree_exiting)
 
 
 func _on_block_list_block_selected(line, column):
@@ -79,8 +86,7 @@ func _on_multi_editor_editor_removed(key: String):
 
 func _on_multi_editor_parsing_finished(result):
 	block_list.call_deferred("load_file", _current_file_path, result.blocks)
-	# TODO config to stop this
-	if player.visible:
+	if player.visible and _should_sync_editor_and_player:
 		_on_top_bar_execute_dialogue()
 
 
@@ -259,10 +265,6 @@ func _toggle_lists():
 	top_bar.set_lists_visibility(lists_container.visible)
 
 
-func _on_multi_editor_toggle_interface_lists_requested():
-	_toggle_lists()
-
-
 func _on_top_bar_toggle_file_list_triggered():
 	_toggle_lists()
 
@@ -284,7 +286,11 @@ func _on_top_bar_execute_dialogue():
 	if not player.visible:
 		_toggle_player()
 
+	var old_dialogue = player._dialogue_key
 	player.set_dialogue(_current_file_path, doc)
+
+	if old_dialogue != _current_file_path and _debug_panel != null:
+		_debug_panel.load_data(player.get_data(), true)
 
 
 func _on_player_content_finished_changing(dialogue_key, content):
@@ -305,3 +311,56 @@ func _on_player_position_selected(dialogue_key, line, column):
 			return
 		editor.switch_editor(dialogue_key)
 	editor.go_to_position(line, column)
+
+
+func _on_top_bar_toggle_player_sync():
+	_should_sync_editor_and_player = not _should_sync_editor_and_player
+	top_bar.set_editor_sync(_should_sync_editor_and_player)
+
+
+func _on_player_toggle_debug_panel(is_visible):
+	if is_visible:
+		_create_debug_panel()
+	else:
+		_remove_debug_panel()
+
+
+func _create_debug_panel():
+	if _debug_panel != null:
+		editor_plugin.add_control_to_bottom_panel(_debug_panel, InterfaceText.get_string(InterfaceText.KEY_DEBUG_PANEL_NAME))
+		editor_plugin.make_bottom_panel_item_visible(_debug_panel)
+		return
+
+	_debug_panel = DebugPanel.instantiate()
+	editor_plugin.add_control_to_bottom_panel(_debug_panel, InterfaceText.get_string(InterfaceText.KEY_DEBUG_PANEL_NAME))
+	_debug_panel.load_data(player.get_data())
+	_debug_panel.variable_changed.connect(_on_debug_variable_changed)
+	editor_plugin.make_bottom_panel_item_visible(_debug_panel)
+
+
+func _remove_debug_panel():
+	if is_instance_valid(_debug_panel) and is_instance_valid(editor_plugin) and _debug_panel.is_inside_tree():
+		editor_plugin.remove_control_from_bottom_panel(_debug_panel)
+
+
+func _on_tree_exiting():
+	_remove_debug_panel()
+
+
+func _on_debug_variable_changed(var_name: String, value):
+	player.set_variable(var_name, value)
+
+
+func _on_player_variable_changed(var_name, value, old_value):
+	if _debug_panel != null:
+		_debug_panel.set_variable(var_name, value, old_value)
+
+
+func _on_player_event_triggered(event_name):
+	if _debug_panel != null:
+		_debug_panel.record_event(event_name)
+
+
+func _on_player_dialogue_mem_clean():
+	if _debug_panel != null:
+		_debug_panel.load_data(player.get_data(), true)

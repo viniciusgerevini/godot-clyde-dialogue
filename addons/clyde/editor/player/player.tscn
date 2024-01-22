@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://addons/clyde/editor/player/player.gd" id="1_nuwy5"]
 
-[sub_resource type="Image" id="Image_schlx"]
+[sub_resource type="Image" id="Image_juvn1"]
 data = {
 "data": PackedByteArray(255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 94, 94, 127, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 93, 93, 255, 255, 94, 94, 127, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 94, 94, 127, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 94, 94, 127, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 231, 255, 94, 94, 54, 255, 94, 94, 57, 255, 93, 93, 233, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 231, 255, 94, 94, 54, 255, 94, 94, 57, 255, 93, 93, 233, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 97, 97, 42, 255, 255, 255, 0, 255, 255, 255, 0, 255, 97, 97, 42, 255, 93, 93, 233, 255, 93, 93, 232, 255, 93, 93, 41, 255, 255, 255, 0, 255, 255, 255, 0, 255, 97, 97, 42, 255, 93, 93, 233, 255, 93, 93, 232, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 96, 96, 45, 255, 93, 93, 44, 255, 255, 255, 0, 255, 97, 97, 42, 255, 97, 97, 42, 255, 255, 255, 0, 255, 96, 96, 45, 255, 93, 93, 44, 255, 255, 255, 0, 255, 97, 97, 42, 255, 97, 97, 42, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 96, 96, 45, 255, 93, 93, 235, 255, 94, 94, 234, 255, 95, 95, 43, 255, 255, 255, 0, 255, 255, 255, 0, 255, 96, 96, 45, 255, 93, 93, 235, 255, 94, 94, 234, 255, 95, 95, 43, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 235, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 233, 255, 95, 95, 59, 255, 96, 96, 61, 255, 93, 93, 235, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 233, 255, 95, 95, 59, 255, 96, 96, 61, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0),
 "format": "RGBA8",
@@ -11,8 +11,8 @@ data = {
 "width": 16
 }
 
-[sub_resource type="ImageTexture" id="ImageTexture_rugs7"]
-image = SubResource("Image_schlx")
+[sub_resource type="ImageTexture" id="ImageTexture_v4w6e"]
+image = SubResource("Image_juvn1")
 
 [node name="Player" type="MarginContainer"]
 anchors_preset = 15
@@ -61,58 +61,60 @@ size_flags_horizontal = 3
 tooltip_text = "Selected block"
 disabled = true
 text_overrun_behavior = 3
-item_count = 1
+item_count = 2
 selected = 0
 popup/item_0/text = "Default"
 popup/item_0/id = 0
+popup/item_1/text = "Default"
+popup/item_1/id = 1
 
 [node name="restart" type="Button" parent="HBoxContainer/VBoxContainer/actions"]
 layout_mode = 2
 tooltip_text = "Restart dialogue"
 disabled = true
-icon = SubResource("ImageTexture_rugs7")
+icon = SubResource("ImageTexture_v4w6e")
 
 [node name="next_line" type="Button" parent="HBoxContainer/VBoxContainer/actions"]
 layout_mode = 2
 tooltip_text = "Next line"
 disabled = true
-icon = SubResource("ImageTexture_rugs7")
+icon = SubResource("ImageTexture_v4w6e")
 
 [node name="forward" type="Button" parent="HBoxContainer/VBoxContainer/actions"]
 layout_mode = 2
 tooltip_text = "Foward to next choice"
 disabled = true
-icon = SubResource("ImageTexture_rugs7")
+icon = SubResource("ImageTexture_v4w6e")
 
 [node name="poltergeist" type="Button" parent="HBoxContainer/VBoxContainer/actions"]
 layout_mode = 2
 tooltip_text = "Poltergeist mode (auto-select)"
 disabled = true
-icon = SubResource("ImageTexture_rugs7")
+icon = SubResource("ImageTexture_v4w6e")
 
 [node name="clear_mem" type="Button" parent="HBoxContainer/VBoxContainer/actions"]
 layout_mode = 2
 tooltip_text = "Clear memory"
-icon = SubResource("ImageTexture_rugs7")
+icon = SubResource("ImageTexture_v4w6e")
 
 [node name="multi_single" type="Button" parent="HBoxContainer/VBoxContainer/actions"]
 layout_mode = 2
 tooltip_text = "Toggle multi-bubble mode"
 toggle_mode = true
 button_pressed = true
-icon = SubResource("ImageTexture_rugs7")
+icon = SubResource("ImageTexture_v4w6e")
 
 [node name="show_meta" type="Button" parent="HBoxContainer/VBoxContainer/actions"]
 layout_mode = 2
 tooltip_text = "Show metadata"
 toggle_mode = true
-icon = SubResource("ImageTexture_rugs7")
+icon = SubResource("ImageTexture_v4w6e")
 
 [node name="show_debug" type="Button" parent="HBoxContainer/VBoxContainer/actions"]
 layout_mode = 2
 tooltip_text = "Show debug panel"
 toggle_mode = true
-icon = SubResource("ImageTexture_rugs7")
+icon = SubResource("ImageTexture_v4w6e")
 
 [connection signal="item_selected" from="HBoxContainer/VBoxContainer/actions/Block" to="." method="_on_block_item_selected"]
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/actions/restart" to="." method="_on_restart_pressed"]

@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://cawbpae28n55p"]
+
+[node name="DialogueOption" type="Button"]
+size_flags_horizontal = 3
+text = "Option"
+flat = true
+alignment = 0

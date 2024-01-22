@@ -5,7 +5,6 @@ signal editor_switched(key: String)
 signal editor_removed(key: String)
 signal content_changed
 signal parsing_finished(result: Dictionary)
-signal toggle_interface_lists_requested
 
 const DialogueEditor = preload("res://addons/clyde/editor/editor/editor.tscn")
 
@@ -78,13 +77,11 @@ func remove_editor(key):
 func _initilize_editor(key: String, editor: Node):
 	editor.content_changed.connect(_on_editor_content_changed.bind(key))
 	editor.parsing_finished.connect(_on_parsing_finished.bind(key))
-	editor.toggle_interface_lists_requested.connect(_on_toggle_interface_lists_requested)
 
 
 func _remove_editor_listeners(key: String, editor: Node):
 	editor.content_changed.disconnect(_on_editor_content_changed.bind(key))
 	editor.parsing_finished.disconnect(_on_parsing_finished.bind(key))
-	editor.toggle_interface_lists_requested.disconnect(_on_toggle_interface_lists_requested)
 
 
 func _on_editor_content_changed(editor_key: String):
@@ -115,9 +112,6 @@ func go_to_position(line: int, column: int):
 
 func set_content(content: String):
 	_current_editor.set_content(content)
-
-func _on_toggle_interface_lists_requested():
-	toggle_interface_lists_requested.emit()
 
 
 func set_executing_line(key: String, line: int):
