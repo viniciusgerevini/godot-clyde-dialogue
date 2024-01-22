@@ -21,6 +21,9 @@ const KEY_PLAYER_DIALOGUE_STARTED = "PLAYER_DIALOGUE_STARTED_MESSAGE"
 # top bar
 const KEY_FILE_MENU_NEW_FILE = "FILE_MENU_NEW_FILE"
 const KEY_FILE_MENU_OPEN_FILE = "FILE_MENU_OPEN_FILE"
+const KEY_FILE_MENU_OPEN_RECENT_FILE = "FILE_MENU_OPEN_RECENT"
+const KEY_FILE_MENU_OPEN_RECENT_NO_RECENTS = "FILE_MENU_OPEN_RECENT_NO_RECENTS"
+const KEY_FILE_MENU_RECENT_CLEAR_RECENTS = "FILE_MENU_RECENT_CLEAR_RECENTS"
 const KEY_FILE_MENU_SAVE_FILE = "FILE_MENU_SAVE_FILE"
 const KEY_FILE_MENU_SAVE_AS = "FILE_MENU_SAVE_AS"
 const KEY_FILE_MENU_SAVE_ALL = "FILE_MENU_SAVE_ALL"
@@ -65,30 +68,33 @@ static func get_string(key: String) -> String:
 		# TODO move those to csv file. Only here because godot editor cache static hard
 		"DEFAULT_BLOCK": "Default",
 		"NO_DIALOGUE": "No dialogue",
-		"PLAYER_BLOCK_SELECTION_TOOLTIP": "Selected block",
+		"PLAYER_BLOCK_SELECTION_TOOLTIP": "Selected Block",
 		"PLAYER_DIALOGUE_STARTED_MESSAGE": "dialogue started",
-		"EXECUTE_DIALOGUE": "Execute dialogue",
+		"EXECUTE_DIALOGUE": "Execute Dialogue",
 		"DIALOGUE_END": "dialogue ended",
 		"DIALOGUE_LOADED": "dialogue loaded",
 		"DIALOGUE_NOT_LOADED": "no dialogue loaded",
-		"FILE_MENU_NEW_FILE": "New file...",
+		"FILE_MENU_NEW_FILE": "New File...",
 		"FILE_MENU_OPEN_FILE": "Open...",
+		"FILE_MENU_OPEN_RECENT": "Open Recent",
+		"FILE_MENU_RECENT_CLEAR_RECENTS": "Clear Recent Files",
+		"FILE_MENU_OPEN_RECENT_NO_RECENTS": "No recent files",
 		"FILE_MENU_SAVE_FILE": "Save",
-		"FILE_MENU_SAVE_AS": "Save as...",
-		"FILE_MENU_SAVE_ALL": "Save all",
-		"FILE_MENU_RELOAD_FROM_DISK": "Reload from disk",
+		"FILE_MENU_SAVE_AS": "Save As...",
+		"FILE_MENU_SAVE_ALL": "Save All",
+		"FILE_MENU_RELOAD_FROM_DISK": "Reload from Disk",
 		"FILE_MENU_SHOW_IN_FILESYSTEM": "Show in FileSystem",
 		"FILE_MENU_CLOSE": "Close",
-		"FILE_MENU_CLOSE_ALL": "Close all",
-		"FILE_MENU_CLOSE_OTHER": "Close others",
-		"TOOL_MENU_SHOW_LISTS": "Show lists",
-		"TOOL_MENU_SHOW_PLAYER": "Show dialogue player",
+		"FILE_MENU_CLOSE_ALL": "Close All",
+		"FILE_MENU_CLOSE_OTHER": "Close Others",
+		"TOOL_MENU_SHOW_LISTS": "Show Lists",
+		"TOOL_MENU_SHOW_PLAYER": "Show Dialogue Player",
 		"MENU_FILE": "File",
 		"MENU_TOOL": "Tool",
 		"MENU_HELP": "Help",
 		"TOOL_MENU_PLAYER_SECTION": "Player",
 		"TOOL_MENU_EDITOR_SECTION": "Editor",
-		"TOOL_MENU_PLAYER_SYNC": "Sync changes with player",
+		"TOOL_MENU_PLAYER_SYNC": "Sync Changes with Player",
 		"DEBUG_PANEL_NAME": "Clyde Debug",
 		"DEBUG_VARIABLES_LABEL": "Variables",
 		"DEBUG_HISTORY_LABEL": "History",
@@ -98,11 +104,11 @@ static func get_string(key: String) -> String:
 		"DEBUG_TYPE": "Type",
 		"DEBUG_NAME": "Name",
 		"DEBUG_VALUE": "Value",
-		"DEBUG_PREVIOUS_VALUE": "Previous value",
+		"DEBUG_PREVIOUS_VALUE": "Previous Value",
 		"DEBUG_EDIT": "Edit",
 		"DEBUG_SAVE": "Save",
 		"DEBUG_REMOVE": "Remove",
-		"DEBUG_ADD_VARIABLE": "Add variable",
+		"DEBUG_ADD_VARIABLE": "Add Variable",
 		"DEBUG_CANCEL": "Cancel",
 	}
 	_load_strings()

@@ -21,14 +21,19 @@ signal toggle_player_sync
 
 signal execute_dialogue
 
+signal recent_file_triggered(file_path)
+signal clear_recent_files_triggered()
+
 @onready var _file_menu: PopupMenu = $file_menu.get_popup()
 @onready var _tool_menu: PopupMenu = $tool_menu.get_popup()
+@onready var _recents_submenu: PopupMenu = _create_recents_submenu()
 
 @onready var _execute_dialogue := $right_icons/MarginContainer/execute_dialogue
 
 enum FileMenu {
 	NEW_FILE = 100,
 	OPEN_FILE = 200,
+	OPEN_RECENT = 201,
 	SAVE_FILE = 300,
 	SAVE_AS = 400,
 	SAVE_ALL = 500,
@@ -44,6 +49,10 @@ enum ToolMenu {
 	TOGGLE_PLAYER = 200,
 	EXECUTE_DIALOGUE = 300,
 	TOGGLE_PLAYER_SYNC = 400,
+}
+
+enum RecentSubMenu {
+	CLEAR_RECENTS = 100,
 }
 
 var _disabled_when_no_file = [
@@ -81,6 +90,8 @@ var _tool_menu_triggers = {
 	ToolMenu.TOGGLE_PLAYER_SYNC: toggle_player_sync,
 }
 
+var _recent_files_paths = []
+
 
 func _ready():
 	var shortcuts = Shortcuts.new()
@@ -93,6 +104,7 @@ func _initialize_menus(shortcuts):
 	_initilize_file_menu(shortcuts)
 	_initilize_tool_menu(shortcuts)
 	_initilize_help_menu(shortcuts)
+	_initialize_recents_submenu()
 
 
 func _initilize_file_menu(shortcuts):
@@ -102,6 +114,10 @@ func _initilize_file_menu(shortcuts):
 
 	_add_item(_file_menu, InterfaceText.KEY_FILE_MENU_NEW_FILE, FileMenu.NEW_FILE, shortcuts, Shortcuts.CMD_NEW_FILE)
 	_add_item(_file_menu, InterfaceText.KEY_FILE_MENU_OPEN_FILE, FileMenu.OPEN_FILE, shortcuts, Shortcuts.CMD_OPEN_FILE)
+
+
+	_file_menu.add_child(_recents_submenu)
+	_add_submenu_item(_file_menu, InterfaceText.KEY_FILE_MENU_OPEN_RECENT_FILE, _recents_submenu.name, FileMenu.OPEN_RECENT)
 
 	_file_menu.add_separator()
 
@@ -174,6 +190,23 @@ func _initilize_help_menu(_shortcuts):
 	# TODO load demo dialogue
 	# TODO editor commands
 
+
+func _initialize_recents_submenu():
+	_setup_empty_recents()
+
+
+func _setup_empty_recents():
+	_add_item(_recents_submenu, InterfaceText.KEY_FILE_MENU_OPEN_RECENT_NO_RECENTS, 99)
+	_recents_submenu.set_item_disabled(_recents_submenu.get_item_index(99), true)
+
+
+func _create_recents_submenu():
+	var recents_submenu = PopupMenu.new()
+	recents_submenu.name = "recents"
+	recents_submenu.id_pressed.connect(_on_recents_menu_item_selected)
+	return recents_submenu
+
+
 func _on_file_menu_item_selected(id: int):
 	if _file_menu_triggers.has(id):
 		_file_menu_triggers[id].emit()
@@ -182,6 +215,16 @@ func _on_file_menu_item_selected(id: int):
 func _on_tool_menu_item_selected(id: int):
 	if _tool_menu_triggers.has(id):
 		_tool_menu_triggers[id].emit()
+
+
+func _on_recents_menu_item_selected(id: int):
+	if id == RecentSubMenu.CLEAR_RECENTS:
+		clear_recent_files_triggered.emit()
+		return
+	if id == 99:
+		return
+
+	recent_file_triggered.emit(_recent_files_paths[id])
 
 
 func _initialize_right_icons(_shortcuts):
@@ -243,3 +286,19 @@ func _add_item(menu: PopupMenu, text_key: String, id: int, shortcuts: Shortcuts 
 	menu.add_item(InterfaceText.get_string(text_key), id)
 	if command != null:
 		menu.set_item_shortcut(menu.get_item_index(id), shortcuts.get_shortcut_for_command(command))
+
+
+func _add_submenu_item(menu: PopupMenu, text_key: String, submenu_key: String, id: int):
+	menu.add_submenu_item(InterfaceText.get_string(text_key), submenu_key, id)
+
+
+func set_recents(recent_files: Array):
+	_recents_submenu.clear()
+	if recent_files.is_empty():
+		_setup_empty_recents()
+		return
+	_recent_files_paths = recent_files
+	for path in _recent_files_paths:
+		_recents_submenu.add_item(path.get_file())
+	_recents_submenu.add_separator()
+	_add_item(_recents_submenu, InterfaceText.KEY_FILE_MENU_RECENT_CLEAR_RECENTS, RecentSubMenu.CLEAR_RECENTS)

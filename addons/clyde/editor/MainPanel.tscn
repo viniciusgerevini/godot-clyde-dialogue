@@ -54,15 +54,16 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="Player" parent="HSplitContainer" instance=ExtResource("2_08cag")]
-visible = false
 layout_mode = 2
 
+[connection signal="clear_recent_files_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_clear_recent_files_triggered"]
 [connection signal="close_all_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_close_all_triggered"]
 [connection signal="close_file_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_close_file_triggered"]
 [connection signal="close_other_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_close_other_triggered"]
 [connection signal="execute_dialogue" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_execute_dialogue"]
 [connection signal="new_file_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_new_file_triggered"]
 [connection signal="open_file_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_open_file_triggered"]
+[connection signal="recent_file_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_recent_file_triggered"]
 [connection signal="reload_from_disk" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_reload_from_disk"]
 [connection signal="save_all_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_save_all_triggered"]
 [connection signal="save_as_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_save_as_triggered"]

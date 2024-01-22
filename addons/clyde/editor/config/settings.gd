@@ -90,20 +90,30 @@ func set_config(config_name: String, value):
 
 
 func get_open_files():
-	pass
+	return _editor_settings.get_project_metadata("clyde", "open_files", [])
 
 
-func set_open_files():
-	pass
+func set_open_files(open_files: Array):
+	_editor_settings.set_project_metadata("clyde", "open_files", open_files)
 
 
-func get_recents():
-	pass
+func get_recents() -> Array:
+	return _editor_settings.get_project_metadata("clyde", "recents", [])
 
 
-func set_recents():
-	pass
+func set_recents(recents: Array):
+	_editor_settings.set_project_metadata("clyde", "recents", recents)
+
+
+func add_recent(path: String):
+	var recents = get_recents()
+	if recents.has(path):
+		recents.erase(path)
+	elif recents.size() > 9:
+		recents.remove_at(9)
+	recents.push_front(path)
+	set_recents(recents)
 
 
 func clear_recents():
-	pass
+	set_recents([])

@@ -32,14 +32,10 @@ var editor_plugin: EditorPlugin
 
 var _debug_panel
 
-# TODO save layout
-# TODO save open files
-# TODO save config
 # TODO files
 #   - open from file system
 #   - close from list
 #   - reload from system
-#   - persist open file list
 #   -  prompt save
 # TODO drag and drop from filesystem to file list
 # TODO re-order opened files in list
@@ -51,13 +47,11 @@ var _debug_panel
 
 func _ready():
 	_load_config()
-	# TODO load from saved cache
-	_open_files = []
+	_open_files = _load_open_files()
+	_load_recents()
 
 	for key in _open_files:
-		file_list.add_file(key)
-
-	editor.switch_editor(_current_file_path)
+		_open_file(key, false, false)
 
 	self.tree_exiting.connect(_on_tree_exiting)
 
@@ -162,6 +156,7 @@ func _on_top_bar_close_all_triggered():
 		else:
 			editor.remove_editor(o)
 
+	_open_files = []
 	# TODO show confirmation to delete unsaved as well
 
 
@@ -169,6 +164,8 @@ func _on_top_bar_close_file_triggered():
 	if file_list.is_unsaved(_current_file_path):
 		print("show warning")
 	editor.remove_editor(_current_file_path)
+
+	_open_files.erase(_current_file_path)
 
 
 func _on_top_bar_close_other_triggered():
@@ -182,6 +179,8 @@ func _on_top_bar_close_other_triggered():
 			should_notify_unsaved = true
 		else:
 			editor.remove_editor(o)
+
+	_open_files = [_current_file_path]
 	# TODO show confirmation to remove unsaved blah
 	# don't forget to skip current
 
@@ -214,6 +213,11 @@ func _open_file_dialog():
 
 
 func _on_open_dialog_file_selected(path, dialogue_modal):
+	_open_file(path)
+	dialogue_modal.queue_free()
+
+
+func _open_file(path, include_in_open_list: bool = true, include_in_recents: bool = true):
 	var content = _load_file_content(path)
 	file_list.add_file(path)
 	_current_file_path = path
@@ -221,7 +225,10 @@ func _on_open_dialog_file_selected(path, dialogue_modal):
 	editor.set_content(content)
 	file_list.mark_saved(_current_file_path)
 	file_list.select_file(path)
-	dialogue_modal.queue_free()
+	if include_in_open_list:
+		_open_files.push_back(path)
+	if include_in_recents:
+		_add_recent(path)
 	_refresh_top_bar()
 
 
@@ -361,6 +368,7 @@ func _remove_debug_panel():
 
 
 func _on_tree_exiting():
+	_settings.set_open_files(_open_files)
 	_remove_debug_panel()
 
 
@@ -394,3 +402,31 @@ func _load_config():
 
 	if not config.get(_settings.EDITOR_CFG_SYNC_PLAYER, true):
 		_toggle_player_sync(false)
+
+
+func _load_open_files() -> Array:
+	return _settings.get_open_files().filter(func(path): return FileAccess.file_exists(path))
+
+
+func _on_top_bar_clear_recent_files_triggered():
+	_settings.clear_recents()
+	top_bar.set_recents([])
+
+
+func _on_top_bar_recent_file_triggered(file_path):
+	if _open_files.has(file_path):
+		editor.switch_editor(file_path)
+		return
+	if not FileAccess.file_exists(file_path):
+		return
+
+	_open_file(file_path)
+
+
+func _add_recent(recent_path):
+	_settings.add_recent(recent_path)
+	top_bar.set_recents(_settings.get_recents())
+
+
+func _load_recents():
+	top_bar.set_recents(_settings.get_recents())
