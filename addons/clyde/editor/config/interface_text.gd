@@ -49,6 +49,7 @@ const KEY_DEBUG_PREVIOUS_VALUE = "DEBUG_PREVIOUS_VALUE"
 const KEY_DEBUG_EDIT = "DEBUG_EDIT"
 const KEY_DEBUG_SAVE = "DEBUG_SAVE"
 const KEY_DEBUG_REMOVE = "DEBUG_REMOVE"
+const KEY_DEBUG_ADD_VARIABLE = "DEBUG_ADD_VARIABLE"
 
 
 static var _loaded_locale := "en"
@@ -98,6 +99,7 @@ static func get_string(key: String) -> String:
 		"DEBUG_EDIT": "Edit",
 		"DEBUG_SAVE": "Save",
 		"DEBUG_REMOVE": "Remove",
+		"DEBUG_ADD_VARIABLE": "Add variable",
 	}
 	_load_strings()
 	if _entries.has(key):

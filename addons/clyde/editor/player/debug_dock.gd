@@ -10,6 +10,7 @@ const InterfaceText = preload("../config/interface_text.gd")
 @onready var _event_entries: GridContainer = $HSplitContainer/history/ScrollContainer/EventEntries
 @onready var _event_scrollbar: VScrollBar = _event_entries.get_parent().get_v_scroll_bar()
 @onready var _variable_scrollbar: VScrollBar = _debug_entries.get_parent().get_v_scroll_bar()
+@onready var _add_btn: Button = $HSplitContainer/variables/MarginContainer/add_btn
 
 var _variables = {}
 
@@ -19,11 +20,16 @@ enum Types {
 	StringValue,
 }
 
+var _is_adding = false
+const ADD_VAR_TEMP_NAME = "ADD-VAR"
+
 func _ready():
 	_event_scrollbar.changed.connect(_on_scrollbar_changed)
 	_variable_scrollbar.changed.connect(_on_var_scrollbar_changed)
-	$HSplitContainer/variables/Label.text = InterfaceText.get_string(InterfaceText.KEY_DEBUG_VARIABLES_LABEL)
+	$HSplitContainer/variables/MarginContainer/Label.text = InterfaceText.get_string(InterfaceText.KEY_DEBUG_VARIABLES_LABEL)
 	$HSplitContainer/history/Label.text = InterfaceText.get_string(InterfaceText.KEY_DEBUG_HISTORY_LABEL)
+	_add_btn.icon = get_theme_icon("Add", "EditorIcons")
+	_add_btn.tooltip_text = InterfaceText.get_string(InterfaceText.KEY_DEBUG_ADD_VARIABLE)
 
 
 func record_event(event_name: String):
@@ -190,6 +196,13 @@ func load_data(data: Dictionary, should_clear_events: bool = false):
 
 
 func _on_action_save_pressed(var_name: String):
+	if var_name == ADD_VAR_TEMP_NAME:
+		var new_name = _handle_var_creation()
+		if not new_name:
+			return
+		var_name = new_name
+		_is_adding = false
+		_add_btn.disabled = false
 	_save_fields(var_name)
 
 
@@ -328,3 +341,46 @@ func _time_field():
 	var label = Label.new()
 	label.text = Time.get_datetime_string_from_system(false, true)
 	return label
+
+
+func _on_add_btn_pressed():
+	if _is_adding:
+		return
+	_is_adding = true
+	_add_btn.disabled = true
+	_create_variable_fields(ADD_VAR_TEMP_NAME)
+	var name_field = _variables[ADD_VAR_TEMP_NAME].name
+	_variables[ADD_VAR_TEMP_NAME].actions._save_mode()
+	_set_fields_edit_mode(ADD_VAR_TEMP_NAME)
+	name_field.focus_mode = name_field.FOCUS_ALL
+	name_field.editable = true
+	name_field.text = "var_name"
+
+
+func _handle_var_creation():
+	var fields = _variables[ADD_VAR_TEMP_NAME]
+	var valid_id = RegEx.create_from_string("^[A-z_]+[A-z0-9_]*");
+	if valid_id.search(fields.name.text) == null:
+		return false
+	var new_name = fields.name.text
+	_variables[new_name] = fields
+	_variables.erase(ADD_VAR_TEMP_NAME)
+
+	fields.name.focus_mode = fields.name.FOCUS_NONE
+	fields.name.editable = false
+
+	var actions = fields.actions
+
+	actions.save_pressed.disconnect(_on_action_save_pressed.bind(ADD_VAR_TEMP_NAME))
+	actions.edit_pressed.disconnect(_on_action_edit_pressed.bind(ADD_VAR_TEMP_NAME))
+	actions.cancel_pressed.disconnect(_on_action_cancel_pressed.bind(ADD_VAR_TEMP_NAME))
+	actions.delete_pressed.disconnect(_on_action_delete_pressed.bind(ADD_VAR_TEMP_NAME))
+	fields.type.item_selected.disconnect(_on_type_item_selected.bind(ADD_VAR_TEMP_NAME))
+
+	actions.save_pressed.connect(_on_action_save_pressed.bind(new_name))
+	actions.edit_pressed.connect(_on_action_edit_pressed.bind(new_name))
+	actions.cancel_pressed.connect(_on_action_cancel_pressed.bind(new_name))
+	actions.delete_pressed.connect(_on_action_delete_pressed.bind(new_name))
+	fields.type.item_selected.connect(_on_type_item_selected.bind(new_name))
+
+	return new_name

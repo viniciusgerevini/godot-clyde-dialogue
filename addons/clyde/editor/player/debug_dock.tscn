@@ -21,10 +21,17 @@ theme_override_constants/separation = 20
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label" type="Label" parent="HSplitContainer/variables"]
+[node name="MarginContainer" type="MarginContainer" parent="HSplitContainer/variables"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HSplitContainer/variables/MarginContainer"]
 layout_mode = 2
 text = "Variables"
 horizontal_alignment = 1
+
+[node name="add_btn" type="Button" parent="HSplitContainer/variables/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
 
 [node name="ScrollContainer" type="ScrollContainer" parent="HSplitContainer/variables"]
 layout_mode = 2
@@ -56,3 +63,5 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 columns = 5
+
+[connection signal="pressed" from="HSplitContainer/variables/MarginContainer/add_btn" to="." method="_on_add_btn_pressed"]
