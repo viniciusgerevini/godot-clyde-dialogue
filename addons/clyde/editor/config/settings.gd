@@ -2,11 +2,19 @@ extends RefCounted
 
 signal settings_changed
 
-var _editor_settings
+var _editor_settings: EditorSettings
+
+const EDITOR_CFG_SHOW_LISTS = "show_lists"
+const EDITOR_CFG_SHOW_PLAYER = "show_player"
+const EDITOR_CFG_SYNC_PLAYER = "sync_player"
+const EDITOR_CFG_PLAYER_SHOW_MULTI_BUBBLE = "player_multi_bubble"
+const EDITOR_CFG_PLAYER_SHOW_METADATA = "player_metadata"
+
 
 func _init():
 	_editor_settings = EditorInterface.get_editor_settings()
 	_editor_settings.settings_changed.connect(_on_settings_changed)
+
 
 func _get_setting(key: String):
 	return _editor_settings.get_setting(key)
@@ -49,28 +57,6 @@ func editor_settings():
 	}
 
 
-#func _load_theme_config():
-	#var settings = EditorInterface.get_editor_settings()
-#
-	#return {
-		#"color_scheme": {
-			#"background": settings.get_setting("text_editor/theme/highlighting/background_color"),
-			#"current_line": settings.get_setting("text_editor/theme/highlighting/current_line_color"),
-			#"error_line": settings.get_setting("text_editor/theme/highlighting/mark_color"),
-			#"comment": settings.get_setting("text_editor/theme/highlighting/comment_color"),
-			#"identifier": settings.get_setting("text_editor/theme/highlighting/member_variable_color"),
-			#"symbol": settings.get_setting("text_editor/theme/highlighting/symbol_color"),
-			#"text": settings.get_setting("text_editor/theme/highlighting/text_color"),
-			#"tag": settings.get_setting("text_editor/theme/highlighting/function_color"),
-			#"keyword": settings.get_setting("text_editor/theme/highlighting/keyword_color"),
-			#"operator": settings.get_setting("text_editor/theme/highlighting/control_flow_keyword_color"),
-			#"number_literal": settings.get_setting("text_editor/theme/highlighting/number_color"),
-			#"boolean_literal": settings.get_setting("text_editor/theme/highlighting/keyword_color"),
-			#"string_literal": settings.get_setting("text_editor/theme/highlighting/string_color"),
-		#}
-	#}
-
-
 func editor_color_scheme():
 	return {
 		"background": _get_setting("text_editor/theme/highlighting/background_color"),
@@ -91,3 +77,33 @@ func editor_color_scheme():
 
 func _on_settings_changed():
 	settings_changed.emit()
+
+
+func get_editor_config():
+	return _editor_settings.get_project_metadata("clyde", "config", {})
+
+
+func set_config(config_name: String, value):
+	var config = get_editor_config()
+	config[config_name] = value
+	_editor_settings.set_project_metadata("clyde", "config", config)
+
+
+func get_open_files():
+	pass
+
+
+func set_open_files():
+	pass
+
+
+func get_recents():
+	pass
+
+
+func set_recents():
+	pass
+
+
+func clear_recents():
+	pass

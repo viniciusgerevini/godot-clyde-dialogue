@@ -10,8 +10,11 @@ signal variable_changed(var_name, value, old_value)
 signal event_triggered(event_name)
 
 const InterfaceText = preload("../config/interface_text.gd")
+const Settings = preload("../config/settings.gd")
 const DialogueBubble = preload("./dialogue_bubble.tscn")
 const DialogueEventBubble = preload("./dialogue_event_bubble.tscn")
+
+var _settings = Settings.new()
 
 @onready var _dialogue_title_field = $HBoxContainer/VBoxContainer/dialogue_name
 @onready var _lines_container = $HBoxContainer/VBoxContainer/LinesMargin/lines/dialogue_lines
@@ -37,14 +40,15 @@ var _dialogue_data = {}
 
 
 func _ready():
+	_load_config()
 	_scrollbar.changed.connect(_on_scrollbar_changed)
 	_setup_actions()
+	_add_initial_line()
 
 
 func _setup_actions():
 	_setup_strings()
 	_setup_icons()
-	_setup_shortcuts()
 	clear_dialogue()
 
 
@@ -75,18 +79,11 @@ func _setup_icons():
 	_show_debug_btn.icon = get_theme_icon("Debug", "EditorIcons")
 
 
-func _setup_shortcuts():
-	pass
+func _load_config():
+	var cfg = _settings.get_editor_config()
+	_multi_single_btn.button_pressed = cfg.get(_settings.EDITOR_CFG_PLAYER_SHOW_MULTI_BUBBLE, true)
+	_show_meta_btn.button_pressed = cfg.get(_settings.EDITOR_CFG_PLAYER_SHOW_METADATA, false)
 
-# TODO
-# - top actions
-#    - show / hide debug panel
-
-# debug panel
-# - show variables (name, value, last update)
-# - show events (name, last update)
-# - set variable action
-# - change variable value
 
 func set_dialogue(key: String, parsed_document: Dictionary):
 	# persist previous data
@@ -203,6 +200,7 @@ func _on_multi_single_toggled(toggled_on):
 		_show_all_lines()
 	else:
 		_hide_previous_lines()
+	_settings.set_config(_settings.EDITOR_CFG_PLAYER_SHOW_MULTI_BUBBLE, toggled_on)
 
 
 func _on_show_meta_toggled(toggled_on):
@@ -213,6 +211,7 @@ func _on_show_meta_toggled(toggled_on):
 	else:
 		for c in get_tree().get_nodes_in_group("clyde_dialogue_line_meta"):
 			c.hide()
+	_settings.set_config(_settings.EDITOR_CFG_PLAYER_SHOW_METADATA, toggled_on)
 
 
 func _on_show_debug_toggled(toggled_on):
@@ -329,3 +328,8 @@ func _on_variable_changed(var_name: String, value, old_value):
 
 func _on_event_triggered(event_name: String):
 	event_triggered.emit(event_name)
+
+
+func _add_initial_line():
+	var message = InterfaceText.get_string(InterfaceText.KEY_DIALOGUE_NOT_LOADED)
+	_add_event_line(message)

@@ -3,6 +3,9 @@ extends MarginContainer
 
 const DebugPanel = preload("./player/debug_dock.tscn")
 const InterfaceText = preload("./config/interface_text.gd")
+const Settings = preload("./config/settings.gd")
+
+var _settings = Settings.new()
 
 @onready
 var editor = $HSplitContainer/VBoxContainer/HSplitContainer/MultiEditor
@@ -44,7 +47,10 @@ var _debug_panel
 
 # TODO fix current problems (it seems partial dialogues can cause an infinite loop (i.e. -)
 #   -- lexer has a bunch of issues with lookups
+
+
 func _ready():
+	_load_config()
 	# TODO load from saved cache
 	_open_files = []
 
@@ -100,8 +106,6 @@ func _on_multi_editor_editor_switched(key):
 
 
 func _on_top_bar_open_file_triggered():
-	var my_theme = EditorInterface.get_editor_settings().get_setting("interface/theme/preset")
-	print(my_theme)
 	_open_file_dialog()
 
 
@@ -260,9 +264,12 @@ func _save_file(path: String, content: String):
 	file.store_string(content)
 
 
-func _toggle_lists():
+func _toggle_lists(persist_change: bool = true):
 	lists_container.visible = not lists_container.visible
 	top_bar.set_lists_visibility(lists_container.visible)
+
+	if persist_change:
+		_settings.set_config(_settings.EDITOR_CFG_SHOW_LISTS, lists_container.visible)
 
 
 func _on_top_bar_toggle_file_list_triggered():
@@ -273,9 +280,12 @@ func _on_top_bar_toggle_player_triggered():
 	_toggle_player()
 
 
-func _toggle_player():
+func _toggle_player(persist_change: bool = true):
 	player.visible = not player.visible
 	top_bar.set_player_visibility(player.visible)
+
+	if persist_change:
+		_settings.set_config(_settings.EDITOR_CFG_SHOW_PLAYER, player.visible)
 
 
 func _on_top_bar_execute_dialogue():
@@ -314,8 +324,15 @@ func _on_player_position_selected(dialogue_key, line, column):
 
 
 func _on_top_bar_toggle_player_sync():
+	_toggle_player_sync()
+
+
+func _toggle_player_sync(persist_change: bool = true):
 	_should_sync_editor_and_player = not _should_sync_editor_and_player
 	top_bar.set_editor_sync(_should_sync_editor_and_player)
+
+	if persist_change:
+		_settings.set_config(_settings.EDITOR_CFG_SYNC_PLAYER, _should_sync_editor_and_player)
 
 
 func _on_player_toggle_debug_panel(is_visible):
@@ -364,3 +381,16 @@ func _on_player_event_triggered(event_name):
 func _on_player_dialogue_mem_clean():
 	if _debug_panel != null:
 		_debug_panel.load_data(player.get_data(), true)
+
+
+func _load_config():
+	var config = _settings.get_editor_config()
+
+	if not config.get(_settings.EDITOR_CFG_SHOW_LISTS, true):
+		_toggle_lists(false)
+
+	if config.get(_settings.EDITOR_CFG_SHOW_PLAYER, false):
+		_toggle_player(false)
+
+	if not config.get(_settings.EDITOR_CFG_SYNC_PLAYER, true):
+		_toggle_player_sync(false)
