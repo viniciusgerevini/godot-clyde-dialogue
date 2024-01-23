@@ -25,6 +25,7 @@ var player = $HSplitContainer/Player
 
 var _current_file_path = ""
 var _open_files = []
+var _persisted_content = {}
 
 var _should_sync_editor_and_player = true
 
@@ -63,7 +64,10 @@ func _on_multi_editor_content_changed():
 	if _current_file_path == "":
 		return
 	var should_refresh_file = file_list.open_file_count() == 0
-	file_list.mark_edited(_current_file_path)
+	if editor.get_content() != _persisted_content[_current_file_path]:
+		file_list.mark_edited(_current_file_path)
+	else:
+		file_list.mark_saved(_current_file_path)
 	_load_blocks()
 	if should_refresh_file:
 		_refresh_top_bar()
@@ -71,6 +75,7 @@ func _on_multi_editor_content_changed():
 
 func _on_multi_editor_editor_removed(key: String):
 	file_list.remove_file(key)
+	_persisted_content.erase(key)
 	if file_list.open_file_count() == 0:
 		_refresh_top_bar()
 
@@ -110,8 +115,10 @@ func _on_top_bar_reload_from_disk():
 
 
 func _reload_current():
-	editor.set_content(_load_file_content(_current_file_path))
+	var content = _load_file_content(_current_file_path)
+	editor.set_content(content)
 	file_list.mark_saved(_current_file_path)
+	_persisted_content[_current_file_path] = content
 
 
 func _on_top_bar_save_all_triggered():
@@ -225,6 +232,7 @@ func _on_open_dialog_file_selected(paths, dialogue_modal):
 
 func _open_file(path, include_in_open_list: bool = true, include_in_recents: bool = true):
 	var content = _load_file_content(path)
+	_persisted_content[path] = content
 	file_list.add_file(path)
 	_current_file_path = path
 	editor.switch_editor(_current_file_path)
@@ -276,6 +284,7 @@ func _on_save_as_dialog_file_selected(path, dialogue_modal):
 func _save_file(path: String, content: String):
 	var file = FileAccess.open(path, FileAccess.WRITE)
 	file.store_string(content)
+	_persisted_content[path] = content
 
 
 func _toggle_lists(persist_change: bool = true):
