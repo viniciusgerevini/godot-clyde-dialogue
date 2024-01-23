@@ -54,6 +54,7 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="Player" parent="HSplitContainer" instance=ExtResource("2_08cag")]
+visible = false
 layout_mode = 2
 
 [connection signal="clear_recent_files_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_clear_recent_files_triggered"]

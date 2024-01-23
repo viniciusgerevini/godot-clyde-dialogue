@@ -59,6 +59,9 @@ const KEY_COPY_FILE_PATH = "COPY_FILE_PATH"
 const KEY_FILTER_FILES = "FILTER_FILES"
 const KEY_FILTER_BLOCKS = "FILTER_BLOCKS"
 const KEY_SORT = "SORT"
+const KEY_CLOSE_UNSAVED_FILE_MESSAGE = "CLOSE_UNSAVED_FILE_MESSAGE"
+const KEY_CLOSE_UNSAVED_FILES_MESSAGE = "CLOSE_UNSAVED_FILES_MESSAGE"
+const KEY_DISCARD = "DISCARD"
 
 static var _loaded_locale := "en"
 static var _default_locale := "en"
@@ -117,6 +120,9 @@ static func get_string(key: String) -> String:
 		"FILTER_FILES": "Filter Files",
 		"FILTER_BLOCKS": "Filter Blocks",
 		"SORT": "Sort",
+		"CLOSE_UNSAVED_FILE_MESSAGE": "Close and save changes?",
+		"CLOSE_UNSAVED_FILES_MESSAGE": "Some files have unsaved changes. Are you sure you want to close them?",
+		"DISCARD": "Discard",
 	}
 	_load_strings()
 	if _entries.has(key):

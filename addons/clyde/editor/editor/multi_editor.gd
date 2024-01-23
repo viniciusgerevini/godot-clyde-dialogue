@@ -59,7 +59,6 @@ func remove_editor(key):
 	_editors.erase(key)
 	if key == _current_editor_key:
 		if _editors.is_empty():
-			#_default_editor = _create_editor()
 			_current_editor = _default_editor
 			_current_editor_key = ""
 		else:

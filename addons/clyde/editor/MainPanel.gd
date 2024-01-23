@@ -34,8 +34,6 @@ var _debug_panel
 
 # TODO files
 #   - open from file system
-#   - close from list
-#   - reload from system
 #   -  prompt save
 # TODO drag and drop from filesystem to file list
 # TODO re-order opened files in list
@@ -150,39 +148,52 @@ func _on_top_bar_show_in_filesystem_triggered():
 func _on_top_bar_close_all_triggered():
 	var open_files = file_list.get_open_files_paths()
 	var should_notify_unsaved = false
+	var remaining = []
 	for o in open_files:
 		if file_list.is_unsaved(o):
 			should_notify_unsaved = true
+			remaining.push_back(o)
 		else:
 			editor.remove_editor(o)
 
-	_open_files = []
-	# TODO show confirmation to delete unsaved as well
+	_open_files = remaining
+
+	if should_notify_unsaved:
+		_multiple_unsaved_files_on_close_confirmation_dialog("close_all")
 
 
 func _on_top_bar_close_file_triggered():
 	if file_list.is_unsaved(_current_file_path):
-		print("show warning")
-	editor.remove_editor(_current_file_path)
+		_unsaved_file_close_confirmation_dialog()
+		return
 
+	_close_current_file()
+
+
+func _close_current_file():
 	_open_files.erase(_current_file_path)
+	editor.remove_editor(_current_file_path)
 
 
 func _on_top_bar_close_other_triggered():
 	var open_files = file_list.get_open_files_paths()
 	var should_notify_unsaved = false
+	var remaining = []
 	for o in open_files:
 		if o == _current_file_path:
+			remaining.push_back(_current_file_path)
 			continue
 
 		if file_list.is_unsaved(o):
 			should_notify_unsaved = true
+			remaining.push_back(o)
 		else:
 			editor.remove_editor(o)
 
-	_open_files = [_current_file_path]
-	# TODO show confirmation to remove unsaved blah
-	# don't forget to skip current
+	_open_files = remaining
+
+	if should_notify_unsaved:
+		_multiple_unsaved_files_on_close_confirmation_dialog("close_other")
 
 
 func _refresh_top_bar():
@@ -462,3 +473,66 @@ func _on_file_list_show_in_filesystem_triggered():
 
 func _on_file_list_copy_current_path_triggered():
 	DisplayServer.clipboard_set(ProjectSettings.localize_path(_current_file_path))
+
+
+func _unsaved_file_close_confirmation_dialog():
+	var c = AcceptDialog.new()
+	c.title = InterfaceText.get_string(InterfaceText.KEY_FILE_MENU_CLOSE)
+	c.dialog_text = "%s\n(%s)" % [
+		InterfaceText.get_string(InterfaceText.KEY_CLOSE_UNSAVED_FILE_MESSAGE),
+		_current_file_path.get_file()
+	]
+	c.ok_button_text = InterfaceText.get_string(InterfaceText.KEY_DEBUG_SAVE)
+	c.add_button(InterfaceText.get_string(InterfaceText.KEY_DISCARD), false, "discard")
+	c.add_cancel_button(InterfaceText.get_string(InterfaceText.KEY_DEBUG_CANCEL))
+	c.confirmed.connect(_on_unsaved_close_confirmed.bind(c))
+	c.canceled.connect(_on_unsaved_close_canceled.bind(c))
+	c.custom_action.connect(_on_unsaved_close_action.bind(c))
+	add_child(c)
+	c.popup_centered()
+
+
+func _on_unsaved_close_confirmed(c):
+	_save_file(_current_file_path, editor.get_content())
+	EditorInterface.get_resource_filesystem().scan()
+	c.queue_free()
+	_close_current_file()
+
+
+func _on_unsaved_close_canceled(c):
+	c.queue_free()
+
+
+func _on_unsaved_close_action(action_name: String, c):
+	if action_name == "discard":
+		_close_current_file()
+	c.queue_free()
+
+
+func _on_multiple_unsaved_discard(action_name: String, c):
+	c.queue_free()
+	for o in _open_files:
+		if o != _current_file_path:
+			editor.remove_editor(o)
+
+	if action_name == "close_all":
+		editor.remove_editor(_current_file_path)
+		_open_files = []
+	else:
+		_open_files = [_current_file_path]
+
+
+func _multiple_unsaved_files_on_close_confirmation_dialog(close_action: String):
+	var c = AcceptDialog.new()
+	c.title = InterfaceText.get_string(InterfaceText.KEY_FILE_MENU_CLOSE)
+	c.dialog_text = InterfaceText.get_string(InterfaceText.KEY_CLOSE_UNSAVED_FILES_MESSAGE)
+	c.ok_button_text = InterfaceText.get_string(InterfaceText.KEY_DISCARD)
+	c.add_cancel_button(InterfaceText.get_string(InterfaceText.KEY_DEBUG_CANCEL))
+	c.confirmed.connect(_on_multiple_unsaved_discard.bind(close_action, c))
+	c.canceled.connect(_on_unsaved_close_canceled.bind(c))
+	add_child(c)
+	c.popup_centered()
+
+
+func _get_source_folder():
+	return ProjectSettings.get_setting("dialogue/source_folder") if ProjectSettings.has_setting("dialogue/source_folder") else "res://dialogues/"

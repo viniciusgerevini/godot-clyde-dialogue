@@ -15,11 +15,6 @@ const CMD_EDITOR_EXECUTE_DIALOGUE = "editor_execute_dialogue"
 const CMD_EDITOR_DELETE_LINE = "editor_delete_line"
 const CMD_TOGGLE_WORD_WRAP = "toggle_word_wrap"
 
-# TODO show in file system
-
-# TODO dialogue shortcuts
-			#"Ctrl+Mouse Wheel Up", "Command+Mouse Wheel Up":
-
 func _init():
 	_shortcuts = _load_shortcuts()
 
@@ -39,7 +34,7 @@ func _load_shortcuts():
 			 { "key": KEY_O, "is_command_or_control_pressed": true },
 		],
 		CMD_SAVE_FILE: [
-			 { "key": KEY_S, "is_command_or_control_pressed": true, "is_alt_pressed": true },
+			 { "key": KEY_S, "is_command_or_control_pressed": true },
 		],
 		CMD_SAVE_ALL: [
 			 { "key": KEY_S, "is_command_or_control_pressed": true, "is_shift_pressed": true },

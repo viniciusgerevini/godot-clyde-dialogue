@@ -253,6 +253,7 @@ func _get_field_value(var_name: String):
 		Types.StringValue:
 			return fields.value_string.text
 
+
 func _clear_variable_entries():
 	for c in _debug_entries.get_children():
 		c.queue_free()

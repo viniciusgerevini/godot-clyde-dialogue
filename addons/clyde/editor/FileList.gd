@@ -58,7 +58,6 @@ func add_file(file_path: String):
 func remove_file(file_path: String):
 	if not _files.has(file_path):
 		return
-
 	_files.erase(file_path)
 	reload_list()
 

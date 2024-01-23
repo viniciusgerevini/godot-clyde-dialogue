@@ -6,8 +6,10 @@ const Parser = preload("./parser/Parser.gd")
 func _get_priority():
 	return 1
 
+
 func _get_import_order():
 	return 1
+
 
 func _get_importer_name():
 	return "clyde.dialogue"
