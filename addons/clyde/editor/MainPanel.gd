@@ -32,13 +32,6 @@ var editor_plugin: EditorPlugin
 
 var _debug_panel
 
-# TODO files
-#   - open from file system
-#   -  prompt save
-# TODO drag and drop from filesystem to file list
-# TODO re-order opened files in list
-# TODO double click open from filesystem, is it possible?
-
 # TODO fix current problems (it seems partial dialogues can cause an infinite loop (i.e. -)
 #   -- lexer has a bunch of issues with lookups
 
@@ -106,9 +99,7 @@ func _on_top_bar_new_file_triggered():
 	file_dialog.title = "New dialogue file..."
 	file_dialog.file_selected.connect(_on_new_file_dialog_file_selected.bind(file_dialog))
 	file_dialog.popup_centered_ratio()
-	# TODO open in dialogue folder by default
-	#if _source != "":
-		#_file_dialog_aseprite.current_dir = ProjectSettings.globalize_path(_source.get_base_dir())
+	file_dialog.current_dir = ProjectSettings.globalize_path(_get_source_folder())
 
 
 func _on_top_bar_reload_from_disk():
@@ -215,11 +206,9 @@ func _open_file_dialog():
 	file_dialog.access = EditorFileDialog.ACCESS_FILESYSTEM
 	file_dialog.file_selected.connect(_on_open_dialog_file_selected.bind(file_dialog))
 	file_dialog.set_filters(PackedStringArray(["*.clyde"]))
+	file_dialog.current_dir = ProjectSettings.globalize_path(_get_source_folder())
 
 	get_parent().add_child(file_dialog)
-	# TODO open in dialogue folder by default
-	#if _source != "":
-		#_file_dialog_aseprite.current_dir = ProjectSettings.globalize_path(_source.get_base_dir())
 	file_dialog.popup_centered_ratio()
 
 
