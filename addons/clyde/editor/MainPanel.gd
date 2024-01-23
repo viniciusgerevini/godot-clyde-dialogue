@@ -202,9 +202,9 @@ func _load_blocks():
 func _open_file_dialog():
 	# TODO support opening multiple files
 	var file_dialog = EditorFileDialog.new()
-	file_dialog.file_mode = EditorFileDialog.FILE_MODE_OPEN_FILE
+	file_dialog.file_mode = EditorFileDialog.FILE_MODE_OPEN_FILES
 	file_dialog.access = EditorFileDialog.ACCESS_FILESYSTEM
-	file_dialog.file_selected.connect(_on_open_dialog_file_selected.bind(file_dialog))
+	file_dialog.files_selected.connect(_on_open_dialog_file_selected.bind(file_dialog))
 	file_dialog.set_filters(PackedStringArray(["*.clyde"]))
 	file_dialog.current_dir = ProjectSettings.globalize_path(_get_source_folder())
 
@@ -212,9 +212,11 @@ func _open_file_dialog():
 	file_dialog.popup_centered_ratio()
 
 
-func _on_open_dialog_file_selected(path, dialogue_modal):
-	_open_file(path)
+func _on_open_dialog_file_selected(paths, dialogue_modal):
 	dialogue_modal.queue_free()
+
+	for path in paths:
+		_open_file(path)
 
 
 func _open_file(path, include_in_open_list: bool = true, include_in_recents: bool = true):
