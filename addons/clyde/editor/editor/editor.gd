@@ -6,7 +6,7 @@ signal content_changed
 
 const ParseWorker = preload("../parse_worker.gd")
 
-@onready var editor = $DialogueEditor
+@onready var editor: CodeEdit = $DialogueEditor
 @onready var status_bar = $StatusBar
 
 @onready var parse_worker = ParseWorker.new()
@@ -84,3 +84,7 @@ func set_executing_line(line: int):
 
 func clear_executing_lines():
 	editor.clear_executing_lines()
+
+
+func clear_undo_history():
+	editor.clear_undo_history()

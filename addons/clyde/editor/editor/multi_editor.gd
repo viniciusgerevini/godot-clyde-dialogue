@@ -129,3 +129,7 @@ func clear_executing_line(key: String = ""):
 
 func has_editor(key: String):
 	return _editors.has(key)
+
+
+func clear_undo_history():
+	_current_editor.clear_undo_history()

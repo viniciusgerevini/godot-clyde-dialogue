@@ -229,6 +229,7 @@ func _open_file(path, include_in_open_list: bool = true, include_in_recents: boo
 	_current_file_path = path
 	editor.switch_editor(_current_file_path)
 	editor.set_content(content)
+	editor.clear_undo_history()
 	file_list.mark_saved(_current_file_path)
 	file_list.select_file(path)
 	if include_in_open_list:
