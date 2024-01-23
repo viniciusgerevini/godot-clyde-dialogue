@@ -62,6 +62,7 @@ const KEY_SORT = "SORT"
 const KEY_CLOSE_UNSAVED_FILE_MESSAGE = "CLOSE_UNSAVED_FILE_MESSAGE"
 const KEY_CLOSE_UNSAVED_FILES_MESSAGE = "CLOSE_UNSAVED_FILES_MESSAGE"
 const KEY_DISCARD = "DISCARD"
+const KEY_RELOAD_UNSAVED_FILE = "RELOAD_UNSAVED_FILE"
 
 static var _loaded_locale := "en"
 static var _default_locale := "en"
@@ -122,6 +123,7 @@ static func get_string(key: String) -> String:
 		"SORT": "Sort",
 		"CLOSE_UNSAVED_FILE_MESSAGE": "Close and save changes?",
 		"CLOSE_UNSAVED_FILES_MESSAGE": "Some files have unsaved changes. Are you sure you want to close them?",
+		"RELOAD_UNSAVED_FILE": "File has unsaved changes. Reload from disk?",
 		"DISCARD": "Discard",
 	}
 	_load_strings()

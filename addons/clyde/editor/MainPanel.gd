@@ -104,9 +104,14 @@ func _on_top_bar_new_file_triggered():
 
 func _on_top_bar_reload_from_disk():
 	if file_list.is_unsaved(_current_file_path):
-		print("show warning")
+		_unsaved_file_reload_confirmation_dialog()
+		return
+	_reload_current()
 
+
+func _reload_current():
 	editor.set_content(_load_file_content(_current_file_path))
+	file_list.mark_saved(_current_file_path)
 
 
 func _on_top_bar_save_all_triggered():
@@ -200,7 +205,6 @@ func _load_blocks():
 
 
 func _open_file_dialog():
-	# TODO support opening multiple files
 	var file_dialog = EditorFileDialog.new()
 	file_dialog.file_mode = EditorFileDialog.FILE_MODE_OPEN_FILES
 	file_dialog.access = EditorFileDialog.ACCESS_FILESYSTEM
@@ -466,6 +470,21 @@ func _on_file_list_copy_current_path_triggered():
 	DisplayServer.clipboard_set(ProjectSettings.localize_path(_current_file_path))
 
 
+func _unsaved_file_reload_confirmation_dialog():
+	var c = AcceptDialog.new()
+	c.title = InterfaceText.get_string(InterfaceText.KEY_FILE_MENU_RELOAD_FROM_DISK)
+	c.dialog_text = "%s\n(%s)" % [
+		InterfaceText.get_string(InterfaceText.KEY_RELOAD_UNSAVED_FILE),
+		_current_file_path.get_file()
+	]
+	c.ok_button_text = InterfaceText.get_string(InterfaceText.KEY_FILE_MENU_RELOAD_FROM_DISK)
+	c.add_cancel_button(InterfaceText.get_string(InterfaceText.KEY_DEBUG_CANCEL))
+	c.confirmed.connect(_on_reload_unsaved_confirmed.bind(c))
+	c.canceled.connect(_on_unsaved_close_canceled.bind(c))
+	add_child(c)
+	c.popup_centered()
+
+
 func _unsaved_file_close_confirmation_dialog():
 	var c = AcceptDialog.new()
 	c.title = InterfaceText.get_string(InterfaceText.KEY_FILE_MENU_CLOSE)
@@ -523,6 +542,11 @@ func _multiple_unsaved_files_on_close_confirmation_dialog(close_action: String):
 	c.canceled.connect(_on_unsaved_close_canceled.bind(c))
 	add_child(c)
 	c.popup_centered()
+
+
+func _on_reload_unsaved_confirmed(c):
+	_reload_current()
+	c.queue_free()
 
 
 func _get_source_folder():
