@@ -2,8 +2,8 @@
 
 [ext_resource type="Script" path="res://addons/clyde/editor/player/dialogue_bubble.gd" id="1_gkd1v"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gkdqg"]
-bg_color = Color(0.0729, 0.0729, 0.0729, 0.6)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sail3"]
+bg_color = Color(0.06561, 0.06561, 0.06561, 0.6)
 corner_radius_top_left = 5
 corner_radius_top_right = 5
 corner_radius_bottom_right = 5
@@ -17,7 +17,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
-theme_override_styles/panel = SubResource("StyleBoxFlat_gkdqg")
+theme_override_styles/panel = SubResource("StyleBoxFlat_sail3")
 script = ExtResource("1_gkd1v")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]

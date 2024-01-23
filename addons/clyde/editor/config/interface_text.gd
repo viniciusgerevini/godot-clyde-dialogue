@@ -55,7 +55,10 @@ const KEY_DEBUG_SAVE = "DEBUG_SAVE"
 const KEY_DEBUG_REMOVE = "DEBUG_REMOVE"
 const KEY_DEBUG_CANCEL = "DEBUG_CANCEL"
 const KEY_DEBUG_ADD_VARIABLE = "DEBUG_ADD_VARIABLE"
-
+const KEY_COPY_FILE_PATH = "COPY_FILE_PATH"
+const KEY_FILTER_FILES = "FILTER_FILES"
+const KEY_FILTER_BLOCKS = "FILTER_BLOCKS"
+const KEY_SORT = "SORT"
 
 static var _loaded_locale := "en"
 static var _default_locale := "en"
@@ -110,6 +113,10 @@ static func get_string(key: String) -> String:
 		"DEBUG_REMOVE": "Remove",
 		"DEBUG_ADD_VARIABLE": "Add Variable",
 		"DEBUG_CANCEL": "Cancel",
+		"COPY_FILE_PATH": "Copy File Path",
+		"FILTER_FILES": "Filter Files",
+		"FILTER_BLOCKS": "Filter Blocks",
+		"SORT": "Sort",
 	}
 	_load_strings()
 	if _entries.has(key):

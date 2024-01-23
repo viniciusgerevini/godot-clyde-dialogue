@@ -430,3 +430,35 @@ func _add_recent(recent_path):
 
 func _load_recents():
 	top_bar.set_recents(_settings.get_recents())
+
+
+func _on_file_list_close_all_triggered():
+	_on_top_bar_close_all_triggered()
+
+
+func _on_file_list_close_file_triggered():
+	_on_top_bar_close_file_triggered()
+
+
+func _on_file_list_close_other_triggered():
+	_on_top_bar_close_other_triggered()
+
+
+func _on_file_list_reload_from_disk():
+	_on_top_bar_reload_from_disk()
+
+
+func _on_file_list_save_as_triggered():
+	_on_top_bar_save_as_triggered()
+
+
+func _on_file_list_save_file_triggered():
+	_on_top_bar_save_file_triggered()
+
+
+func _on_file_list_show_in_filesystem_triggered():
+	_on_top_bar_show_in_filesystem_triggered()
+
+
+func _on_file_list_copy_current_path_triggered():
+	DisplayServer.clipboard_set(ProjectSettings.localize_path(_current_file_path))

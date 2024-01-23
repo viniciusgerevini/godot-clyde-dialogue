@@ -14,6 +14,10 @@ placeholder_text = "Filter files"
 custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
 size_flags_vertical = 3
+allow_rmb_select = true
+
+[node name="Menu" type="PopupMenu" parent="."]
 
 [connection signal="text_changed" from="filter" to="." method="_on_filter_text_changed"]
+[connection signal="item_clicked" from="ItemList" to="." method="_on_item_list_item_clicked"]
 [connection signal="item_selected" from="ItemList" to="." method="_on_item_list_item_selected"]

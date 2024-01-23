@@ -3,6 +3,8 @@ extends VBoxContainer
 
 signal block_selected(line: int, column: int)
 
+const InterfaceText = preload("./config/interface_text.gd")
+
 @onready var _file_name = $HBoxContainer/file_name
 @onready var _filter = $filter
 @onready var _sort_button = $HBoxContainer/sort_button
@@ -14,6 +16,7 @@ var _block_names_alphabetical = []
 
 
 func _ready():
+	_filter.placeholder_text = InterfaceText.get_string(InterfaceText.KEY_FILTER_BLOCKS)
 	_filter.right_icon = get_theme_icon("Search", "EditorIcons")
 	_sort_button.icon = get_theme_icon("Sort", "EditorIcons")
 
