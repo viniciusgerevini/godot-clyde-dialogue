@@ -83,6 +83,8 @@ var _disabled_when_no_file = [
 
 var _tool_disabled_when_no_file = [
 	ToolMenu.EXECUTE_DIALOGUE,
+	ToolMenu.CREATE_CSV,
+	ToolMenu.GENERATE_IDS,
 ]
 
 var _file_menu_triggers = {

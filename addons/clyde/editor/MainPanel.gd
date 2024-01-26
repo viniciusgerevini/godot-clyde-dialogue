@@ -4,6 +4,7 @@ extends MarginContainer
 const DebugPanel = preload("./player/debug_dock.tscn")
 const InterfaceText = preload("./config/interface_text.gd")
 const Settings = preload("./config/settings.gd")
+const IdGenerator = preload("./tools/id_generator.gd")
 
 var _settings = Settings.new()
 
@@ -575,7 +576,15 @@ func _on_top_bar_create_csv_triggered():
 
 
 func _on_top_bar_generate_ids_triggered():
-	pass # Replace with function body.
+	var current_content = editor.get_content()
+
+	if current_content == "":
+		return
+
+	var id_generator = IdGenerator.new()
+	var new_content = id_generator.add_ids_to_content(current_content)
+	editor.set_content(new_content)
+	file_list.mark_edited(_current_file_path)
 
 
 func _on_top_bar_open_online_docs_triggered():

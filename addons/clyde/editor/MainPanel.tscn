@@ -55,6 +55,7 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="Player" parent="HSplitContainer" instance=ExtResource("2_08cag")]
+visible = false
 layout_mode = 2
 
 [node name="CsvExporterWindow" parent="." instance=ExtResource("7_645cb")]
