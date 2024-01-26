@@ -11,6 +11,8 @@ const DEFAULT_SOURCE_FOLDER := "res://dialogues/"
 const SETTING_ID_SUFFIX_LOOKUP_SEPARATOR := "dialogue/id_suffix_lookup_separator"
 const DEFAULT_ID_SUFFIX_LOOKUP_SEPARATOR := "&"
 
+const MAIN_EDITOR_ENABLED := "dialogue/editor_enabled"
+
 var _import_plugin
 var _main_panel
 
@@ -30,20 +32,28 @@ func _disable_plugin():
 func _setup_project_settings():
 	if not ProjectSettings.has_setting(SETTING_SOURCE_FOLDER):
 		ProjectSettings.set(SETTING_SOURCE_FOLDER, DEFAULT_SOURCE_FOLDER)
-		ProjectSettings.set_initial_value(SETTING_SOURCE_FOLDER, DEFAULT_SOURCE_FOLDER)
-		ProjectSettings.add_property_info({
-			"name": SETTING_SOURCE_FOLDER,
-			"type": TYPE_STRING,
-			"hint": PROPERTY_HINT_DIR,
-		})
+	ProjectSettings.set_initial_value(SETTING_SOURCE_FOLDER, DEFAULT_SOURCE_FOLDER)
+	ProjectSettings.add_property_info({
+		"name": SETTING_SOURCE_FOLDER,
+		"type": TYPE_STRING,
+		"hint": PROPERTY_HINT_DIR,
+	})
 
 	if not ProjectSettings.has_setting(SETTING_ID_SUFFIX_LOOKUP_SEPARATOR):
 		ProjectSettings.set(SETTING_ID_SUFFIX_LOOKUP_SEPARATOR, DEFAULT_ID_SUFFIX_LOOKUP_SEPARATOR)
-		ProjectSettings.set_initial_value(SETTING_ID_SUFFIX_LOOKUP_SEPARATOR, DEFAULT_ID_SUFFIX_LOOKUP_SEPARATOR)
-		ProjectSettings.add_property_info({
-			"name": SETTING_ID_SUFFIX_LOOKUP_SEPARATOR,
-			"type": TYPE_STRING,
-		})
+	ProjectSettings.set_initial_value(SETTING_ID_SUFFIX_LOOKUP_SEPARATOR, DEFAULT_ID_SUFFIX_LOOKUP_SEPARATOR)
+	ProjectSettings.add_property_info({
+		"name": SETTING_ID_SUFFIX_LOOKUP_SEPARATOR,
+		"type": TYPE_STRING,
+	})
+
+	if not ProjectSettings.has_setting(MAIN_EDITOR_ENABLED):
+		ProjectSettings.set(MAIN_EDITOR_ENABLED, true)
+	ProjectSettings.set_initial_value(MAIN_EDITOR_ENABLED, true)
+	ProjectSettings.add_property_info({
+		"name": MAIN_EDITOR_ENABLED,
+		"type": TYPE_BOOL,
+	})
 
 	ProjectSettings.save()
 
@@ -51,6 +61,7 @@ func _setup_project_settings():
 func _clear_project_settings():
 	ProjectSettings.clear(SETTING_SOURCE_FOLDER)
 	ProjectSettings.clear(SETTING_ID_SUFFIX_LOOKUP_SEPARATOR)
+	ProjectSettings.clear(MAIN_EDITOR_ENABLED)
 	ProjectSettings.save()
 
 
@@ -65,6 +76,8 @@ func _exit_tree() -> void:
 
 func _setup_main_panel() -> void:
 	InterfaceText.plugin_version = get_plugin_version()
+	if not ProjectSettings.get_setting(MAIN_EDITOR_ENABLED, true):
+		return
 	_main_panel = MainPanel.instantiate()
 	_main_panel.editor_plugin = self
 	get_editor_interface().get_editor_main_screen().add_child(_main_panel)
@@ -72,7 +85,7 @@ func _setup_main_panel() -> void:
 
 
 func _has_main_screen() -> bool:
-	return true
+	return ProjectSettings.get_setting(MAIN_EDITOR_ENABLED, true)
 
 
 func _make_visible(is_visible: bool) -> void:
