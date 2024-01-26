@@ -1,7 +1,7 @@
 [remap]
 
 importer="clyde.dialogue"
-type="PackedDataContainer"
+type="ClydeDialogueFile"
 uid="uid://b8286smipwio4"
 path="res://.godot/imported/pulp_with_blocks.clyde-57ab3e2ccfcb2214643ebe777438f0f6.res"
 

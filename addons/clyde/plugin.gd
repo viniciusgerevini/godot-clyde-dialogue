@@ -105,3 +105,15 @@ func _build() -> bool:
 	if is_instance_valid(_main_panel):
 		_main_panel.prepare_for_project_run()
 	return true
+
+
+func _handles(object) -> bool:
+	if not is_instance_valid(_main_panel):
+		return false
+	return object is ClydeDialogueFile
+
+
+func _edit(object):
+	if object == null:
+		return
+	_main_panel.load_file(object.resource_path)

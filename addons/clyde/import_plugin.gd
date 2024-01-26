@@ -28,7 +28,7 @@ func _get_save_extension():
 
 
 func _get_resource_type():
-	return "PackedDataContainer"
+	return "ClydeDialogueFile"
 
 
 func _get_preset_count():

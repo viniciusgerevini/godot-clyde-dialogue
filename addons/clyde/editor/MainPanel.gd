@@ -601,3 +601,7 @@ func _on_csv_file_selected(path: String, dialog: EditorFileDialog):
 
 func prepare_for_project_run():
 	_on_top_bar_save_all_triggered()
+
+
+func load_file(path):
+	_open_file(ProjectSettings.globalize_path(path))
