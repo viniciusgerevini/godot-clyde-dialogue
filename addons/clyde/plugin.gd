@@ -84,5 +84,5 @@ func _get_plugin_name() -> String:
 	return "Clyde"
 
 
-#func _get_plugin_icon():
-#	return get_editor_interface().get_editor_theme().get_icon("Node", "EditorIcons")
+func _get_plugin_icon() -> Texture2D:
+	return load(get_script().resource_path.get_base_dir() + "/editor/assets/clyde.svg")
