@@ -307,3 +307,21 @@ func _font_size_down():
 
 func _font_reset():
 	_settings.clear_font_size()
+
+
+func _on_symbol_lookup(symbol, line, column):
+	var text = get_line(line).substr(column + 2)
+	var char_index = text.find("<-")
+	if char_index != -1:
+		text = text.substr(0, char_index).strip_edges()
+
+	if _parsed_doc != null:
+		for b in _parsed_doc.blocks:
+			if b.name == text:
+				go_to_position(b.meta.line, b.meta.column)
+				break
+
+
+func _on_symbol_validate(symbol):
+	if symbol == "->":
+		set_symbol_lookup_word_as_valid(true)
