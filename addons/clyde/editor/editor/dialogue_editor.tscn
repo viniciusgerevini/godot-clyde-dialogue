@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://addons/clyde/editor/editor/clyde_syntax_highlighter.gd" id="1_evse1"]
 [ext_resource type="Script" path="res://addons/clyde/editor/editor/dialogue_editor.gd" id="1_oeyb6"]
 
-[sub_resource type="SyntaxHighlighter" id="SyntaxHighlighter_tia5m"]
+[sub_resource type="SyntaxHighlighter" id="SyntaxHighlighter_cketi"]
 script = ExtResource("1_evse1")
 
 [node name="DialogueEditor" type="CodeEdit"]

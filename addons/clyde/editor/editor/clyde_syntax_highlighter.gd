@@ -13,15 +13,16 @@ const _logic_keywords = [ "set", "when", "trigger" ]
 const _options = [ "*", "+", ">" ]
 
 var _escapable_chars_regex = RegEx.create_from_string("[\\\\|\\*\\+\\>\\%\\(\\)\\{\\}\\\"\\'\\$\\#]")
-var _variations_mode_regex = RegEx.create_from_string("^[\\s\\t]*(cycle|once|sequence|shuffle|shuffle sequence|shuffle cycle|shuffle once)[\\s\\t]*$")
+var _variations_mode_regex = RegEx.create_from_string("^([\\s\\t]*)(cycle|once|sequence|shuffle(\\s+(once|cycle|sequence))?)([\\s\\t]*)$")
 var _tag_regex = RegEx.create_from_string("[A-z0-9\\-\\_\\.]")
+var _leading_spaces_regex = RegEx.create_from_string("^\\s*")
 
 var _config = {}
 
 func _clear_highlighting_cache():
 	_cache = {}
 
-# FIXME fix leaky hightlight (set, boolean, variations)
+
 func _get_line_syntax_highlighting(line: int) -> Dictionary:
 	var editor: TextEdit = get_text_edit()
 	var content: String = editor.get_line(line)
@@ -141,7 +142,8 @@ func _get_regions(content: String, line_number: int) -> Dictionary:
 		# speaker
 		if content[current_column] == ":" and is_speaker_allowed:
 			if not has_no_text_content:
-				regions[current_column - uninterrupted_text.strip_edges().length()] = _identifier_region()
+				var leading_spaces = _leading_spaces_regex.search(uninterrupted_text)
+				regions[current_column - uninterrupted_text.length() + leading_spaces.get_end()] = _identifier_region()
 				was_last_region_text = false
 				current_column += 1
 				is_speaker_allowed = false
@@ -305,6 +307,7 @@ func _handle_logic_mode(content: String, current_column: int, no_previous_text: 
 		if _logic_operators_and_symbols.has(character):
 			regions[current_column] = _operator_region()
 			current_column += 1
+			regions[current_column] = _text_region()
 			continue
 
 		# logic block end
@@ -357,6 +360,7 @@ func _handle_logic_regular_chars(current_column: int, content: String, regions: 
 		regions[init_column] = _boolean_literal_region()
 	else:
 		regions[init_column] = _identifier_region()
+	regions[init_column + value.length()] = _text_region()
 
 	return current_column
 
@@ -388,6 +392,7 @@ func _handle_quote_mode(content: String, current_column: int, regions: Dictionar
 			is_in_quote_mode = false
 			regions[current_column] = _symbol_region()
 			current_column += 1
+			regions[current_column] = _text_region()
 			break
 		current_column += 1
 
@@ -404,7 +409,14 @@ func _handle_variation_mode_start(content: String, current_column: int, regions:
 		var s = content.substr(current_column)
 		var result = _variations_mode_regex.search(s)
 		if result != null:
-			regions[current_column] = _keyword_region()
+			regions[current_column + result.get_start(2)] = _keyword_region()
+			if result.get_start(3) != -1:
+				regions[current_column + result.get_start(3)] =_text_region()
+			if result.get_start(4) != -1:
+				regions[current_column + result.get_start(4)] = _keyword_region()
+			if result.get_start(5) != -1:
+				regions[current_column + result.get_start(5)] = _text_region()
+
 			return { "current_column": current_column + result.get_end() }
 
 	return {
@@ -417,6 +429,7 @@ func _handle_tag(content: String, current_column: int, regions: Dictionary) -> D
 	current_column += 1
 	while (current_column < content.length()):
 		if _tag_regex.search(content[current_column]) == null:
+			regions[current_column] = _text_region()
 			current_column += 1
 			break
 		current_column += 1
