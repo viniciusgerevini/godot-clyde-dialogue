@@ -65,6 +65,8 @@ func _load_text_editor_config():
 	self.scroll_v_scroll_speed = settings.scroll_v_scroll_speed
 	self.wrap_mode = settings.wrap_mode
 
+	add_theme_font_size_override("font_size", settings.font_size)
+
 
 func _load_theme_config():
 	return {
@@ -78,6 +80,22 @@ func _load_shortcuts():
 		{
 			"shortcut": shortcuts.get_shortcut_for_command(Shortcuts.CMD_EDITOR_TOGGLE_COMMENT),
 			"handler": _toggle_comment,
+		},
+		{
+			"shortcut": shortcuts.get_shortcut_for_command(Shortcuts.CMD_EDITOR_TOGGLE_COMMENT),
+			"handler": _toggle_comment,
+		},
+		{
+			"shortcut": shortcuts.get_shortcut_for_command(Shortcuts.CMD_EDITOR_FONT_SIZE_UP),
+			"handler": _font_size_up,
+		},
+		{
+			"shortcut": shortcuts.get_shortcut_for_command(Shortcuts.CMD_EDITOR_FONT_SIZE_DOWN),
+			"handler": _font_size_down,
+		},
+		{
+			"shortcut": shortcuts.get_shortcut_for_command(Shortcuts.CMD_EDITOR_FONT_SIZE_RESET),
+			"handler": _font_reset,
 		},
 	]
 
@@ -241,6 +259,13 @@ func _gui_input(event: InputEvent) -> void:
 			if s.shortcut.matches_event(event):
 				s.handler.call()
 				get_viewport().set_input_as_handled()
+	elif event is InputEventMouseButton and (event.ctrl_pressed or event.meta_pressed):
+		if event.button_index == MOUSE_BUTTON_WHEEL_UP and event.is_pressed():
+			_font_size_up()
+			get_viewport().set_input_as_handled()
+		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN and event.is_pressed():
+			_font_size_down()
+			get_viewport().set_input_as_handled()
 
 
 func _toggle_comment():
@@ -270,3 +295,15 @@ func _toggle_comment():
 				set_line(line, line_text.substr(comment_symbol.length()))
 
 	end_complex_operation()
+
+
+func _font_size_up():
+	_settings.change_font_size(+1)
+
+
+func _font_size_down():
+	_settings.change_font_size(-1)
+
+
+func _font_reset():
+	_settings.clear_font_size()

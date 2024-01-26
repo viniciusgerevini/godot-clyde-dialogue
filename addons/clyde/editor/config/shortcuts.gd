@@ -14,6 +14,9 @@ const CMD_EDITOR_TOGGLE_COMMENT = "editor_toggle_comment"
 const CMD_EDITOR_EXECUTE_DIALOGUE = "editor_execute_dialogue"
 const CMD_EDITOR_DELETE_LINE = "editor_delete_line"
 const CMD_TOGGLE_WORD_WRAP = "toggle_word_wrap"
+const CMD_EDITOR_FONT_SIZE_UP = "editor_font_size_up"
+const CMD_EDITOR_FONT_SIZE_DOWN = "editor_font_size_down"
+const CMD_EDITOR_FONT_SIZE_RESET = "editor_font_size_reset"
 
 func _init():
 	_shortcuts = _load_shortcuts()
@@ -57,6 +60,15 @@ func _load_shortcuts():
 		],
 		CMD_TOGGLE_WORD_WRAP: [
 			 { "key": KEY_Z, "is_alt_pressed": true },
+		],
+		CMD_EDITOR_FONT_SIZE_UP: [
+			 { "key": KEY_EQUAL, "is_command_or_control_pressed": true },
+		],
+		CMD_EDITOR_FONT_SIZE_DOWN: [
+			 { "key": KEY_MINUS, "is_command_or_control_pressed": true },
+		],
+		CMD_EDITOR_FONT_SIZE_RESET: [
+			 { "key": KEY_0, "is_command_or_control_pressed": true },
 		],
 	}
 
