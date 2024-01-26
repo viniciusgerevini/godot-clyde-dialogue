@@ -218,7 +218,7 @@ func _initilize_help_menu(_shortcuts):
 		InterfaceText.get_string(InterfaceText.KEY_HELP_REPORT_ISSUE),
 		HelpMenu.REPORT_ISSUE
 	)
-	_help_menu.add_item(InterfaceText.plugin_version, HelpMenu.VERSION)
+	_help_menu.add_item("v%s" % InterfaceText.plugin_version, HelpMenu.VERSION)
 	_help_menu.set_item_disabled(_help_menu.get_item_index(HelpMenu.VERSION), true)
 
 
