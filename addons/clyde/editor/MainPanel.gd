@@ -597,3 +597,7 @@ func _on_top_bar_report_issue_triggered():
 
 func _on_csv_file_selected(path: String, dialog: EditorFileDialog):
 	dialog.queue_free()
+
+
+func prepare_for_project_run():
+	_on_top_bar_save_all_triggered()

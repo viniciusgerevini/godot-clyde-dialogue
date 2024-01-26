@@ -99,3 +99,9 @@ func _get_plugin_name() -> String:
 
 func _get_plugin_icon() -> Texture2D:
 	return load(get_script().resource_path.get_base_dir() + "/editor/assets/clyde.svg")
+
+
+func _build() -> bool:
+	if is_instance_valid(_main_panel):
+		_main_panel.prepare_for_project_run()
+	return true
