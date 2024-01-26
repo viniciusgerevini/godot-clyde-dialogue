@@ -23,6 +23,9 @@ var top_bar = $HSplitContainer/VBoxContainer/TopBar
 @onready
 var player = $HSplitContainer/Player
 
+@onready
+var _csv_exporter_dialog = $CsvExporterWindow
+
 var _current_file_path = ""
 var _open_files = []
 var _persisted_content = {}
@@ -101,7 +104,7 @@ func _on_top_bar_open_file_triggered():
 
 func _on_top_bar_new_file_triggered():
 	var file_dialog = _create_save_file_dialogue()
-	file_dialog.title = "New dialogue file..."
+	file_dialog.title = InterfaceText.get_string(InterfaceText.KEY_FILE_MENU_NEW_FILE)
 	file_dialog.file_selected.connect(_on_new_file_dialog_file_selected.bind(file_dialog))
 	file_dialog.popup_centered_ratio()
 	file_dialog.current_dir = ProjectSettings.globalize_path(_get_source_folder())
@@ -132,7 +135,7 @@ func _on_top_bar_save_all_triggered():
 
 func _on_top_bar_save_as_triggered():
 	var file_dialog = _create_save_file_dialogue()
-	file_dialog.title = "Save dialogue as..."
+	file_dialog.title = InterfaceText.get_string(InterfaceText.KEY_FILE_MENU_SAVE_AS)
 	file_dialog.file_selected.connect(_on_save_as_dialog_file_selected.bind(file_dialog))
 	file_dialog.popup_centered_ratio()
 
@@ -252,7 +255,7 @@ func _load_file_content(path: String) -> String:
 	return file.get_as_text()
 
 
-func _create_save_file_dialogue():
+func _create_save_file_dialogue() -> EditorFileDialog:
 	var file_dialog = EditorFileDialog.new()
 	file_dialog.file_mode = EditorFileDialog.FILE_MODE_SAVE_FILE
 	file_dialog.access = EditorFileDialog.ACCESS_FILESYSTEM
@@ -561,3 +564,27 @@ func _on_reload_unsaved_confirmed(c):
 
 func _get_source_folder():
 	return ProjectSettings.get_setting("dialogue/source_folder") if ProjectSettings.has_setting("dialogue/source_folder") else "res://dialogues/"
+
+
+func _on_top_bar_create_csv_triggered():
+	var parsed = editor.get_parsed_document()
+	if parsed == null:
+		printerr("dialogue not compiled")
+	_csv_exporter_dialog.set_current_file(_current_file_path, parsed)
+	_csv_exporter_dialog.popup_centered()
+
+
+func _on_top_bar_generate_ids_triggered():
+	pass # Replace with function body.
+
+
+func _on_top_bar_open_online_docs_triggered():
+	OS.shell_open(_settings.ONLINE_DOCS_URL)
+
+
+func _on_top_bar_report_issue_triggered():
+	OS.shell_open(_settings.REPORT_ISSUE_URL)
+
+
+func _on_csv_file_selected(path: String, dialog: EditorFileDialog):
+	dialog.queue_free()

@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://cux0i1kt0tw3u"]
+[gd_scene load_steps=8 format=3 uid="uid://cux0i1kt0tw3u"]
 
 [ext_resource type="Script" path="res://addons/clyde/editor/MainPanel.gd" id="1_xwtbw"]
 [ext_resource type="PackedScene" uid="uid://c1vmpgpv2jrpx" path="res://addons/clyde/editor/TopBar.tscn" id="2_7f2jg"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://y4xxgq3fdok8" path="res://addons/clyde/editor/FileList.tscn" id="2_yhcsr"]
 [ext_resource type="PackedScene" uid="uid://xw1w6iil2jcw" path="res://addons/clyde/editor/BlockList.tscn" id="3_lfkp5"]
 [ext_resource type="PackedScene" uid="uid://b07csfwvymaeu" path="res://addons/clyde/editor/editor/multi_editor.tscn" id="4_1if4e"]
+[ext_resource type="PackedScene" uid="uid://bm1ht3mndadas" path="res://addons/clyde/editor/tools/csv_exporter.tscn" id="7_645cb"]
 
 [node name="MainPanel" type="MarginContainer"]
 anchors_preset = 15
@@ -54,18 +55,24 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="Player" parent="HSplitContainer" instance=ExtResource("2_08cag")]
-visible = false
 layout_mode = 2
+
+[node name="CsvExporterWindow" parent="." instance=ExtResource("7_645cb")]
+visible = false
 
 [connection signal="clear_recent_files_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_clear_recent_files_triggered"]
 [connection signal="close_all_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_close_all_triggered"]
 [connection signal="close_file_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_close_file_triggered"]
 [connection signal="close_other_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_close_other_triggered"]
+[connection signal="create_csv_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_create_csv_triggered"]
 [connection signal="execute_dialogue" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_execute_dialogue"]
+[connection signal="generate_ids_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_generate_ids_triggered"]
 [connection signal="new_file_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_new_file_triggered"]
 [connection signal="open_file_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_open_file_triggered"]
+[connection signal="open_online_docs_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_open_online_docs_triggered"]
 [connection signal="recent_file_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_recent_file_triggered"]
 [connection signal="reload_from_disk" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_reload_from_disk"]
+[connection signal="report_issue_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_report_issue_triggered"]
 [connection signal="save_all_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_save_all_triggered"]
 [connection signal="save_as_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_save_as_triggered"]
 [connection signal="save_file_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_save_file_triggered"]

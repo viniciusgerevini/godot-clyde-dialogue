@@ -3,6 +3,7 @@ extends EditorPlugin
 
 const ImportPlugin = preload("import_plugin.gd")
 const MainPanel = preload("./editor/MainPanel.tscn")
+const InterfaceText = preload("./editor/config/interface_text.gd")
 
 const SETTING_SOURCE_FOLDER := "dialogue/source_folder"
 const DEFAULT_SOURCE_FOLDER := "res://dialogues/"
@@ -63,6 +64,7 @@ func _exit_tree() -> void:
 
 
 func _setup_main_panel() -> void:
+	InterfaceText.plugin_version = get_plugin_version()
 	_main_panel = MainPanel.instantiate()
 	_main_panel.editor_plugin = self
 	get_editor_interface().get_editor_main_screen().add_child(_main_panel)

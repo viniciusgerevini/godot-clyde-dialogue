@@ -24,9 +24,16 @@ signal execute_dialogue
 signal recent_file_triggered(file_path)
 signal clear_recent_files_triggered()
 
+signal generate_ids_triggered
+signal create_csv_triggered
+
+signal open_online_docs_triggered
+signal report_issue_triggered
+
 @onready var _file_menu: PopupMenu = $file_menu.get_popup()
 @onready var _tool_menu: PopupMenu = $tool_menu.get_popup()
 @onready var _recents_submenu: PopupMenu = _create_recents_submenu()
+@onready var _help_menu: PopupMenu = $help_menu.get_popup()
 
 @onready var _execute_dialogue := $right_icons/MarginContainer/execute_dialogue
 
@@ -49,10 +56,18 @@ enum ToolMenu {
 	TOGGLE_PLAYER = 200,
 	EXECUTE_DIALOGUE = 300,
 	TOGGLE_PLAYER_SYNC = 400,
+	CREATE_CSV = 500,
+	GENERATE_IDS = 600,
 }
 
 enum RecentSubMenu {
 	CLEAR_RECENTS = 100,
+}
+
+enum HelpMenu {
+	ONLINE_DOCS = 100,
+	REPORT_ISSUE = 200,
+	VERSION = 300,
 }
 
 var _disabled_when_no_file = [
@@ -88,10 +103,16 @@ var _tool_menu_triggers = {
 	ToolMenu.TOGGLE_PLAYER: toggle_player_triggered,
 	ToolMenu.EXECUTE_DIALOGUE: execute_dialogue,
 	ToolMenu.TOGGLE_PLAYER_SYNC: toggle_player_sync,
+	ToolMenu.CREATE_CSV: create_csv_triggered,
+	ToolMenu.GENERATE_IDS: generate_ids_triggered,
+}
+
+var _help_menu_triggers = {
+	HelpMenu.ONLINE_DOCS: open_online_docs_triggered,
+	HelpMenu.REPORT_ISSUE: report_issue_triggered,
 }
 
 var _recent_files_paths = []
-
 
 func _ready():
 	var shortcuts = Shortcuts.new()
@@ -161,8 +182,6 @@ func _initilize_tool_menu(shortcuts: Shortcuts):
 		true
 	)
 
-	# player section
-
 	_add_separator(_tool_menu, InterfaceText.KEY_TOOL_MENU_PLAYER_SECTION)
 
 	_add_item(_tool_menu, InterfaceText.KEY_EXECUTE_DIALOGUE, ToolMenu.EXECUTE_DIALOGUE, shortcuts, Shortcuts.CMD_EDITOR_EXECUTE_DIALOGUE)
@@ -176,19 +195,29 @@ func _initilize_tool_menu(shortcuts: Shortcuts):
 		Shortcuts.CMD_PLAYER_TOGGLE
 	)
 
-	# TODO dialogue section
-	# generate ids
-	# translation: submenu
-	# generate csv from file (open save dialogue with <filename>.csv pre-filled
+	_add_separator(_tool_menu, InterfaceText.KEY_DIALOGUE)
+
+	_add_item(_tool_menu, InterfaceText.KEY_GENERATE_LINE_IDS, ToolMenu.GENERATE_IDS)
+	_add_item(_tool_menu, InterfaceText.KEY_CREATE_CSV, ToolMenu.CREATE_CSV)
 
 
 func _initilize_help_menu(_shortcuts):
 	$help_menu.text = InterfaceText.get_string(InterfaceText.KEY_MENU_HELP)
-	# TODO docs
-	# TODO report issue
-	# TODO about (versions, license)
-	# TODO load demo dialogue
-	# TODO editor commands
+	_help_menu.id_pressed.connect(_on_help_menu_item_selected)
+
+	_help_menu.clear()
+	_help_menu.add_icon_item(
+		get_theme_icon("ExternalLink", "EditorIcons"),
+		InterfaceText.get_string(InterfaceText.KEY_HELP_ONLINE_DOCS),
+		HelpMenu.ONLINE_DOCS
+	)
+	_help_menu.add_icon_item(
+		get_theme_icon("ExternalLink", "EditorIcons"),
+		InterfaceText.get_string(InterfaceText.KEY_HELP_REPORT_ISSUE),
+		HelpMenu.REPORT_ISSUE
+	)
+	_help_menu.add_item(InterfaceText.plugin_version, HelpMenu.VERSION)
+	_help_menu.set_item_disabled(_help_menu.get_item_index(HelpMenu.VERSION), true)
 
 
 func _initialize_recents_submenu():
@@ -225,6 +254,11 @@ func _on_recents_menu_item_selected(id: int):
 		return
 
 	recent_file_triggered.emit(_recent_files_paths[id])
+
+
+func _on_help_menu_item_selected(id: int):
+	if _help_menu_triggers.has(id):
+		_help_menu_triggers[id].emit()
 
 
 func _initialize_right_icons(_shortcuts):

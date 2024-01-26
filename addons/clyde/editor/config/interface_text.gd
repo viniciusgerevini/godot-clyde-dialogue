@@ -40,6 +40,8 @@ const KEY_TOOL_MENU_PLAYER_SYNC = "TOOL_MENU_PLAYER_SYNC"
 const KEY_MENU_FILE = "MENU_FILE"
 const KEY_MENU_TOOL = "MENU_TOOL"
 const KEY_MENU_HELP = "MENU_HELP"
+const KEY_HELP_ONLINE_DOCS = "HELP_ONLINE_DOCS"
+const KEY_HELP_REPORT_ISSUE = "HELP_REPORT_ISSUE"
 const KEY_DEBUG_PANEL_NAME = "DEBUG_PANEL_NAME"
 const KEY_DEBUG_VARIABLES_LABEL = "DEBUG_VARIABLES_LABEL"
 const KEY_DEBUG_HISTORY_LABEL = "DEBUG_HISTORY_LABEL"
@@ -63,6 +65,30 @@ const KEY_CLOSE_UNSAVED_FILE_MESSAGE = "CLOSE_UNSAVED_FILE_MESSAGE"
 const KEY_CLOSE_UNSAVED_FILES_MESSAGE = "CLOSE_UNSAVED_FILES_MESSAGE"
 const KEY_DISCARD = "DISCARD"
 const KEY_RELOAD_UNSAVED_FILE = "RELOAD_UNSAVED_FILE"
+const KEY_DIALOGUE = "DIALOGUE"
+const KEY_GENERATE_LINE_IDS = "GENERATE_LINE_IDS"
+const KEY_CREATE_CSV = "CREATE_CSV"
+
+const KEY_CSV_EXPORTER_WINDOW_TITLE = "CSV_EXPORTER_WINDOW_TITLE"
+const KEY_CSV_EXPORTER_NEW_FILE = "CSV_EXPORTER_NEW_FILE"
+const KEY_CSV_EXPORTER_NEW_FILE_DESC = "CSV_EXPORTER_NEW_FILE_DESC"
+const KEY_CSV_EXPORTER_INCLUDE_METADATA = "CSV_EXPORTER_INCLUDE_METADATA"
+const KEY_CSV_EXPORTER_INCLUDE_METADATA_DESC = "CSV_EXPORTER_INCLUDE_METADATA_DESC"
+const KEY_CSV_EXPORTER_INCLUDE_HEADER = "CSV_EXPORTER_INCLUDE_HEADER"
+const KEY_CSV_EXPORTER_INCLUDE_HEADER_DESC = "CSV_EXPORTER_INCLUDE_HEADER_DESC"
+const KEY_CSV_EXPORTER_HEADER_LOCALE = "CSV_EXPORTER_HEADER_LOCALE"
+const KEY_CSV_EXPORTER_HEADER_LOCALE_DESC = "CSV_EXPORTER_HEADER_LOCALE_DESC"
+const KEY_CSV_EXPORTER_DELIMITER = "CSV_EXPORTER_DELIMITER"
+const KEY_CSV_EXPORTER_DELIMITER_DESC = "CSV_EXPORTER_DELIMITER_DESC"
+const KEY_CSV_EXPORTER_FILE = "CSV_EXPORTER_FILE"
+const KEY_CSV_EXPORTER_OPTIONS = "CSV_EXPORTER_OPTIONS"
+const KEY_CSV_EXPORTER_EXPORT = "CSV_EXPORTER_EXPORT"
+const KEY_CSV_FILE_EXISTS_WARNING = "CSV_FILE_EXISTS_WARNING"
+const KEY_CSV_EXPORTER_SUCCEED = "CSV_EXPORTER_SUCCEED"
+const KEY_CSV_EXPORTER_FAIL = "CSV_EXPORTER_FAIL"
+
+
+static var plugin_version := ""
 
 static var _loaded_locale := "en"
 static var _default_locale := "en"
@@ -99,6 +125,8 @@ static func get_string(key: String) -> String:
 		"MENU_FILE": "File",
 		"MENU_TOOL": "Tool",
 		"MENU_HELP": "Help",
+		"HELP_ONLINE_DOCS": "Online Documentation",
+		"HELP_REPORT_ISSUE": "Report Issue",
 		"TOOL_MENU_PLAYER_SECTION": "Player",
 		"TOOL_MENU_EDITOR_SECTION": "Editor",
 		"TOOL_MENU_PLAYER_SYNC": "Sync Changes with Player",
@@ -125,6 +153,26 @@ static func get_string(key: String) -> String:
 		"CLOSE_UNSAVED_FILES_MESSAGE": "Some files have unsaved changes. Are you sure you want to close them?",
 		"RELOAD_UNSAVED_FILE": "File has unsaved changes. Reload from disk?",
 		"DISCARD": "Discard",
+		"DIALOGUE": "Dialogue",
+		"GENERATE_LINE_IDS": "Generate Line IDs",
+		"CREATE_CSV": "Create Translation CSV...",
+		"CSV_EXPORTER_WINDOW_TITLE": "Export dialogue lines as CSV",
+		"CSV_EXPORTER_FILE": "CSV File",
+		"CSV_EXPORTER_NEW_FILE": "Select file",
+		"CSV_EXPORTER_NEW_FILE_DESC": "File to store CSV lines. Previous content will be replaced.",
+		"CSV_EXPORTER_INCLUDE_METADATA": "Include metadata",
+		"CSV_EXPORTER_INCLUDE_METADATA_DESC": "Adds extra line to CSV file with extra data. (i.e. speaker and tags)",
+		"CSV_EXPORTER_INCLUDE_HEADER": "Include header",
+		"CSV_EXPORTER_INCLUDE_HEADER_DESC": "Include file header (id, locale)",
+		"CSV_EXPORTER_HEADER_LOCALE": "Locale",
+		"CSV_EXPORTER_HEADER_LOCALE_DESC": "The locale of the original dialogue to be used in the header. It can be any value. Check Godot's supported locales.",
+		"CSV_EXPORTER_DELIMITER": "Column delimiter",
+		"CSV_EXPORTER_DELIMITER_DESC": "Symbol used to separate columns. Default ','. Has to be one character.",
+		"CSV_EXPORTER_OPTIONS": "Option",
+		"CSV_EXPORTER_EXPORT": "Export CSV",
+		"CSV_FILE_EXISTS_WARNING": "Selected file already exists. Content will be overwritten.",
+		"CSV_EXPORTER_SUCCEED": "CSV export succeeded",
+		"CSV_EXPORTER_FAIL": "CSV export failed",
 	}
 	_load_strings()
 	if _entries.has(key):

@@ -10,6 +10,18 @@ const EDITOR_CFG_SYNC_PLAYER = "sync_player"
 const EDITOR_CFG_PLAYER_SHOW_MULTI_BUBBLE = "player_multi_bubble"
 const EDITOR_CFG_PLAYER_SHOW_METADATA = "player_metadata"
 
+const CSV_EXPORTER_CFG_INCLUDE_METADATA = "csv_include_metadata"
+const CSV_EXPORTER_CFG_ALWAYS_USE_QUOTES = "csv_use_quotes"
+const CSV_EXPORTER_CFG_INCLUDE_HEADER = "csv_include_header"
+const CSV_EXPORTER_CFG_HEADER_LOCALE = "csv_header_locale"
+const CSV_EXPORTER_CFG_DELIMITER = "csv_delimiter"
+const CSV_EXPORTER_CFG_QUOTE_TYPE = "csv_quote_type"
+const CSV_EXPORTER_RECORDED_PATHS = "csv_recorded_paths"
+
+
+# TODO better docs
+const ONLINE_DOCS_URL = "https://github.com/viniciusgerevini/godot-clyde-dialogue/blob/godot_4/USAGE.md"
+const REPORT_ISSUE_URL = "https://github.com/viniciusgerevini/godot-clyde-dialogue/issues"
 
 func _init():
 	_editor_settings = EditorInterface.get_editor_settings()
@@ -117,3 +129,11 @@ func add_recent(path: String):
 
 func clear_recents():
 	set_recents([])
+
+
+func get_project_config(config_key: String, default):
+	return _editor_settings.get_project_metadata("clyde", config_key, default)
+
+
+func set_project_config(config_key: String, value):
+	_editor_settings.set_project_metadata("clyde", config_key, value)
