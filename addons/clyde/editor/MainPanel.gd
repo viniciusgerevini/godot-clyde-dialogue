@@ -605,3 +605,7 @@ func prepare_for_project_run():
 
 func load_file(path):
 	_open_file(ProjectSettings.globalize_path(path))
+
+
+func _on_player_close_triggered():
+	_toggle_player()

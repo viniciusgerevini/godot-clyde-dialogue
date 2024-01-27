@@ -8,6 +8,7 @@ signal toggle_debug_panel(is_visible: bool)
 signal dialogue_mem_clean
 signal variable_changed(var_name, value, old_value)
 signal event_triggered(event_name)
+signal close_triggered
 
 const InterfaceText = preload("../config/interface_text.gd")
 const Settings = preload("../config/settings.gd")
@@ -16,7 +17,7 @@ const DialogueEventBubble = preload("./dialogue_event_bubble.tscn")
 
 var _settings = Settings.new()
 
-@onready var _dialogue_title_field = $HBoxContainer/VBoxContainer/dialogue_name
+@onready var _dialogue_title_field = $HBoxContainer/VBoxContainer/MarginContainer/dialogue_name
 @onready var _lines_container = $HBoxContainer/VBoxContainer/LinesMargin/lines/dialogue_lines
 @onready var _scroll_container = $HBoxContainer/VBoxContainer/LinesMargin/lines
 
@@ -28,6 +29,7 @@ var _settings = Settings.new()
 @onready var _multi_single_btn := $HBoxContainer/VBoxContainer/actions/multi_single
 @onready var _show_meta_btn = $HBoxContainer/VBoxContainer/actions/show_meta
 @onready var _show_debug_btn = $HBoxContainer/VBoxContainer/actions/show_debug
+@onready var _close_btn = $HBoxContainer/VBoxContainer/MarginContainer/close
 
 @onready var _block_selection_field = $HBoxContainer/VBoxContainer/actions/Block
 @onready var _scrollbar: VScrollBar = _scroll_container.get_v_scroll_bar()
@@ -73,10 +75,12 @@ func _setup_icons():
 	_next_line_btn.icon = get_theme_icon("Play", "EditorIcons")
 	_forward_btn.icon = get_theme_icon("TransitionEnd", "EditorIcons")
 	_polterigeist_btn.icon = get_theme_icon("Joypad", "EditorIcons") # TODO custom icon ghost
+	_polterigeist_btn.icon = load("res://addons/clyde/editor/assets/clyde.svg")
 	_clear_mem_btn.icon = get_theme_icon("History", "EditorIcons")
 	_multi_single_btn.icon = get_theme_icon("MakeFloating", "EditorIcons")
 	_show_meta_btn.icon = get_theme_icon("GuiEllipsis", "EditorIcons")
 	_show_debug_btn.icon = get_theme_icon("Debug", "EditorIcons")
+	_close_btn.icon = get_theme_icon("Close", "EditorIcons")
 
 
 func _load_config():
@@ -333,3 +337,7 @@ func _on_event_triggered(event_name: String):
 func _add_initial_line():
 	var message = InterfaceText.get_string(InterfaceText.KEY_DIALOGUE_NOT_LOADED)
 	_add_event_line(message)
+
+
+func _on_close_button_up():
+	close_triggered.emit()

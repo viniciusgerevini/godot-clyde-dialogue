@@ -95,6 +95,7 @@ visible = false
 [connection signal="editor_removed" from="HSplitContainer/VBoxContainer/HSplitContainer/MultiEditor" to="." method="_on_multi_editor_editor_removed"]
 [connection signal="editor_switched" from="HSplitContainer/VBoxContainer/HSplitContainer/MultiEditor" to="." method="_on_multi_editor_editor_switched"]
 [connection signal="parsing_finished" from="HSplitContainer/VBoxContainer/HSplitContainer/MultiEditor" to="." method="_on_multi_editor_parsing_finished"]
+[connection signal="close_triggered" from="HSplitContainer/Player" to="." method="_on_player_close_triggered"]
 [connection signal="content_finished_changing" from="HSplitContainer/Player" to="." method="_on_player_content_finished_changing"]
 [connection signal="dialogue_mem_clean" from="HSplitContainer/Player" to="." method="_on_player_dialogue_mem_clean"]
 [connection signal="dialogue_reset" from="HSplitContainer/Player" to="." method="_on_player_dialogue_reset"]
