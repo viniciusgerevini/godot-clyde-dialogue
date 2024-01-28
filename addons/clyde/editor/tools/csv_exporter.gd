@@ -191,7 +191,3 @@ func _on_include_metadata_focus_entered():
 
 func _on_include_header_focus_entered():
 	_hide_save_message()
-
-
-func _on_always_use_quotes_focus_entered():
-	_hide_save_message()
