@@ -2,6 +2,7 @@
 extends CodeEdit
 
 signal finished_change
+signal search_requested
 
 const Settings = preload("../config/settings.gd")
 const Shortcuts = preload("../config/shortcuts.gd")
@@ -97,6 +98,10 @@ func _load_shortcuts():
 			"shortcut": shortcuts.get_shortcut_for_command(Shortcuts.CMD_EDITOR_FONT_SIZE_RESET),
 			"handler": _font_reset,
 		},
+		{
+			"shortcut": shortcuts.get_shortcut_for_command(Shortcuts.CMD_EDITOR_SEARCH),
+			"handler": _start_search,
+		},
 	]
 
 
@@ -117,8 +122,12 @@ func _notify_change():
 	finished_change.emit()
 
 
-func go_to_position(line: int, column: int):
-	set_caret_line(line, false)
+func _start_search():
+	search_requested.emit()
+
+
+func go_to_position(line: int, column: int, adjust_viewport: bool = false):
+	set_caret_line(line, adjust_viewport)
 	set_caret_column(column)
 
 
@@ -306,7 +315,7 @@ func _font_size_down():
 
 
 func _font_reset():
-	_settings.clear_font_size()
+	_settings.font_size()
 
 
 func _on_symbol_lookup(symbol, line, column):
@@ -325,3 +334,46 @@ func _on_symbol_lookup(symbol, line, column):
 func _on_symbol_validate(symbol):
 	if symbol == "->":
 		set_symbol_lookup_word_as_valid(true)
+
+
+func clear_search():
+	deselect()
+	set_search_text("")
+
+
+func set_search(search_info: Dictionary, should_go_to_position: bool = false, backwards: bool = false):
+	if search_info.text == "":
+		clear_search()
+		return
+	deselect()
+	var flags = _get_search_flags(search_info, backwards)
+	set_search_flags(flags)
+	set_search_text(search_info.text)
+
+	if should_go_to_position:
+		var p = search(search_info.text, flags, get_caret_line(), get_caret_column())
+		if p.x != -1:
+			go_to_position(p.y, p.x, true)
+			select(p.y, p.x, p.y, p.x + search_info.text.length())
+
+
+func _get_search_flags(search: Dictionary, backwards: bool = false):
+	var search_flags = 0
+	if search.match_case:
+		search_flags += SEARCH_MATCH_CASE
+	if search.whole_words:
+		search_flags += SEARCH_WHOLE_WORDS
+	if backwards:
+		search_flags += SEARCH_BACKWARDS
+
+	return search_flags
+
+
+func search_next(search_obj: Dictionary):
+	set_caret_column(get_caret_column() + 1)
+	set_search(search_obj, true)
+
+
+func search_previous(search_obj: Dictionary):
+	set_caret_column(get_caret_column() -1)
+	set_search(search_obj, true, true)

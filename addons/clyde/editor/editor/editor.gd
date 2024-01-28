@@ -3,6 +3,7 @@ extends VBoxContainer
 
 signal parsing_finished(result)
 signal content_changed
+signal search_requested
 
 const ParseWorker = preload("../parse_worker.gd")
 
@@ -88,3 +89,30 @@ func clear_executing_lines():
 
 func clear_undo_history():
 	editor.clear_undo_history()
+
+
+func _on_dialogue_editor_search_requested():
+	search_requested.emit()
+
+
+func set_search(search_obj, should_go_to_position: bool = false):
+	if search_obj == null:
+		editor.clear_search()
+		return
+	editor.set_search(search_obj, should_go_to_position)
+
+
+func clear_search():
+	editor.clear_search()
+
+
+func search_next(search_obj: Dictionary):
+	editor.search_next(search_obj)
+
+
+func search_previous(search_obj: Dictionary):
+	editor.search_previous(search_obj)
+
+
+func focus():
+	editor.grab_focus()

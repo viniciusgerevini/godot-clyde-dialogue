@@ -5,7 +5,7 @@
 [ext_resource type="Script" path="res://addons/clyde/editor/editor/clyde_syntax_highlighter.gd" id="3_v1074"]
 [ext_resource type="PackedScene" uid="uid://c3tu6jy2udoqk" path="res://addons/clyde/editor/editor/StatusBar.tscn" id="4_eek30"]
 
-[sub_resource type="SyntaxHighlighter" id="SyntaxHighlighter_pbf1t"]
+[sub_resource type="SyntaxHighlighter" id="SyntaxHighlighter_s6rha"]
 script = ExtResource("3_v1074")
 
 [node name="Editor" type="VBoxContainer"]
@@ -20,13 +20,13 @@ script = ExtResource("1_7djvi")
 
 [node name="DialogueEditor" parent="." instance=ExtResource("2_y3ceu")]
 layout_mode = 2
-syntax_highlighter = SubResource("SyntaxHighlighter_pbf1t")
-code_completion_prefixes = Array[String](["=", "-", "#", "$", "&", "("])
+syntax_highlighter = SubResource("SyntaxHighlighter_s6rha")
 
 [node name="StatusBar" parent="." instance=ExtResource("4_eek30")]
 layout_mode = 2
 
 [connection signal="caret_changed" from="DialogueEditor" to="." method="_on_dialogue_editor_caret_changed"]
 [connection signal="finished_change" from="DialogueEditor" to="." method="_on_dialogue_editor_finished_change"]
+[connection signal="search_requested" from="DialogueEditor" to="." method="_on_dialogue_editor_search_requested"]
 [connection signal="text_changed" from="DialogueEditor" to="." method="_on_dialogue_editor_text_changed"]
 [connection signal="error_hint_clicked" from="StatusBar" to="." method="_on_status_bar_error_hint_clicked"]

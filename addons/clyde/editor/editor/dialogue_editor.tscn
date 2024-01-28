@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://addons/clyde/editor/editor/clyde_syntax_highlighter.gd" id="1_evse1"]
 [ext_resource type="Script" path="res://addons/clyde/editor/editor/dialogue_editor.gd" id="1_oeyb6"]
 
-[sub_resource type="SyntaxHighlighter" id="SyntaxHighlighter_cketi"]
+[sub_resource type="SyntaxHighlighter" id="SyntaxHighlighter_x4knf"]
 script = ExtResource("1_evse1")
 
 [node name="DialogueEditor" type="CodeEdit"]
@@ -20,9 +20,10 @@ scroll_past_end_of_file = true
 minimap_draw = true
 caret_blink = true
 caret_blink_interval = 0.5
-syntax_highlighter = SubResource("SyntaxHighlighter_tia5m")
+syntax_highlighter = SubResource("SyntaxHighlighter_x4knf")
 highlight_current_line = true
 draw_tabs = true
+draw_spaces = true
 symbol_lookup_on_click = true
 line_length_guidelines = Array[int]([100, 80])
 gutters_draw_executing_lines = true
