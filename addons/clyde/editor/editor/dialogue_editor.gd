@@ -370,10 +370,22 @@ func _get_search_flags(search: Dictionary, backwards: bool = false):
 
 
 func search_next(search_obj: Dictionary):
-	set_caret_column(get_caret_column() + 1)
+	var column = get_caret_column() + 1
+	var line = get_caret_line()
+	if column >= get_line(line).length():
+		column = 0
+		line += 1
+	set_caret_column(column)
+	set_caret_line(line)
 	set_search(search_obj, true)
 
 
 func search_previous(search_obj: Dictionary):
-	set_caret_column(get_caret_column() -1)
+	var column = get_caret_column() - 1
+	var line = get_caret_line()
+	if column < 0:
+		line -= 1
+		column = get_line(line).length() - 1
+	set_caret_column(column)
+	set_caret_line(line)
 	set_search(search_obj, true, true)
