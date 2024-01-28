@@ -51,7 +51,7 @@ func load_dialogue(file_name: String, block: String = "") -> void:
 	_load_parsed_doc(file, block)
 
 
-func _load_parsed_doc(doc: Dictionary, block: String) -> void:
+func _load_parsed_doc(doc: Dictionary, block: String = "") -> void:
 	_interpreter = Interpreter.new()
 	_interpreter.init(doc, {
 		"id_suffix_lookup_separator": _config_id_suffix_lookup_separator(),
