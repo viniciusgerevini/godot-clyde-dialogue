@@ -39,22 +39,22 @@ func set_internal_variable(id, value):
 	return value
 
 
-func get_internal_variable(id, default_value):
+func get_internal_variable(id: String, default_value):
 	var value = _mem.internal.get(str(id));
 	if value == null:
 		return default_value;
 	return value
 
 
-func get_all():
+func get_all() -> Dictionary:
 	return _mem
 
 
-func load_data(data):
+func load_data(data: Dictionary) -> void:
 	_mem = data
 
 
-func clear():
+func clear() -> void:
 	_mem = {
 		"access": {},
 		"variables": {},
