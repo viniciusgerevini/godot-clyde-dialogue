@@ -50,11 +50,9 @@ func _get_option_visibility(_path, _option, _options):
 func _import(source_file, save_path, options, platform_variants, gen_files):
 	var file = FileAccess.open(source_file, FileAccess.READ)
 	var clyde = file.get_as_text()
-	var result = parse(clyde)
-	file.close()
 
-	var container = PackedDataContainer.new()
-	container.__data__ = JSON.stringify(result).to_utf8_buffer()
+	var container = ClydeDialogueFile.new()
+	container.content = parse(clyde)
 
 	return ResourceSaver.save(container, "%s.%s" % [save_path, _get_save_extension()])
 

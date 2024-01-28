@@ -14,10 +14,4 @@ func _recognize(resource: Resource) -> bool:
 
 
 func _save(resource: Resource, path: String, flags: int) -> int:
-	var file = FileAccess.open(path, FileAccess.WRITE)
-
-	if not file.is_open():
-		return file.get_open_error()
-
-	file.store_string(resource.get("__data__").get_string_from_utf8());
-	return OK
+	return ResourceSaver.save(resource, path)
