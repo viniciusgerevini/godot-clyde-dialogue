@@ -11,6 +11,8 @@ const Interpreter = preload('./interpreter/Interpreter.gd')
 
 ## Emits when a variable is changed inside the dialogue.
 signal variable_changed(name: String, value: Variant, previous_value: Variant)
+## Emits when an external variable is changed inside the dialogue.
+signal external_variable_changed(name: String, value: Variant, previous_value: Variant)
 ## Emits when an event is triggered inside the dialogue.
 signal event_triggered(name: String)
 
@@ -39,7 +41,7 @@ func configure(options: Dictionary) -> void:
 	_options = options
 
 
-## Load dialogue file. [br]
+## Load dialogue file.[br]
 ## file_name: path to the dialogue file. I.e 'my_dialogue', 'res://my_dialogue.clyde', res://my_dialogue.json [br]
 ## block: block name to run. This allows keeping multiple dialogues in the same file. [br]
 func load_dialogue(file_name: String, block: String = "") -> void:
@@ -57,8 +59,9 @@ func _load_parsed_doc(doc: Dictionary, block: String = "") -> void:
 		"id_suffix_lookup_separator": _config_id_suffix_lookup_separator(),
 		"include_hidden_options": _options.get("include_hidden_options", false)
 	})
-	_interpreter.connect("variable_changed",Callable(self,"_trigger_variable_changed"))
-	_interpreter.connect("event_triggered",Callable(self,"_trigger_event_triggered"))
+	_interpreter.variable_changed.connect(_trigger_variable_changed)
+	_interpreter.external_variable_changed.connect(_trigger_external_variable_changed)
+	_interpreter.event_triggered.connect(_trigger_event_triggered)
 	if block != "":
 		_interpreter.select_block(block)
 
@@ -132,11 +135,15 @@ func _load_clyde_file(path) -> Dictionary:
 
 
 func _trigger_variable_changed(name: String, value: Variant, previous_value: Variant) -> void:
-	emit_signal("variable_changed", name, value, previous_value)
+	variable_changed.emit(name, value, previous_value)
+
+
+func _trigger_external_variable_changed(name: String, value: Variant, previous_value: Variant) -> void:
+	external_variable_changed.emit(name, value, previous_value)
 
 
 func _trigger_event_triggered(name: String) -> void:
-	emit_signal("event_triggered", name)
+	event_triggered.emit(name)
 
 
 func _get_file_path(file_name: String) -> String:

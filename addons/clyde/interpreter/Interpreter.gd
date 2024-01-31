@@ -1,6 +1,7 @@
 extends RefCounted
 
 signal variable_changed(name: String, value: Variant, previous_value: Variant)
+signal external_variable_changed(name: String, value: Variant, previous_value: Variant)
 signal event_triggered(event_name: String)
 
 const Memory = preload("./Memory.gd")
@@ -22,7 +23,8 @@ func init(document: Dictionary, interpreter_options: Dictionary = {}) -> void:
 	_doc = document
 	_doc._index = "r"
 	_mem = Memory.new()
-	_mem.connect("variable_changed",Callable(self,"_trigger_variable_changed"))
+	_mem.variable_changed.connect(_trigger_variable_changed)
+	_mem.external_variable_changed.connect(_trigger_external_variable_changed)
 	_logic = LogicInterpreter.new()
 	_logic.init(_mem)
 
@@ -86,6 +88,14 @@ func get_variable(name: String) -> Variant:
 
 func set_variable(name: String, value: Variant) -> Variant:
 	return _mem.set_variable(name, value)
+
+
+func set_external_variable(name: String, value: Variant) -> Variant:
+	return _mem.set_external_variable(name, value)
+
+
+func get_external_variable(name: String) -> Variant:
+	return _mem.get_external_variable(name)
 
 
 func get_data() -> Dictionary:
@@ -394,8 +404,7 @@ func _translate_text(key, text, id_suffixes = null):
 func _replace_variables(text):
 	if text == null or text == "":
 		return text
-	var regex = RegEx.new()
-	regex.compile("\\%(?<variable>[A-z0-9]*)\\%")
+	var regex = RegEx.create_from_string("\\%(?<variable>[A-z0-9@]*)\\%")
 	for result in regex.search_all(text):
 		var value = _mem.get_variable(result.get_string("variable"))
 		text = text.replace(result.get_string(), str(value) if value != null else "")
@@ -488,4 +497,8 @@ func _handle_real_shuffle_variation(variations):
 
 
 func _trigger_variable_changed(name: String, value: Variant, previous_value: Variant) -> void:
-	emit_signal("variable_changed", name, value, previous_value)
+	variable_changed.emit(name, value, previous_value)
+
+
+func _trigger_external_variable_changed(name: String, value: Variant, previous_value: Variant) -> void:
+	external_variable_changed.emit(name, value, previous_value)

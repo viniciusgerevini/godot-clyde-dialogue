@@ -634,15 +634,22 @@ func _handle_logic_block():
 	if _input[_position].is_valid_int():
 		return _handle_logic_number()
 
-	var identifier = RegEx.new()
-	identifier.compile("[A-Z|a-z]")
-	if identifier.search(_input[_position]) != null:
+	var identifier_start = RegEx.create_from_string("[A-Z|a-z|@]")
+
+	if identifier_start.search(_input[_position]) != null:
 		return _handle_logic_identifier()
 
 
 func _handle_logic_identifier():
 	var initial_column = _column
 	var values = ''
+
+	# global char prefix. Only allowed as first char in identifier
+	if _input[_position] == "@":
+		values += "@"
+		_position += 1
+		_column += 1
+
 
 	while _is_valid_position() and _is_identifier(_input[_position]):
 		values += _input[_position]
@@ -774,15 +781,14 @@ func _is_tab_char(character):
 func _is_valid_position():
 	return _position < _input.length() and _input[_position]
 
+
 func _is_identifier(character):
-	var lineId = RegEx.new()
-	lineId.compile("[A-Z|a-z|0-9|_]")
+	var lineId = RegEx.create_from_string("[A-Z|a-z|0-9|_]")
 	return lineId.search(character) != null
 
 
 func _is_block_identifier(character):
-	var identifier = RegEx.new()
-	identifier.compile("[A-Z|a-z|0-9|_| ]")
+	var identifier = RegEx.create_from_string("[A-Z|a-z|0-9|_| ]")
 	return identifier.search(character) != null
 
 
