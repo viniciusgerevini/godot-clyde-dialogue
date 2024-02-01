@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://bgnv5o1tcqyp2"]
+
+[node name="DialogueOption" type="Button"]
+offset_right = 8.0
+offset_bottom = 8.0
+theme_override_colors/font_pressed_color = Color(0.43917, 0.729351, 0.980453, 1)
+toggle_mode = true
+text = "option"
+flat = true

@@ -10,17 +10,20 @@ const DEFAULT_SOURCE_FOLDER := "res://dialogues/"
 
 const SETTING_ID_SUFFIX_LOOKUP_SEPARATOR := "dialogue/id_suffix_lookup_separator"
 const DEFAULT_ID_SUFFIX_LOOKUP_SEPARATOR := "&"
-
 const MAIN_EDITOR_ENABLED := "dialogue/editor_enabled"
+const HELPERS_ENABLED := "dialogue/enable_helpers"
 
 var _import_plugin
 var _main_panel
+var _helpers_enabled = false
 
 func _enter_tree():
 	_import_plugin = ImportPlugin.new()
 	add_import_plugin(_import_plugin)
 	_setup_project_settings()
 	_setup_main_panel()
+	_setup_helpers()
+	_listen_to_project_settings_changes()
 
 
 func _disable_plugin():
@@ -52,6 +55,14 @@ func _setup_project_settings():
 	ProjectSettings.set_initial_value(MAIN_EDITOR_ENABLED, true)
 	ProjectSettings.add_property_info({
 		"name": MAIN_EDITOR_ENABLED,
+		"type": TYPE_BOOL,
+	})
+
+	if not ProjectSettings.has_setting(HELPERS_ENABLED):
+		ProjectSettings.set(HELPERS_ENABLED, false)
+	ProjectSettings.set_initial_value(HELPERS_ENABLED, false)
+	ProjectSettings.add_property_info({
+		"name": HELPERS_ENABLED,
 		"type": TYPE_BOOL,
 	})
 
@@ -117,3 +128,40 @@ func _edit(object):
 	if object == null:
 		return
 	_main_panel.load_file(object.resource_path)
+
+
+func _setup_helpers():
+	_helpers_enabled = ProjectSettings.get_setting(HELPERS_ENABLED, false)
+	if _helpers_enabled:
+		_register_helper_types()
+
+
+func _register_helper_types():
+	add_autoload_singleton("Dialogue", "res://addons/clyde/helpers/dialogue_manager.gd")
+	add_custom_type(
+		"ClydeDialogueConfig",
+		"Node",
+		load("res://addons/clyde/helpers/dialogue_config.gd"),
+		_get_plugin_icon()
+	)
+
+
+func _remove_helper_types():
+	remove_autoload_singleton("Dialogue")
+	remove_custom_type("ClydeDialogueConfig")
+
+
+func _listen_to_project_settings_changes():
+	ProjectSettings.settings_changed.connect(_on_project_settings_changed)
+
+
+func _on_project_settings_changed():
+	var helpers = ProjectSettings.get_setting(HELPERS_ENABLED, false)
+	if _helpers_enabled == helpers:
+		return
+	_helpers_enabled = helpers
+
+	if _helpers_enabled:
+		_register_helper_types()
+	else:
+		_remove_helper_types()
