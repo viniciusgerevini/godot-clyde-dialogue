@@ -88,13 +88,26 @@ func choose(option_index: int) -> void:
 
 
 ## Set variable to be used in the dialogue.
-func set_variable(name: String, value: Variant) -> void:
-	_interpreter.set_variable(name, value)
+func set_variable(name: String, value: Variant) -> Variant:
+	return _interpreter.set_variable(name, value)
 
 
 ## Get current value of a variable inside the dialogue. [br]
-## name: variable name
 func get_variable(name: String) -> Variant:
+	return _interpreter.get_variable(name)
+
+
+## Set external variable to be used in the dialogue.
+## External variables can be accessed using the `@` prefix and
+## are not included in the save object, so they are not persisted between runs.
+func set_external_variable(name: String, value: Variant) -> Variant:
+	return _interpreter.set_variable(name, value)
+
+
+## Get current value of an external variable set to the dialogue.[br]
+## External variables are not persisted between dialogue runs, but they can
+## be modified inside the dialogue.
+func get_external_variable(name: String) -> Variant:
 	return _interpreter.get_variable(name)
 
 
