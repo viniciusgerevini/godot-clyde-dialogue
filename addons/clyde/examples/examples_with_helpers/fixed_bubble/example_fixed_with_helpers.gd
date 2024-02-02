@@ -8,26 +8,12 @@ var _is_dialogue_running := false
 
 func _ready():
 	_setup_dialogue_events()
+	_load_buttons()
 
 
 func _on_button_pressed():
 	# TODO move dialogue examples to addon folder
 	Dialogue.start_dialogue("res://dialogues/pulp_with_blocks.clyde")
-
-	# example with custom speaker info
-	#Dialogue.start_dialogue("res://dialogues/pulp_with_blocks.clyde", "", {
-		#"Jules": {
-			#"speaker_info": {
-				#"name": "Mr. Jules",
-			#}
-#
-		#},
-		#"Vincent": {
-			#"speaker_info": {
-				#"name": "Mr Vincent",
-			#},
-		#},
-	#})
 
 
 func _setup_dialogue_events():
@@ -86,3 +72,22 @@ func _input(event):
 	if event is InputEventKey:
 		# start dialogue on any event
 		_on_button_pressed()
+
+
+# this is only for this demo to show the input instruction in the screen
+func _load_buttons():
+	var config = $HUD/MarginContainer/ClydeDialogueConfig
+
+	$commands/next/Action.text = _input_label(config._next_content_input_action_name)
+	$commands/confirm/Action.text = _input_label(config._select_option_input_action_name)
+	$commands/select/Action.text = _input_label(config._previous_option_input_action_name)
+	$commands/select/Action.text += " / " + _input_label(config._next_option_input_action_name)
+
+
+func _input_label(actionName: StringName):
+	var events = InputMap.action_get_events(actionName)
+	var events_text = []
+	for e in events:
+		if e is InputEventKey:
+			events_text.push_back(e.as_text())
+	return " / ".join(events_text)
