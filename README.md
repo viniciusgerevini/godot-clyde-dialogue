@@ -37,7 +37,7 @@ The importer automatically imports `.clyde` files to be used with the interprete
 
 Check [USAGE.md](./USAGE.md) for how to use the interpreter.
 
-You can find a simple usage example on [/example/example.gd](./example/example.gd)
+You can find usage examples on [/addons/clyde/examples](./addons/clyde/examples)
 
 For more about how to write dialogues using Clyde, check [clyde/LANGUAGE.md](https://github.com/viniciusgerevini/clyde/blob/master/LANGUAGE.md)
 
