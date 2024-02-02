@@ -27,7 +27,7 @@ func _on_button_pressed():
 		}
 	}
 
-	Dialogue.start_dialogue("res://dialogues/pulp_with_blocks.clyde", "", speakers)
+	Dialogue.start_dialogue("res://addons/clyde/examples/dialogues/pulp_with_blocks.clyde", "", speakers)
 
 
 func _setup_dialogue_events():

@@ -1,19 +1,26 @@
 extends MarginContainer
 
-@onready var _dialogue_start_button := $Button
+@onready var _dialogue_start_button := $VBoxContainer/Button
+@onready var _dialogue_selector := $VBoxContainer/OptionButton
 
 var _is_dialogue_running := false
 
-# NOTE This example requires the helpers option to be enabled in Project Settings.
+var _dialogue_files = [
+	"res://addons/clyde/examples/dialogues/pulp_with_blocks.clyde",
+	"res://addons/clyde/examples/dialogues/language_features_demo.clyde",
+	"res://addons/clyde/examples/dialogues/simple_lines.clyde",
+]
 
+var _current_dialogue = 0
+
+# NOTE This example requires the helpers option to be enabled in Project Settings.
 func _ready():
 	_setup_dialogue_events()
 	_load_buttons()
 
 
 func _on_button_pressed():
-	# TODO move dialogue examples to addon folder
-	Dialogue.start_dialogue("res://dialogues/pulp_with_blocks.clyde")
+	Dialogue.start_dialogue(_dialogue_files[_current_dialogue])
 
 
 func _setup_dialogue_events():
@@ -29,7 +36,7 @@ func _on_dialogue_started(dialogue_name: String, block_name: String):
 	print("Dialogue started: %s %s" % [dialogue_name, block_name])
 	# In your game, this signal can be used for suspending input and other actions
 	# so they don't conflict with the dialogue input.
-	_dialogue_start_button.hide()
+	$VBoxContainer.hide()
 	_is_dialogue_running = true
 
 
@@ -37,7 +44,7 @@ func _on_dialogue_ended(dialogue_name: String, block_name: String):
 	print("Dialogue ended: %s %s" % [dialogue_name, block_name])
 	# This signal can be used to resume the game or input
 	await get_tree().create_timer(0.5).timeout
-	_dialogue_start_button.show()
+	$VBoxContainer.show()
 	_is_dialogue_running = false
 
 
@@ -76,6 +83,9 @@ func _input(event):
 
 # this is only for this demo to show the input instruction in the screen
 func _load_buttons():
+	for d in _dialogue_files:
+		_dialogue_selector.add_item(d.get_file())
+
 	var config = $HUD/MarginContainer/ClydeDialogueConfig
 
 	$commands/next/Action.text = _input_label(config._next_content_input_action_name)
@@ -91,3 +101,7 @@ func _input_label(actionName: StringName):
 		if e is InputEventKey:
 			events_text.push_back(e.as_text())
 	return " / ".join(events_text)
+
+
+func _on_option_button_item_selected(index):
+	_current_dialogue = index

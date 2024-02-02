@@ -45,7 +45,15 @@ text = "Confirm option:"
 [node name="Action" type="Label" parent="commands/confirm"]
 layout_mode = 2
 
-[node name="Button" type="Button" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="OptionButton" type="OptionButton" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
@@ -64,4 +72,5 @@ grow_vertical = 0
 [node name="ClydeDialogueConfig" type="Node" parent="HUD/MarginContainer"]
 script = ExtResource("2_xv0we")
 
-[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]
+[connection signal="item_selected" from="VBoxContainer/OptionButton" to="." method="_on_option_button_item_selected"]
+[connection signal="pressed" from="VBoxContainer/Button" to="." method="_on_button_pressed"]
