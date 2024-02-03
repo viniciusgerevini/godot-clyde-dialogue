@@ -12,7 +12,7 @@ const _logic_operators_and_symbols = [ "=", "*", "/", "+", "-", "?", ",", "<", "
 const _logic_keywords = [ "set", "when", "trigger" ]
 const _options = [ "*", "+", ">" ]
 
-var _escapable_chars_regex = RegEx.create_from_string("[\\\\|\\*\\+\\>\\%\\(\\)\\{\\}\\\"\\'\\$\\#]")
+var _escapable_chars_regex = RegEx.create_from_string("[\\\\|\\*\\+\\>\\%\\(\\)\\{\\}\\\"\\'\\$\\#\\:]")
 var _variations_mode_regex = RegEx.create_from_string("^([\\s\\t]*)(cycle|once|sequence|shuffle(\\s+(once|cycle|sequence))?)([\\s\\t]*)$")
 var _tag_regex = RegEx.create_from_string("[A-z0-9\\-\\_\\.]")
 var _leading_spaces_regex = RegEx.create_from_string("^\\s*")
