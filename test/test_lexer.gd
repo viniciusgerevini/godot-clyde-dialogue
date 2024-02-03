@@ -1092,3 +1092,24 @@ Pick an option.
 
 	assert_eq_deep(tab_tokens, tokens)
 
+
+func test_does_not_break_on_lookups():
+	var lexer = Lexer.new()
+	assert_eq_deep(lexer.init('-').get_all()[0], {
+		"token": Lexer.TOKEN_TEXT,
+		"value": "-",
+		"line": 0,
+		"column": 0,
+	})
+	assert_eq_deep(lexer.init('=').get_all()[0], {
+		"token": Lexer.TOKEN_TEXT,
+		"value": "=",
+		"line": 0,
+		"column": 0,
+	})
+	assert_eq_deep(lexer.init('<').get_all()[0], {
+		"token": Lexer.TOKEN_TEXT,
+		"value": "<",
+		"line": 0,
+		"column": 0,
+	})

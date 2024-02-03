@@ -170,7 +170,7 @@ func _is_current_mode(mode):
 
 
 func _get_next_token():
-	if not _is_current_mode(MODE_QSTRING) and _input[_position] == '-' and _input[_position + 1] == '-':
+	if not _is_current_mode(MODE_QSTRING) and _check_sequence(_input, _position, "--"):
 		return _handle_comments()
 
 	if not _is_current_mode(MODE_QSTRING) and _input[_position] == '\n':
@@ -211,13 +211,13 @@ func _get_next_token():
 	if _input[_position] == ')':
 		return _handle_stop_variations()
 
-	if _column == 0 and _input[_position] == '=' and _input[_position + 1] == '=':
+	if _column == 0 and _check_sequence(_input, _position, "=="):
 		return _handle_block()
 
-	if _input[_position] == '-' and _input[_position + 1] == '>':
+	if _check_sequence(_input, _position, "->"):
 		return _handle_divert()
 
-	if _input[_position] == '<' and _input[_position + 1] == '-':
+	if _check_sequence(_input, _position, "<-"):
 		return _handle_divert_parent()
 
 	if _is_current_mode(MODE_VARIATIONS) and _input[_position] == '-':
@@ -795,4 +795,3 @@ func _is_block_identifier(character):
 func _check_sequence(string, initial_position, value):
 	var sequence = string.substr(initial_position, value.length())
 	return sequence == value
-
