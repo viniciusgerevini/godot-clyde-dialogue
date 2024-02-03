@@ -10,7 +10,7 @@ const DEFAULT_SOURCE_FOLDER := "res://dialogues/"
 
 const SETTING_ID_SUFFIX_LOOKUP_SEPARATOR := "dialogue/id_suffix_lookup_separator"
 const DEFAULT_ID_SUFFIX_LOOKUP_SEPARATOR := "&"
-const MAIN_EDITOR_ENABLED := "dialogue/editor_enabled"
+const MAIN_EDITOR_ENABLED := "dialogue/enable_editor"
 const HELPERS_ENABLED := "dialogue/enable_helpers"
 
 var _import_plugin
