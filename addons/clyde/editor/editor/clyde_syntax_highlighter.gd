@@ -44,6 +44,7 @@ func _get_regions(content: String, line_number: int) -> Dictionary:
 	var is_in_quote_mode = false
 	var quote_char = ""
 	var was_last_region_text = true
+	var has_divert = false
 
 	var uninterrupted_text = ""
 	var is_speaker_allowed = true
@@ -69,6 +70,7 @@ func _get_regions(content: String, line_number: int) -> Dictionary:
 			"on_q_mode": is_in_quote_mode,
 			"on_l_mode": is_in_logic_mode,
 			"on_v_mode": is_in_variation_mode,
+			"has_divert": has_divert,
 			"quote_char": quote_char,
 			"prev_on_q_mode": prev_q_mode,
 			"prev_on_l_mode": prev_l_mode,
@@ -190,19 +192,25 @@ func _get_regions(content: String, line_number: int) -> Dictionary:
 			continue
 
 		if current_column > 0:
+			var is_mid_text = uninterrupted_text.strip_edges().length() > 2
+
+			if not is_mid_text:
+				# divert
+				if content[current_column] == ">" and content[current_column - 1] == "-":
+					regions[current_column - 1] = _operator_region()
+					current_column += 1
+					# proactively sets the rest of the line as identifier
+					if current_column < content.length() -1:
+						regions[current_column] = _text_region()
+						regions[current_column + 1] = _identifier_region()
+					has_divert = true
+					continue
+
 			#  divert to parent
-			if content[current_column] == "-" and content[current_column - 1] == "<":
+			if (not is_mid_text or has_divert) and content[current_column] == "-" and content[current_column - 1] == "<":
 				regions[current_column - 1] = _operator_region()
 				current_column += 1
 				was_last_region_text = false
-				continue
-			# divert
-			if content[current_column] == ">" and content[current_column - 1] == "-":
-				regions[current_column - 1] = _operator_region()
-				current_column += 1
-				# proactively sets the rest of the line as identifier
-				if current_column < content.length() -1:
-					regions[current_column + 1] = _identifier_region()
 				continue
 
 		# blocks
@@ -230,6 +238,7 @@ func _get_regions(content: String, line_number: int) -> Dictionary:
 		"on_l_mode": is_in_logic_mode,
 		"on_v_mode": is_in_variation_mode,
 		"quote_char": quote_char,
+		"has_divert": has_divert,
 		"prev_on_q_mode": prev_q_mode,
 		"prev_on_l_mode": prev_l_mode,
 		"prev_on_v_mode": prev_v_mode,
@@ -268,6 +277,7 @@ func _default_meta():
 		"prev_on_q_mode": false,
 		"prev_on_l_mode": false,
 		"prev_on_v_mode": false,
+		"has_divert": false,
 	}
 
 func _has_previous_line_changed(line_number: int, cached: Dictionary) -> bool:
