@@ -137,10 +137,11 @@ func add_error(error):
 
 
 func clear_errors():
-	for error_line in _errors:
+	var errors_to_remove = _errors
+	_errors = []
+	for error_line in errors_to_remove:
 		if error_line < get_line_count():
 			set_line_background_color(error_line, Color(0, 0, 0, 0))
-	_errors = []
 
 
 func set_parsed_document(parsed: Dictionary):
