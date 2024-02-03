@@ -263,6 +263,13 @@ func _confirm_code_completion(replace: bool) -> void:
 	call_deferred("cancel_code_completion")
 
 
+# this method's default implementation does some string handling
+# which is adding quotes to the auto completion options sometimes depending
+# on where in the file it's happening. Overriding to remove default behaviour.
+func _filter_code_completion_candidates(candidates: Array) -> Array:
+	return candidates
+
+
 func _gui_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.is_pressed():
 		for s in _shortcuts:
