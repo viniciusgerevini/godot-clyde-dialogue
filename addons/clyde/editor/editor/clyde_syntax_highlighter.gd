@@ -280,6 +280,7 @@ func _default_meta():
 		"has_divert": false,
 	}
 
+
 func _has_previous_line_changed(line_number: int, cached: Dictionary) -> bool:
 	if (line_number == 0):
 		return false

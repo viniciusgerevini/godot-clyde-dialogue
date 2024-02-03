@@ -32,6 +32,7 @@ var _open_files = []
 var _persisted_content = {}
 
 var _should_sync_editor_and_player = true
+var _should_follow_executing_line = true
 
 var editor_plugin: EditorPlugin
 
@@ -423,6 +424,9 @@ func _load_config():
 	if not config.get(_settings.EDITOR_CFG_SYNC_PLAYER, true):
 		_toggle_player_sync(false)
 
+	if not config.get(_settings.EDITOR_CFG_EDITOR_FOLLOW_EXECUTION, true):
+		_toggle_follow_execution(false)
+
 
 func _load_open_files() -> Array:
 	return _settings.get_open_files().filter(func(path): return FileAccess.file_exists(path))
@@ -593,6 +597,18 @@ func _on_top_bar_open_online_docs_triggered():
 
 func _on_top_bar_report_issue_triggered():
 	OS.shell_open(_settings.REPORT_ISSUE_URL)
+
+
+func _on_top_bar_toggle_follow_execution():
+	_toggle_follow_execution(true)
+
+
+func _toggle_follow_execution(should_persist: bool = true):
+	_should_follow_executing_line = not _should_follow_executing_line
+	top_bar.set_follow_executing_line(_should_follow_executing_line)
+	if should_persist:
+		_settings.set_config(_settings.EDITOR_CFG_EDITOR_FOLLOW_EXECUTION, _should_follow_executing_line)
+		editor.refresh_config()
 
 
 func _on_csv_file_selected(path: String, dialog: EditorFileDialog):

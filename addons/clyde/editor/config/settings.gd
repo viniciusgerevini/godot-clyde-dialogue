@@ -9,6 +9,8 @@ const EDITOR_CFG_SHOW_PLAYER = "show_player"
 const EDITOR_CFG_SYNC_PLAYER = "sync_player"
 const EDITOR_CFG_PLAYER_SHOW_MULTI_BUBBLE = "player_multi_bubble"
 const EDITOR_CFG_PLAYER_SHOW_METADATA = "player_metadata"
+const EDITOR_CFG_EDITOR_FOLLOW_EXECUTION = "follow_execution"
+
 
 const CSV_EXPORTER_CFG_INCLUDE_METADATA = "csv_include_metadata"
 const CSV_EXPORTER_CFG_ALWAYS_USE_QUOTES = "csv_use_quotes"
@@ -105,7 +107,12 @@ func get_editor_config():
 	return _editor_settings.get_project_metadata("clyde", "config", {})
 
 
-func set_config(config_name: String, value):
+func get_config(config_name: String, value: Variant) -> Variant:
+	var config = get_editor_config()
+	return config.get(config_name, value)
+
+
+func set_config(config_name: String, value: Variant) -> void:
 	var config = get_editor_config()
 	config[config_name] = value
 	_editor_settings.set_project_metadata("clyde", "config", config)

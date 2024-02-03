@@ -79,8 +79,7 @@ func set_content(content: String):
 
 
 func set_executing_line(line: int):
-	clear_executing_lines()
-	editor.set_line_as_executing(line, true)
+	editor.set_executing_line(line)
 
 
 func clear_executing_lines():
@@ -116,3 +115,7 @@ func search_previous(search_obj: Dictionary):
 
 func focus():
 	editor.grab_focus()
+
+
+func refresh_config():
+	editor.refresh_config()

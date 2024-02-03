@@ -18,6 +18,7 @@ signal close_other_triggered
 signal toggle_file_list_triggered
 signal toggle_player_triggered
 signal toggle_player_sync
+signal toggle_follow_execution
 
 signal execute_dialogue
 
@@ -54,6 +55,7 @@ enum FileMenu {
 enum ToolMenu {
 	TOGGLE_FILE_LIST = 100,
 	TOGGLE_PLAYER = 200,
+	FOLLOW_EXECUTING_LINE = 201,
 	EXECUTE_DIALOGUE = 300,
 	TOGGLE_PLAYER_SYNC = 400,
 	CREATE_CSV = 500,
@@ -103,6 +105,7 @@ var _file_menu_triggers = {
 var _tool_menu_triggers = {
 	ToolMenu.TOGGLE_FILE_LIST: toggle_file_list_triggered,
 	ToolMenu.TOGGLE_PLAYER: toggle_player_triggered,
+	ToolMenu.FOLLOW_EXECUTING_LINE: toggle_follow_execution,
 	ToolMenu.EXECUTE_DIALOGUE: execute_dialogue,
 	ToolMenu.TOGGLE_PLAYER_SYNC: toggle_player_sync,
 	ToolMenu.CREATE_CSV: create_csv_triggered,
@@ -181,6 +184,13 @@ func _initilize_tool_menu(shortcuts: Shortcuts):
 		_tool_menu,
 		InterfaceText.KEY_TOOL_MENU_PLAYER_SYNC,
 		ToolMenu.TOGGLE_PLAYER_SYNC,
+		true
+	)
+
+	_add_check_item(
+		_tool_menu,
+		InterfaceText.KEY_TOOL_MENU_FOLLOW_EXECUTION,
+		ToolMenu.FOLLOW_EXECUTING_LINE,
 		true
 	)
 
@@ -299,6 +309,11 @@ func set_player_visibility(is_visible: bool):
 
 func set_editor_sync(should_sync: bool):
 	var toggle_index = _tool_menu.get_item_index(ToolMenu.TOGGLE_PLAYER_SYNC)
+	_tool_menu.set_item_checked(toggle_index, should_sync)
+
+
+func set_follow_executing_line(should_sync: bool):
+	var toggle_index = _tool_menu.get_item_index(ToolMenu.FOLLOW_EXECUTING_LINE)
 	_tool_menu.set_item_checked(toggle_index, should_sync)
 
 

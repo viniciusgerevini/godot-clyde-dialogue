@@ -20,6 +20,9 @@ var _parsed_doc = null
 
 var _shortcuts = []
 
+var _should_follow_execution = true
+
+
 func _ready():
 	editor_theme_config = _load_theme_config()
 	syntax_highlighter = ClydeSyntaxHighlighter.new()
@@ -68,6 +71,7 @@ func _load_text_editor_config():
 
 	add_theme_font_size_override("font_size", settings.font_size)
 
+	refresh_config()
 
 func _load_theme_config():
 	return {
@@ -397,3 +401,15 @@ func search_previous(search_obj: Dictionary):
 	set_caret_column(column)
 	set_caret_line(line)
 	set_search(search_obj, true, true)
+
+
+func set_executing_line(line: int):
+	clear_executing_lines()
+	set_line_as_executing(line, true)
+	if _should_follow_execution:
+		set_caret_line(line)
+		center_viewport_to_caret()
+
+
+func refresh_config():
+	_should_follow_execution = _settings.get_config(_settings.EDITOR_CFG_EDITOR_FOLLOW_EXECUTION, true)

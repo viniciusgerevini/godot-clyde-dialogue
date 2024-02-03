@@ -165,3 +165,8 @@ func _on_search_bar_search_text_changed(text, match_case, whole_words):
 		"whole_words": whole_words,
 	}
 	_current_editor.set_search(_search_info, true)
+
+
+func refresh_config():
+	for e in _editors:
+		_editors[e].refresh_config()

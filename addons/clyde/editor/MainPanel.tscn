@@ -79,6 +79,7 @@ visible = false
 [connection signal="save_file_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_save_file_triggered"]
 [connection signal="show_in_filesystem_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_show_in_filesystem_triggered"]
 [connection signal="toggle_file_list_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_toggle_file_list_triggered"]
+[connection signal="toggle_follow_execution" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_toggle_follow_execution"]
 [connection signal="toggle_player_sync" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_toggle_player_sync"]
 [connection signal="toggle_player_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_toggle_player_triggered"]
 [connection signal="close_all_triggered" from="HSplitContainer/VBoxContainer/HSplitContainer/Lists/VSplitContainer/FileList" to="." method="_on_file_list_close_all_triggered"]
