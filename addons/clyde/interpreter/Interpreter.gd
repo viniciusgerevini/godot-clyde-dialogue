@@ -1,6 +1,7 @@
 extends Reference
 
 signal variable_changed(name, value, previous_value)
+signal external_variable_changed(name, value, previous_value)
 signal event_triggered(event_name)
 
 const Memory = preload("./Memory.gd")
@@ -23,6 +24,7 @@ func init(document, interpreter_options = {}):
 	_doc._index = "r"
 	_mem = Memory.new()
 	_mem.connect("variable_changed", self, "_trigger_variable_changed")
+	_mem.connect("external_variable_changed", self, "_trigger_external_variable_changed")
 	_logic = LogicInterpreter.new()
 	_logic.init(_mem)
 
@@ -81,6 +83,14 @@ func get_variable(name):
 
 func set_variable(name, value):
 	return _mem.set_variable(name, value)
+
+
+func get_external_variable(name):
+	return _mem.get_external_variable(name)
+
+
+func set_external_variable(name, value):
+	return _mem.set_external_variable(name, value)
 
 
 func get_data():
@@ -387,7 +397,7 @@ func _replace_variables(text):
 	if not text:
 		return text
 	var regex = RegEx.new()
-	regex.compile("\\%(?<variable>[A-z0-9]*)\\%")
+	regex.compile("\\%(?<variable>[A-z0-9@]*)\\%")
 	for result in regex.search_all(text):
 		var value = _mem.get_variable(result.get_string("variable"))
 		text = text.replace(result.get_string(), value if value != null else "")
@@ -498,3 +508,7 @@ func _filter(function: FuncRef, array: Array) -> Array:
 
 func _trigger_variable_changed(name, value, previous_value):
 	emit_signal("variable_changed", name, value, previous_value)
+
+
+func _trigger_external_variable_changed(name, value, previous_value):
+	emit_signal("external_variable_changed", name, value, previous_value)

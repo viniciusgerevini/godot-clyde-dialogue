@@ -634,15 +634,21 @@ func _handle_logic_block():
 	if _input[_position].is_valid_integer():
 		return _handle_logic_number()
 
-	var identifier = RegEx.new()
-	identifier.compile("[A-Z|a-z]")
-	if identifier.search(_input[_position]) != null:
+	var identifier_start = RegEx.new()
+	identifier_start.compile("[A-Z|a-z|@]")
+	if identifier_start.search(_input[_position]) != null:
 		return _handle_logic_identifier()
 
 
 func _handle_logic_identifier():
 	var initial_column = _column
 	var values = ''
+
+	# global char prefix. Only allowed as first char in identifier
+	if _input[_position] == "@":
+		values += "@"
+		_position += 1
+		_column += 1
 
 	while _is_valid_position() and _is_identifier(_input[_position]):
 		values += _input[_position]

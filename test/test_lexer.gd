@@ -130,6 +130,18 @@ func test_count_lines_correctly_in_quotted_text_with_line_breaks():
 	])
 
 
+func test_text_with_interpolation():
+	var lexer = Lexer.new()
+	var tokens = lexer.init('this is a line with %var% %@var%').get_all()
+	assert_eq_deep(tokens.size(), 2)
+	assert_eq_deep(tokens[0], {
+		"token": Lexer.TOKEN_TEXT,
+		"value": "this is a line with %var% %@var%",
+		"line": 0,
+		"column": 0,
+	})
+
+
 func test_ignores_comments():
 	var lexer = Lexer.new()
 	var tokens = lexer.init("""-- this is a comment
@@ -565,6 +577,7 @@ func test_variables_conditions():
 { variable == false }
 { variable == \"s1\" }
 { variable == null }
+{ @global_variable }
 
 """).get_all()
 	assert_eq_deep(tokens, [
@@ -734,7 +747,13 @@ func test_variables_conditions():
 		{ "token": Lexer.TOKEN_BRACE_CLOSE, "line": 23, "column": 19, "value": null, },
 		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 23, "column": 20, "value": null, },
 
-		{ "token": Lexer.TOKEN_EOF, "line": 25, "column": 0, "value": null },
+		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 24, "column": 0, "value": null },
+		{ "token": Lexer.TOKEN_BRACE_OPEN, "line": 24, "column": 0, "value": null, },
+		{ "token": Lexer.TOKEN_IDENTIFIER, "value": '@global_variable', "line": 24, "column": 2, },
+		{ "token": Lexer.TOKEN_BRACE_CLOSE, "line": 24, "column": 19, "value": null, },
+		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 24, "column": 20, "value": null, },
+
+		{ "token": Lexer.TOKEN_EOF, "line": 26, "column": 0, "value": null },
 	])
 
 
