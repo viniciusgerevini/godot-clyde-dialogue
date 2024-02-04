@@ -35,7 +35,7 @@ The importer automatically imports `.clyde` files to be used with the interprete
 
 Check [USAGE.md](./USAGE.md) for how to use the interpreter.
 
-You can find a simple usage example on [/example/example.gd](./example/example.gd)
+You can find usage examples on [/addons/clyde/examples](./addons/clyde/examples)
 
 For more about how to write dialogues using Clyde, check [clyde/LANGUAGE.md](https://github.com/viniciusgerevini/clyde/blob/master/LANGUAGE.md)
 
@@ -54,3 +54,14 @@ Go to `Project > Project Settings > General > Dialogue`.
 | ----------------------- | ----------- |
 | Source Folder: | Default folder where the interpreter will look for `.clyde` files when just the filename is provided. Default: `res://dialogues/` |
 | Id Suffix Lookup Separator: | When using id suffixes, this is the separator used in the translation keys. Default. `&`.|
+| Enable Helpers: | Default: false. Enable the `Dialogue` singleton and config node. |
+
+## Helpers
+
+As seen in the USAGE.md, the Clyde interpreter has as simple interface giving you full control on how to display and handle your dialogues. However, there are many different ways you can go about it, which might make it daunting for new developers.
+
+To help you quick start a project, I included a few helpers with this plugin. By enabling the helpers option in ProjectSettings, a `Dialogue` singleton and a `ClydeDialogueConfig` node will be available, allowing a quick start with no much effort.
+
+You can find examples using these helpers on [/addons/clyde/examples](./addons/clyde/examples).
+
+This implementation comes with a simple fixed dialogue bubble. You can adapt these helpes however you need. If you intend to change them, I recommend copying them to your project's folder so there are no conflicts when updating the plugin.

@@ -13,6 +13,9 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### Added
 
 - Assignment initializer operator `?=`. It only assigns if variable was not set before.
+- Resource loader and saver to simplify file usage.
+- External variable support. You can set variables that are not included in the persistence object.
+- Implemented helpers: Dialogue config, singleton and fixed dialogue bubble.
 
 ### Changed
 
@@ -21,11 +24,14 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Return end object (`{ "type": "end" }`) instead of null on dialogue end.
 - Changing block order in file does not impact persisted options and variations anymore.
 - Make variation `shuffle` option be really random. There is no guarantee all items will be executed.
+- The importer now saves a ClydeDialogueFile resource instead of PackedDataContainer.
+- Improve dialogue examples.
 
 ### Fixed
 
 - Use correct `fmod` for `a %=` operations.
 - variable interpolation with value "0" was not being printed, as godot interprets it as falsy
+- Changing block order in file does not impact persisted options and variations anymore.
 
 ## 3.2.0 (2022-08-25)
 
