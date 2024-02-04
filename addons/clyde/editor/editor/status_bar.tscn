@@ -1,6 +1,6 @@
 [gd_scene load_steps=21 format=3 uid="uid://c3tu6jy2udoqk"]
 
-[ext_resource type="Script" path="res://addons/clyde/editor/editor/StatusBar.gd" id="1_eoqkm"]
+[ext_resource type="Script" path="res://addons/clyde/editor/editor/status_bar.gd" id="1_eoqkm"]
 
 [sub_resource type="Image" id="Image_b7t43"]
 data = {

@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://c1vmpgpv2jrpx"]
 
-[ext_resource type="Script" path="res://addons/clyde/editor/TopBar.gd" id="1_wdnc4"]
+[ext_resource type="Script" path="res://addons/clyde/editor/top_bar.gd" id="1_wdnc4"]
 
 [sub_resource type="Image" id="Image_juvn1"]
 data = {

@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://xs4xc7ybpjcp"]
 
-[ext_resource type="Script" path="res://DialogueEventBubble.gd" id="1_iadjw"]
+[ext_resource type="Script" path="res://addons/clyde/editor/player/dialogue_event_bubble.gd" id="1_qc4xu"]
 
 [node name="DialogueEventBubble" type="VBoxContainer"]
 modulate = Color(1, 1, 1, 0.933333)
@@ -10,7 +10,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
-script = ExtResource("1_iadjw")
+script = ExtResource("1_qc4xu")
 
 [node name="HSeparator" type="HSeparator" parent="."]
 visible = false

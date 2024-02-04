@@ -53,6 +53,18 @@ func load_dialogue(file_name: String, block: String = "") -> void:
 	_load_parsed_doc(file, block)
 
 
+## Load dialogue resource.[br]
+## dialogue: ClydeDialogueFile resource.[br]
+## block: block name to run. This allows keeping multiple dialogues in the same file. [br]
+func load_resource(resource: ClydeDialogueFile, block: String = "") -> void:
+	var file = resource.content
+
+	if file == null or file.is_empty():
+		return
+
+	_load_parsed_doc(file, block)
+
+
 func _load_parsed_doc(doc: Dictionary, block: String = "") -> void:
 	_interpreter = Interpreter.new()
 	_interpreter.init(doc, {

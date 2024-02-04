@@ -20,8 +20,8 @@ Dialogue="*res://addons/clyde/helpers/dialogue_manager.gd"
 
 [dialogue]
 
-source_folder="res://test/dialogue_samples"
 enable_helpers=true
+source_folder="res://test/dialogue_samples"
 
 [display]
 

@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://bqjvv0xyfm54y"]
 
 [ext_resource type="Script" path="res://addons/clyde/examples/examples_with_helpers/floating_bubble/example_floating_with_helpers.gd" id="1_tjmj8"]
-[ext_resource type="Script" path="res://addons/clyde/examples/examples_with_helpers/floating_bubble/ClydeDialogueConfig.gd" id="2_bouif"]
+[ext_resource type="Script" path="res://addons/clyde/examples/examples_with_helpers/floating_bubble/clyde_dialogue_config.gd" id="2_bouif"]
 [ext_resource type="PackedScene" uid="uid://c2aifp4pq54ut" path="res://addons/clyde/helpers/bubbles/dialogue_bubble_floating.tscn" id="3_8rmxq"]
 [ext_resource type="Texture2D" uid="uid://cl82ufpwosg48" path="res://icon.png" id="4_iuwpv"]
 

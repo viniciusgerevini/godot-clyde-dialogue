@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://xw1w6iil2jcw"]
 
-[ext_resource type="Script" path="res://addons/clyde/editor/BlockList.gd" id="1_q0xf4"]
+[ext_resource type="Script" path="res://addons/clyde/editor/block_list.gd" id="1_q0xf4"]
 
 [sub_resource type="Image" id="Image_5n2jo"]
 data = {

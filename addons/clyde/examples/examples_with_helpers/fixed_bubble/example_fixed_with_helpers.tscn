@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://vf0hf7ckudp5"]
 
 [ext_resource type="Script" path="res://addons/clyde/examples/examples_with_helpers/fixed_bubble/example_fixed_with_helpers.gd" id="1_mug4u"]
-[ext_resource type="Script" path="res://addons/clyde/examples/examples_with_helpers/fixed_bubble/ClydeDialogueConfig.gd" id="2_xv0we"]
+[ext_resource type="Script" path="res://addons/clyde/examples/examples_with_helpers/fixed_bubble/clyde_dialogue_config.gd" id="2_xv0we"]
 
 [node name="example_fixed_with_helper" type="MarginContainer"]
 anchors_preset = 15

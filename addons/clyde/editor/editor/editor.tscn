@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://addons/clyde/editor/editor/editor.gd" id="1_7djvi"]
 [ext_resource type="PackedScene" uid="uid://itwcdoycxjc3" path="res://addons/clyde/editor/editor/dialogue_editor.tscn" id="2_y3ceu"]
 [ext_resource type="Script" path="res://addons/clyde/editor/editor/clyde_syntax_highlighter.gd" id="3_v1074"]
-[ext_resource type="PackedScene" uid="uid://c3tu6jy2udoqk" path="res://addons/clyde/editor/editor/StatusBar.tscn" id="4_eek30"]
+[ext_resource type="PackedScene" uid="uid://c3tu6jy2udoqk" path="res://addons/clyde/editor/editor/status_bar.tscn" id="4_eek30"]
 
 [sub_resource type="SyntaxHighlighter" id="SyntaxHighlighter_s6rha"]
 script = ExtResource("3_v1074")
