@@ -30,6 +30,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Make variation `shuffle` option be really random. There is no guarantee all items will be executed.
 - The importer now saves a ClydeDialogueFile resource instead of PackedDataContainer.
 - Improve dialogue examples.
+- `load_dialogue` does not accept null as block. It's an optional string.
 
 ### Fixed
 
