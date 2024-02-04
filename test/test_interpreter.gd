@@ -624,7 +624,7 @@ func test_file_path_without_extension():
 
 func test_uses_configured_dialogue_folder():
 	var dialogue = ClydeDialogue.new()
-	dialogue.dialogue_folder = 'res://dialogues'
+	dialogue.dialogue_folder = 'res://addons/clyde/examples/dialogues'
 	dialogue.load_dialogue('simple_lines')
 
 	var lines = [
