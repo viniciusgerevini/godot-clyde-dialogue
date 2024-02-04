@@ -4,8 +4,19 @@ const Interpreter = preload('./interpreter/Interpreter.gd')
 
 class_name ClydeDialogue
 
+# Emits when a variable is changed inside the dialogue.
 signal variable_changed(name, value, previous_value)
+## Emits when an event is triggered inside the dialogue.
 signal event_triggered(name)
+
+# Type for regular dialogue line
+const CONTENT_TYPE_LINE = Interpreter.CONTENT_TYPE_LINE
+
+# This type is returned when content has options to choose from
+const CONTENT_TYPE_OPTIONS = Interpreter.CONTENT_TYPE_OPTIONS
+
+# This type is returned when the dialogue reached an end
+const CONTENT_TYPE_END = Interpreter.CONTENT_TYPE_END
 
 # Custom folder where the interpreter should look for dialogue files
 # in case just the name is provided.
