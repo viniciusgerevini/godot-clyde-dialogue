@@ -101,16 +101,8 @@ func _load_file(path) -> Dictionary:
 
 
 func _load_clyde_file(path):
-	var data = load(path).__data__.get_string_from_utf8()
-	var parsed_json = JSON.parse(data)
-
-	if OK != parsed_json.error:
-		var format = [parsed_json.error_line, parsed_json.error_string]
-		var error_string = "%d: %s" % format
-		printerr("Could not parse json", error_string)
-		return null
-
-	return parsed_json.result
+	var data = load(path)
+	return data.content
 
 
 func _trigger_variable_changed(name, value, previous_value):
