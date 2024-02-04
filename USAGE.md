@@ -55,9 +55,9 @@ func get_variable(name: String) -> Variant
 func set_external_variable(name: String, value: Variant) -> Variant
 
 
-## Get current value of an external variable set to the dialogue.
-## External variables are not persisted between dialogue runs, but they can
-## be modified inside the dialogue.
+# Get current value of an external variable set to the dialogue.
+# External variables are not persisted between dialogue runs, but they can
+# be modified inside the dialogue.
 func get_external_variable(name: String) -> Variant
 
 
@@ -192,6 +192,8 @@ func _on_variable_changed(variable_name, value, previous_vale):
 
 ```
 
+For external variables, use the `external_variable_changed` signal.
+
 ### Listening to events
 
 You can listen to events triggered by the dialogue by observing the `event_triggered` signal.
@@ -262,7 +264,7 @@ You should not change this object manually. If you want't to change a variable u
 ```
 
 Variables set via `set_variable` are included in the dialogue data object. This might not be ideal in cases where the data does not belong to the dialogue. For instance,
-in the example setting the health, all dialogues will contain a version of that value, which will increase your save file.
+in the example setting the health, all dialogues will contain a version of that value, which will increase your save file size.
 
 To workaround this you should use `set_external_variable`. Variables set this way will only be available in the current dialogue instance and won't be included in the persistence object.
 To access external variables in your dialogue use the `@` prefix (i.e health becomes `@health`).
