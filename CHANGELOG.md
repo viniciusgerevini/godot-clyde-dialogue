@@ -14,6 +14,13 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 - Assignment initializer operator `?=`. It only assigns if variable was not set before.
 - `has_block` method helper to check if block exists before starting dialogue. (@HexagonNico)
+- Editor main panel. Edit Clyde files directly in Godot.
+- Dialogue player. Execute and debug dialogues directly in Godot.
+- Id generator tool. Add random ids to lines without ids.
+- CSV exporter tool. Generate a translation CSV for the dialogue.
+- Resource loader and saver to simplify file usage.
+- External variable support. You can set variables that are not included in the persistence object.
+- Implemented helpers: Dialogue config, singleton and fixed and floating dialogue bubbles.
 
 ### Changed
 
@@ -21,6 +28,8 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
     - As `+` is also used for strings, this `set a += "abc"` also works.
 - Return end object (`{ "type": "end" }`) instead of null on dialogue end.
 - Make variation `shuffle` option be really random. There is no guarantee all items will be executed.
+- The importer now saves a ClydeDialogueFile resource instead of PackedDataContainer.
+- Improve dialogue examples.
 
 ### Fixed
 
