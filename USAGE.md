@@ -272,6 +272,6 @@ dialogue.load_dialogue("res://samples/banana.clyde")
 
 ## Examples
 
-You can find usage examples on [/example/](./example/) folder.
+You can find usage examples on [/example/](./addons/clyde/examples/) folder.
 
 
