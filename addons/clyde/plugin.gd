@@ -2,7 +2,7 @@
 extends EditorPlugin
 
 const ImportPlugin = preload("import_plugin.gd")
-const MainPanel = preload("./editor/MainPanel.tscn")
+const MainPanel = preload("./editor/main_panel.tscn")
 const InterfaceText = preload("./editor/config/interface_text.gd")
 
 const SETTING_SOURCE_FOLDER := "dialogue/source_folder"
