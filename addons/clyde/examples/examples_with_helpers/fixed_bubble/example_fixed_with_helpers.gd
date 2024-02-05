@@ -32,44 +32,44 @@ func _setup_dialogue_events():
 	Dialogue.speaker_changed.connect(_on_speaker_changed)
 
 
+# In your game, this signal can be used for suspending input and other actions
+# so they don't conflict with the dialogue input.
 func _on_dialogue_started(dialogue_name: String, block_name: String):
-	print("Dialogue started: %s %s" % [dialogue_name, block_name])
-	# In your game, this signal can be used for suspending input and other actions
-	# so they don't conflict with the dialogue input.
+	print("Dialogue started: '%s' '%s'" % [dialogue_name, block_name])
 	$VBoxContainer.hide()
 	_is_dialogue_running = true
 
 
+# This signal can be used to resume the game or input
 func _on_dialogue_ended(dialogue_name: String, block_name: String):
-	print("Dialogue ended: %s %s" % [dialogue_name, block_name])
-	# This signal can be used to resume the game or input
+	print("Dialogue ended: '%s' '%s'" % [dialogue_name, block_name])
 	await get_tree().create_timer(0.5).timeout
 	$VBoxContainer.show()
 	_is_dialogue_running = false
 
 
+# A variable changed in the event. This is useful for reacting to variable changes.
+# This can be used also as a form of event with payload.
 func _on_variable_changed(variable_name: String, value: Variant, old_value: Variant):
-	print("Variable changed: %s new: %s old: %s " % [ variable_name, value, old_value ])
-	# A variable changed in the event. This is useful for reacting to variable changes.
-	# This can be used also as a form of event with payload.
+	print("Variable changed: '%s' new: '%s' old: '%s' " % [ variable_name, value, old_value ])
 
 
+# External variables are not persisted with the dialogue. This event allows you to listen
+# to any updates to these variables and store them properly
 func _on_external_variable_changed(variable_name: String, value: Variant, old_value: Variant):
-	print("External variable changed: %s new: %s old: %s " % [ variable_name, value, old_value ])
-	# External variables are not persisted with the dialogue. This event allows you to listen
-	# to any updates to these variables and store them properly
+	print("External variable changed: '%s' new: '%s' old: '%s' " % [ variable_name, value, old_value ])
 
 
+# Listen to events triggered by dialogue.
+# One usage example is to do stuff like screen shake, play sounds or specific animations.
 func _on_event_triggered(event_name: String):
-	print("Event triggered: %s" % event_name)
-	# Listen to events triggered by dialogue.
-	# One usage example is to do stuff like screen shake, play sounds or specific animations.
+	print("Event triggered: '%s'" % event_name)
 
 
-func _on_speaker_changed(speaker: String):
-	print("Speaker changed: %s" % speaker)
-	# This event is useful for when you want to animate your speaker without hooking it
-	# to the dialogue box. One example is making other characters look at the talking speaker
+# This event is useful for when you want to animate your speaker without hooking it
+# to the dialogue box. One example is making other characters look at the talking speaker
+func _on_speaker_changed(current: String, previous: String):
+	print("Speaker changed. Current: '%s' Previous: '%s'" % [current, previous])
 
 
 func _input(event):
