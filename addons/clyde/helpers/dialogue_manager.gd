@@ -9,7 +9,7 @@ signal dialogue_ended(dialogue_path, block)
 signal variable_changed(variable_name, value, old_value)
 signal external_variable_changed(variable_name, value, old_value)
 signal event_triggered(event_name)
-signal speaker_changed(speaker_name)
+signal speaker_changed(current_speaker, previous_speaker)
 
 var config
 var _dialogue: ClydeDialogue
@@ -24,6 +24,7 @@ var _speaker_data = {}
 
 var _bubbles = {}
 var _current_bubble = null
+var _current_speaker := ""
 
 ## Start a dialogue. This will create the dialogue bubble based on the configuration set in
 ## the dialogue config node.
@@ -157,6 +158,12 @@ func _next_content() -> void:
 	_current_bubble = _get_bubble(content.get("speaker"))
 	_current_bubble.set_content(content)
 
+	if _current_speaker != content.get("speaker", ""):
+		var previous_speaker = _current_speaker
+		var new_speaker = content.get("speaker", "")
+		_current_speaker = "" if new_speaker == null else new_speaker
+		emit_signal("speaker_changed", _current_speaker, previous_speaker)
+
 
 func _end_dialogue():
 	_has_dialogue_ended = true
@@ -173,6 +180,7 @@ func _clear_manager():
 	_bubbles = {}
 	_current_bubble = null
 	_current_config = null
+	_current_speaker = ""
 
 
 func _get_bubble(speaker):

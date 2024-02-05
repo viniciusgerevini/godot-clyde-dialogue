@@ -41,8 +41,13 @@ _global_script_class_icons={
 config/name="clyde-plugin"
 config/icon="res://icon.png"
 
+[autoload]
+
+Dialogue="*res://addons/clyde/helpers/dialogue_manager.gd"
+
 [dialogue]
 
+enable_helpers=true
 source_folder="res://test/dialogue_samples"
 
 [editor_plugins]
