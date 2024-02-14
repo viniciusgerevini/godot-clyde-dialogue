@@ -61,6 +61,11 @@ func start(block_name = null):
 	_interpreter.select_block(block_name)
 
 
+## Checks if a block with the given name exists.
+func has_block(block_name):
+	return _interpreter.has_block(block_name)
+
+
 ## Get next dialogue content. [br]
 ## The content may be a line, options or end of dialogue.
 func get_content():

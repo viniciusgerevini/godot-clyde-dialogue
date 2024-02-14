@@ -72,6 +72,10 @@ func select_block(block_name = null):
 		_initialise_stack(_doc)
 
 
+func has_block(block_name):
+	return block_name in _anchors
+
+
 func get_variable(name):
 	return _mem.get_variable(name)
 
