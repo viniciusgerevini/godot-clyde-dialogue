@@ -1,10 +1,15 @@
 extends Reference
 
 signal variable_changed(name, value, previous_value)
+signal external_variable_changed(name, value, previous_value)
 signal event_triggered(event_name)
 
 const Memory = preload("./Memory.gd")
 const LogicInterpreter = preload("./LogicInterpreter.gd")
+
+const CONTENT_TYPE_LINE = "line"
+const CONTENT_TYPE_OPTIONS = "options"
+const CONTENT_TYPE_END = "end"
 
 var _mem
 var _logic
@@ -19,6 +24,7 @@ func init(document, interpreter_options = {}):
 	_doc._index = "r"
 	_mem = Memory.new()
 	_mem.connect("variable_changed", self, "_trigger_variable_changed")
+	_mem.connect("external_variable_changed", self, "_trigger_external_variable_changed")
 	_logic = LogicInterpreter.new()
 	_logic.init(_mem)
 
@@ -77,6 +83,14 @@ func get_variable(name):
 
 func set_variable(name, value):
 	return _mem.set_variable(name, value)
+
+
+func get_external_variable(name):
+	return _mem.get_external_variable(name)
+
+
+func set_external_variable(name, value):
+	return _mem.set_external_variable(name, value)
 
 
 func get_data():
@@ -148,7 +162,7 @@ func _handle_document_node(_node):
 		node.content_index = content_index
 		return _handle_next_node(node.current.content[content_index]);
 
-	return { "type": "end" }
+	return { "type": CONTENT_TYPE_END }
 
 
 func _handle_content_node(content_node):
@@ -170,7 +184,7 @@ func _handle_line_node(line_node):
 		line_node["_index"] = _generate_index()
 
 	return {
-		"type": "line",
+		"type": CONTENT_TYPE_LINE,
 		"tags": line_node.get("tags"),
 		"id": line_node.get("id"),
 		"speaker": line_node.get("speaker"),
@@ -197,7 +211,7 @@ func _handle_options_node(options_node):
 		return _handle_next_node(_stack_head().current)
 
 	return {
-		"type": "options",
+		"type": CONTENT_TYPE_OPTIONS,
 		"speaker": options_node.get("speaker"),
 		"id": options_node.get("id"),
 		"tags": options_node.get("tags"),
@@ -315,7 +329,7 @@ func _handle_block_node(block):
 		node.content_index = content_index
 		return _handle_next_node(node.current.content.content[content_index]);
 
-	return { "type": "end" }
+	return { "type": CONTENT_TYPE_END }
 
 
 func _handle_divert_node(divert):
@@ -328,12 +342,12 @@ func _handle_divert_node(divert):
 		if _stack.size() > 1:
 			_stack_pop()
 			return _handle_next_node(_stack_head().current)
-		return { "type": "end" }
+		return { "type": CONTENT_TYPE_END }
 
 	if divert.target == '<end>':
 		_initialise_stack(_doc)
 		_stack_head().content_index = _stack_head().current.content.size();
-		return { "type": "end" }
+		return { "type": CONTENT_TYPE_END }
 
 	return _handle_next_node(_anchors[divert.target])
 
@@ -383,7 +397,7 @@ func _replace_variables(text):
 	if not text:
 		return text
 	var regex = RegEx.new()
-	regex.compile("\\%(?<variable>[A-z0-9]*)\\%")
+	regex.compile("\\%(?<variable>[A-z0-9@]*)\\%")
 	for result in regex.search_all(text):
 		var value = _mem.get_variable(result.get_string("variable"))
 		text = text.replace(result.get_string(), value if value != null else "")
@@ -494,3 +508,7 @@ func _filter(function: FuncRef, array: Array) -> Array:
 
 func _trigger_variable_changed(name, value, previous_value):
 	emit_signal("variable_changed", name, value, previous_value)
+
+
+func _trigger_external_variable_changed(name, value, previous_value):
+	emit_signal("external_variable_changed", name, value, previous_value)

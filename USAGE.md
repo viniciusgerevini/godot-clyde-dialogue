@@ -12,6 +12,7 @@ This is `ClydeDialogue`'s interface:
 extends Node
 
 signal variable_changed(variable_name, value, previous_vale)
+signal external_variable_changed(name, value, previous_value)
 signal event_triggered(event_name)
 
 # Load dialogue file
@@ -46,6 +47,18 @@ func set_variable(name, value)
 # Get current value of a variable inside the dialogue.
 # name: variable name
 func get_variable(name)
+
+
+# Set external variable to be used in the dialogue.
+# External variables can be accessed using the `@` prefix and
+# are not included in the save object, so they are not persisted between runs.
+func set_external_variable(name, value)
+
+
+# Get current value of an external variable set to the dialogue.
+# External variables are not persisted between dialogue runs, but they can
+# be modified inside the dialogue.
+func get_external_variable(name)
 
 
 # Return all variables and internal variables. Useful for persisting the dialogue's internal
@@ -176,6 +189,8 @@ func _on_variable_changed(variable_name, value, previous_vale):
 
 ```
 
+For external variables, use the `external_variable_changed` signal.
+
 ### Listening to events
 
 You can listen to events triggered by the dialogue by observing the `event_triggered` signal.
@@ -245,6 +260,12 @@ You should not change this object manually. If you want't to change a variable u
     _dialogue.set_variable("health", character.health)
 ```
 
+Variables set via `set_variable` are included in the dialogue data object. This might not be ideal in cases where the data does not belong to the dialogue. For instance,
+in the example setting the health, all dialogues will contain a version of that value, which will increase your save file size.
+
+To workaround this you should use `set_external_variable`. Variables set this way will only be available in the current dialogue instance and won't be included in the persistence object.
+To access external variables in your dialogue use the `@` prefix (i.e health becomes `@health`).
+
 
 ### Translations / Localisation
 
@@ -270,6 +291,6 @@ dialogue.load_dialogue("res://samples/banana.clyde")
 
 ## Examples
 
-You can find usage examples on [/example/](./example/) folder.
+You can find usage examples on [/example/](./addons/clyde/examples/) folder.
 
 

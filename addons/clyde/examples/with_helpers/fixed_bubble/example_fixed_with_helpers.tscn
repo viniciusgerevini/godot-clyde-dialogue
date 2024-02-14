@@ -1,0 +1,101 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://addons/clyde/examples/with_helpers/fixed_bubble/clyde_dialogue_config.gd" type="Script" id=1]
+[ext_resource path="res://addons/clyde/examples/with_helpers/fixed_bubble/example_fixed_with_helpers.gd" type="Script" id=2]
+
+[node name="example_fixed_with_helpers" type="MarginContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
+script = ExtResource( 2 )
+
+[node name="commands" type="VBoxContainer" parent="."]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 1014.0
+margin_bottom = 590.0
+
+[node name="next" type="HBoxContainer" parent="commands"]
+margin_right = 1004.0
+margin_bottom = 14.0
+
+[node name="Label" type="Label" parent="commands/next"]
+margin_right = 87.0
+margin_bottom = 14.0
+text = "Next content:"
+
+[node name="Action" type="Label" parent="commands/next"]
+margin_left = 91.0
+margin_right = 91.0
+margin_bottom = 14.0
+
+[node name="confirm" type="HBoxContainer" parent="commands"]
+margin_top = 18.0
+margin_right = 1004.0
+margin_bottom = 32.0
+
+[node name="Label" type="Label" parent="commands/confirm"]
+margin_right = 88.0
+margin_bottom = 14.0
+text = "Select option:"
+
+[node name="Action" type="Label" parent="commands/confirm"]
+margin_left = 92.0
+margin_right = 92.0
+margin_bottom = 14.0
+
+[node name="select" type="HBoxContainer" parent="commands"]
+margin_top = 36.0
+margin_right = 1004.0
+margin_bottom = 50.0
+
+[node name="Label" type="Label" parent="commands/select"]
+margin_right = 95.0
+margin_bottom = 14.0
+text = "Change option:"
+
+[node name="Action" type="Label" parent="commands/select"]
+margin_left = 99.0
+margin_right = 99.0
+margin_bottom = 14.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+margin_left = 408.0
+margin_top = 275.0
+margin_right = 615.0
+margin_bottom = 325.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+custom_constants/separation = 10
+
+[node name="OptionButton" type="OptionButton" parent="VBoxContainer"]
+margin_right = 207.0
+margin_bottom = 20.0
+
+[node name="Button" type="Button" parent="VBoxContainer"]
+margin_top = 30.0
+margin_right = 207.0
+margin_bottom = 50.0
+text = "Press any key to start dialogue"
+
+[node name="HUD" type="CanvasLayer" parent="."]
+
+[node name="MarginContainer" type="MarginContainer" parent="HUD"]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_vertical = 0
+size_flags_vertical = 8
+custom_constants/margin_right = 20
+custom_constants/margin_top = 20
+custom_constants/margin_left = 20
+custom_constants/margin_bottom = 20
+
+[node name="ClydeDialogueConfig" type="Node" parent="HUD/MarginContainer"]
+script = ExtResource( 1 )
+
+[connection signal="item_selected" from="VBoxContainer/OptionButton" to="." method="_on_option_button_item_selected"]
+[connection signal="pressed" from="VBoxContainer/Button" to="." method="_on_button_pressed"]

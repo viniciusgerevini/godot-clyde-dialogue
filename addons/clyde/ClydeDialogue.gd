@@ -4,8 +4,21 @@ const Interpreter = preload('./interpreter/Interpreter.gd')
 
 class_name ClydeDialogue
 
+# Emits when a variable is changed inside the dialogue.
 signal variable_changed(name, value, previous_value)
+# Emits when an external variable is changed inside the dialogue.
+signal external_variable_changed(name, value, previous_value)
+## Emits when an event is triggered inside the dialogue.
 signal event_triggered(name)
+
+# Type for regular dialogue line
+const CONTENT_TYPE_LINE = Interpreter.CONTENT_TYPE_LINE
+
+# This type is returned when content has options to choose from
+const CONTENT_TYPE_OPTIONS = Interpreter.CONTENT_TYPE_OPTIONS
+
+# This type is returned when the dialogue reached an end
+const CONTENT_TYPE_END = Interpreter.CONTENT_TYPE_END
 
 # Custom folder where the interpreter should look for dialogue files
 # in case just the name is provided.
@@ -36,6 +49,7 @@ func load_dialogue(file_name, block = null):
 		"include_hidden_options": _options.get("include_hidden_options", false)
 	})
 	_interpreter.connect("variable_changed", self, "_trigger_variable_changed")
+	_interpreter.connect("external_variable_changed", self, "_trigger_external_variable_changed")
 	_interpreter.connect("event_triggered", self, "_trigger_event_triggered")
 	if block:
 		_interpreter.select_block(block)
@@ -65,6 +79,20 @@ func set_variable(name, value):
 # Get current value of a variable inside the dialogue.
 # name: variable name
 func get_variable(name):
+	return _interpreter.get_variable(name)
+
+
+# Set external variable to be used in the dialogue.
+# External variables can be accessed using the `@` prefix and
+# are not included in the save object, so they are not persisted between runs.
+func set_external_variable(name: String, value):
+	return _interpreter.set_variable(name, value)
+
+
+# Get current value of an external variable set to the dialogue.[br]
+# External variables are not persisted between dialogue runs, but they can
+# be modified inside the dialogue.
+func get_external_variable(name: String):
 	return _interpreter.get_variable(name)
 
 
@@ -101,20 +129,16 @@ func _load_file(path) -> Dictionary:
 
 
 func _load_clyde_file(path):
-	var data = load(path).__data__.get_string_from_utf8()
-	var parsed_json = JSON.parse(data)
-
-	if OK != parsed_json.error:
-		var format = [parsed_json.error_line, parsed_json.error_string]
-		var error_string = "%d: %s" % format
-		printerr("Could not parse json", error_string)
-		return null
-
-	return parsed_json.result
+	var data = load(path)
+	return data.content
 
 
 func _trigger_variable_changed(name, value, previous_value):
 	emit_signal("variable_changed", name, value, previous_value)
+
+
+func _trigger_external_variable_changed(name, value, previous_value):
+	emit_signal("external_variable_changed", name, value, previous_value)
 
 
 func _trigger_event_triggered(name):

@@ -13,9 +13,27 @@ _global_script_classes=[ {
 "class": "ClydeDialogue",
 "language": "GDScript",
 "path": "res://addons/clyde/ClydeDialogue.gd"
+}, {
+"base": "Resource",
+"class": "ClydeDialogueFile",
+"language": "GDScript",
+"path": "res://addons/clyde/resource/ClydeDialogueResource.gd"
+}, {
+"base": "ResourceFormatLoader",
+"class": "ClydeDialogueResourceLoader",
+"language": "GDScript",
+"path": "res://addons/clyde/resource/ClydeDialogueResourceLoader.gd"
+}, {
+"base": "ResourceFormatSaver",
+"class": "ClydeDialogueResourceSaver",
+"language": "GDScript",
+"path": "res://addons/clyde/resource/ClydeDialogueResourceSaver.gd"
 } ]
 _global_script_class_icons={
-"ClydeDialogue": ""
+"ClydeDialogue": "",
+"ClydeDialogueFile": "res://addons/clyde/assets/clyde.svg",
+"ClydeDialogueResourceLoader": "",
+"ClydeDialogueResourceSaver": ""
 }
 
 [application]
@@ -23,8 +41,13 @@ _global_script_class_icons={
 config/name="clyde-plugin"
 config/icon="res://icon.png"
 
+[autoload]
+
+Dialogue="*res://addons/clyde/helpers/dialogue_manager.gd"
+
 [dialogue]
 
+enable_helpers=true
 source_folder="res://test/dialogue_samples"
 
 [editor_plugins]

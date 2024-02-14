@@ -1,0 +1,109 @@
+-- Pulp Fiction: Jules and Vincent first car scene.
+-- adapted to demonstrate features.
+
+( once 
+	- Jules: Okay now, tell me about that. { set europe_topics_talked = 0 }
+)
+
+Vincent: What do you want to know?
+	* Is hash legal there?
+		-> about hash <-
+	+ Something about Europe. { europe_topics_talked < 4 }
+		-> about europe <-
+	+ Nah, maybe another time { OPTIONS_COUNT > 1 }
+		( shuffle
+			- Vincent: Alright!
+			- Vincent: No problem!
+			- Vincent: Ok!
+		)
+
+Jules: Enough talk. Let's get to work!
+
+
+-- blocks
+
+== about hash
+Jules:	 Is hash legal there?
+Vincent: Yes, but is ain't a hundred percent legal.
+		 I mean you can't walk into a restaurant, roll a joint,
+		 and start puffin' away. You're only supposed to smoke in
+		 your home or certain designated places.
+Jules:	 Those are hash bars?
+Vincent: Yeah, it breaks down like this\: it's legal to buy it,
+		 it's legal to own it and, if you're the proprietor of a
+		 hash bar, it's legal to sell it. It's legal to carry it,
+		 which doesn't really matter ' cause - get a load of this -
+		 if the cops stop you, it's illegal for this to search you.
+		 Searching you is a right that the cops in Amsterdam don't have.
+Jules:	 That did it, man - I'm f**n' goin', that's all there is to it.
+<-
+
+== about europe
+( once
+	-
+		Vincent: You know what the funniest thing about Europe is?
+		Jules:   What?
+		Vincent: It's the little differences. A lotta the same sh*t we got here,
+				 they got there, but there they're a little different.
+)
+
+( sequence
+	- Jules: Examples?
+	- Jules: Tell me more about Europe.
+)
+
+About Europe...
+	* You can buy beer in movie theatres.
+		-> beer in theathres <-
+	* What they call a Quarter Pounder in Paris
+		-> quarter pounder talk <-
+	* What they call a Whopper { quarter_pounder_talk_complete }
+		-> whopper talk <-
+	* What they put on the french fries instead of ketchup.
+		-> french fries talk <-
+	+ { OPTIONS_COUNT > 1 } I'm suddenly not interested anymore.
+		Jules: We talk about this another time.
+{ set europe_talk_complete = true }
+<-
+
+
+== beer in theathres
+Vincent: Well, in Amsterdam, you can buy beer in a
+		 movie theatre.
+Vincent: And I don't mean in a paper
+		 cup either. They give you a glass of beer,
+{ set europe_topics_talked += 1}
+<-
+
+
+== quarter pounder talk
+Vincent: You know what they call a Quarter Pounder with Cheese in Paris?
+Jules:   They don't call it a Quarter Pounder with Cheese?
+Vincent: No, they got the metric system there, they wouldn't know what
+		 the f a Quarter Pounder is.
+Jules:   What'd they call it?
+Vincent: Royale with Cheese.
+Jules:   Royale with cheese. What'd they call a Big Mac?
+Vincent: Big Mac's a Big Mac, but they call it Le Big Mac.
+{ set quarter_pounder_talk_complete = true, europe_topics_talked += 1 }
+<-
+
+
+== whopper talk
+Jules:   What do they call a Whopper?
+Vincent: I dunno, I didn't go into a Burger King.
+{ set europe_topics_talked += 1 }
+<-
+
+
+== french fries talk
+Vincent: You know what they put on french fries in Holland
+		 instead of ketchup?
+Jules:	 What?
+Vincent: Mayonnaise.
+Jules:	 Goddamn!
+Vincent: I seen 'em do it. And I don't mean a little bit
+		 on the side of the plate, they freakin' drown 'em in it.
+Jules:	 Uuccch!
+{ set europe_topics_talked += 1 }
+<-
