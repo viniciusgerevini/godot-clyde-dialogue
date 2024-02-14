@@ -1,0 +1,32 @@
+[gd_scene load_steps=6 format=3 uid="uid://ccsjekeu2tgxr"]
+
+[ext_resource type="Script" path="res://addons/clyde/editor/editor/editor.gd" id="1_7djvi"]
+[ext_resource type="PackedScene" uid="uid://itwcdoycxjc3" path="res://addons/clyde/editor/editor/dialogue_editor.tscn" id="2_y3ceu"]
+[ext_resource type="Script" path="res://addons/clyde/editor/editor/clyde_syntax_highlighter.gd" id="3_v1074"]
+[ext_resource type="PackedScene" uid="uid://c3tu6jy2udoqk" path="res://addons/clyde/editor/editor/status_bar.tscn" id="4_eek30"]
+
+[sub_resource type="SyntaxHighlighter" id="SyntaxHighlighter_s6rha"]
+script = ExtResource("3_v1074")
+
+[node name="Editor" type="VBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_7djvi")
+
+[node name="DialogueEditor" parent="." instance=ExtResource("2_y3ceu")]
+layout_mode = 2
+syntax_highlighter = SubResource("SyntaxHighlighter_s6rha")
+
+[node name="StatusBar" parent="." instance=ExtResource("4_eek30")]
+layout_mode = 2
+
+[connection signal="caret_changed" from="DialogueEditor" to="." method="_on_dialogue_editor_caret_changed"]
+[connection signal="finished_change" from="DialogueEditor" to="." method="_on_dialogue_editor_finished_change"]
+[connection signal="search_requested" from="DialogueEditor" to="." method="_on_dialogue_editor_search_requested"]
+[connection signal="text_changed" from="DialogueEditor" to="." method="_on_dialogue_editor_text_changed"]
+[connection signal="error_hint_clicked" from="StatusBar" to="." method="_on_status_bar_error_hint_clicked"]

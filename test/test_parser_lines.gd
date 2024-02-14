@@ -102,3 +102,20 @@ Just talking.\"
 		"blocks": []
 	}
 	assert_eq_deep(result, expected)
+
+
+func test_parser_with_meta():
+	var parser = Parser.new()
+	var result = parser.parse("""
+jules: say what one more time!
+	Just say it $some_id #tag
+*= this is an option
+this is a nested option
+	*= this is an option
+
+== this is a block
+""", true)
+	assert_eq_deep(result.content[0].content[0].meta, {  "line": 1, "column": 7 })
+	assert_eq_deep(result.content[0].content[1].meta, { "line": 3, "column": 0 })
+	assert_eq_deep(result.content[0].content[2].meta, { "line": 4, "column": 0 })
+	assert_eq_deep(result.blocks[0].meta, { "line": 7, "column": 0 })

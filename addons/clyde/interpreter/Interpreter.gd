@@ -1,10 +1,15 @@
 extends RefCounted
 
-signal variable_changed(name, value, previous_value)
-signal event_triggered(event_name)
+signal variable_changed(name: String, value: Variant, previous_value: Variant)
+signal external_variable_changed(name: String, value: Variant, previous_value: Variant)
+signal event_triggered(event_name: String)
 
 const Memory = preload("./Memory.gd")
 const LogicInterpreter = preload("./LogicInterpreter.gd")
+
+const CONTENT_TYPE_LINE = "line"
+const CONTENT_TYPE_OPTIONS = "options"
+const CONTENT_TYPE_END = "end"
 
 var _mem
 var _logic
@@ -14,11 +19,12 @@ var _handlers = {}
 var _anchors = {}
 var _config
 
-func init(document, interpreter_options = {}):
+func init(document: Dictionary, interpreter_options: Dictionary = {}) -> void:
 	_doc = document
 	_doc._index = "r"
 	_mem = Memory.new()
-	_mem.connect("variable_changed",Callable(self,"_trigger_variable_changed"))
+	_mem.variable_changed.connect(_trigger_variable_changed)
+	_mem.external_variable_changed.connect(_trigger_external_variable_changed)
 	_logic = LogicInterpreter.new()
 	_logic.init(_mem)
 
@@ -32,11 +38,11 @@ func init(document, interpreter_options = {}):
 	_initialize_handlers()
 
 
-func get_content():
+func get_content() -> Dictionary:
 	return _handle_next_node(_stack_head().current)
 
 
-func choose(option_index):
+func choose(option_index: int) -> void:
 	var node = _stack_head()
 
 	if node.current.type == 'options':
@@ -65,59 +71,67 @@ func choose(option_index):
 		printerr("Nothing to select")
 
 
-func select_block(block_name = null):
-	if block_name != null:
+func select_block(block_name: String = "") -> void:
+	if block_name != "":
 		_initialise_stack(_anchors[block_name])
 	else:
 		_initialise_stack(_doc)
 
 
-func has_block(block_name):
+func has_block(block_name: String) -> bool:
 	return block_name in _anchors
 
 
-func get_variable(name):
+func get_variable(name: String) -> Variant:
 	return _mem.get_variable(name)
 
 
-func set_variable(name, value):
+func set_variable(name: String, value: Variant) -> Variant:
 	return _mem.set_variable(name, value)
 
 
-func get_data():
+func set_external_variable(name: String, value: Variant) -> Variant:
+	return _mem.set_external_variable(name, value)
+
+
+func get_external_variable(name: String) -> Variant:
+	return _mem.get_external_variable(name)
+
+
+func get_data() -> Dictionary:
 	return _mem.get_all()
 
 
-func load_data(data):
-	return _mem.load_data(data)
+func load_data(data: Dictionary) -> void:
+	_mem.load_data(data)
 
 
-func clear_data():
-	return _mem.clear()
+func clear_data() -> void:
+	_mem.clear()
 
 
-func _initialise_stack(root):
+func _initialise_stack(root: Dictionary) -> void:
 	_stack = [{
 	"current": root,
 	"content_index": -1
 	}]
 
 
-func _initialise_blocks(doc):
+func _initialise_blocks(doc: Dictionary) -> void:
 	for i in range(doc.blocks.size()):
 		doc.blocks[i]._index = "b_%s" % doc.blocks[i].name
 		_anchors[doc.blocks[i].name] = doc.blocks[i]
 
 
-func _stack_head():
+func _stack_head() -> Dictionary:
 	return _stack[_stack.size() - 1]
 
 
-func _stack_pop():
+func _stack_pop() -> Dictionary:
 	return _stack.pop_back()
 
 
-func _add_to_stack(node):
+func _add_to_stack(node: Dictionary) -> void:
 	if _stack_head().current != node:
 		_stack.push_back({
 			"current": node,
@@ -125,11 +139,11 @@ func _add_to_stack(node):
 		})
 
 
-func _generate_index():
+func _generate_index() -> String:
 	return "%s_%s" % [_stack_head().current._index, _stack_head().content_index]
 
 
-func _initialize_handlers():
+func _initialize_handlers() -> void:
 	_handlers = {
 		"document": _handle_document_node,
 		"content": _handle_content_node,
@@ -146,14 +160,14 @@ func _initialize_handlers():
 	}
 
 
-func _handle_document_node(_node):
+func _handle_document_node(_node: Dictionary) -> Dictionary:
 	var node = _stack_head()
 	var content_index = node.content_index + 1
 	if content_index < node.current.content.size():
 		node.content_index = content_index
 		return _handle_next_node(node.current.content[content_index]);
 
-	return { "type": "end" }
+	return { "type": CONTENT_TYPE_END }
 
 
 func _handle_content_node(content_node):
@@ -174,13 +188,16 @@ func _handle_line_node(line_node):
 	if line_node.get("_index") == null:
 		line_node["_index"] = _generate_index()
 
-	return {
-		"type": "line",
+	var line = {
+		"type": CONTENT_TYPE_LINE,
 		"tags": line_node.get("tags"),
 		"id": line_node.get("id"),
 		"speaker": line_node.get("speaker"),
 		"text": _replace_variables(_translate_text(line_node.get("id"), line_node.get("value"), line_node.get("id_suffixes")))
 	}
+	if line_node.has("meta"):
+		line.meta = line_node.meta
+	return line
 
 
 func _handle_options_node(options_node):
@@ -202,14 +219,17 @@ func _handle_options_node(options_node):
 		choose(0)
 		return _handle_next_node(_stack_head().current)
 
-	return {
-		"type": "options",
+	var o = {
+		"type": CONTENT_TYPE_OPTIONS,
 		"speaker": options_node.get("speaker"),
 		"id": options_node.get("id"),
 		"tags": options_node.get("tags"),
 		"name": _replace_variables(_translate_text(options_node.get("id"), options_node.get("name"), options_node.get("id_suffixes"))),
 		"options": options.map(func(e): return _map_option(e, options.find(e), _config.include_hidden_options)),
 	}
+	if options_node.has("meta"):
+		o.meta = options_node.meta
+	return o
 
 
 func _get_visible_options(options):
@@ -316,7 +336,7 @@ func _handle_block_node(block):
 		node.content_index = content_index
 		return _handle_next_node(node.current.content.content[content_index]);
 
-	return { "type": "end" }
+	return { "type": CONTENT_TYPE_END }
 
 
 func _handle_divert_node(divert):
@@ -330,12 +350,12 @@ func _handle_divert_node(divert):
 			_stack_pop()
 			return _handle_next_node(_stack_head().current)
 
-		return { "type": "end" }
+		return { "type": CONTENT_TYPE_END }
 
 	if divert.target == '<end>':
 		_initialise_stack(_doc)
 		_stack_head().content_index = _stack_head().current.content.size();
-		return { "type": "end" }
+		return { "type": CONTENT_TYPE_END }
 
 	return _handle_next_node(_anchors[divert.target])
 
@@ -384,8 +404,7 @@ func _translate_text(key, text, id_suffixes = null):
 func _replace_variables(text):
 	if text == null or text == "":
 		return text
-	var regex = RegEx.new()
-	regex.compile("\\%(?<variable>[A-z0-9]*)\\%")
+	var regex = RegEx.create_from_string("\\%(?<variable>[A-z0-9@]*)\\%")
 	for result in regex.search_all(text):
 		var value = _mem.get_variable(result.get_string("variable"))
 		text = text.replace(result.get_string(), str(value) if value != null else "")
@@ -477,5 +496,9 @@ func _handle_real_shuffle_variation(variations):
 	return randi() % variations.content.size()
 
 
-func _trigger_variable_changed(name, value, previous_value):
-	emit_signal("variable_changed", name, value, previous_value)
+func _trigger_variable_changed(name: String, value: Variant, previous_value: Variant) -> void:
+	variable_changed.emit(name, value, previous_value)
+
+
+func _trigger_external_variable_changed(name: String, value: Variant, previous_value: Variant) -> void:
+	external_variable_changed.emit(name, value, previous_value)

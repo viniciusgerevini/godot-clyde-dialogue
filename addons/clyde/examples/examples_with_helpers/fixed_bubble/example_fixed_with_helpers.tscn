@@ -1,0 +1,80 @@
+[gd_scene load_steps=3 format=3 uid="uid://vf0hf7ckudp5"]
+
+[ext_resource type="Script" path="res://addons/clyde/examples/examples_with_helpers/fixed_bubble/example_fixed_with_helpers.gd" id="1_mug4u"]
+[ext_resource type="Script" path="res://addons/clyde/examples/examples_with_helpers/fixed_bubble/clyde_dialogue_config.gd" id="2_xv0we"]
+
+[node name="example_fixed_with_helper" type="MarginContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+script = ExtResource("1_mug4u")
+
+[node name="commands" type="VBoxContainer" parent="."]
+layout_mode = 2
+size_flags_vertical = 0
+
+[node name="next" type="HBoxContainer" parent="commands"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="commands/next"]
+layout_mode = 2
+text = "Next content:"
+
+[node name="Action" type="Label" parent="commands/next"]
+layout_mode = 2
+
+[node name="select" type="HBoxContainer" parent="commands"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="commands/select"]
+layout_mode = 2
+text = "Select option:"
+
+[node name="Action" type="Label" parent="commands/select"]
+layout_mode = 2
+
+[node name="confirm" type="HBoxContainer" parent="commands"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="commands/confirm"]
+layout_mode = 2
+text = "Confirm option:"
+
+[node name="Action" type="Label" parent="commands/confirm"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="OptionButton" type="OptionButton" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+text = "Press any key to start dialogue"
+
+[node name="HUD" type="CanvasLayer" parent="."]
+
+[node name="MarginContainer" type="MarginContainer" parent="HUD"]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="ClydeDialogueConfig" type="Node" parent="HUD/MarginContainer"]
+script = ExtResource("2_xv0we")
+
+[connection signal="item_selected" from="VBoxContainer/OptionButton" to="." method="_on_option_button_item_selected"]
+[connection signal="pressed" from="VBoxContainer/Button" to="." method="_on_button_pressed"]

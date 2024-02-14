@@ -14,6 +14,7 @@ func test_text():
 		"column": 0,
 	})
 
+
 func test_text_with_multiple_lines():
 	var lexer = Lexer.new()
 	var tokens = lexer.init('this is a line\nthis is another line 2').get_all()
@@ -128,6 +129,17 @@ func test_count_lines_correctly_in_quotted_text_with_line_breaks():
 			},
 		{ "token": Lexer.TOKEN_EOF, "line": 2, "column": 24, "value": null },
 	])
+
+func test_text_with_interpolation():
+	var lexer = Lexer.new()
+	var tokens = lexer.init('this is a line with %var% %@var%').get_all()
+	assert_eq_deep(tokens.size(), 2)
+	assert_eq_deep(tokens[0], {
+		"token": Lexer.TOKEN_TEXT,
+		"value": "this is a line with %var% %@var%",
+		"line": 0,
+		"column": 0,
+	})
 
 
 func test_ignores_comments():
@@ -538,7 +550,6 @@ func test_variations():
 	])
 
 
-
 func test_variables_conditions():
 	var lexer = Lexer.new()
 	var tokens = lexer.init("""
@@ -565,6 +576,7 @@ func test_variables_conditions():
 { variable == false }
 { variable == \"s1\" }
 { variable == null }
+{ @global_variable }
 
 """).get_all()
 	assert_eq_deep(tokens, [
@@ -734,7 +746,13 @@ func test_variables_conditions():
 		{ "token": Lexer.TOKEN_BRACE_CLOSE, "line": 23, "column": 19, "value": null, },
 		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 23, "column": 20, "value": null, },
 
-		{ "token": Lexer.TOKEN_EOF, "line": 25, "column": 0, "value": null },
+		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 24, "column": 0, "value": null },
+		{ "token": Lexer.TOKEN_BRACE_OPEN, "line": 24, "column": 0, "value": null, },
+		{ "token": Lexer.TOKEN_IDENTIFIER, "value": '@global_variable', "line": 24, "column": 2, },
+		{ "token": Lexer.TOKEN_BRACE_CLOSE, "line": 24, "column": 19, "value": null, },
+		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 24, "column": 20, "value": null, },
+
+		{ "token": Lexer.TOKEN_EOF, "line": 26, "column": 0, "value": null },
 	])
 
 
@@ -1036,6 +1054,7 @@ now another dedent""")
 	assert_eq_deep(tokens.next(), { "token": Lexer.TOKEN_DEDENT, "line": 3, "column": 0, "value": null })
 	assert_eq_deep(tokens.next(), { "token": Lexer.TOKEN_TEXT, "value": 'now another dedent', "line": 3, "column": 0 })
 
+
 func test_parse_token_friendly_hint():
 	assert_eq_deep(Lexer.get_token_friendly_hint(Lexer.TOKEN_LINE_ID), '$id')
 	assert_eq_deep(Lexer.get_token_friendly_hint('some_unkown_token'), 'some_unkown_token')
@@ -1073,3 +1092,24 @@ Pick an option.
 
 	assert_eq_deep(tab_tokens, tokens)
 
+
+func test_does_not_break_on_lookups():
+	var lexer = Lexer.new()
+	assert_eq_deep(lexer.init('-').get_all()[0], {
+		"token": Lexer.TOKEN_TEXT,
+		"value": "-",
+		"line": 0,
+		"column": 0,
+	})
+	assert_eq_deep(lexer.init('=').get_all()[0], {
+		"token": Lexer.TOKEN_TEXT,
+		"value": "=",
+		"line": 0,
+		"column": 0,
+	})
+	assert_eq_deep(lexer.init('<').get_all()[0], {
+		"token": Lexer.TOKEN_TEXT,
+		"value": "<",
+		"line": 0,
+		"column": 0,
+	})

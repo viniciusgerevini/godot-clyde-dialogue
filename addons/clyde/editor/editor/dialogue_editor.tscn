@@ -1,0 +1,47 @@
+[gd_scene load_steps=4 format=3 uid="uid://itwcdoycxjc3"]
+
+[ext_resource type="Script" path="res://addons/clyde/editor/editor/clyde_syntax_highlighter.gd" id="1_evse1"]
+[ext_resource type="Script" path="res://addons/clyde/editor/editor/dialogue_editor.gd" id="1_oeyb6"]
+
+[sub_resource type="SyntaxHighlighter" id="SyntaxHighlighter_x4knf"]
+script = ExtResource("1_evse1")
+
+[node name="DialogueEditor" type="CodeEdit"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 21
+scroll_smooth = true
+scroll_past_end_of_file = true
+minimap_draw = true
+caret_blink = true
+caret_blink_interval = 0.5
+syntax_highlighter = SubResource("SyntaxHighlighter_x4knf")
+highlight_current_line = true
+draw_tabs = true
+draw_spaces = true
+symbol_lookup_on_click = true
+line_length_guidelines = Array[int]([100, 80])
+gutters_draw_executing_lines = true
+gutters_draw_line_numbers = true
+code_completion_enabled = true
+code_completion_prefixes = Array[String](["=", "-", "#", "$", "&", "("])
+indent_automatic = true
+indent_automatic_prefixes = Array[String]([":", "{", "("])
+auto_brace_completion_enabled = true
+auto_brace_completion_highlight_matching = true
+auto_brace_completion_pairs = {
+"\"": "\"",
+"'": "'",
+"(": ")",
+"{": "}"
+}
+script = ExtResource("1_oeyb6")
+
+[connection signal="symbol_lookup" from="." to="." method="_on_symbol_lookup"]
+[connection signal="symbol_validate" from="." to="." method="_on_symbol_validate"]
+[connection signal="text_changed" from="." to="." method="_on_text_changed"]

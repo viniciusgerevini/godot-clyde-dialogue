@@ -1,0 +1,67 @@
+[gd_scene load_steps=2 format=3 uid="uid://chxe8wkmq82wx"]
+
+[ext_resource type="Script" path="res://addons/clyde/editor/player/debug_dock.gd" id="1_d63jl"]
+
+[node name="DebugDock" type="HBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_d63jl")
+
+[node name="HSplitContainer" type="HSplitContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 20
+
+[node name="variables" type="VBoxContainer" parent="HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="HSplitContainer/variables"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HSplitContainer/variables/MarginContainer"]
+layout_mode = 2
+text = "Variables"
+horizontal_alignment = 1
+
+[node name="add_btn" type="Button" parent="HSplitContainer/variables/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+
+[node name="ScrollContainer" type="ScrollContainer" parent="HSplitContainer/variables"]
+layout_mode = 2
+size_flags_vertical = 3
+follow_focus = true
+
+[node name="DebugEntries" type="GridContainer" parent="HSplitContainer/variables/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+columns = 4
+
+[node name="history" type="VBoxContainer" parent="HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="HSplitContainer/history"]
+layout_mode = 2
+text = "Change history"
+horizontal_alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="HSplitContainer/history"]
+layout_mode = 2
+size_flags_vertical = 3
+follow_focus = true
+
+[node name="EventEntries" type="GridContainer" parent="HSplitContainer/history/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+columns = 5
+
+[connection signal="pressed" from="HSplitContainer/variables/MarginContainer/add_btn" to="." method="_on_add_btn_pressed"]

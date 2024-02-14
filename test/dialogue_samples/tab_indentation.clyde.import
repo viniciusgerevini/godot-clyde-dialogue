@@ -1,7 +1,7 @@
 [remap]
 
 importer="clyde.dialogue"
-type="PackedDataContainer"
+type="ClydeDialogueFile"
 uid="uid://cimytklysybej"
 path="res://.godot/imported/tab_indentation.clyde-8ee8cc9bb5cb2115aafff97867b41e61.res"
 

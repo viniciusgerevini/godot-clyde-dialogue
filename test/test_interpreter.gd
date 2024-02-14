@@ -2,9 +2,9 @@ extends "res://addons/gut/test.gd"
 
 var Parser = preload("res://addons/clyde/parser/Parser.gd")
 
-func parse(input):
+func parse(input, include_meta = false):
 	var parser = Parser.new()
-	return parser.parse(input)
+	return parser.parse(input, include_meta)
 
 
 func _line(line):
@@ -359,7 +359,6 @@ func test_variation_default_shuffle():
 	for _i in range(5):
 		interpreter.select_block()
 		var rdc = interpreter.get_content().text
-		print(rdc)
 		assert_has(random_default_cycle, rdc)
 
 
@@ -458,6 +457,52 @@ func test_set_variables():
 	dialogue.set_variable('first_time', false)
 	dialogue.start()
 	assert_eq_deep(dialogue.get_content().text, "not")
+
+
+func test_external_variables_assignments():
+	var interpreter = ClydeDialogue.Interpreter.new()
+	var content = parse("""
+{ set var = 2 }
+{ set @var = 1 }
+""")
+	interpreter.init(content)
+	assert_eq_deep(interpreter.get_content().type, 'end')
+	assert_eq(interpreter.get_variable("var"), 2)
+	assert_eq(interpreter.get_external_variable("var"), 1)
+	interpreter.set_variable("var", 42)
+	interpreter.set_external_variable("var", 43)
+	assert_eq(interpreter.get_variable("var"), 42)
+	assert_eq(interpreter.get_external_variable("var"), 43)
+
+
+func test_external_variables_not_included_in_data():
+	var interpreter = ClydeDialogue.Interpreter.new()
+	var content = parse("""
+{ set var = 2 }
+{ set @var2 = 1 }
+""")
+	interpreter.init(content)
+	interpreter.get_content()
+	interpreter.set_external_variable("var3", 42)
+
+	assert_does_not_have(interpreter.get_data().variables, "var3")
+	assert_does_not_have(interpreter.get_data().variables, "var2")
+	assert_has(interpreter.get_data().variables, "var")
+
+
+func test_external_variables_interpolation():
+	var interpreter = ClydeDialogue.Interpreter.new()
+	var content = parse("""
+{ set var = 2 } this is setting a regular v %var% e %@var%
+{ set @var = 1} this is setting an external var v %var% e %@var%
+vars where changed externally v %var% e %@var%
+""")
+	interpreter.init(content)
+	assert_eq_deep(interpreter.get_content().text, 'this is setting a regular v 2 e ')
+	assert_eq_deep(interpreter.get_content().text, 'this is setting an external var v 2 e 1')
+	interpreter.set_variable("var", 42)
+	interpreter.set_external_variable("var", 43)
+	assert_eq_deep(interpreter.get_content().text, 'vars where changed externally v 42 e 43')
 
 
 func test_data_control():
@@ -572,6 +617,7 @@ func test_events():
 	dialogue.load_dialogue('variables')
 	dialogue.connect("event_triggered",Callable(self,"_on_event_triggered"))
 	dialogue.connect("variable_changed",Callable(self,"_on_variable_changed"))
+	dialogue.connect("external_variable_changed",Callable(self,"_on_external_variable_changed"))
 
 	pending_events.push_back({ "type": "variable", "name": "xx", "value": true })
 	pending_events.push_back({ "type": "variable", "name": "first_time", "value": 2.0 })
@@ -590,6 +636,7 @@ func test_events():
 	pending_events.push_back({ "type": "variable", "name": "hp", "value": 5.0 })
 	pending_events.push_back({ "type": "variable", "name": "s", "value": false })
 	pending_events.push_back({ "type": "variable", "name": "x", "value": true })
+	pending_events.push_back({ "type": "variable", "name": "ex", "value": true })
 
 	while true:
 		var res = dialogue.get_content()
@@ -603,6 +650,12 @@ func test_events():
 
 
 func _on_variable_changed(var_name, value, _previous_value):
+	for e in pending_events:
+		if e.type == 'variable' and e.name == var_name and  typeof(e.value) == typeof(value) and  e.value == value:
+			pending_events.erase(e)
+
+
+func _on_external_variable_changed(var_name, value, _previous_value):
 	for e in pending_events:
 		if e.type == 'variable' and e.name == var_name and  typeof(e.value) == typeof(value) and  e.value == value:
 			pending_events.erase(e)
@@ -632,16 +685,16 @@ func test_file_path_without_extension():
 
 func test_uses_configured_dialogue_folder():
 	var dialogue = ClydeDialogue.new()
-	dialogue.dialogue_folder = 'res://dialogues'
+	dialogue.dialogue_folder = 'res://addons/clyde/examples/dialogues'
 	dialogue.load_dialogue('simple_lines')
 
 	var lines = [
 		_line({ "type": "line", "text": "Dinner at Jack Rabbit Slim's:" }),
-		_line({ "type": "line", "text": "Don’t you hate that?", "speaker": "Mia" }),
+		_line({ "type": "line", "text": "Don't you hate that?", "speaker": "Mia" }),
 		_line({ "type": "line", "text": "What?", "speaker": "Vincent" }),
-		_line({ "type": "line", "text": "Uncomfortable silences. Why do we feel it’s necessary to yak about bullshit in order to be comfortable?", "speaker": "Mia", "id": "145" }),
-		_line({ "type": "line", "text": "I don’t know. That’s a good question.", "speaker": "Vincent" }),
-		_line({ "type": "line", "text": "That’s when you know you’ve found somebody special. When you can just shut the fuck up for a minute and comfortably enjoy the silence.", "speaker": "Mia", "id": "123"}),
+		_line({ "type": "line", "text": "Uncomfortable silences. Why do we feel it's necessary to yak about bullshit in order to be comfortable?", "speaker": "Mia", "id": "145" }),
+		_line({ "type": "line", "text": "I don't know. That's a good question.", "speaker": "Vincent" }),
+		_line({ "type": "line", "text": "That's when you know you've found somebody special. When you can just shut the fuck up for a minute and comfortably enjoy the silence.", "speaker": "Mia", "id": "123"}),
 	]
 
 	for line in lines:
@@ -653,3 +706,26 @@ func test_has_blocks():
 	dialogue.load_dialogue('blocks')
 	assert_true(dialogue.has_block("intro"), "Should have block")
 	assert_false(dialogue.has_block("some-block-that-definitely-doesnt-exist"), "Should not have block")
+
+
+func test_returning_meta_when_available():
+	var interpreter = ClydeDialogue.Interpreter.new()
+	var content = parse("""
+first line
+* first option
+second option
+	* option
+""", true)
+	interpreter.init(content)
+
+	var first_line = _line({ "type": "line", "text": "first line" })
+	first_line.meta = { "line": 1, "column": 0 }
+	var first_option = _options({ "options": [_option({"label": "first option"})] })
+	first_option.meta = { "line": 2, "column": 0 }
+	var second_option = _options({ "name": "second option", "options": [_option({"label": "option"})] })
+	second_option.meta = { "line": 3, "column": 0 }
+
+	assert_eq_deep(interpreter.get_content(), first_line)
+	assert_eq_deep(interpreter.get_content(), first_option)
+	interpreter.choose(0)
+	assert_eq_deep(interpreter.get_content(), second_option)

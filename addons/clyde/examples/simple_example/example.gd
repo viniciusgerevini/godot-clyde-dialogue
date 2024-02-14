@@ -1,5 +1,12 @@
 extends MarginContainer
 
+# This is a simple example using the ClydeDialogue class.
+# No helpers required.
+
+@onready var _line_container = $Panel/MarginContainer/line
+@onready var _options_container = $Panel/MarginContainer/options
+@onready var _end_container = $Panel/MarginContainer/dialogue_ended
+
 var _dialogue
 
 func _ready():
@@ -13,39 +20,40 @@ func _ready():
 func _get_next_dialogue_line():
 	var content = _dialogue.get_content()
 	if content.type == "end":
-		$line.hide()
-		$options.hide()
-		$dialogue_ended.show()
+		_line_container.hide()
+		_options_container.hide()
+		_end_container.show()
 		return
 
 	if content.type == 'line':
 		_set_up_line(content)
-		$line.show()
-		$options.hide()
+		_line_container.show()
+		_options_container.hide()
 	else:
 		_set_up_options(content)
-		$options.show()
-		$line.hide()
+		_options_container.show()
+		_line_container.hide()
 
 
 func _set_up_line(content):
-	$line/speaker.text = content.get('speaker') if content.get('speaker') != null else ''
-	$line/text.text = content.text
+	_line_container.get_node("speaker").text = content.get('speaker') if content.get('speaker') != null else ''
+	_line_container.get_node("text").text = content.text
 
 
 func _set_up_options(options):
-	for c in $options/items.get_children():
+	for c in _options_container.get_node("items").get_children():
 		c.queue_free()
 
-	$options/name.text = options.get('name') if options.get('name') != null else ''
-	$options/speaker.text = options.get('speaker') if options.get('speaker') != null else ''
+	_options_container.get_node("name").text = options.get('name') if options.get('name') != null else ''
+	_options_container.get_node("speaker").text = options.get('speaker') if options.get('speaker') != null else ''
+	_options_container.get_node("speaker").visible = _options_container.get_node("speaker").text != ""
 
 	var index = 0
 	for option in options.options:
 		var btn = Button.new()
 		btn.text = option.label
 		btn.connect("button_down",Callable(self,"_on_option_selected").bind(index))
-		$options/items.add_child(btn)
+		_options_container.get_node("items").add_child(btn)
 		index += 1
 
 
@@ -68,6 +76,6 @@ func _on_variable_changed(variable_name, new_value, previous_value):
 
 
 func _on_restart_pressed():
-	$dialogue_ended.hide()
+	_end_container.hide()
 	_dialogue.start()
 	_get_next_dialogue_line()

@@ -1,0 +1,95 @@
+[gd_scene load_steps=5 format=3 uid="uid://bqjvv0xyfm54y"]
+
+[ext_resource type="Script" path="res://addons/clyde/examples/examples_with_helpers/floating_bubble/example_floating_with_helpers.gd" id="1_tjmj8"]
+[ext_resource type="Script" path="res://addons/clyde/examples/examples_with_helpers/floating_bubble/clyde_dialogue_config.gd" id="2_bouif"]
+[ext_resource type="PackedScene" uid="uid://c2aifp4pq54ut" path="res://addons/clyde/helpers/bubbles/dialogue_bubble_floating.tscn" id="3_8rmxq"]
+[ext_resource type="Texture2D" uid="uid://cl82ufpwosg48" path="res://icon.png" id="4_iuwpv"]
+
+[node name="example_floating_with_helpers" type="MarginContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+script = ExtResource("1_tjmj8")
+
+[node name="commands" type="VBoxContainer" parent="."]
+layout_mode = 2
+size_flags_vertical = 0
+
+[node name="next" type="HBoxContainer" parent="commands"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="commands/next"]
+layout_mode = 2
+text = "Next content:"
+
+[node name="Action" type="Label" parent="commands/next"]
+layout_mode = 2
+
+[node name="select" type="HBoxContainer" parent="commands"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="commands/select"]
+layout_mode = 2
+text = "Select option:"
+
+[node name="Action" type="Label" parent="commands/select"]
+layout_mode = 2
+
+[node name="confirm" type="HBoxContainer" parent="commands"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="commands/confirm"]
+layout_mode = 2
+text = "Confirm option:"
+
+[node name="Action" type="Label" parent="commands/confirm"]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+text = "Press any key to start dialogue"
+
+[node name="HUD" type="CanvasLayer" parent="."]
+
+[node name="ClydeDialogueConfig" type="Node" parent="HUD"]
+script = ExtResource("2_bouif")
+_dialogue_bubble = ExtResource("3_8rmxq")
+
+[node name="jules" type="Sprite2D" parent="."]
+position = Vector2(382, 257)
+texture = ExtResource("4_iuwpv")
+
+[node name="Label" type="Label" parent="jules"]
+offset_left = -27.0
+offset_top = 54.0
+offset_right = 13.0
+offset_bottom = 77.0
+text = "Jules"
+
+[node name="bubble_position" type="Node2D" parent="jules"]
+position = Vector2(59, -65)
+
+[node name="vincent" type="Sprite2D" parent="."]
+self_modulate = Color(0, 0.509804, 0.513726, 1)
+position = Vector2(764, 257)
+texture = ExtResource("4_iuwpv")
+
+[node name="Label" type="Label" parent="vincent"]
+offset_left = -36.0
+offset_top = 54.0
+offset_right = 23.0
+offset_bottom = 77.0
+text = "Vincent"
+
+[node name="bubble_position" type="Node2D" parent="vincent"]
+position = Vector2(59, -65)
+
+[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]

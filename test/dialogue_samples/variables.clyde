@@ -21,6 +21,7 @@
 { set a = b = c = d = 3 }
 { set a += b }
 { set a -= 4 ^ 2 }
+{ set @ex = true }
 
 trigger {trigger some_event}
 {trigger another_event}

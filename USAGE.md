@@ -11,64 +11,78 @@ This is `ClydeDialogue`'s interface:
 ```gdscript
 extends Node
 
-signal variable_changed(variable_name, value, previous_vale)
-signal event_triggered(event_name)
+signal variable_changed(variable_name: String, value; Variant, previous_vale: Variant)
+signal external_variable_changed(name: String, value: Variant, previous_value: Variant)
+signal event_triggered(event_name; String)
 
 # Load dialogue file
 # file_name: path to the dialogue file.
 #            i.e 'my_dialogue', 'res://my_dialogue.clyde', res://my_dialogue.json
 # block: block name to run. This allows keeping
 #        multiple dialogues in the same file.
-func load_dialogue(file_name, block = null)
+func load_dialogue(file_name: String, block: String = "") -> Void
 
 
 # Start or restart dialogue. Variables are not reset.
-func start(block_name = null)
+func start(block_name: String = "") -> void
 
 
 # Get next dialogue content.
 # The content may be a line, options or null.
 # If null, it means the dialogue reached an end.
-func get_content():
+func get_content() -> Dictionary
 
 
 # Choose one of the available options.
 # option_index: index starting in 0.
-func choose(option_index)
+func choose(option_index: int) -> void
 
 
 # Set variable to be used in the dialogue
 # name: variable name
 # value: variable value
-func set_variable(name, value)
+func set_variable(name: String, value: Variant) -> Variant
 
 
 # Get current value of a variable inside the dialogue.
 # name: variable name
-func get_variable(name)
+func get_variable(name: String) -> Variant
+
+
+# Set external variable to be used in the dialogue.
+# External variables can be accessed using the `@` prefix and
+# are not included in the save object, so they are not persisted between runs.
+func set_external_variable(name: String, value: Variant) -> Variant
+
+
+# Get current value of an external variable set to the dialogue.
+# External variables are not persisted between dialogue runs, but they can
+# be modified inside the dialogue.
+func get_external_variable(name: String) -> Variant
 
 
 # Return all variables and internal variables. Useful for persisting the dialogue's internal
 # data, such as options already choosen and random variations states.
-func get_data()
+func get_data(): Dictionary
 
 
 # Load internal data
-func load_data(data)
+func load_data(data: Dictionary) -> void
 
 
 # Clear all internal data
-func clear_data()
+func clear_data() -> void
+
 
 # Set optional settings for current interpreter. [br]
 # Options:
 #   include_hidden_options (boolean, default false): Returns conditional options event when check resulted in false.
 #
-func configure(options)
+func configure(options: Dictionary) -> void
 
 
 ## Checks if a block with the given name exists.
-func has_block(block_name)
+func has_block(block_name: String) -> bool
 ```
 
 ### Creating an object
@@ -178,6 +192,8 @@ func _on_variable_changed(variable_name, value, previous_vale):
 
 ```
 
+For external variables, use the `external_variable_changed` signal.
+
 ### Listening to events
 
 You can listen to events triggered by the dialogue by observing the `event_triggered` signal.
@@ -247,6 +263,12 @@ You should not change this object manually. If you want't to change a variable u
     _dialogue.set_variable("health", character.health)
 ```
 
+Variables set via `set_variable` are included in the dialogue data object. This might not be ideal in cases where the data does not belong to the dialogue. For instance,
+in the example setting the health, all dialogues will contain a version of that value, which will increase your save file size.
+
+To workaround this you should use `set_external_variable`. Variables set this way will only be available in the current dialogue instance and won't be included in the persistence object.
+To access external variables in your dialogue use the `@` prefix (i.e health becomes `@health`).
+
 
 ### Translations / Localisation
 
@@ -272,6 +294,6 @@ dialogue.load_dialogue("res://samples/banana.clyde")
 
 ## Examples
 
-You can find usage examples on [/example/](./example/) folder.
+You can find usage examples on [/example/](./addons/clyde/examples/) folder.
 
 

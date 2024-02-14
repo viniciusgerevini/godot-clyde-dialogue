@@ -1,0 +1,34 @@
+[gd_scene load_steps=3 format=3 uid="uid://b07csfwvymaeu"]
+
+[ext_resource type="Script" path="res://addons/clyde/editor/editor/multi_editor.gd" id="1_cgdav"]
+[ext_resource type="PackedScene" uid="uid://ds44yak1vowc1" path="res://addons/clyde/editor/editor/search_bar.tscn" id="2_rdvmm"]
+
+[node name="MultiEditor" type="MarginContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_cgdav")
+
+[node name="container" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="editors" type="MarginContainer" parent="container"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="DefaultEditor" type="MarginContainer" parent="container/editors"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="search_bar" parent="container" instance=ExtResource("2_rdvmm")]
+visible = false
+layout_mode = 2
+
+[connection signal="next_pressed" from="container/search_bar" to="." method="_on_search_bar_next_pressed"]
+[connection signal="previous_pressed" from="container/search_bar" to="." method="_on_search_bar_previous_pressed"]
+[connection signal="search_closed" from="container/search_bar" to="." method="_on_search_bar_search_closed"]
+[connection signal="search_text_changed" from="container/search_bar" to="." method="_on_search_bar_search_text_changed"]

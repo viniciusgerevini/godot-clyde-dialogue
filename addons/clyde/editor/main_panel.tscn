@@ -1,0 +1,105 @@
+[gd_scene load_steps=8 format=3 uid="uid://cux0i1kt0tw3u"]
+
+[ext_resource type="Script" path="res://addons/clyde/editor/main_panel.gd" id="1_vr0bg"]
+[ext_resource type="PackedScene" uid="uid://c1vmpgpv2jrpx" path="res://addons/clyde/editor/top_bar.tscn" id="2_u6411"]
+[ext_resource type="PackedScene" uid="uid://y4xxgq3fdok8" path="res://addons/clyde/editor/file_list.tscn" id="3_gbtsb"]
+[ext_resource type="PackedScene" uid="uid://xw1w6iil2jcw" path="res://addons/clyde/editor/block_list.tscn" id="4_thgot"]
+[ext_resource type="PackedScene" uid="uid://b07csfwvymaeu" path="res://addons/clyde/editor/editor/multi_editor.tscn" id="5_6qvkm"]
+[ext_resource type="PackedScene" uid="uid://po7pmftb1orn" path="res://addons/clyde/editor/player/player.tscn" id="6_laobm"]
+[ext_resource type="PackedScene" uid="uid://bm1ht3mndadas" path="res://addons/clyde/editor/tools/csv_exporter.tscn" id="7_wy00i"]
+
+[node name="MainPanel" type="MarginContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+script = ExtResource("1_vr0bg")
+
+[node name="HSplitContainer" type="HSplitContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TopBar" parent="HSplitContainer/VBoxContainer" instance=ExtResource("2_u6411")]
+layout_mode = 2
+
+[node name="HSplitContainer" type="HSplitContainer" parent="HSplitContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Lists" type="VBoxContainer" parent="HSplitContainer/VBoxContainer/HSplitContainer"]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+
+[node name="VSplitContainer" type="VSplitContainer" parent="HSplitContainer/VBoxContainer/HSplitContainer/Lists"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="FileList" parent="HSplitContainer/VBoxContainer/HSplitContainer/Lists/VSplitContainer" instance=ExtResource("3_gbtsb")]
+layout_mode = 2
+
+[node name="BlockList" parent="HSplitContainer/VBoxContainer/HSplitContainer/Lists/VSplitContainer" instance=ExtResource("4_thgot")]
+layout_mode = 2
+
+[node name="MultiEditor" parent="HSplitContainer/VBoxContainer/HSplitContainer" instance=ExtResource("5_6qvkm")]
+layout_mode = 2
+
+[node name="Player" parent="HSplitContainer" instance=ExtResource("6_laobm")]
+layout_mode = 2
+
+[node name="CsvExporterWindow" parent="." instance=ExtResource("7_wy00i")]
+visible = false
+
+[connection signal="clear_recent_files_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_clear_recent_files_triggered"]
+[connection signal="close_all_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_close_all_triggered"]
+[connection signal="close_file_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_close_file_triggered"]
+[connection signal="close_other_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_close_other_triggered"]
+[connection signal="create_csv_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_create_csv_triggered"]
+[connection signal="execute_dialogue" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_execute_dialogue"]
+[connection signal="generate_ids_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_generate_ids_triggered"]
+[connection signal="new_file_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_new_file_triggered"]
+[connection signal="open_file_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_open_file_triggered"]
+[connection signal="open_online_docs_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_open_online_docs_triggered"]
+[connection signal="recent_file_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_recent_file_triggered"]
+[connection signal="reload_from_disk" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_reload_from_disk"]
+[connection signal="report_issue_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_report_issue_triggered"]
+[connection signal="save_all_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_save_all_triggered"]
+[connection signal="save_as_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_save_as_triggered"]
+[connection signal="save_file_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_save_file_triggered"]
+[connection signal="show_in_filesystem_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_show_in_filesystem_triggered"]
+[connection signal="toggle_file_list_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_toggle_file_list_triggered"]
+[connection signal="toggle_follow_execution" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_toggle_follow_execution"]
+[connection signal="toggle_player_sync" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_toggle_player_sync"]
+[connection signal="toggle_player_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_toggle_player_triggered"]
+[connection signal="close_all_triggered" from="HSplitContainer/VBoxContainer/HSplitContainer/Lists/VSplitContainer/FileList" to="." method="_on_file_list_close_all_triggered"]
+[connection signal="close_file_triggered" from="HSplitContainer/VBoxContainer/HSplitContainer/Lists/VSplitContainer/FileList" to="." method="_on_file_list_close_file_triggered"]
+[connection signal="close_other_triggered" from="HSplitContainer/VBoxContainer/HSplitContainer/Lists/VSplitContainer/FileList" to="." method="_on_file_list_close_other_triggered"]
+[connection signal="copy_current_path_triggered" from="HSplitContainer/VBoxContainer/HSplitContainer/Lists/VSplitContainer/FileList" to="." method="_on_file_list_copy_current_path_triggered"]
+[connection signal="file_selected" from="HSplitContainer/VBoxContainer/HSplitContainer/Lists/VSplitContainer/FileList" to="." method="_on_file_list_file_selected"]
+[connection signal="reload_from_disk" from="HSplitContainer/VBoxContainer/HSplitContainer/Lists/VSplitContainer/FileList" to="." method="_on_file_list_reload_from_disk"]
+[connection signal="save_as_triggered" from="HSplitContainer/VBoxContainer/HSplitContainer/Lists/VSplitContainer/FileList" to="." method="_on_file_list_save_as_triggered"]
+[connection signal="save_file_triggered" from="HSplitContainer/VBoxContainer/HSplitContainer/Lists/VSplitContainer/FileList" to="." method="_on_file_list_save_file_triggered"]
+[connection signal="show_in_filesystem_triggered" from="HSplitContainer/VBoxContainer/HSplitContainer/Lists/VSplitContainer/FileList" to="." method="_on_file_list_show_in_filesystem_triggered"]
+[connection signal="block_selected" from="HSplitContainer/VBoxContainer/HSplitContainer/Lists/VSplitContainer/BlockList" to="." method="_on_block_list_block_selected"]
+[connection signal="content_changed" from="HSplitContainer/VBoxContainer/HSplitContainer/MultiEditor" to="." method="_on_multi_editor_content_changed"]
+[connection signal="editor_removed" from="HSplitContainer/VBoxContainer/HSplitContainer/MultiEditor" to="." method="_on_multi_editor_editor_removed"]
+[connection signal="editor_switched" from="HSplitContainer/VBoxContainer/HSplitContainer/MultiEditor" to="." method="_on_multi_editor_editor_switched"]
+[connection signal="parsing_finished" from="HSplitContainer/VBoxContainer/HSplitContainer/MultiEditor" to="." method="_on_multi_editor_parsing_finished"]
+[connection signal="close_triggered" from="HSplitContainer/Player" to="." method="_on_player_close_triggered"]
+[connection signal="content_finished_changing" from="HSplitContainer/Player" to="." method="_on_player_content_finished_changing"]
+[connection signal="dialogue_mem_clean" from="HSplitContainer/Player" to="." method="_on_player_dialogue_mem_clean"]
+[connection signal="dialogue_reset" from="HSplitContainer/Player" to="." method="_on_player_dialogue_reset"]
+[connection signal="event_triggered" from="HSplitContainer/Player" to="." method="_on_player_event_triggered"]
+[connection signal="position_selected" from="HSplitContainer/Player" to="." method="_on_player_position_selected"]
+[connection signal="toggle_debug_panel" from="HSplitContainer/Player" to="." method="_on_player_toggle_debug_panel"]
+[connection signal="variable_changed" from="HSplitContainer/Player" to="." method="_on_player_variable_changed"]

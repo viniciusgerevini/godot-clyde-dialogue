@@ -1,0 +1,122 @@
+[gd_scene load_steps=4 format=3 uid="uid://c1vmpgpv2jrpx"]
+
+[ext_resource type="Script" path="res://addons/clyde/editor/top_bar.gd" id="1_wdnc4"]
+
+[sub_resource type="Image" id="Image_juvn1"]
+data = {
+"data": PackedByteArray(255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 94, 94, 127, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 93, 93, 255, 255, 94, 94, 127, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 94, 94, 127, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 94, 94, 127, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 231, 255, 94, 94, 54, 255, 94, 94, 57, 255, 93, 93, 233, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 231, 255, 94, 94, 54, 255, 94, 94, 57, 255, 93, 93, 233, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 97, 97, 42, 255, 255, 255, 0, 255, 255, 255, 0, 255, 97, 97, 42, 255, 93, 93, 233, 255, 93, 93, 232, 255, 93, 93, 41, 255, 255, 255, 0, 255, 255, 255, 0, 255, 97, 97, 42, 255, 93, 93, 233, 255, 93, 93, 232, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 96, 96, 45, 255, 93, 93, 44, 255, 255, 255, 0, 255, 97, 97, 42, 255, 97, 97, 42, 255, 255, 255, 0, 255, 96, 96, 45, 255, 93, 93, 44, 255, 255, 255, 0, 255, 97, 97, 42, 255, 97, 97, 42, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 96, 96, 45, 255, 93, 93, 235, 255, 94, 94, 234, 255, 95, 95, 43, 255, 255, 255, 0, 255, 255, 255, 0, 255, 96, 96, 45, 255, 93, 93, 235, 255, 94, 94, 234, 255, 95, 95, 43, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 235, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 233, 255, 95, 95, 59, 255, 96, 96, 61, 255, 93, 93, 235, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 233, 255, 95, 95, 59, 255, 96, 96, 61, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0),
+"format": "RGBA8",
+"height": 16,
+"mipmaps": false,
+"width": 16
+}
+
+[sub_resource type="ImageTexture" id="ImageTexture_v4w6e"]
+image = SubResource("Image_juvn1")
+
+[node name="TopBar" type="HBoxContainer"]
+size_flags_horizontal = 3
+script = ExtResource("1_wdnc4")
+
+[node name="file_menu" type="MenuButton" parent="."]
+layout_mode = 2
+text = "File"
+switch_on_hover = true
+item_count = 13
+popup/item_0/text = "New file..."
+popup/item_0/id = 100
+popup/item_1/text = "Open..."
+popup/item_1/id = 200
+popup/item_2/text = ""
+popup/item_2/id = -1
+popup/item_2/separator = true
+popup/item_3/text = "Save"
+popup/item_3/id = 300
+popup/item_3/disabled = true
+popup/item_4/text = "Save as..."
+popup/item_4/id = 400
+popup/item_4/disabled = true
+popup/item_5/text = "Save all"
+popup/item_5/id = 500
+popup/item_5/disabled = true
+popup/item_6/text = ""
+popup/item_6/id = -1
+popup/item_6/separator = true
+popup/item_7/text = "Reload from disk"
+popup/item_7/id = 600
+popup/item_7/disabled = true
+popup/item_8/text = "Show in FileSystem"
+popup/item_8/id = 700
+popup/item_8/disabled = true
+popup/item_9/text = ""
+popup/item_9/id = -1
+popup/item_9/separator = true
+popup/item_10/text = "Close"
+popup/item_10/id = 800
+popup/item_10/disabled = true
+popup/item_11/text = "Close all"
+popup/item_11/id = 900
+popup/item_11/disabled = true
+popup/item_12/text = "Close others"
+popup/item_12/id = 1000
+popup/item_12/disabled = true
+
+[node name="tool_menu" type="MenuButton" parent="."]
+layout_mode = 2
+text = "Tool"
+switch_on_hover = true
+item_count = 5
+popup/item_0/text = "Editor"
+popup/item_0/id = -1
+popup/item_0/separator = true
+popup/item_1/text = "Show lists"
+popup/item_1/checkable = 1
+popup/item_1/checked = true
+popup/item_1/id = 100
+popup/item_2/text = "Player"
+popup/item_2/id = -1
+popup/item_2/separator = true
+popup/item_3/text = "Execute dialogue"
+popup/item_3/id = 300
+popup/item_3/disabled = true
+popup/item_4/text = "Show dialogue player"
+popup/item_4/checkable = 1
+popup/item_4/id = 200
+
+[node name="view_menu" type="MenuButton" parent="."]
+visible = false
+layout_mode = 2
+text = "View"
+switch_on_hover = true
+item_count = 2
+popup/item_0/text = "Show file and block list"
+popup/item_0/checkable = 1
+popup/item_0/checked = true
+popup/item_0/id = 100
+popup/item_1/text = "Show dialogue player"
+popup/item_1/checkable = 1
+popup/item_1/id = 200
+
+[node name="help_menu" type="MenuButton" parent="."]
+layout_mode = 2
+text = "Help"
+switch_on_hover = true
+
+[node name="right_icons" type="HBoxContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="right_icons"]
+layout_mode = 2
+theme_override_constants/margin_right = 5
+
+[node name="execute_dialogue" type="Button" parent="right_icons/MarginContainer"]
+layout_mode = 2
+tooltip_text = "Execute dialogue"
+focus_mode = 0
+disabled = true
+icon = SubResource("ImageTexture_v4w6e")
+flat = true
+
+[connection signal="pressed" from="right_icons/MarginContainer/execute_dialogue" to="." method="_on_execute_dialogue_pressed"]

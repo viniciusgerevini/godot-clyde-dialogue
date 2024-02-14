@@ -1,5 +1,7 @@
 extends RefCounted
 
+signal parsing_failure(result: Dictionary)
+
 const Lexer = preload("./Lexer.gd")
 const TokenWalker = preload("./TokenWalker.gd")
 
@@ -37,13 +39,17 @@ const _assignment_operators = {
 
 var _tokens
 
-func parse(doc):
+var _include_meta = false
+
+func parse(doc, include_meta: bool = false):
+	_include_meta = include_meta
 	var lexer = Lexer.new()
 	_tokens = TokenWalker.new()
 	_tokens.set_tokens(lexer.init(doc))
+	_tokens.unexpected_token_detected.connect(_on_unexpected_token)
 
-#	var l = Lexer.new()
-#	print(l.init(doc).get_all())
+	#var l = Lexer.new()
+	#print(l.init(doc).get_all())
 
 	var result = _document()
 	if _tokens.has_next():
@@ -90,8 +96,9 @@ func _document():
 
 func _blocks():
 	_tokens.consume([Lexer.TOKEN_BLOCK])
+	var blockToken = _tokens.current_token
 	var blocks =  [
-		BlockNode(_tokens.current_token.value, ContentNode(_lines()))
+		BlockNode(blockToken.value, ContentNode(_lines()), _meta(blockToken))
 	]
 
 	while _tokens.has_next([Lexer.TOKEN_BLOCK]):
@@ -175,6 +182,8 @@ func _line_with_speaker():
 
 func _text_line():
 	var value = _tokens.current_token.value
+	var text_column = _tokens.current_token.column
+	var text_line = _tokens.current_token.line
 	var next = _tokens.peek([Lexer.TOKEN_LINE_ID, Lexer.TOKEN_TAG])
 	var line
 
@@ -210,7 +219,8 @@ func _text_line():
 
 			_tokens.consume([Lexer.TOKEN_DEDENT, Lexer.TOKEN_EOF])
 
-	return line
+	return _with_optional_meta(line, { "line": text_line, "column": text_column })
+
 
 func _line_with_metadata():
 	match _tokens.current_token.token:
@@ -259,7 +269,8 @@ func _line_with_tags():
 
 
 func _options():
-	var options = OptionsNode([])
+	var tk = _tokens.peek()
+	var options = _with_optional_meta(OptionsNode([]), { "line": tk.line, "column": tk.column })
 
 	while _tokens.has_next([Lexer.TOKEN_OPTION, Lexer.TOKEN_STICKY_OPTION, Lexer.TOKEN_FALLBACK_OPTION]):
 		options.content.push_back(_option())
@@ -694,16 +705,16 @@ func ContentNode(content):
 	return { "type": 'content',"content": content }
 
 
-func BlockNode(blockName, content):
-	return { "type": 'block', "name": blockName, "content": content }
+func BlockNode(blockName, content, meta = null):
+	return _with_optional_meta({ "type": 'block', "name": blockName, "content": content }, meta)
 
 
 func LineNode(value, speaker = null, id = null, tags = [], id_suffixes = null):
 	return { "type": 'line', "value": value, "id": id, "speaker": speaker, "tags": tags, "id_suffixes": id_suffixes }
 
 
-func OptionsNode(content, name = null, id = null, speaker = null, tags = [], id_suffixes = null):
-	return { "type": 'options', "name": name, "content": content,"id": id, "speaker": speaker, "tags": tags, "id_suffixes": id_suffixes }
+func OptionsNode(content, name = null, id = null, speaker = null, tags = [], id_suffixes = null, meta = null):
+	return _with_optional_meta({ "type": 'options', "name": name, "content": content,"id": id, "speaker": speaker, "tags": tags, "id_suffixes": id_suffixes }, meta)
 
 
 func OptionNode(content, mode, name, id, speaker, tags, id_suffixes = null):
@@ -771,3 +782,20 @@ func EventsNode(events):
 
 func EventNode(name):
 	return { "type": 'event', "name": name }
+
+
+func _on_unexpected_token(result: Dictionary):
+	parsing_failure.emit(result)
+
+
+func _with_optional_meta(node: Dictionary, meta):
+	if meta and _include_meta:
+		node["meta"] = meta
+	return node
+
+
+func _meta(token: Dictionary):
+	return {
+		"column": token.column,
+		"line": token.line,
+	}

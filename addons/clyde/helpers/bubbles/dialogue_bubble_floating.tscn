@@ -1,0 +1,54 @@
+[gd_scene load_steps=3 format=3 uid="uid://c2aifp4pq54ut"]
+
+[ext_resource type="Script" path="res://addons/clyde/helpers/bubbles/dialogue_bubble_floating.gd" id="1_84fwq"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6p5jo"]
+content_margin_left = 10.0
+content_margin_top = 10.0
+content_margin_right = 10.0
+content_margin_bottom = 10.0
+bg_color = Color(0.129458, 0.148989, 0.180255, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.160708, 0.207614, 0.258915, 1)
+
+[node name="DialogueBubbleFloating" type="MarginContainer"]
+offset_right = 41.0
+offset_bottom = 60.0
+size_flags_vertical = 8
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+script = ExtResource("1_84fwq")
+
+[node name="panel" type="PanelContainer" parent="."]
+custom_minimum_size = Vector2(300, 40)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_6p5jo")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="panel"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="panel/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="speaker" type="Label" parent="panel/HBoxContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+
+[node name="text" type="RichTextLabel" parent="panel/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+shortcut_keys_enabled = false
+
+[node name="options" type="VBoxContainer" parent="panel/HBoxContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+size_flags_vertical = 3

@@ -1,0 +1,112 @@
+-- This file will demonstrate some of Clyde's features.
+-- Execute as you go to see it in action.
+-- By the way, this is how you add comments to your dialogues.
+
+-- basic lines
+With Clyde, any line becomes a Dialogue line.
+Of course, lines can become too wide. In those cases,
+	you can add a line break and indent the next lines so
+	they are all included in the same dialogue line.
+
+-- speaker
+narrator: This is how you define a speaker for your line.
+narrator: It also accepts multiple lines.
+		  Which might come in handy.
+-- tags
+narrator: Lines can also have ids $this_is_a_line_id
+narrator: And also tags #this_is_a_tag #happy #interesting
+
+-- variations
+(
+	- Also...
+	- Another thing...
+)
+the line before had what I call "Variations". Only one of these lines will be
+	picked for displaying.
+There are many types of variations, like "sequence", "cycle", "once", "shuffle", etc.
+	You can check the docs for details.
+( shuffle
+	- This is how you define the variation type
+	- This line used a variation type
+)
+
+-- options
+Besides variations, I guess you might want to give your players options to choose from
+	+ yes
+		Of course!
+	+ No
+		Not really.
+
+There are a few types of options
+	* Single-use
+		Single-use options are only shown once
+		<-
+	+ Sticky
+		Sticky options are always visible (unless you use conditions, but that's for later).
+		<-
+	> Fallback
+		A fallback option works like sticky options. However, when it is the only one available
+			it will be selected by default.
+		<-
+	+= Display Option
+		Any of the options before can be used with =, so the text in the option is also displayed
+			as a line.
+	+ I've heard enough...
+		Cool. Let's continue!
+
+-- diverts and blocks
+You might have noticed the <- symbol in the options example. Those are diverts.
+You can use diverts to jump to another block.
+-> another block
+
+== quick block
+But when in a block, that block will be executed until the end. Unless you divert back
+	to the caller.
+<-
+
+== another block
+By the way. This is another block.
+Blocks can be used to organise your dialogue or to keep multiple dialogues in the same file.
+You can jump as many times as you want
+-> quick block
+Here we are again!
+
+-- logic
+
+Let's step up a bit with logic blocks. { not this_is_a_false_var }
+Logic blocks can be used to define variables. { set name = "Narrator", count = 1, should_show = false }
+Those variables can be used in the text like the %name% is doing right now.
+-> condition example
+Well, let me try again. { set should_show }
+-> condition example
+{ should_show }
+	You can use these blocks in many different places.
+	Like surrounding a set of content.
+{ should_show } Before the line.
+After the line { should_show }
+And as many as you want. { should_show } { set count += 1 }
+Multiple conditions are allowed. { should_show or should_show and should_show }
+In the long or symbol form. { should_show || should_show && should_show }
+
+Needless to say, those can be used with options and variations as well.
+	+= Really? { should_show }
+	+= Awesome! { should_show }
+	+= Meh! { not should_show }
+
+-- escaping special characters
+Clyde's goal is to be simple to write. As much as possible it can identify context
+	and escape characters properly, like *, + and >. These are special options characters, but
+	in mid sentence it's obvious they can be escaped.
+However, at times Clyde is not able to understand special characters shouldn't be special. In those
+	cases you can escape them like this \: \$.
+"Or by using single or double quotes around your line. : $ # "
+
+"If you want more examples and the full language definition, check the docs at https://github.com/viniciusgerevini/clyde/blob/master/LANGUAGE.md"
+
+Good writing!
+
+
+== condition example
+They can be used in condition blocks as well. { not should_show }
+You've probably didn't see this line the first time { should_show }
+<-

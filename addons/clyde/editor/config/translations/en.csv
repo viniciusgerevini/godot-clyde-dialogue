@@ -1,0 +1,84 @@
+id,en
+PLAYER_RESTART_TOOLTIP,Restart Dialogue
+PLAYER_NEXT_LINE_TOOLTIP,Next Line
+PLAYER_FORWARD_TOOLTIP,Foward to Next Choice
+PLAYER_POLTERGEIST_TOOLTIP,Poltergeist Mode (auto-select)
+PLAYER_CLEAR_MEM_TOOLTIP,Clear Memory
+PLAYER_BALLOONS_TOOLTIP,Toggle Multi-Bubble Mode
+PLAYER_SHOW_META_TOOLTIP,Show Metadata
+PLAYER_SHOW_DEBUG_TOOLTIP,Show Debug Panel
+DEFAULT_BLOCK,Default
+NO_DIALOGUE,No dialogue
+PLAYER_BLOCK_SELECTION_TOOLTIP,Selected Block
+PLAYER_DIALOGUE_STARTED_MESSAGE,dialogue started
+EXECUTE_DIALOGUE,Execute Dialogue
+DIALOGUE_END,dialogue ended
+DIALOGUE_LOADED,dialogue loaded
+DIALOGUE_NOT_LOADED,no dialogue loaded
+FILE_MENU_NEW_FILE,New File...
+FILE_MENU_OPEN_FILE,Open...
+FILE_MENU_OPEN_RECENT,Open Recent
+FILE_MENU_RECENT_CLEAR_RECENTS,Clear Recent Files
+FILE_MENU_OPEN_RECENT_NO_RECENTS,No recent files
+FILE_MENU_SAVE_FILE,Save
+FILE_MENU_SAVE_AS,Save As...
+FILE_MENU_SAVE_ALL,Save All
+FILE_MENU_RELOAD_FROM_DISK,Reload from Disk
+FILE_MENU_SHOW_IN_FILESYSTEM,Show in FileSystem
+FILE_MENU_CLOSE,Close
+FILE_MENU_CLOSE_ALL,Close All
+FILE_MENU_CLOSE_OTHER,Close Others
+TOOL_MENU_SHOW_LISTS,Show Lists
+TOOL_MENU_SHOW_PLAYER,Show Dialogue Player
+MENU_FILE,File
+MENU_TOOL,Tools
+MENU_HELP,Help
+HELP_ONLINE_DOCS,Online Documentation
+HELP_REPORT_ISSUE,Report Issue
+TOOL_MENU_PLAYER_SECTION,Player
+TOOL_MENU_EDITOR_SECTION,Editor
+TOOL_MENU_PLAYER_SYNC,Sync Changes with Player
+TOOL_MENU_FOLLOW_EXECUTION,Follow executing line
+DEBUG_PANEL_NAME,Clyde Debug
+DEBUG_VARIABLES_LABEL,Variables
+DEBUG_HISTORY_LABEL,History
+DEBUG_EVENT_LABEL,event
+DEBUG_VARIABLE_LABEL,variable
+DEBUG_TIME,Time
+DEBUG_TYPE,Type
+DEBUG_NAME,Name
+DEBUG_VALUE,Value
+DEBUG_PREVIOUS_VALUE,Previous Value
+DEBUG_EDIT,Edit
+DEBUG_SAVE,Save
+DEBUG_REMOVE,Remove
+DEBUG_ADD_VARIABLE,Add Variable
+DEBUG_CANCEL,Cancel
+COPY_FILE_PATH,Copy File Path
+FILTER_FILES,Filter Files
+FILTER_BLOCKS,Filter Blocks
+SORT,Sort
+CLOSE_UNSAVED_FILE_MESSAGE,Close and save changes?
+CLOSE_UNSAVED_FILES_MESSAGE,Some files have unsaved changes. Are you sure you want to close them?
+RELOAD_UNSAVED_FILE,File has unsaved changes. Reload from disk?
+DISCARD,Discard
+DIALOGUE,Dialogue
+GENERATE_LINE_IDS,Generate Line IDs
+CREATE_CSV,Create Translation CSV...
+CSV_EXPORTER_WINDOW_TITLE,Export dialogue lines as CSV
+CSV_EXPORTER_FILE,CSV File
+CSV_EXPORTER_NEW_FILE,Select file
+CSV_EXPORTER_NEW_FILE_DESC,File to store CSV lines. Previous content will be replaced.
+CSV_EXPORTER_INCLUDE_METADATA,Include metadata
+CSV_EXPORTER_INCLUDE_METADATA_DESC,Adds extra line to CSV file with extra data. (i.e. speaker and tags)
+CSV_EXPORTER_INCLUDE_HEADER,Include header
+CSV_EXPORTER_INCLUDE_HEADER_DESC,"Include file header (id, locale)"
+CSV_EXPORTER_HEADER_LOCALE,Locale
+CSV_EXPORTER_HEADER_LOCALE_DESC,The locale of the original dialogue to be used in the header. It can be any value. Check Godot's supported locales.
+CSV_EXPORTER_DELIMITER,Column delimiter
+CSV_EXPORTER_DELIMITER_DESC,"Symbol used to separate columns. Default ','. Has to be one character."
+CSV_EXPORTER_OPTIONS,Option
+CSV_EXPORTER_EXPORT,Export CSV
+CSV_FILE_EXISTS_WARNING,Selected file already exists. Content will be overwritten.
+CSV_EXPORTER_SUCCEED,CSV export succeeded
+CSV_EXPORTER_FAIL,CSV export failed

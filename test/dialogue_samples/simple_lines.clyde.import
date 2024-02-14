@@ -1,7 +1,7 @@
 [remap]
 
 importer="clyde.dialogue"
-type="PackedDataContainer"
+type="ClydeDialogueFile"
 uid="uid://c0gccugafkk51"
 path="res://.godot/imported/simple_lines.clyde-98fe219190b436758a9f898c27848bed.res"
 
