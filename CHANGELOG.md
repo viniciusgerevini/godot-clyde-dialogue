@@ -13,6 +13,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### Added
 
 - Assignment initializer operator `?=`. It only assigns if variable was not set before.
+- `has_block` method helper to check if block exists before starting dialogue. (@HexagonNico)
 
 ### Changed
 
@@ -31,6 +32,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 - Thanks to @Rubonnek for finding and fixing the exit crash.
 - Thanks to @ThePat02 for updating the doc comments to be Godot 4's doc comments.
+- Thanks to @HexagonNico for implementing the `has_block` helper.
 
 ## 3.2.1 (2023-09-07)
 
