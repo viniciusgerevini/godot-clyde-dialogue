@@ -646,3 +646,10 @@ func test_uses_configured_dialogue_folder():
 
 	for line in lines:
 		assert_eq_deep(dialogue.get_content(), line)
+
+
+func test_has_blocks():
+	var dialogue = ClydeDialogue.new()
+	dialogue.load_dialogue('blocks')
+	assert_true(dialogue.has_block("intro"), "Should have block")
+	assert_false(dialogue.has_block("some-block-that-definitely-doesnt-exist"), "Should not have block")

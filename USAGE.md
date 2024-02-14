@@ -66,6 +66,9 @@ func clear_data()
 #
 func configure(options)
 
+
+## Checks if a block with the given name exists.
+func has_block(block_name)
 ```
 
 ### Creating an object
