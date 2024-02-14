@@ -359,7 +359,6 @@ func test_variation_default_shuffle():
 	for _i in range(5):
 		interpreter.select_block()
 		var rdc = interpreter.get_content().text
-		print(rdc)
 		assert_has(random_default_cycle, rdc)
 
 

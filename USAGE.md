@@ -82,7 +82,7 @@ func configure(options: Dictionary) -> void
 
 
 ## Checks if a block with the given name exists.
-func has_block(block_name)
+func has_block(block_name: String) -> bool
 ```
 
 ### Creating an object

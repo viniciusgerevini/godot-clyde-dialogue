@@ -84,7 +84,7 @@ func start(block_name: String = "") -> void:
 
 
 ## Checks if a block with the given name exists.
-func has_block(block_name):
+func has_block(block_name: String) -> bool:
 	return _interpreter.has_block(block_name)
 
 
