@@ -106,12 +106,28 @@ func get_variable(name: String) -> Variant:
 	return _interpreter.get_variable(name)
 
 
-## Set callback to be used when requesting external variables
+## Set callback to be used when requesting external variables.
+## This callback should return the value for the requested variable, which will
+## be used in the dialogue.
+## Usage:
+## [codeblock]
+## dialogue.on_external_variable_fetch(func (variable_name: String):
+##    # do the logic to get the correct value for variable_name
+##    return 0
+## )
+## [/codeblock]
 func on_external_variable_fetch(callback: Callable) -> void:
 	_interpreter.on_external_variable_fetch(callback)
 
 
 ## Set callback to be used when an external variable is updated in the dialogue
+## Usage:
+## [codeblock]
+## dialogue.on_external_variable_update(func (variable_name: String, value: Variant):
+##    # do the logic to persist new value for variable
+##    persistence.set(variable_name, value)
+## )
+## [/codeblock]
 func on_external_variable_update(callback: Callable) -> void:
 	_interpreter.on_external_variable_update(callback)
 
