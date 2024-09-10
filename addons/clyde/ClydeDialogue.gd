@@ -132,13 +132,6 @@ func on_external_variable_update(callback: Callable) -> void:
 	_interpreter.on_external_variable_update(callback)
 
 
-## Get current value of an external variable set to the dialogue.[br]
-## External variables are not persisted between dialogue runs, but they can
-## be modified inside the dialogue.
-func get_external_variable(name: String) -> Variant:
-	return _interpreter.get_variable(name)
-
-
 ## Return all variables and internal variables. Useful for persisting the dialogue's internal
 ## data, such as options already choosen and random variations states.
 func get_data() -> Dictionary:

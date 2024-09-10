@@ -7,7 +7,6 @@ const DialogueBubbleFixed = preload("res://addons/clyde/helpers/bubbles/dialogue
 signal dialogue_started(dialogue_path: String, block: String)
 signal dialogue_ended(dialogue_path: String, block: String)
 signal variable_changed(variable_name: String, value: Variant, old_value: Variant)
-signal external_variable_changed(variable_name: String, value: Variant, old_value: Variant)
 signal event_triggered(event_name: String)
 signal speaker_changed(current_speaker: String, previous_speaker: String)
 
@@ -25,6 +24,9 @@ var _speaker_data = {}
 var _bubbles = {}
 var _current_bubble = null
 var _current_speaker := ""
+
+var _external_variable_fetch_callback
+var _external_variable_update_callback
 
 ## Start a dialogue. This will create the dialogue bubble based on the configuration set in
 ## the dialogue config node.
@@ -45,6 +47,8 @@ var _current_speaker := ""
 ## to the dialogue and available to be accessed as `@npc_name`. The whole object will be passed to
 ## the set_speaker method in the dialogue bubble as is.
 ##
+## NOTE: Variables defined via the speakers dictionary have preference over the external variable fetch callback
+## and can't be edited via dialogue.
 func start_dialogue(path: String, block: String = "", speakers: Dictionary = {}) -> void:
 	load_dialogue(path, block, speakers)
 	start()
@@ -64,9 +68,43 @@ func load_dialogue(path: String, block: String = "", speakers: Dictionary = {}) 
 	_load_data(path, block)
 	_load_speakers(speakers)
 	_dialogue.variable_changed.connect(_on_variable_changed)
-	_dialogue.external_variable_changed.connect(_on_external_variable_changed)
 	_dialogue.event_triggered.connect(_on_event_triggered)
 	_has_dialogue_ended = false
+
+	_dialogue.on_external_variable_fetch(func (variable_name: String):
+		if _is_speaker_variable(variable_name):
+			return _get_speaker_variable(variable_name)
+
+		return _current_config._on_external_variable_fetch(variable_name)
+	)
+
+	_dialogue.on_external_variable_update(func (variable_name: String, value: Variant):
+		_current_config._on_external_variable_update(variable_name, value)
+	)
+
+
+func _is_speaker_variable(variable_name: String) -> bool:
+	var parts := variable_name.split("_", true, 1)
+	if parts.size() < 2:
+		return false
+	var prefix = parts[0]
+	var var_name = parts[1]
+
+	if not _speaker_data.has(prefix) or not _speaker_data[prefix].has("variables"):
+		return false
+
+	if not _speaker_data[prefix].variables.has(var_name):
+		return false
+
+	return true
+
+
+func _get_speaker_variable(variable_name: String) -> Variant:
+	var parts := variable_name.split("_", true, 1)
+	var prefix = parts[0]
+	var var_name = parts[1]
+
+	return _speaker_data[prefix].variables[var_name]
 
 
 func _load_data(path: String, block: String) -> void:
@@ -79,15 +117,6 @@ func _load_data(path: String, block: String) -> void:
 func _load_speakers(speakers: Dictionary):
 	for key in speakers:
 		_speaker_data[key] = speakers[key]
-		_set_variables_for_speaker(key, _speaker_data[key] )
-
-
-func _set_variables_for_speaker(speaker_name: String, data):
-	if not data.has("variables"):
-		return
-	for key in data.variables:
-		var var_name = "%s_%s" % [speaker_name, key]
-		_dialogue.set_external_variable(var_name, data.variables[key])
 
 
 ## Start pre-loaded dialogue
@@ -107,14 +136,16 @@ func get_variable(var_name: String) -> Variant:
 	return _dialogue.get_variable(var_name)
 
 
-## set external variable to current running dialogue
-func set_external_variable(var_name: String, value: Variant) -> Variant:
-	return _dialogue.set_external_variable(var_name, value)
+## Set callback to be used when requesting external variables.
+## This callback should return the value for the requested variable, which will
+## be used in the dialogue.
+func on_external_variable_fetch(callback: Callable) -> void:
+	_external_variable_fetch_callback = callback
 
 
-## get external variable from current running dialogue
-func get_external_variable(var_name: String) -> Variant:
-	return _dialogue.get_external_variable(var_name)
+## Set callback to be used when an external variable is updated in the dialogue
+func on_external_variable_update(callback: Callable) -> void:
+	_external_variable_update_callback = callback
 
 
 func _load_config():
@@ -126,10 +157,6 @@ func _load_config():
 
 func _on_variable_changed(variable_name: String, value: Variant, old_value: Variant):
 	variable_changed.emit(variable_name, value, old_value)
-
-
-func _on_external_variable_changed(variable_name: String, value: Variant, old_value: Variant):
-	external_variable_changed.emit(variable_name, value, old_value)
 
 
 func _on_event_triggered(event_name: String):
