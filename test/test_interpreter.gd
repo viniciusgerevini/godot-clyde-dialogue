@@ -457,6 +457,8 @@ func test_set_variables():
 	assert_eq_deep(dialogue.get_content().text, "not")
 
 
+
+var ext_assignment = { "var": "", "value": 0 }
 func test_external_variables_assignments():
 	var interpreter = ClydeDialogue.Interpreter.new()
 	var content = parse("""
@@ -464,43 +466,39 @@ func test_external_variables_assignments():
 { set @var = 1 }
 """)
 	interpreter.init(content)
+	interpreter.on_external_variable_update(funcref(self, "_ext_var_update_callback"))
 	assert_eq_deep(interpreter.get_content().type, 'end')
+	yield_frames(5) # wait a few frames to ensure callback was triggered
 	assert_eq(interpreter.get_variable("var"), 2)
-	assert_eq(interpreter.get_external_variable("var"), 1)
-	interpreter.set_variable("var", 42)
-	interpreter.set_external_variable("var", 43)
-	assert_eq(interpreter.get_variable("var"), 42)
-	assert_eq(interpreter.get_external_variable("var"), 43)
+	assert_eq(ext_assignment.var, "var")
+	assert_eq(ext_assignment.value, 1)
 
 
-func test_external_variables_not_included_in_data():
-	var interpreter = ClydeDialogue.Interpreter.new()
-	var content = parse("""
-{ set var = 2 }
-{ set @var2 = 1 }
-""")
-	interpreter.init(content)
-	interpreter.get_content()
-	interpreter.set_external_variable("var3", 42)
+func _ext_var_update_callback(variable_name, value):
+		ext_assignment.var = variable_name
+		ext_assignment.value = value
 
-	assert_does_not_have(interpreter.get_data().variables, "var3")
-	assert_does_not_have(interpreter.get_data().variables, "var2")
-	assert_has(interpreter.get_data().variables, "var")
 
 
 func test_external_variables_interpolation():
 	var interpreter = ClydeDialogue.Interpreter.new()
 	var content = parse("""
 { set var = 2 } this is setting a regular v %var% e %@var%
-{ set @var = 1} this is setting an external var v %var% e %@var%
 vars where changed externally v %var% e %@var%
 """)
 	interpreter.init(content)
 	assert_eq_deep(interpreter.get_content().text, 'this is setting a regular v 2 e ')
-	assert_eq_deep(interpreter.get_content().text, 'this is setting an external var v 2 e 1')
+
+	interpreter.on_external_variable_fetch(funcref(self, "_external_variable_fetch_callback"))
+
 	interpreter.set_variable("var", 42)
-	interpreter.set_external_variable("var", 43)
 	assert_eq_deep(interpreter.get_content().text, 'vars where changed externally v 42 e 43')
+
+
+
+func _external_variable_fetch_callback(_variable_name):
+	return 43
+
 
 
 func test_data_control():
@@ -610,7 +608,6 @@ func test_events():
 	dialogue.load_dialogue('variables')
 	dialogue.connect("event_triggered", self, "_on_event_triggered")
 	dialogue.connect("variable_changed", self, "_on_variable_changed")
-	dialogue.connect("external_variable_changed", self, "_on_external_variable_changed")
 
 	pending_events.push_back({ "type": "variable", "name": "xx", "value": true })
 	pending_events.push_back({ "type": "variable", "name": "first_time", "value": 2.0 })
@@ -629,7 +626,6 @@ func test_events():
 	pending_events.push_back({ "type": "variable", "name": "hp", "value": 5.0 })
 	pending_events.push_back({ "type": "variable", "name": "s", "value": false })
 	pending_events.push_back({ "type": "variable", "name": "x", "value": true })
-	pending_events.push_back({ "type": "variable", "name": "ex", "value": true })
 
 	while true:
 		var res = dialogue.get_content()
@@ -643,12 +639,6 @@ func test_events():
 
 
 func _on_variable_changed(name, value, _previous_value):
-	for e in pending_events:
-		if e.type == 'variable' and e.name == name and  typeof(e.value) == typeof(value) and  e.value == value:
-			pending_events.erase(e)
-
-
-func _on_external_variable_changed(name, value, _previous_value):
 	for e in pending_events:
 		if e.type == 'variable' and e.name == name and  typeof(e.value) == typeof(value) and  e.value == value:
 			pending_events.erase(e)

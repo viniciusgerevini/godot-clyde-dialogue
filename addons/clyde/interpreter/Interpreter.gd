@@ -1,7 +1,6 @@
 extends Reference
 
 signal variable_changed(name, value, previous_value)
-signal external_variable_changed(name, value, previous_value)
 signal event_triggered(event_name)
 
 const Memory = preload("./Memory.gd")
@@ -24,7 +23,6 @@ func init(document, interpreter_options = {}):
 	_doc._index = "r"
 	_mem = Memory.new()
 	_mem.connect("variable_changed", self, "_trigger_variable_changed")
-	_mem.connect("external_variable_changed", self, "_trigger_external_variable_changed")
 	_logic = LogicInterpreter.new()
 	_logic.init(_mem)
 
@@ -84,13 +82,12 @@ func get_variable(name):
 func set_variable(name, value):
 	return _mem.set_variable(name, value)
 
+func on_external_variable_fetch(callback: FuncRef) -> void:
+	_mem.on_external_variable_fetch(callback)
 
-func get_external_variable(name):
-	return _mem.get_external_variable(name)
 
-
-func set_external_variable(name, value):
-	return _mem.set_external_variable(name, value)
+func on_external_variable_update(callback: FuncRef) -> void:
+	_mem.on_external_variable_update(callback)
 
 
 func get_data():
@@ -508,7 +505,3 @@ func _filter(function: FuncRef, array: Array) -> Array:
 
 func _trigger_variable_changed(name, value, previous_value):
 	emit_signal("variable_changed", name, value, previous_value)
-
-
-func _trigger_external_variable_changed(name, value, previous_value):
-	emit_signal("external_variable_changed", name, value, previous_value)
