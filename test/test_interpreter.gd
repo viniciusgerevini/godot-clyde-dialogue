@@ -683,11 +683,11 @@ func test_uses_configured_dialogue_folder():
 
 	var lines = [
 		_line({ "type": "line", "text": "Dinner at Jack Rabbit Slim's:" }),
-		_line({ "type": "line", "text": "Don’t you hate that?", "speaker": "Mia" }),
+		_line({ "type": "line", "text": "Don't you hate that?", "speaker": "Mia" }),
 		_line({ "type": "line", "text": "What?", "speaker": "Vincent" }),
-		_line({ "type": "line", "text": "Uncomfortable silences. Why do we feel it’s necessary to yak about bullshit in order to be comfortable?", "speaker": "Mia", "id": "145" }),
-		_line({ "type": "line", "text": "I don’t know. That’s a good question.", "speaker": "Vincent" }),
-		_line({ "type": "line", "text": "That’s when you know you’ve found somebody special. When you can just shut the fuck up for a minute and comfortably enjoy the silence.", "speaker": "Mia", "id": "123"}),
+		_line({ "type": "line", "text": "Uncomfortable silences. Why do we feel it's necessary to yak about bullshit in order to be comfortable?", "speaker": "Mia", "id": "145" }),
+		_line({ "type": "line", "text": "I don't know. That's a good question.", "speaker": "Vincent" }),
+		_line({ "type": "line", "text": "That's when you know you've found somebody special. When you can just shut the fuck up for a minute and comfortably enjoy the silence.", "speaker": "Mia", "id": "123"}),
 	]
 
 	for line in lines:

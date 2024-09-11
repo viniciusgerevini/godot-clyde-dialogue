@@ -2,6 +2,21 @@
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## Unreleased
+
+### Breaking changes
+
+`ResourceFormatLoader.load` contract changed in Godot 3.6. In order to keep up with the latest LTS this will break compatibility with older versions.
+
+### Changed
+
+- Changed `ResourceFormatLoader.load` override to match godot 3.6
+
+
+### Thanks
+
+- Thanks @Riordan-DC for the headsup about the breaking change way before the release.
+
 ## 4.0.0 (2024-02-14)
 
 ### Breaking changes
