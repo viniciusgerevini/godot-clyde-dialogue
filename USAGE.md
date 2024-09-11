@@ -186,8 +186,6 @@ func _on_variable_changed(variable_name, value, previous_vale):
 
 ```
 
-For external variables, use the `external_variable_changed` signal.
-
 ### Listening to events
 
 You can listen to events triggered by the dialogue by observing the `event_triggered` signal.
