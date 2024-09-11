@@ -7,6 +7,7 @@ signal position_selected(dialogue_key: String, line: int, column: int)
 signal toggle_debug_panel(is_visible: bool)
 signal dialogue_mem_clean
 signal variable_changed(var_name, value, old_value)
+signal external_variable_changed(var_name, value, old_value)
 signal event_triggered(event_name)
 signal close_triggered
 
@@ -39,7 +40,8 @@ var _dialogue_key: String
 var _dialogue_has_ended = false
 var _is_waiting_for_choice = false
 var _dialogue_data = {}
-
+var _external_variables := {}
+var _has_external_variables_changed := false
 
 func _ready():
 	_load_config()
@@ -87,12 +89,15 @@ func _load_config():
 	var cfg = _settings.get_editor_config()
 	_multi_single_btn.button_pressed = cfg.get(_settings.EDITOR_CFG_PLAYER_SHOW_MULTI_BUBBLE, true)
 	_show_meta_btn.button_pressed = cfg.get(_settings.EDITOR_CFG_PLAYER_SHOW_METADATA, false)
+	_external_variables = _settings.get_external_variables()
 
 
 func set_dialogue(key: String, parsed_document: Dictionary):
 	# persist previous data
 	if _dialogue != null:
 		_dialogue_data[_dialogue_key] = _dialogue.get_data()
+
+	_update_external_variables()
 
 	_dialogue_key = key
 	_dialogue_title_field.text = key.get_file()
@@ -112,6 +117,9 @@ func set_dialogue(key: String, parsed_document: Dictionary):
 
 	_dialogue.variable_changed.connect(_on_variable_changed)
 	_dialogue.event_triggered.connect(_on_event_triggered)
+
+	_dialogue.on_external_variable_fetch(_external_variable_fetch)
+	_dialogue.on_external_variable_update(_external_variable_update)
 
 	_remove_lines()
 	_add_dialogue_loaded_line()
@@ -283,6 +291,7 @@ func _adjust_previous_line_visibility():
 func _add_dialogue_ended_line():
 	_dialogue_has_ended = true
 	_add_event_line(InterfaceText.get_string(InterfaceText.KEY_DIALOGUE_END), null)
+	_update_external_variables()
 
 
 func _add_event_line(text: String, second_line = null):
@@ -326,6 +335,12 @@ func set_variable(var_name: String, value):
 		_dialogue.set_variable(var_name, value)
 
 
+func set_external_variable(var_name: String, value):
+	_external_variables[var_name] = value
+	_has_external_variables_changed = true
+	_update_external_variables()
+
+
 func _on_variable_changed(var_name: String, value, old_value):
 	variable_changed.emit(var_name, value, old_value)
 
@@ -340,4 +355,29 @@ func _add_initial_line():
 
 
 func _on_close_button_up():
+	_update_external_variables()
 	close_triggered.emit()
+
+
+func _external_variable_fetch(var_name: String) -> Variant:
+	return _external_variables.get(var_name, null)
+
+
+func _external_variable_update(var_name: String, value: Variant) -> void:
+	_has_external_variables_changed = true
+	var old_value = _external_variables.get(var_name)
+	_external_variables[var_name] = value
+	external_variable_changed.emit(var_name, value, old_value)
+
+
+func _update_external_variables():
+	if _has_external_variables_changed:
+		_settings.set_external_variables(_external_variables)
+		_has_external_variables_changed = false
+
+
+func get_external_variables():
+	if _external_variables.is_empty():
+		_external_variables = _settings.get_external_variables()
+
+	return _external_variables.duplicate()

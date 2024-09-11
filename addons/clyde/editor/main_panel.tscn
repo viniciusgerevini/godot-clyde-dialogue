@@ -100,6 +100,7 @@ visible = false
 [connection signal="dialogue_mem_clean" from="HSplitContainer/Player" to="." method="_on_player_dialogue_mem_clean"]
 [connection signal="dialogue_reset" from="HSplitContainer/Player" to="." method="_on_player_dialogue_reset"]
 [connection signal="event_triggered" from="HSplitContainer/Player" to="." method="_on_player_event_triggered"]
+[connection signal="external_variable_changed" from="HSplitContainer/Player" to="." method="_on_player_external_variable_changed"]
 [connection signal="position_selected" from="HSplitContainer/Player" to="." method="_on_player_position_selected"]
 [connection signal="toggle_debug_panel" from="HSplitContainer/Player" to="." method="_on_player_toggle_debug_panel"]
 [connection signal="variable_changed" from="HSplitContainer/Player" to="." method="_on_player_variable_changed"]
