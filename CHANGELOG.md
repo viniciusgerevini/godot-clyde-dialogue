@@ -6,7 +6,14 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ### Breaking changes
 
-`ResourceFormatLoader.load` contract changed in Godot 3.6. In order to keep up with the latest LTS this will break compatibility with older versions.
+- `ResourceFormatLoader.load` contract changed in Godot 3.6. In order to keep up with the latest LTS this will break compatibility with older versions.
+- Changed external variables to be requested in runtime instead of set beforehand.
+  This means now there are two new methods to define the callbacks (`on_external_variable_fetch`, `on_external_variable_update`) and
+  the external variable methods `set_external_variable` and `get_external_variable` were removed.
+
+### Added
+
+- External variable fetching/updating callbacks
 
 ### Changed
 

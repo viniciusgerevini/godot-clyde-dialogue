@@ -62,3 +62,17 @@ func _load_dialogue_data(dialogue_path: String, block_name: String) -> Dictionar
 ## dialogue data.
 func _persist_dialogue_data(dialogue_path: String, block_name: String, dialogue_data: Dictionary) -> void:
 	pass
+
+
+## Override this method. Called when an external variable is updated via dialogue
+## (i.e. `{ set @hp = 100 }`)
+## This method should be used to update the external storage with the new value.
+func _on_external_variable_update(variable_name: String, value) -> void:
+	pass
+
+
+## Override this method. Called when an external variable is accessed
+## in the dialogue (i.e. `@is_alive`).
+## The value returned in this method will be used in the dialogue.
+func _on_external_variable_fetch(variable_name: String):
+	return null

@@ -12,7 +12,6 @@ This is `ClydeDialogue`'s interface:
 extends Node
 
 signal variable_changed(variable_name, value, previous_vale)
-signal external_variable_changed(name, value, previous_value)
 signal event_triggered(event_name)
 
 # Load dialogue file
@@ -48,17 +47,11 @@ func set_variable(name, value)
 # name: variable name
 func get_variable(name)
 
+# Set callback to be used when requesting external variables
+func on_external_variable_fetch(callback)
 
-# Set external variable to be used in the dialogue.
-# External variables can be accessed using the `@` prefix and
-# are not included in the save object, so they are not persisted between runs.
-func set_external_variable(name, value)
-
-
-# Get current value of an external variable set to the dialogue.
-# External variables are not persisted between dialogue runs, but they can
-# be modified inside the dialogue.
-func get_external_variable(name)
+# Set callback to be used when an external variable is updated in the dialogue
+func on_external_variable_update(callback)
 
 
 # Return all variables and internal variables. Useful for persisting the dialogue's internal
@@ -189,8 +182,6 @@ func _on_variable_changed(variable_name, value, previous_vale):
 
 ```
 
-For external variables, use the `external_variable_changed` signal.
-
 ### Listening to events
 
 You can listen to events triggered by the dialogue by observing the `event_triggered` signal.
@@ -261,11 +252,33 @@ You should not change this object manually. If you want't to change a variable u
 ```
 
 Variables set via `set_variable` are included in the dialogue data object. This might not be ideal in cases where the data does not belong to the dialogue. For instance,
-in the example setting the health, all dialogues will contain a version of that value, which will increase your save file size.
+if you pass a health variable to the dialogue, all dialogues will contain a version of that value, which will increase your save file size. You can workaround this by using external variables.
 
-To workaround this you should use `set_external_variable`. Variables set this way will only be available in the current dialogue instance and won't be included in the persistence object.
-To access external variables in your dialogue use the `@` prefix (i.e health becomes `@health`).
+### External variables
 
+External variables are accessed using the `@` prefix. i.e. `@health`. You need to define two callbacks to allow the dialogue to access and modify external variables:
+
+```gdscript
+# ...
+
+func _fetch_callback(variable_name: String):
+  return persistence[variable_name]
+
+
+func _update_callback(variable_name: String, value):
+  persistence[variable_name] = value
+
+
+_dialogue.on_external_variable_fetch(funcref(self, "_fetch_callback"))
+_dialogue.on_external_variable_update(funcref(self, "_update_callback"))
+
+```
+
+`on_external_variable_fetch` will be called any time the dialogue tries to access an external variable. i.e. `{ @health > 10 }`.
+
+`on_external_variable_update` will be called any time the dialogue tries to update an external variable. i.e `{ set @health = 100 }`
+
+External variables are just a proxy to the game variables. No external data is stored as part of the dialogue.
 
 ### Translations / Localisation
 

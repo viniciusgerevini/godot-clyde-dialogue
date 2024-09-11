@@ -27,7 +27,6 @@ func _setup_dialogue_events():
 	Dialogue.connect("dialogue_started", self, "_on_dialogue_started")
 	Dialogue.connect("dialogue_ended", self, "_on_dialogue_ended")
 	Dialogue.connect("variable_changed", self, "_on_variable_changed")
-	Dialogue.connect("external_variable_changed", self, "_on_external_variable_changed")
 	Dialogue.connect("event_triggered", self, "_on_event_triggered")
 	Dialogue.connect("speaker_changed", self, "_on_speaker_changed")
 
@@ -51,12 +50,6 @@ func _on_dialogue_ended(dialogue_name: String, block_name: String):
 # This can be used also as a form of event with payload.
 func _on_variable_changed(variable_name: String, value, old_value):
 	print("Variable changed: '%s' new: '%s' old: '%s'" % [ variable_name, value, old_value ])
-
-
-# External variables are not persisted with the dialogue. This event allows you to listen
-# to any updates to these variables and store them properly
-func _on_external_variable_changed(variable_name: String, value, old_value):
-	print("External variable changed: '%s' new: '%s' old: '%s'" % [ variable_name, value, old_value ])
 
 
 # Listen to events triggered by dialogue.
