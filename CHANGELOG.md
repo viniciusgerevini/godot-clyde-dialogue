@@ -13,6 +13,7 @@ the external variable methods `set_external_variable` and `get_external_variable
 ### Added
 
 - External variable fetching/updating callbacks
+- Editor player now supports external variables
 
 
 ## 4.0.0 (2024-02-14)
