@@ -38,10 +38,6 @@ var editor_plugin: EditorPlugin
 
 var _debug_panel
 
-# TODO fix current problems (it seems partial dialogues can cause an infinite loop (i.e. -)
-#   -- lexer has a bunch of issues with lookups
-
-
 func _ready():
 	_load_config()
 	_open_files = _load_open_files()
@@ -379,7 +375,9 @@ func _create_debug_panel():
 	_debug_panel = DebugPanel.instantiate()
 	editor_plugin.add_control_to_bottom_panel(_debug_panel, InterfaceText.get_string(InterfaceText.KEY_DEBUG_PANEL_NAME))
 	_debug_panel.load_data(player.get_data())
+	_debug_panel.load_external_variables(player.get_external_variables())
 	_debug_panel.variable_changed.connect(_on_debug_variable_changed)
+	_debug_panel.external_variable_changed.connect(_on_debug_external_variable_changed)
 	editor_plugin.make_bottom_panel_item_visible(_debug_panel)
 
 
@@ -397,9 +395,18 @@ func _on_debug_variable_changed(var_name: String, value):
 	player.set_variable(var_name, value)
 
 
+func _on_debug_external_variable_changed(var_name: String, value):
+	player.set_external_variable(var_name, value)
+
+
 func _on_player_variable_changed(var_name, value, old_value):
 	if _debug_panel != null:
 		_debug_panel.set_variable(var_name, value, old_value)
+
+
+func _on_player_external_variable_changed(var_name, value, old_value):
+	if _debug_panel != null:
+		_debug_panel.set_external_variable(var_name, value, old_value)
 
 
 func _on_player_event_triggered(event_name):

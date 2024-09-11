@@ -1,7 +1,6 @@
 extends RefCounted
 
 signal variable_changed(name: String, value: Variant, previous_value: Variant)
-signal external_variable_changed(name: String, value: Variant, previous_value: Variant)
 signal event_triggered(event_name: String)
 
 const Memory = preload("./Memory.gd")
@@ -24,7 +23,6 @@ func init(document: Dictionary, interpreter_options: Dictionary = {}) -> void:
 	_doc._index = "r"
 	_mem = Memory.new()
 	_mem.variable_changed.connect(_trigger_variable_changed)
-	_mem.external_variable_changed.connect(_trigger_external_variable_changed)
 	_logic = LogicInterpreter.new()
 	_logic.init(_mem)
 
@@ -90,12 +88,12 @@ func set_variable(name: String, value: Variant) -> Variant:
 	return _mem.set_variable(name, value)
 
 
-func set_external_variable(name: String, value: Variant) -> Variant:
-	return _mem.set_external_variable(name, value)
+func on_external_variable_fetch(callback: Callable) -> void:
+	_mem.on_external_variable_fetch(callback)
 
 
-func get_external_variable(name: String) -> Variant:
-	return _mem.get_external_variable(name)
+func on_external_variable_update(callback: Callable) -> void:
+	_mem.on_external_variable_update(callback)
 
 
 func get_data() -> Dictionary:
@@ -498,7 +496,3 @@ func _handle_real_shuffle_variation(variations):
 
 func _trigger_variable_changed(name: String, value: Variant, previous_value: Variant) -> void:
 	variable_changed.emit(name, value, previous_value)
-
-
-func _trigger_external_variable_changed(name: String, value: Variant, previous_value: Variant) -> void:
-	external_variable_changed.emit(name, value, previous_value)

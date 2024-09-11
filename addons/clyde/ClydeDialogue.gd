@@ -11,8 +11,6 @@ const Interpreter = preload('./interpreter/Interpreter.gd')
 
 ## Emits when a variable is changed inside the dialogue.
 signal variable_changed(name: String, value: Variant, previous_value: Variant)
-## Emits when an external variable is changed inside the dialogue.
-signal external_variable_changed(name: String, value: Variant, previous_value: Variant)
 ## Emits when an event is triggered inside the dialogue.
 signal event_triggered(name: String)
 
@@ -72,7 +70,6 @@ func _load_parsed_doc(doc: Dictionary, block: String = "") -> void:
 		"include_hidden_options": _options.get("include_hidden_options", false)
 	})
 	_interpreter.variable_changed.connect(_trigger_variable_changed)
-	_interpreter.external_variable_changed.connect(_trigger_external_variable_changed)
 	_interpreter.event_triggered.connect(_trigger_event_triggered)
 	if block != "":
 		_interpreter.select_block(block)
@@ -109,18 +106,30 @@ func get_variable(name: String) -> Variant:
 	return _interpreter.get_variable(name)
 
 
-## Set external variable to be used in the dialogue.
-## External variables can be accessed using the `@` prefix and
-## are not included in the save object, so they are not persisted between runs.
-func set_external_variable(name: String, value: Variant) -> Variant:
-	return _interpreter.set_variable(name, value)
+## Set callback to be used when requesting external variables.
+## This callback should return the value for the requested variable, which will
+## be used in the dialogue.
+## Usage:
+## [codeblock]
+## dialogue.on_external_variable_fetch(func (variable_name: String):
+##    # do the logic to get the correct value for variable_name
+##    return 0
+## )
+## [/codeblock]
+func on_external_variable_fetch(callback: Callable) -> void:
+	_interpreter.on_external_variable_fetch(callback)
 
 
-## Get current value of an external variable set to the dialogue.[br]
-## External variables are not persisted between dialogue runs, but they can
-## be modified inside the dialogue.
-func get_external_variable(name: String) -> Variant:
-	return _interpreter.get_variable(name)
+## Set callback to be used when an external variable is updated in the dialogue
+## Usage:
+## [codeblock]
+## dialogue.on_external_variable_update(func (variable_name: String, value: Variant):
+##    # do the logic to persist new value for variable
+##    persistence.set(variable_name, value)
+## )
+## [/codeblock]
+func on_external_variable_update(callback: Callable) -> void:
+	_interpreter.on_external_variable_update(callback)
 
 
 ## Return all variables and internal variables. Useful for persisting the dialogue's internal
@@ -161,10 +170,6 @@ func _load_clyde_file(path) -> Dictionary:
 
 func _trigger_variable_changed(name: String, value: Variant, previous_value: Variant) -> void:
 	variable_changed.emit(name, value, previous_value)
-
-
-func _trigger_external_variable_changed(name: String, value: Variant, previous_value: Variant) -> void:
-	external_variable_changed.emit(name, value, previous_value)
 
 
 func _trigger_event_triggered(name: String) -> void:

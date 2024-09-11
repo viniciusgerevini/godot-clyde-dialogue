@@ -154,3 +154,11 @@ func get_project_config(config_key: String, default):
 
 func set_project_config(config_key: String, value):
 	_editor_settings.set_project_metadata("clyde", config_key, value)
+
+
+func get_external_variables() -> Dictionary:
+	return _editor_settings.get_project_metadata("clyde", "ext_variables", {})
+
+
+func set_external_variables(variables: Dictionary) -> void:
+	_editor_settings.set_project_metadata("clyde", "ext_variables", variables)
