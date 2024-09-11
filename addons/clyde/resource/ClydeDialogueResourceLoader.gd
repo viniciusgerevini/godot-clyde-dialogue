@@ -17,5 +17,5 @@ func handles_type(typename: String) -> bool:
 	return ["ClydeDialogueFile", "Resource", "TextFile"].has(typename)
 
 
-func load(path, original_path):
+func load(path, original_path, use_sub_res_cache):
 	return ResourceLoader.load(path)
