@@ -38,6 +38,10 @@ func peek(expected = null, offset = 0):
 		return lookahead
 
 
+func has_next(expected = null, offset = 0) -> bool:
+	return peek(expected, offset) != null
+
+
 func _wrong_token_error(token, expected):
 	var expected_hints = []
 	for e in expected:

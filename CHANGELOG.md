@@ -2,6 +2,20 @@
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## Unreleased
+
+### Added
+
+- Allow defining speaker to multiple lines at once by indenting them.
+i.e
+```
+Vinny:
+    Multiple lines can be set with same speaker.
+    You just need to indent them after the speaker line.
+    Grouping lines also work this way
+        by indenting the line further.
+```
+
 ## 5.0.0 (2024-09-11)
 
 ### Breaking changes
