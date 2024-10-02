@@ -635,7 +635,7 @@ func _handle_logic_block():
 		return _handle_logic_number()
 
 	var identifier_start = RegEx.new()
-	identifier_start.compile("[A-Z|a-z|@]")
+	identifier_start.compile("[A-Z|a-z|@|_]")
 	if identifier_start.search(_input[_position]) != null:
 		return _handle_logic_identifier()
 
