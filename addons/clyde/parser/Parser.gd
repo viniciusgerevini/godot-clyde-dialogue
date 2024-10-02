@@ -128,12 +128,16 @@ func _lines():
 
 	if tk.token == Lexer.TOKEN_SPEAKER or tk.token == Lexer.TOKEN_TEXT:
 		_tokens.consume([ Lexer.TOKEN_SPEAKER, Lexer.TOKEN_TEXT ])
-		var line = _line()
-		if _tokens.has_next([Lexer.TOKEN_BRACE_OPEN]):
-			_tokens.consume([Lexer.TOKEN_BRACE_OPEN])
-			lines = [_line_with_action(line)]
+
+		if tk.token == Lexer.TOKEN_SPEAKER and _tokens.has_next([Lexer.TOKEN_INDENT]):
+			lines = _lines_with_speaker()
 		else:
-			lines = [line]
+			var line = _line()
+			if _tokens.has_next([Lexer.TOKEN_BRACE_OPEN]):
+				_tokens.consume([Lexer.TOKEN_BRACE_OPEN])
+				lines = [_line_with_action(line)]
+			else:
+				lines = [line]
 	elif tk.token == Lexer.TOKEN_OPTION or tk.token == Lexer.TOKEN_STICKY_OPTION or tk.token == Lexer.TOKEN_FALLBACK_OPTION:
 		lines = [_options()]
 	elif tk.token == Lexer.TOKEN_DIVERT or tk.token == Lexer.TOKEN_DIVERT_PARENT:
@@ -170,6 +174,28 @@ func _dialogue_line():
 			return _line_with_speaker()
 		Lexer.TOKEN_TEXT:
 			return _text_line()
+
+
+func _lines_with_speaker():
+	var speaker_token = _tokens.current_token
+	var lines = []
+	_tokens.consume([Lexer.TOKEN_INDENT])
+
+	while not _tokens.has_next([Lexer.TOKEN_DEDENT, Lexer.TOKEN_EOF]):
+		_tokens.consume([Lexer.TOKEN_TEXT])
+		var line = _text_line()
+		line.speaker = speaker_token.value;
+
+		if _tokens.has_next([Lexer.TOKEN_BRACE_OPEN]):
+			_tokens.consume([Lexer.TOKEN_BRACE_OPEN])
+			lines.push_back(_line_with_action(line))
+		else:
+			lines.push_back(line)
+
+	if _tokens.has_next([Lexer.TOKEN_DEDENT]):
+		_tokens.consume([Lexer.TOKEN_DEDENT])
+
+	return lines
 
 
 func _line_with_speaker():

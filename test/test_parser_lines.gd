@@ -119,3 +119,40 @@ this is a nested option
 	assert_eq_deep(result.content[0].content[1].meta, { "line": 3, "column": 0 })
 	assert_eq_deep(result.content[0].content[2].meta, { "line": 4, "column": 0 })
 	assert_eq_deep(result.blocks[0].meta, { "line": 7, "column": 0 })
+
+
+func test_parse_lines_grouped_by_speaker():
+		var result = parse("""
+jules:
+	First line $first #yelling #mad
+	Second line $second #sec
+	Third line w multi line $third #t
+		Still third line
+	This is conditional { some_var }
+	Fourth line $fourth
+vincent:
+	Another one
+
+""")
+
+		var expected = {
+			"type": 'document',
+			"content": [{
+				"type": 'content',
+				"content": [
+					{ "type": 'line', "value": 'First line', "id": 'first', "speaker": 'jules', "tags": [ 'yelling', 'mad' ], "id_suffixes": null },
+					{ "type": 'line', "value": 'Second line', "id": 'second', "speaker": 'jules', "tags": [ 'sec' ], "id_suffixes": null },
+					{ "type": 'line', "value": 'Third line w multi line Still third line', "id": 'third', "speaker": 'jules', "tags": [ 't' ], "id_suffixes": null },
+					{
+						"type": "conditional_content",
+						"conditions": { "type": "variable", "name": "some_var" },
+						"content": { "type": 'line', "value": 'This is conditional', "id": null, "speaker": 'jules', "tags": [], "id_suffixes": null },
+					},
+					{"type": 'line', "value": 'Fourth line', "id": "fourth", "speaker": 'jules', "tags": [], "id_suffixes": null },
+					{"type": 'line', "value": 'Another one', "id": null, "speaker": 'vincent', "tags": [], "id_suffixes": null }
+				]
+			}],
+			"blocks": []
+		}
+
+		assert_eq_deep(result, expected)
