@@ -52,7 +52,7 @@ const TOKEN_ASSIGN_MOD = "%="
 const TOKEN_ASSIGN_INIT = "?="
 const TOKEN_COMMA = ","
 const TOKEN_LINE_BREAK = "line break"
-
+const TOKEN_LINK_FILE = "link file"
 
 const MODE_DEFAULT = "DEFAULT"
 const MODE_OPTION = "OPTION"
@@ -90,6 +90,7 @@ const _token_hints = {
 	TOKEN_LE: '<=',
 	TOKEN_GREATER: '>',
 	TOKEN_LESS: '<',
+	TOKEN_LINK_FILE: "@link <import> | <import_name> = <import_path>",
 }
 
 const _keywords = [
@@ -213,6 +214,9 @@ func _get_next_token():
 
 	if _column == 0 and _check_sequence(_input, _position, "=="):
 		return _handle_block()
+
+	if _column == 0 and _check_sequence(_input, _position, "@link "):
+		return _handle_link()
 
 	if _check_sequence(_input, _position, "->"):
 		return _handle_divert()
@@ -435,6 +439,47 @@ func _handle_option_display_char():
 	return Token(TOKEN_ASSIGN, _line, initial_column)
 
 
+func _handle_link():
+	var initial_column = _column
+	var values = []
+
+	# skip @link
+	_position += 6
+	_column += 6
+
+	var link_string = ""
+
+	var link_name = ""
+	var link_path = ""
+
+	while _is_valid_position() and _input[_position] != '\n':
+		if _is_identifier(_input[_position]):
+			link_name += _input[_position]
+			_position += 1
+			_column += 1
+		else:
+			break
+
+	var has_assignment = false
+	while _is_valid_position() and _input[_position] != '\n' and (_input[_position] == ' ' or _input[_position] == '='):
+		_position += 1
+		_column += 1
+		if _input[_position] == '=':
+			has_assignment = true
+
+	if has_assignment:
+		while _is_valid_position() and _input[_position] != '\n':
+			link_path += _input[_position]
+			_position += 1
+			_column += 1
+	elif _input[_position] == "\n":
+		link_path = link_name
+
+
+	return Token(TOKEN_LINK_FILE, _line, initial_column, { "name": link_name, "path": link_path })
+
+
+
 func _handle_block():
 	var initial_column = _column
 	var values = []
@@ -453,19 +498,52 @@ func _handle_divert():
 	var values = []
 	_position += 2
 	_column += 2
-
-	while _is_valid_position() and _is_block_identifier(_input[_position]):
-		values.push_back(_input[_position])
+	
+	while _is_valid_position() and _input[_position] == " ":
 		_position += 1
 		_column += 1
 
-	var token =  Token(TOKEN_DIVERT, _line, initial_column, _array_join(values).strip_edges())
+	var token
+
+	if _input[_position] == "@":
+		_position += 1
+		_column += 1
+		token = _handle_divert_ext(initial_column)
+	else:
+		while _is_valid_position() and _is_block_identifier(_input[_position]):
+			values.push_back(_input[_position])
+			_position += 1
+			_column += 1
+
+		token = Token(TOKEN_DIVERT, _line, initial_column, _array_join(values).strip_edges())
 
 	var linebreak = _get_following_line_break()
 	if linebreak:
 		return [ token, linebreak ]
 
 	return token
+
+
+func _handle_divert_ext(initial_column):
+	var link_name = ""
+	var link_block = ""
+
+	while _is_valid_position() and _is_identifier(_input[_position]):
+		link_name += _input[_position]
+		_position += 1
+		_column += 1
+
+	if _is_valid_position() and _input[_position] == ".":
+		_position += 1
+		_column += 1
+
+		while _is_valid_position() and _is_block_identifier(_input[_position]):
+			link_block += _input[_position]
+			_position += 1
+			_column += 1
+
+	return Token(TOKEN_DIVERT, _line, initial_column, { "link": link_name, "block": link_block })
+ 
 
 
 func _handle_divert_parent():
@@ -785,6 +863,7 @@ func _is_valid_position():
 func _is_tag(character):
 	var lineId = RegEx.create_from_string("[A-Z|a-z|0-9|_|\\-|\\.]")
 	return lineId.search(character) != null
+
 
 func _is_identifier(character):
 	var lineId = RegEx.create_from_string("[A-Z|a-z|0-9|_]")

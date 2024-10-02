@@ -2,8 +2,8 @@ extends Node
 
 var Parser = preload("res://addons/clyde/parser/Parser.gd")
 
-const FILE_PATH = "res://test/dialogue_samples/logic.clyde"
-const OUTPUT_PATH = "res://generated.json"
+const FILE_PATH = "res://test/dialogue_samples/to_import.clyde"
+const OUTPUT_PATH = "res://test/dialogue_samples/to_import.json"
 
 func _ready():
 	var json

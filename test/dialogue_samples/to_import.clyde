@@ -1,0 +1,14 @@
+@link diverts
+
+== this_block_returns_back
+Let's get back.
+<-
+
+== this_block_goes_further
+I'm here
+-> @diverts.goodbye
+Let's get back.
+<-
+
+== this_block_does_not_go_back
+I'm not going back!

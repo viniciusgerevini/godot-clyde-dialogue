@@ -60,4 +60,3 @@ func _expect_assert(assertion_result, message):
 		printerr("%s: test failed: %s" % [self.name, message])
 		return false
 	return true
-

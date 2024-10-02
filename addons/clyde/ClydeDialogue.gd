@@ -8,6 +8,7 @@ class_name ClydeDialogue extends RefCounted
 
 ## The interpreter used to run the dialogue.
 const Interpreter = preload('./interpreter/Interpreter.gd')
+const FileLoader = preload("./file_loader.gd")
 
 ## Emits when a variable is changed inside the dialogue.
 signal variable_changed(name: String, value: Variant, previous_value: Variant)
@@ -23,9 +24,15 @@ const CONTENT_TYPE_OPTIONS = Interpreter.CONTENT_TYPE_OPTIONS
 ## This type is returned when the dialogue reached an end
 const CONTENT_TYPE_END = Interpreter.CONTENT_TYPE_END
 
+var _file_loader = FileLoader.new()
+
 ## Custom folder where the interpreter should look for dialogue files in case just the name is provided.
 ## By default, it loads from ProjectSettings dialogue/source_folder
-var dialogue_folder = null
+var dialogue_folder:
+	set(value):
+		_file_loader.dialogue_folder = value
+	get:
+		return _file_loader.dialogue_folder
 
 var _options = {}
 var _interpreter
@@ -43,10 +50,13 @@ func configure(options: Dictionary) -> void:
 ## file_name: path to the dialogue file. I.e 'my_dialogue', 'res://my_dialogue.clyde', res://my_dialogue.json [br]
 ## block: block name to run. This allows keeping multiple dialogues in the same file. [br]
 func load_dialogue(file_name: String, block: String = "") -> void:
-	var file = _load_file(_get_file_path(file_name))
+	var doc_path = _file_loader.get_file_path(file_name)
+	var file = _file_loader.load_file_in_path(doc_path)
 
 	if file.is_empty():
 		return
+
+	file.doc_path = doc_path
 
 	_load_parsed_doc(file, block)
 
@@ -60,6 +70,8 @@ func load_resource(resource: ClydeDialogueFile, block: String = "") -> void:
 	if file == null or file.is_empty():
 		return
 
+	file.doc_path = resource.resource_path
+
 	_load_parsed_doc(file, block)
 
 
@@ -71,6 +83,7 @@ func _load_parsed_doc(doc: Dictionary, block: String = "") -> void:
 	})
 	_interpreter.variable_changed.connect(_trigger_variable_changed)
 	_interpreter.event_triggered.connect(_trigger_event_triggered)
+	_interpreter.set_file_loader(_load_file)
 	if block != "":
 		_interpreter.select_block(block)
 
@@ -148,26 +161,6 @@ func clear_data() -> void:
 	_interpreter.clear_data()
 
 
-func _load_file(path) -> Dictionary:
-	if path.get_extension() == 'clyde':
-		return _load_clyde_file(path)
-
-	var f := FileAccess.open(path, FileAccess.READ)
-	var json_file = JSON.new()
-	var parse_error = json_file.parse(f.get_as_text())
-	f.close()
-	if parse_error != OK or typeof(json_file.data) != TYPE_DICTIONARY:
-		printerr("Failed to parse file: ", json_file.get_error_message())
-		return {}
-
-	return json_file.data
-
-
-func _load_clyde_file(path) -> Dictionary:
-	var data = load(path)
-	return data.content
-
-
 func _trigger_variable_changed(name: String, value: Variant, previous_value: Variant) -> void:
 	variable_changed.emit(name, value, previous_value)
 
@@ -176,27 +169,15 @@ func _trigger_event_triggered(name: String) -> void:
 	event_triggered.emit(name)
 
 
-func _get_file_path(file_name: String) -> String:
-	var p = file_name
-	var extension = file_name.get_extension()
-
-	if (extension == ""):
-		p = "%s.clyde" % file_name
-
-	if p.begins_with('./') or p.begins_with('res://'):
-		return p
-
-	return _get_source_folder().path_join(p)
-
-
-func _get_source_folder() -> String:
-	var cfg_folder = ProjectSettings.get_setting("dialogue/source_folder") if ProjectSettings.has_setting("dialogue/source_folder") else null
-	var folder = dialogue_folder if dialogue_folder else cfg_folder
-	# https://github.com/godotengine/godot/issues/56598
-	return folder if folder else "res://dialogues/"
-
-
 func _config_id_suffix_lookup_separator() -> String:
 	var lookup_separator = ProjectSettings.get_setting("dialogue/id_suffix_lookup_separator") if ProjectSettings.has_setting("dialogue/id_suffix_lookup_separator") else null
 	return lookup_separator if lookup_separator else "&"
 
+
+func _load_file(file_path: String):
+	var doc_path = _file_loader.get_file_path(file_path)
+	var doc = _file_loader.load_file_in_path(doc_path)
+	if doc.is_empty():
+		return doc
+	doc.doc_path = doc_path
+	return doc
