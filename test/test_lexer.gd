@@ -575,7 +575,7 @@ func test_variables_conditions():
 { variable == true }
 { variable == false }
 { variable == \"s1\" }
-{ variable == null }
+{ _variable == null }
 { @global_variable }
 
 """).get_all()
@@ -740,11 +740,11 @@ func test_variables_conditions():
 
 		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 23, "column": 0, "value": null, },
 		{ "token": Lexer.TOKEN_BRACE_OPEN, "line": 23, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_IDENTIFIER, "value": 'variable', "line": 23, "column": 2, },
-		{ "token": Lexer.TOKEN_EQUAL, "line": 23, "column": 11, "value": null, },
-		{ "token": Lexer.TOKEN_NULL_TOKEN, "line": 23, "column": 14, "value": null, },
-		{ "token": Lexer.TOKEN_BRACE_CLOSE, "line": 23, "column": 19, "value": null, },
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 23, "column": 20, "value": null, },
+		{ "token": Lexer.TOKEN_IDENTIFIER, "value": '_variable', "line": 23, "column": 2, },
+		{ "token": Lexer.TOKEN_EQUAL, "line": 23, "column": 12, "value": null, },
+		{ "token": Lexer.TOKEN_NULL_TOKEN, "line": 23, "column": 15, "value": null, },
+		{ "token": Lexer.TOKEN_BRACE_CLOSE, "line": 23, "column": 20, "value": null, },
+		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 23, "column": 21, "value": null, },
 
 		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 24, "column": 0, "value": null },
 		{ "token": Lexer.TOKEN_BRACE_OPEN, "line": 24, "column": 0, "value": null, },
