@@ -42,7 +42,7 @@ func get_file_path(file_name: String) -> String:
 	if (extension == ""):
 		p = "%s.clyde" % file_name
 
-	if p.begins_with('./') or p.begins_with('res://'):
+	if p.begins_with('./') or p.begins_with('res://') or p.begins_with('/'):
 		return p
 
 	return _get_source_folder().path_join(p)
