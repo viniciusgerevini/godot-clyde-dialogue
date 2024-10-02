@@ -15,6 +15,7 @@ const _options = [ "*", "+", ">" ]
 var _escapable_chars_regex = RegEx.create_from_string("[\\\\|\\*\\+\\>\\%\\(\\)\\{\\}\\\"\\'\\$\\#\\:]")
 var _variations_mode_regex = RegEx.create_from_string("^([\\s\\t]*)(cycle|once|sequence|shuffle(\\s+(once|cycle|sequence))?)([\\s\\t]*)$")
 var _tag_regex = RegEx.create_from_string("[A-z0-9\\-\\_\\.]")
+var _identifier_regex = RegEx.create_from_string("[A-z0-9\\-\\_]")
 var _leading_spaces_regex = RegEx.create_from_string("^\\s*")
 
 var _config = {}
@@ -222,6 +223,11 @@ func _get_regions(content: String, line_number: int) -> Dictionary:
 					regions[current_column + 1] = _identifier_region()
 				continue
 
+		# links
+		if current_column == 0 and content.begins_with("@link"):
+			current_column = _handle_link(content, current_column, regions)
+			continue
+
 		if not was_last_region_text:
 			regions[current_column] = _text_region()
 			was_last_region_text = true
@@ -339,6 +345,40 @@ func _handle_logic_mode(content: String, current_column: int, no_previous_text: 
 		"current_column": current_column,
 		"is_speaker_allowed": no_previous_text
 	}
+
+
+func _handle_link(content: String, current_column: int, regions: Dictionary) -> int:
+	regions[current_column] = _operator_region()
+	current_column += 6
+	regions[current_column] = _text_region()
+
+	while current_column < content.length() and content[current_column] == " ":
+		current_column += 1
+
+	regions[current_column] = _identifier_region()
+	
+	while current_column < content.length() and _identifier_regex.search(content[current_column]) != null:
+		current_column += 1
+
+	regions[current_column] = _text_region()
+
+	while current_column < content.length() and content[current_column] == " ":
+		current_column += 1
+
+	if current_column < content.length() and content[current_column] == "=":
+		regions[current_column] = _operator_region()
+		current_column += 1
+	else:
+		return current_column
+
+	while current_column < content.length() and content[current_column] == " ":
+		current_column += 1
+		
+	if current_column < content.length():
+		regions[current_column] = _string_literal_region()
+		while current_column < content.length():
+			current_column += 1
+	return current_column
 
 
 func _handle_logic_number_literal(current_column: int, content: String, regions: Dictionary) -> int:
