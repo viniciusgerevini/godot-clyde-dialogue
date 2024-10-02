@@ -366,7 +366,7 @@ func _handle_tag():
 	_position += 1
 	_column += 1
 
-	while _is_valid_position() and _is_identifier(_input[_position]):
+	while _is_valid_position() and _is_tag(_input[_position]):
 		values.push_back(_input[_position])
 		_position += 1
 		_column += 1
@@ -777,8 +777,16 @@ func _is_tab_char(character):
 	tab.compile("[\t ]")
 	return tab.search(character) != null
 
+
 func _is_valid_position():
 	return _position < _input.length() and _input[_position]
+
+
+func _is_tag(character):
+	var lineId = RegEx.new()
+	lineId.compile("[A-Z|a-z|0-9|_|\\.|\\-]")
+	return lineId.search(character) != null
+
 
 func _is_identifier(character):
 	var lineId = RegEx.new()

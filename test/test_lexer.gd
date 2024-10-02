@@ -404,13 +404,13 @@ speaker1: this is something $123&var1
 func test_tags():
 	var lexer = Lexer.new()
 	var tokens = lexer.init("""
-this is something #hello #happy #something_else
+this is something #hell_o #happy.mm #something-else
 """).get_all()
 	assert_eq_deep(tokens, [
 		{ "token": Lexer.TOKEN_TEXT, "value": 'this is something', "line": 1, "column": 0 },
-		{ "token": Lexer.TOKEN_TAG, "value": 'hello', "line": 1, "column": 18 },
-		{ "token": Lexer.TOKEN_TAG, "value": 'happy', "line": 1, "column": 25 },
-		{ "token": Lexer.TOKEN_TAG, "value": 'something_else', "line": 1, "column": 32 },
+		{ "token": Lexer.TOKEN_TAG, "value": 'hell_o', "line": 1, "column": 18 },
+		{ "token": Lexer.TOKEN_TAG, "value": 'happy.mm', "line": 1, "column": 26 },
+		{ "token": Lexer.TOKEN_TAG, "value": 'something-else', "line": 1, "column": 36 },
 		{ "token": Lexer.TOKEN_EOF, "line": 2, "column": 0, "value": null },
 	])
 
