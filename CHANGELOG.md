@@ -16,6 +16,11 @@ Vinny:
         by indenting the line further.
 ```
 
+### Changed
+
+- Tags now also accept `.` and `-`.
+- Variables now can start with `_`.
+
 ## 5.0.0 (2024-09-11)
 
 ### Breaking changes
