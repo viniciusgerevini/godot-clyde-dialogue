@@ -1093,3 +1093,28 @@ Pick an option.
 
 	assert_eq_deep(tab_tokens, tokens)
 
+
+func test_imports():
+	var lexer = Lexer.new()
+	var tokens = lexer.init("""
+@link to_import
+@link common = ./to_import
+@link common2 = to_import
+@link common3 = res://test/dialogue_samples/to_import.clyde
+
+-> @common.some_block_name
+-> @common
+""").get_all()
+	assert_eq_deep(tokens, [
+		{ "token": Lexer.TOKEN_LINK_FILE, "value": { "name": "to_import", "path": "to_import"}, "line": 1, "column": 0, },
+		{ "token": Lexer.TOKEN_LINK_FILE, "value": { "name": "common", "path": "./to_import"}, "line": 2, "column": 0, },
+		{ "token": Lexer.TOKEN_LINK_FILE, "value": { "name": "common2", "path": "to_import"}, "line": 3, "column": 0, },
+		{ "token": Lexer.TOKEN_LINK_FILE, "value": { "name": "common3", "path": "res://test/dialogue_samples/to_import.clyde"}, "line": 4, "column": 0, },
+
+		{ "token": Lexer.TOKEN_DIVERT, "value": { "link": "common", "block": "some_block_name" }, "line": 6, "column": 0, },
+		{ "token": Lexer.TOKEN_LINE_BREAK, "value": null, "line": 6, "column": 26, },
+		{ "token": Lexer.TOKEN_DIVERT, "value": { "link": "common", "block": "" }, "line": 7, "column": 0, },
+		{ "token": Lexer.TOKEN_LINE_BREAK, "value": null, "line": 7, "column": 10, },
+
+		{ "token": Lexer.TOKEN_EOF, "line": 8, "column": 0, "value": null, },
+	])

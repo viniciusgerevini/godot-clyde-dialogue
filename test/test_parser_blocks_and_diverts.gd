@@ -35,7 +35,8 @@ line 4
 					{ "type": 'line', "value": 'line 4', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
 				]
 			}},
-		]
+		],
+		"links": {},
 	}
 	assert_eq_deep(result, expected)
 
@@ -77,7 +78,8 @@ line 4
 					{ "type": 'line', "value": 'line 4', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
 				]
 			}},
-		]
+		],
+		"links": {},
 	}
 	assert_eq_deep(result, expected)
 
@@ -118,7 +120,8 @@ func test_parse_diverts():
 				]},
 			]
 		}],
-		"blocks": []
+		"blocks": [],
+		"links": {},
 	}
 	assert_eq_deep(result, expected)
 
@@ -135,6 +138,35 @@ func test_parse_empty_block():
 				"type": 'content',
 				"content": []
 			}},
-		]
+		],
+		"links": {},
+	}
+	assert_eq_deep(result, expected)
+
+func test_links():
+	var result = parse("""
+@link to_import
+@link common = ./to_import
+@link common2 = to_import
+@link common3 = res://test/dialogue_samples/to_import.clyde
+-> @common.some_block_name
+-> @common
+""")
+	var expected = {
+		"type": 'document',
+		"content": [{
+			"type": 'content',
+			"content": [
+				{ "type": 'divert', "target": { "link": "common", "block": "some_block_name" } },
+				{ "type": 'divert', "target": { "link": "common", "block": "" } },
+			]
+		}],
+		"blocks": [],
+		"links": {
+			"to_import": "to_import",
+			"common": "./to_import",
+			"common2": "to_import",
+			"common3": "res://test/dialogue_samples/to_import.clyde",
+		}
 	}
 	assert_eq_deep(result, expected)

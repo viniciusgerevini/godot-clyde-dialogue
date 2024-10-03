@@ -1,0 +1,17 @@
+@link to_import
+@link common = ./to_import
+@link common2 = to_import
+@link common3 = res://test/dialogue_samples/to_import.clyde
+
+Importing from default folder
+-> @to_import.this_block_returns_back
+Relative import
+-> @common.this_block_goes_further
+Default folder import
+-> @common2.this_block_returns_back
+Absolute import
+-> @common3.this_block_returns_back
+
+Now it goes and never comes back
+-> @common3.this_block_does_not_go_back
+End

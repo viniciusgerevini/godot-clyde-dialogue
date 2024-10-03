@@ -15,6 +15,7 @@ Vinny:
     Grouping lines also work this way
         by indenting the line further.
 ```
+- Support linking files using `@link` and divert to blocks in them.
 
 ### Changed
 

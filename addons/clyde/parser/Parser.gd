@@ -65,7 +65,8 @@ func _document():
 		Lexer.TOKEN_BRACKET_OPEN,
 		Lexer.TOKEN_BRACE_OPEN,
 		Lexer.TOKEN_LINE_BREAK,
-		Lexer.TOKEN_BLOCK
+		Lexer.TOKEN_BLOCK,
+		Lexer.TOKEN_LINK_FILE,
 	]
 	var next = _tokens.peek(expected)
 
@@ -73,19 +74,36 @@ func _document():
 		_tokens._wrong_token_error(next, expected)
 		return
 
+	var doc = DocumentNode()
+
 	if next.token == Lexer.TOKEN_EOF:
-		return DocumentNode()
+		return doc
+
+	# links are always at the beginnig of the file
+	if next.token == Lexer.TOKEN_LINK_FILE:
+		doc.links = _links()
+
+	# if a block token is next, it's because there is not
+	# default block
+	if _tokens.has_next([Lexer.TOKEN_BLOCK]):
+		doc.blocks = _blocks()
+		return doc
+
+	doc.content =  [ContentNode(_lines())]
+
+	if _tokens.has_next([Lexer.TOKEN_BLOCK]):
+		doc.blocks = _blocks()
+
+	return doc
 
 
-	if next.token == Lexer.TOKEN_BLOCK:
-		return DocumentNode([], _blocks())
+func _links():
+	var links = {}
+	while _tokens.has_next([Lexer.TOKEN_LINK_FILE]):
+		_tokens.consume([Lexer.TOKEN_LINK_FILE])
+		links[_tokens.current_token.value.name] = _tokens.current_token.value.path
 
-	var result =  DocumentNode([ContentNode(_lines())])
-
-	if _tokens.peek([Lexer.TOKEN_BLOCK]):
-		result.blocks = _blocks()
-
-	return result
+	return links
 
 
 func _blocks():
@@ -716,8 +734,8 @@ func _operator(operator, lhs, rhs):
 
 ## NODES
 
-func DocumentNode(content = [], blocks = []):
-	return { "type": 'document', "content": content, "blocks": blocks }
+func DocumentNode(content = [], blocks = [], links = {}):
+	return { "type": 'document', "content": content, "blocks": blocks, "links": links }
 
 
 func ContentNode(content):
@@ -741,7 +759,7 @@ func OptionNode(content, mode, name, id, speaker, tags, id_suffixes = null):
 
 
 func DivertNode(target):
-	if target == 'END':
+	if target is String and target == 'END':
 		target = '<end>'
 
 	return { "type": 'divert', "target": target }

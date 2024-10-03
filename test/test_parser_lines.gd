@@ -25,7 +25,8 @@ func test_parse_single_line():
 				"id_suffixes": null,
 			}]
 		}],
-		"blocks": []
+		"blocks": [],
+		"links": {}
 	}
 	assert_eq_deep(result, expected)
 
@@ -53,7 +54,8 @@ id last #tag #another_tag $some_id
 					{ "type": 'line', "value": 'id last', "speaker": null, "id": 'some_id', "tags": [ 'tag', 'another_tag' ], "id_suffixes": null },
 				]
 			}],
-			"blocks": []
+			"blocks": [],
+			"links": {}
 		}
 
 		assert_eq_deep(result, expected)
@@ -75,7 +77,8 @@ hello! $id_on_first_line #and_tags
 				{ "type": 'line', "value": 'hello! Just talking.', "id": 'id_on_first_line', "tags": [ 'and_tags' ], "speaker": null, "id_suffixes": null },
 			]
 		}],
-		"blocks": []
+		"blocks": [],
+		"links": {}
 	}
 	assert_eq_deep(result, expected)
 
@@ -98,7 +101,8 @@ Just talking.\"
 				{ "type": 'line', "value": 'this has $everything:', "id": 'id_on_first_line', "tags": [ 'and_tags' ], "speaker": null, "id_suffixes": null },
 			]
 		}],
-		"blocks": []
+		"blocks": [],
+		"links": {}
 	}
 	assert_eq_deep(result, expected)
 
@@ -134,7 +138,8 @@ vincent:
 					{"type": 'line', "value": 'Another one', "id": null, "speaker": 'vincent', "tags": null, "id_suffixes": null }
 				]
 			}],
-			"blocks": []
+			"blocks": [],
+			"links": {}
 		}
 
 		assert_eq_deep(result, expected)
