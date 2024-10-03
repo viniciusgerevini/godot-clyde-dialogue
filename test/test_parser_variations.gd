@@ -18,6 +18,7 @@ func test_simple_variations():
 	var expected = {
 		"type": 'document',
 		"blocks": [],
+		"links": {},
 		"content": [{
 			"type": 'content',
 			"content": [
@@ -44,6 +45,7 @@ func test_simple_variations_with_no_indentation():
 	var expected = {
 		"type": 'document',
 		"blocks": [],
+		"links": {},
 		"content": [{
 			"type": 'content',
 			"content": [
@@ -73,6 +75,7 @@ func test_nested_variations():
 	var expected = {
 		"type": 'document',
 		"blocks": [],
+		"links": {},
 		"content": [{
 			"type": 'content',
 			"content": [
@@ -108,6 +111,7 @@ func _mode_test(mode):
 	var expected = {
 		"type": 'document',
 		"blocks": [],
+		"links": {},
 		"content": [{
 			"type": 'content',
 			"content": [
@@ -142,6 +146,7 @@ func test_variations_with_options():
 	var expected = {
 		"type": 'document',
 		"blocks": [],
+		"links": {},
 		"content": [{
 			"type": 'content',
 			"content": [

@@ -321,6 +321,7 @@ func _on_top_bar_execute_dialogue():
 		_toggle_player()
 
 	var old_dialogue = player._dialogue_key
+	doc.doc_path = _current_file_path
 	player.set_dialogue(_current_file_path, doc)
 
 	if old_dialogue != _current_file_path and _debug_panel != null:

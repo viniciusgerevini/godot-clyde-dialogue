@@ -16,6 +16,8 @@ Vinny:
         by indenting the line further.
 ```
 
+- Support linking files using `@link` dn divert to blocks in them.
+
 ### Changed
 
 - Tags now also accept `.` and `-`.
