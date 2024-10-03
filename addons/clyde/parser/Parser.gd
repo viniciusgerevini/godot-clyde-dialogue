@@ -771,9 +771,6 @@ func DivertNode(target):
 	return { "type": 'divert', "target": target }
 
 
-func DivertExternalNode(target):
-	return { "type": 'divert_ext', "target": target }
-
 func VariationsNode(mode, content = []):
 	return { "type": 'variations', "mode": mode,"content": content }
 
