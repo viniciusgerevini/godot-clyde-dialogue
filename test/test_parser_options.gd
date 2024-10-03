@@ -86,6 +86,7 @@ npc: what do you want to talk about?
 		},
 		],
 		"blocks": [],
+		"links": {},
 	}
 	assert_eq_deep(result, expected)
 
@@ -148,6 +149,7 @@ npc: what do you want to talk about?
 		},
 		],
 		"blocks": [],
+		"links": {},
 	}
 	assert_eq_deep(result, expected)
 
@@ -210,6 +212,7 @@ npc: what do you want to talk about?
 		},
 		],
 		"blocks": [],
+		"links": {},
 	}
 	assert_eq_deep(result, expected)
 
@@ -275,6 +278,7 @@ npc: what do you want to talk about?
 		},
 		],
 		"blocks": [],
+		"links": {},
 	}
 	assert_eq_deep(result, expected)
 
@@ -332,6 +336,7 @@ func test_use_first_line_as_label():
 		},
 		],
 		"blocks": [],
+		"links": {},
 	}
 	assert_eq_deep(result, expected)
 
@@ -401,6 +406,7 @@ spk: second try
 		},
 		],
 		"blocks": [],
+		"links": {},
 	}
 	assert_eq_deep(result, expected)
 
@@ -468,6 +474,7 @@ func test_use_previous_line_in_quotes_as_label():
 		},
 		],
 		"blocks": [],
+		"links": {},
 	}
 	assert_eq_deep(result, expected)
 
@@ -529,6 +536,7 @@ func test_ensures_options_ending_worked():
 		},
 		],
 		"blocks": [],
+		"links": {},
 	}
 	assert_eq_deep(result, expected)
 
@@ -583,6 +591,7 @@ func test_ensures_option_item_ending_worked():
 			],
 		}],
 		"blocks": [],
+		"links": {},
 	}
 	assert_eq_deep(result, expected)
 
@@ -662,6 +671,7 @@ func test_options_with_blocks_both_sides():
 			],
 		}],
 		"blocks": [],
+		"links": {},
 	}
 	assert_eq_deep(result, expected)
 
@@ -835,5 +845,6 @@ func test_options_with_multiple_blocks_on_same_side():
 			],
 		}],
 		"blocks": [],
+		"links": {},
 	}
 	assert_eq_deep(result, expected)

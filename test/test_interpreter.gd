@@ -308,6 +308,29 @@ func test_blocks_and_diverts():
 	for line in goodbye_option:
 		assert_eq_deep(dialogue.get_content(), line)
 
+func test_links_and_diverts():
+	var dialogue = ClydeDialogue.new()
+	dialogue.load_dialogue('imports')
+
+	var lines = [
+		_line({ "type": "line", "text": "Importing from default folder" }),
+		_line({ "type": "line", "text": "Let's get back." }),
+		_line({ "type": "line", "text": "Relative import" }),
+		_line({ "type": "line", "text": "I'm here" }),
+		_line({ "type": "line", "text": "See you next time!", "speaker": "player" }),
+		_line({ "type": "line", "text": "Let's get back." }),
+		_line({ "type": "line", "text": "Default folder import" }),
+		_line({ "type": "line", "text": "Let's get back." }),
+		_line({ "type": "line", "text": "Absolute import" }),
+		_line({ "type": "line", "text": "Let's get back." }),
+		_line({ "type": "line", "text": "Now it goes and never comes back" }),
+		_line({ "type": "line", "text": "I'm not going back!" }),
+		{ "type": "end" },
+	]
+
+	for line in lines:
+		assert_eq_deep(dialogue.get_content(), line)
+
 
 func test_variations():
 	var dialogue = ClydeDialogue.new()

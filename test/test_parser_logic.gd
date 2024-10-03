@@ -13,7 +13,8 @@ func _create_doc_payload(content = [], blocks = []):
 			"type": "content",
 			"content": content
 		}],
-		"blocks": blocks
+		"blocks": blocks,
+		"links": {}
 	}
 
 func test_condition_single_var():

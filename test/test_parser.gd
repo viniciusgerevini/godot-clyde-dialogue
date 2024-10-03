@@ -8,7 +8,8 @@ func test_parse_empty_document():
 	var expected = {
 		"type": 'document',
 		"content": [],
-		"blocks": []
+		"blocks": [],
+		"links": {},
 	};
 	assert_eq_deep(result, expected);
 
@@ -19,6 +20,7 @@ func test_parse_document_with_multiple_line_breaks():
 	var expected = {
 		"type": 'document',
 		"content": [],
-		"blocks": []
+		"blocks": [],
+		"links": {},
 	};
 	assert_eq_deep(result, expected);

@@ -13,13 +13,19 @@ const CONTENT_TYPE_END = "end"
 var _mem
 var _logic
 var _doc
+var _doc_stack = []
 var _stack = []
 var _handlers = {}
 var _anchors = {}
 var _config
+var _doc_anchors = {}
+var _loaded_docs = {}
+
+var _file_loader: FuncRef
 
 func init(document, interpreter_options = {}):
 	_doc = document
+	_doc_stack.push_back(_doc)
 	_doc._index = "r"
 	_mem = Memory.new()
 	_mem.connect("variable_changed", self, "_trigger_variable_changed")
@@ -32,6 +38,7 @@ func init(document, interpreter_options = {}):
 	}
 
 	_initialise_blocks(_doc)
+	_initialise_links(_doc)
 	_initialise_stack(_doc)
 	_initialize_handlers()
 
@@ -70,7 +77,7 @@ func choose(option_index):
 
 func select_block(block_name = null):
 	if block_name:
-		_initialise_stack(_anchors[block_name])
+		_initialise_stack(_doc.anchors[block_name])
 	else:
 		_initialise_stack(_doc)
 
@@ -110,9 +117,15 @@ func _initialise_stack(root):
 
 
 func _initialise_blocks(doc):
+	doc["anchors"] = {}	
 	for i in range(doc.blocks.size()):
 		doc.blocks[i]._index = "b_%s" % doc.blocks[i].name
-		_anchors[doc.blocks[i].name] = doc.blocks[i]
+		doc.anchors[doc.blocks[i].name] = doc.blocks[i]
+	_anchors = doc.anchors
+
+
+func _initialise_links(doc: Dictionary) -> void:
+	_doc_anchors = doc.get("links", {})
 
 
 func _stack_head():
@@ -138,6 +151,7 @@ func _generate_index():
 func _initialize_handlers():
 	_handlers = {
 		"document": funcref(self, "_handle_document_node"),
+		"linked_document": funcref(self, "_handle_linked_doc"),
 		"content": funcref(self, "_handle_content_node"),
 		"line": funcref(self, "_handle_line_node"),
 		"options": funcref(self, "_handle_options_node"),
@@ -152,8 +166,10 @@ func _initialize_handlers():
 	}
 
 
-func _handle_document_node(_node):
+func _handle_document_node(doc_node):
 	var node = _stack_head()
+	_anchors = doc_node.anchors
+	_doc_anchors = doc_node.get("links", [])
 	var content_index = node.content_index + 1
 	if content_index < node.current.content.size():
 		node.content_index = content_index
@@ -330,8 +346,11 @@ func _handle_block_node(block):
 
 
 func _handle_divert_node(divert):
+	if divert.target is Dictionary:
+		return _divert_to_linked_doc(divert.target)
+
 	if divert.target == '<parent>':
-		var target_parents = ['document', 'block', 'option', 'options']
+		var target_parents = ['document', 'block', 'option', 'options', 'linked_document']
 
 		while not target_parents.has(_stack_head().current.type):
 			_stack_pop()
@@ -347,6 +366,57 @@ func _handle_divert_node(divert):
 		return { "type": CONTENT_TYPE_END }
 
 	return _handle_next_node(_anchors[divert.target])
+
+
+func _divert_to_linked_doc(link: Dictionary):
+	if not _doc_anchors.has(link.link):
+		push_error("Could not divert to '%s'. Link not found." % link.link)
+		return
+
+	var doc_path = _doc_anchors[link.link]
+
+	var doc_node
+
+	var actual_path = doc_path
+
+	if doc_path.begins_with("./") or doc_path.begins_with("../"):
+		actual_path = _get_path_relative_to_current_doc(doc_path)
+
+	if _loaded_docs.has(actual_path):
+		doc_node = _loaded_docs[actual_path]
+	else:
+		var load_path
+		var doc = _file_loader.call_func(actual_path)
+		if doc.empty():
+			push_error("Could not load file '%s'" % actual_path)
+			return { "type": CONTENT_TYPE_END }
+
+		doc._index = link.link
+		doc.type = "linked_document"
+		_initialise_blocks(doc)
+		doc_node = doc
+		_loaded_docs[actual_path] = doc
+
+	_doc_stack.push_back(doc_node)
+
+	_anchors = doc_node.anchors
+	_doc_anchors = doc_node.get("links", {})
+
+	_add_to_stack(_loaded_docs[actual_path])
+
+	if link.block == "":
+		return _handle_document_node(_loaded_docs[actual_path])
+	else:
+		return _handle_next_node(_anchors[link.block])
+
+
+func _handle_linked_doc(doc: Dictionary):
+	_doc_stack.pop_back()
+	var doc_node = _doc_stack[_doc_stack.size() - 1]
+	_anchors = doc_node.anchors
+	_doc_anchors = doc_node.links
+	_stack_pop()
+	return _handle_next_node(_stack_head().current)
 
 
 func _handle_assignments_node(assignment_node):
@@ -505,3 +575,13 @@ func _filter(function: FuncRef, array: Array) -> Array:
 
 func _trigger_variable_changed(name, value, previous_value):
 	emit_signal("variable_changed", name, value, previous_value)
+
+
+func set_file_loader(file_loader: FuncRef) -> void:
+	_file_loader = file_loader
+
+
+func _get_path_relative_to_current_doc(doc_path: String) -> String:
+	var current_doc = _doc_stack[_doc_stack.size() - 1]
+	var parent: String = current_doc.doc_path.get_base_dir()
+	return "/".join([parent, doc_path])

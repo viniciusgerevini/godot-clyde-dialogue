@@ -1,6 +1,7 @@
 extends Reference
 
 const Interpreter = preload('./interpreter/Interpreter.gd')
+const FileLoader = preload("./file_loader.gd")
 
 class_name ClydeDialogue
 
@@ -18,10 +19,12 @@ const CONTENT_TYPE_OPTIONS = Interpreter.CONTENT_TYPE_OPTIONS
 # This type is returned when the dialogue reached an end
 const CONTENT_TYPE_END = Interpreter.CONTENT_TYPE_END
 
+var _file_loader = FileLoader.new()
+
 # Custom folder where the interpreter should look for dialogue files
 # in case just the name is provided.
 # by default, it loads from ProjectSettings dialogue/source_folder
-var dialogue_folder = null
+var dialogue_folder setget _set_folder, _get_folder
 
 var _options = {}
 var _interpreter
@@ -40,12 +43,17 @@ func configure(options):
 # block: block name to run. This allows keeping
 #        multiple dialogues in the same file.
 func load_dialogue(file_name, block = null):
-	var file = _load_file(_get_file_path(file_name))
+	var doc_path = _file_loader.get_file_path(file_name)
+	var file = _file_loader.load_file_in_path(doc_path)
+	
+	file.doc_path = doc_path
+
 	_interpreter = Interpreter.new()
 	_interpreter.init(file, {
 		"id_suffix_lookup_separator": _config_id_suffix_lookup_separator(),
 		"include_hidden_options": _options.get("include_hidden_options", false)
 	})
+	_interpreter.set_file_loader(funcref(self, "_load_file"))
 	_interpreter.connect("variable_changed", self, "_trigger_variable_changed")
 	_interpreter.connect("event_triggered", self, "_trigger_event_triggered")
 	if block:
@@ -127,27 +135,6 @@ func clear_data():
 	return _interpreter.clear_data()
 
 
-func _load_file(path) -> Dictionary:
-	if path.get_extension() == 'clyde':
-		var container = _load_clyde_file(path)
-		return container as Dictionary
-
-	var f := File.new()
-	f.open(path, File.READ)
-	var result := JSON.parse(f.get_as_text())
-	f.close()
-	if result.error:
-		printerr("Failed to parse file: ", f.get_error())
-		return {}
-
-	return result.result as Dictionary
-
-
-func _load_clyde_file(path):
-	var data = load(path)
-	return data.content
-
-
 func _trigger_variable_changed(name, value, previous_value):
 	emit_signal("variable_changed", name, value, previous_value)
 
@@ -156,27 +143,22 @@ func _trigger_event_triggered(name):
 	emit_signal("event_triggered", name)
 
 
-func _get_file_path(file_name):
-	var p = file_name
-	var extension = file_name.get_extension()
-
-	if (not extension):
-		p = "%s.clyde" % file_name
-
-	if p.begins_with('./') or p.begins_with('res://'):
-		return p
-
-	return _get_source_folder().plus_file(p)
-
-
-func _get_source_folder():
-	var cfg_folder = ProjectSettings.get_setting("dialogue/source_folder") if ProjectSettings.has_setting("dialogue/source_folder") else null
-	var folder = dialogue_folder if dialogue_folder else cfg_folder
-	# https://github.com/godotengine/godot/issues/56598
-	return folder if folder else "res://dialogues/"
-
-
 func _config_id_suffix_lookup_separator():
 	var lookup_separator = ProjectSettings.get_setting("dialogue/id_suffix_lookup_separator") if ProjectSettings.has_setting("dialogue/id_suffix_lookup_separator") else null
 	return lookup_separator if lookup_separator else "&"
 
+
+func _set_folder(value):
+	_file_loader.dialogue_folder = value
+
+func _get_folder():
+		return _file_loader.dialogue_folder
+
+
+func _load_file(file_path: String):
+	var doc_path = _file_loader.get_file_path(file_path)
+	var doc = _file_loader.load_file_in_path(doc_path)
+	if doc.empty():
+		return doc
+	doc.doc_path = doc_path
+	return doc
