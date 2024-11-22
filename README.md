@@ -46,3 +46,11 @@ To help you quick start a project, I included a few helpers with this plugin. By
 You can find examples using these helpers on [/addons/clyde/examples](./addons/clyde/examples).
 
 This implementation comes with a simple fixed dialogue bubble and a floating dialogue bubble. You can adapt these helpes however you need. If you intend to change them, I recommend copying them to your project's folder so there are no conflicts when updating the plugin.
+
+## Contact and Help
+
+For issues with the plugin, feel free to open an issue in this repository.
+
+If you are looking for help on how things work, general questions, ideas or just want to share something, please use our main discussion forum: https://github.com/viniciusgerevini/clyde/discussions
+
+I also would love to see what games you've been making with Clyde. If you have any released game using clyde, share it with us on: https://github.com/viniciusgerevini/clyde/discussions/3
