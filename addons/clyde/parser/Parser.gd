@@ -139,7 +139,7 @@ func _lines():
 
 	if tk.token == Lexer.TOKEN_SPEAKER or tk.token == Lexer.TOKEN_TEXT:
 		_tokens.consume([ Lexer.TOKEN_SPEAKER, Lexer.TOKEN_TEXT ])
-	
+
 		if tk.token == Lexer.TOKEN_SPEAKER and _tokens.has_next([Lexer.TOKEN_INDENT]):
 			lines = _lines_with_speaker()
 		else:
@@ -580,16 +580,32 @@ func _assignments():
 func _events():
 	_tokens.consume([Lexer.TOKEN_KEYWORD_TRIGGER])
 	_tokens.consume([Lexer.TOKEN_IDENTIFIER])
-	var events = [EventNode(_tokens.current_token.value)]
+	var events = [_event(_tokens.current_token.value)]
 
 	while _tokens.peek([Lexer.TOKEN_COMMA]):
 		_tokens.consume([Lexer.TOKEN_COMMA])
 		_tokens.consume([Lexer.TOKEN_IDENTIFIER])
-		events.push_back(EventNode(_tokens.current_token.value))
+		events.push_back(_event(_tokens.current_token.value))
 
 	_tokens.consume([Lexer.TOKEN_BRACE_CLOSE])
 
 	return EventsNode(events)
+
+
+func _event(event_name: String):
+	if not _tokens.has_next([Lexer.TOKEN_BRACKET_OPEN]):
+		return EventNode(event_name)
+
+	_tokens.consume([Lexer.TOKEN_BRACKET_OPEN])
+
+	var params = [_expression()]
+	while _tokens.has_next([Lexer.TOKEN_COMMA]):
+		_tokens.consume([Lexer.TOKEN_COMMA])
+		params.push_back(_expression())
+
+	_tokens.consume([Lexer.TOKEN_BRACKET_CLOSE])
+
+	return EventNode(event_name, params)
 
 
 func _conditional_line():
@@ -817,5 +833,7 @@ func EventsNode(events):
 	return { "type": 'events', "events": events }
 
 
-func EventNode(name):
-	return { "type": 'event', "name": name }
+func EventNode(name, parameters = null):
+	if parameters == null or parameters.size() == 0:
+		return { "type": 'event', "name": name }
+	return { "type": 'event', "name": name, "params": parameters }

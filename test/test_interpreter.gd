@@ -660,6 +660,29 @@ func test_events():
 	assert_eq(pending_events.size(), 0)
 
 
+var event_with_params_result = { "parameters": null }
+
+func test_events_with_parameters():
+	var interpreter = ClydeDialogue.Interpreter.new()
+	var content = parse("""
+Hi! {set a = 1 }{ trigger some_event(a, "test", true, a + 1) }
+""")
+	interpreter.init(content)
+
+	interpreter.connect("event_triggered", self, "_event_with_params_triggered")
+
+	assert_eq_deep(interpreter.get_content().text, 'Hi!')
+
+	while true:
+		if event_with_params_result.parameters != null:
+			break
+
+	assert_eq_deep(event_with_params_result.parameters, [ 1.0, "test", true, 2.0 ])
+
+
+func _event_with_params_triggered(_event_name, params):
+	event_with_params_result.parameters = params
+
 
 func _on_variable_changed(name, value, _previous_value):
 	for e in pending_events:
@@ -667,7 +690,7 @@ func _on_variable_changed(name, value, _previous_value):
 			pending_events.erase(e)
 
 
-func _on_event_triggered(event_name):
+func _on_event_triggered(event_name, params):
 	for e in pending_events:
 		if e.type == 'event' and e.name == event_name:
 			pending_events.erase(e)

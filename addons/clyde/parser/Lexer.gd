@@ -635,6 +635,12 @@ func _handle_logic_block():
 	if _input[_position] == '}':
 		return _handle_logic_block_stop()
 
+	if _input[_position] == '(':
+		return _create_simple_token(TOKEN_BRACKET_OPEN)
+
+	if _input[_position] == ')':
+		return _create_simple_token(TOKEN_BRACKET_CLOSE)
+
 	if _check_sequence(_input, _position, '=='):
 		return _handle_logic_operator(TOKEN_EQUAL, 2)
 

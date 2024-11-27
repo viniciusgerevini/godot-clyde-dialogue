@@ -11,7 +11,7 @@ func init(mem):
 func handle_assignment(assignment):
 	var variable = assignment.variable;
 	var source = assignment.value;
-	var value = _get_node_value(source);
+	var value = get_node_value(source);
 
 	return _handle_assignment_operation(assignment, variable.name, value)
 
@@ -41,7 +41,7 @@ func _handle_assignment_operation(assignment, var_name, value):
 			printerr("Unknown operation %s" % assignment.operation)
 
 
-func _get_node_value(node):
+func get_node_value(node):
 	match node.type:
 		"literal":
 			return node.value
@@ -69,30 +69,30 @@ func check_condition(condition):
 func check_expression(node):
 	match node.name:
 		"equal":
-			return _get_node_value(node.elements[0]) == _get_node_value(node.elements[1])
+			return get_node_value(node.elements[0]) == get_node_value(node.elements[1])
 		"not_equal":
-			return _get_node_value(node.elements[0]) != _get_node_value(node.elements[1])
+			return get_node_value(node.elements[0]) != get_node_value(node.elements[1])
 		"greater_than":
-			var a = _get_node_value(node.elements[0])
-			var b = _get_node_value(node.elements[1])
+			var a = get_node_value(node.elements[0])
+			var b = get_node_value(node.elements[1])
 			if (a == null || b == null):
 				return false
 			return a > b
 		"greater_or_equal":
-			var a = _get_node_value(node.elements[0])
-			var b = _get_node_value(node.elements[1])
+			var a = get_node_value(node.elements[0])
+			var b = get_node_value(node.elements[1])
 			if (a == null || b == null):
 				return false
 			return a >= b
 		"less_than":
-			var a = _get_node_value(node.elements[0])
-			var b = _get_node_value(node.elements[1])
+			var a = get_node_value(node.elements[0])
+			var b = get_node_value(node.elements[1])
 			if (a == null || b == null):
 				return false
 			return a < b
 		"less_or_equal":
-			var a = _get_node_value(node.elements[0])
-			var b = _get_node_value(node.elements[1])
+			var a = get_node_value(node.elements[0])
+			var b = get_node_value(node.elements[1])
 			if (a == null || b == null):
 				return false
 			return a <= b
@@ -103,38 +103,38 @@ func check_expression(node):
 		"not":
 			return not check_condition(node.elements[0])
 		"mult":
-			var a = _get_node_value(node.elements[0])
-			var b = _get_node_value(node.elements[1])
+			var a = get_node_value(node.elements[0])
+			var b = get_node_value(node.elements[1])
 			if (a == null || b == null):
 				return null
 			return a * b
 		"div":
-			var a = _get_node_value(node.elements[0])
-			var b = _get_node_value(node.elements[1])
+			var a = get_node_value(node.elements[0])
+			var b = get_node_value(node.elements[1])
 			if (a == null || b == null):
 				return null
 			return a / b
 		"sub":
-			var a = _get_node_value(node.elements[0])
-			var b = _get_node_value(node.elements[1])
+			var a = get_node_value(node.elements[0])
+			var b = get_node_value(node.elements[1])
 			if (a == null || b == null):
 				return null
 			return a - b
 		"add":
-			var a = _get_node_value(node.elements[0])
-			var b = _get_node_value(node.elements[1])
+			var a = get_node_value(node.elements[0])
+			var b = get_node_value(node.elements[1])
 			if (a == null || b == null):
 				return null
 			return a + b
 		"pow":
-			var a = _get_node_value(node.elements[0])
-			var b = _get_node_value(node.elements[1])
+			var a = get_node_value(node.elements[0])
+			var b = get_node_value(node.elements[1])
 			if (a == null || b == null):
 				return null
 			return pow(a, b)
 		"mod":
-			var a = _get_node_value(node.elements[0])
-			var b = _get_node_value(node.elements[1])
+			var a = get_node_value(node.elements[0])
+			var b = get_node_value(node.elements[1])
 			if (a == null || b == null):
 				return null
 			return a % b

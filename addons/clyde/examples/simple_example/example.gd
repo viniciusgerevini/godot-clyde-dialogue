@@ -67,8 +67,8 @@ func _gui_input(event):
 		_get_next_dialogue_line()
 
 
-func _on_event_triggered(event_name):
-	print("Event received: %s" % event_name)
+func _on_event_triggered(event_name, parameters):
+	print("Event received: %s parameters: %s" % [event_name, parameters])
 
 
 func _on_variable_changed(variable_name, new_value, previous_value):

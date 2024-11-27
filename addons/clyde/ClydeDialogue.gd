@@ -8,7 +8,7 @@ class_name ClydeDialogue
 # Emits when a variable is changed inside the dialogue.
 signal variable_changed(name, value, previous_value)
 ## Emits when an event is triggered inside the dialogue.
-signal event_triggered(name)
+signal event_triggered(name, parameters)
 
 # Type for regular dialogue line
 const CONTENT_TYPE_LINE = Interpreter.CONTENT_TYPE_LINE
@@ -45,7 +45,7 @@ func configure(options):
 func load_dialogue(file_name, block = null):
 	var doc_path = _file_loader.get_file_path(file_name)
 	var file = _file_loader.load_file_in_path(doc_path)
-	
+
 	file.doc_path = doc_path
 
 	_interpreter = Interpreter.new()
@@ -139,8 +139,8 @@ func _trigger_variable_changed(name, value, previous_value):
 	emit_signal("variable_changed", name, value, previous_value)
 
 
-func _trigger_event_triggered(name):
-	emit_signal("event_triggered", name)
+func _trigger_event_triggered(name, parameters):
+	emit_signal("event_triggered", name, parameters)
 
 
 func _config_id_suffix_lookup_separator():
