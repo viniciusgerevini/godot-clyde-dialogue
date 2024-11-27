@@ -177,13 +177,10 @@ You can listen to variable changes by observing the `variable_changed` signal.
 ``` gdscript
   # ...
 
-  dialogue.connect('variable_changed', self, '_on_variable_changed')
-
-
-func _on_variable_changed(variable_name, value, previous_vale):
-  if variable_name == 'hp' and value < previous_value:
-    print('damage taken')
-
+  dialogue.variable_changed.connect(func (variable_name, value, previous_vale):
+    if variable_name == 'hp' and value < previous_value:
+      print('damage taken')
+  )
 ```
 
 ### Listening to events
@@ -193,14 +190,11 @@ You can listen to events triggered by the dialogue by observing the `event_trigg
 ``` gdscript
   # ...
 
-  dialogue.connect('event_triggered', self, '_on_event_triggered')
-
-
-func _on_event_triggered(event_name, parameters):
-  if event_name == 'self_destruction_activated':
-    _shake_screen()
-    _play_explosion()
-
+  dialogue.event_triggered.connect(func (event_name, parameters):
+    if event_name == 'self_destruction_activated':
+      _shake_screen()
+      _play_explosion()
+  )
 ```
 
 ### Data persistence
