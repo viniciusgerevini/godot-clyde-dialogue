@@ -189,6 +189,8 @@ func _get_next_token():
 		if response:
 			return response
 
+
+
 	if _input[_position] == '"' or _input[_position] == "'":
 		if _current_quote:
 			if _input[_position] == _current_quote:
@@ -498,7 +500,7 @@ func _handle_divert():
 	var values = []
 	_position += 2
 	_column += 2
-	
+
 	while _is_valid_position() and _input[_position] == " ":
 		_position += 1
 		_column += 1
@@ -543,7 +545,7 @@ func _handle_divert_ext(initial_column):
 			_column += 1
 
 	return Token(TOKEN_DIVERT, _line, initial_column, { "link": link_name, "block": link_block })
- 
+
 
 
 func _handle_divert_parent():
@@ -635,6 +637,12 @@ func _handle_logic_block():
 
 	if _input[_position] == '}':
 		return _handle_logic_block_stop()
+
+	if _input[_position] == '(':
+		return _create_simple_token(TOKEN_BRACKET_OPEN)
+
+	if _input[_position] == ')':
+		return _create_simple_token(TOKEN_BRACKET_CLOSE)
 
 	if _check_sequence(_input, _position, '=='):
 		return _handle_logic_operator(TOKEN_EQUAL, 2)

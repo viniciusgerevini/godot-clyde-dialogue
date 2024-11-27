@@ -943,6 +943,39 @@ func test_trigger_event():
 	}])
 	assert_eq_deep(result, expected)
 
+func test_trigger_event_with_parameters():
+	var result = parse("{ trigger some_event(this_is_a_var, this_is_a_var + 1, 123, 'text', false) } trigger")
+	var expected = _create_doc_payload([{
+		"type": 'action_content',
+		"action": {
+			"type": 'events',
+			"events": [
+				{
+					"type": 'event',
+					"name": 'some_event',
+					"params": [
+						{ "type": 'variable', "name": 'this_is_a_var' },
+						{
+							"type": 'expression',
+							"name": 'add',
+							"elements": [
+								{ "type": 'variable', "name": 'this_is_a_var', },
+								{ "type": 'literal', "name": 'number', "value": 1.0 },
+							],
+						},
+						{ "type": 'literal', "name": 'number', "value": 123.0 },
+						{ "type": 'literal', "name": 'string', "value": "text" },
+						{ "type": 'literal', "name": 'boolean', "value": false },
+					]
+				}
+			],
+		},
+		"content": {
+			"type": 'line',
+			"value": 'trigger', "speaker": null, "id": null, "tags": [], "id_suffixes": null,
+		},
+	}])
+	assert_eq_deep(result, expected)
 
 func test_trigger_multiple_events_in_one_block():
 	var result = parse("{ trigger some_event, another_event } trigger")

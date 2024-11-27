@@ -13,7 +13,7 @@ const FileLoader = preload("./file_loader.gd")
 ## Emits when a variable is changed inside the dialogue.
 signal variable_changed(name: String, value: Variant, previous_value: Variant)
 ## Emits when an event is triggered inside the dialogue.
-signal event_triggered(name: String)
+signal event_triggered(name: String, parameters: Array)
 
 ## Type for regular dialogue line
 const CONTENT_TYPE_LINE = Interpreter.CONTENT_TYPE_LINE
@@ -165,8 +165,8 @@ func _trigger_variable_changed(name: String, value: Variant, previous_value: Var
 	variable_changed.emit(name, value, previous_value)
 
 
-func _trigger_event_triggered(name: String) -> void:
-	event_triggered.emit(name)
+func _trigger_event_triggered(name: String, parameters: Array) -> void:
+	event_triggered.emit(name, parameters)
 
 
 func _config_id_suffix_lookup_separator() -> String:

@@ -8,7 +8,7 @@ signal toggle_debug_panel(is_visible: bool)
 signal dialogue_mem_clean
 signal variable_changed(var_name, value, old_value)
 signal external_variable_changed(var_name, value, old_value)
-signal event_triggered(event_name)
+signal event_triggered(event_name, parameters)
 signal close_triggered
 
 const InterfaceText = preload("../config/interface_text.gd")
@@ -345,8 +345,8 @@ func _on_variable_changed(var_name: String, value, old_value):
 	variable_changed.emit(var_name, value, old_value)
 
 
-func _on_event_triggered(event_name: String):
-	event_triggered.emit(event_name)
+func _on_event_triggered(event_name: String, parameters: Array):
+	event_triggered.emit(event_name, parameters)
 
 
 func _add_initial_line():

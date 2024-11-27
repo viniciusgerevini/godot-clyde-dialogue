@@ -410,9 +410,9 @@ func _on_player_external_variable_changed(var_name, value, old_value):
 		_debug_panel.set_external_variable(var_name, value, old_value)
 
 
-func _on_player_event_triggered(event_name):
+func _on_player_event_triggered(event_name, parameters):
 	if _debug_panel != null:
-		_debug_panel.record_event(event_name)
+		_debug_panel.record_event(event_name, parameters)
 
 
 func _on_player_dialogue_mem_clean():

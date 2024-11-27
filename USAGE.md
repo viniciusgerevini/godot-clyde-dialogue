@@ -12,7 +12,7 @@ This is `ClydeDialogue`'s interface:
 extends Node
 
 signal variable_changed(variable_name: String, value; Variant, previous_vale: Variant)
-signal event_triggered(event_name; String)
+signal event_triggered(event_name: String, parameters: Array)
 
 # Load dialogue file
 # file_name: path to the dialogue file.
@@ -196,7 +196,7 @@ You can listen to events triggered by the dialogue by observing the `event_trigg
   dialogue.connect('event_triggered', self, '_on_event_triggered')
 
 
-func _on_event_triggered(event_name):
+func _on_event_triggered(event_name, parameters):
   if event_name == 'self_destruction_activated':
     _shake_screen()
     _play_explosion()

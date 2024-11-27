@@ -68,8 +68,8 @@ func load_external_variables(external_variables: Dictionary):
 	_external_variables.load_data(external_variables)
 
 
-func record_event(event_name: String):
-	_debug_history.record_event(event_name)
+func record_event(event_name: String, parameters: Array):
+	_debug_history.record_event(event_name, parameters)
 
 
 func _on_scrollbar_changed():
