@@ -2,6 +2,16 @@
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## Unreleased
+
+### Breaking changes
+
+`event_triggered` signal expects two parameters now `event_triggered(event_name: String, parameters: [])`
+
+### Changed
+
+- Support events with parameters (e.g `{ trigger event(param1, param2, "text", ...) }`)
+
 ## 5.1.0 (2024-10-07)
 
 ### Added

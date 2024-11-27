@@ -1,7 +1,7 @@
 extends RefCounted
 
 signal variable_changed(name: String, value: Variant, previous_value: Variant)
-signal event_triggered(event_name: String)
+signal event_triggered(event_name: String, parameters: Array)
 
 const Memory = preload("./Memory.gd")
 const LogicInterpreter = preload("./LogicInterpreter.gd")
@@ -310,11 +310,20 @@ func _handle_action_content_node(action_node):
 
 func _handle_action(action_node):
 	if action_node.action.type == 'events':
-		for event in action_node.action.events:
-			emit_signal("event_triggered", event.name)
+		_trigger_events(action_node.action)
 	else:
 		for assignment in action_node.action.assignments:
 			_logic.handle_assignment(assignment)
+
+
+func _trigger_events(events):
+	for event in events.events:
+		var parameters = []
+
+		if event.get("params", null) != null:
+			parameters = event.params.map(_logic.get_node_value)
+
+		event_triggered.emit(event.name, parameters)
 
 
 func _handle_conditional_content_node(conditional_node, fallback_node = _stack_head().current):
@@ -385,7 +394,7 @@ func _divert_to_linked_doc(link: Dictionary):
 	var doc_path = _doc_anchors[link.link]
 
 	var doc_node
-	
+
 	var actual_path = doc_path
 
 	if doc_path.begins_with("./") or doc_path.begins_with("../"):
@@ -435,9 +444,7 @@ func _handle_assignments_node(assignment_node):
 
 
 func _handle_events_node(events):
-	for event in events.events:
-		emit_signal("event_triggered", event.name)
-
+	_trigger_events(events)
 	return _handle_next_node(_stack_head().current);
 
 

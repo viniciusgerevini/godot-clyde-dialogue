@@ -60,8 +60,8 @@ func _on_variable_changed(variable_name: String, value: Variant, old_value: Vari
 
 # Listen to events triggered by dialogue.
 # One usage example is to do stuff like screen shake, play sounds or specific animations.
-func _on_event_triggered(event_name: String):
-	print("Event triggered: '%s'" % event_name)
+func _on_event_triggered(event_name: String, parameters: Array):
+	print("Event triggered: '%s' params: %s" % [ event_name, parameters ])
 
 
 # This event is useful for when you want to animate your speaker without hooking it

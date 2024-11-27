@@ -15,8 +15,8 @@ func _ready():
 	_dialogue = ClydeDialogue.new()
 	_dialogue.load_dialogue('pulp_with_blocks')
 
-	_dialogue.connect("event_triggered",Callable(self,'_on_event_triggered'))
-	_dialogue.connect("variable_changed",Callable(self,'_on_variable_changed'))
+	_dialogue.event_triggered.connect(_on_event_triggered)
+	_dialogue.variable_changed.connect(_on_variable_changed)
 
 	_dialogue.on_external_variable_fetch(_on_external_variable_fetch)
 	_dialogue.on_external_variable_update(_on_external_variable_update)
@@ -72,8 +72,8 @@ func _gui_input(event):
 		_get_next_dialogue_line()
 
 
-func _on_event_triggered(event_name):
-	print("Event received: %s" % event_name)
+func _on_event_triggered(event_name, parameters):
+	print("Event received: %s params: %s " % [event_name, parameters])
 
 
 func _on_variable_changed(variable_name, new_value, previous_value):

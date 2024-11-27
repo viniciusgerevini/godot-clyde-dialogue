@@ -626,13 +626,24 @@ func test_changing_block_order_does_not_affect_persistence():
 	assert_eq_deep(block_2_options, _options({ "options": [_option({ "label": "option 1" }), _option({ "label": "option 2" })] }))
 
 
-var pending_events = []
-
 func test_events():
+	var pending_events = []
+
 	var dialogue = ClydeDialogue.new()
 	dialogue.load_dialogue('variables')
 	dialogue.connect("event_triggered",Callable(self,"_on_event_triggered"))
-	dialogue.connect("variable_changed",Callable(self,"_on_variable_changed"))
+
+	dialogue.event_triggered.connect(func _on_event_triggered(event_name, _params):
+		for e in pending_events:
+			if e.type == 'event' and e.name == event_name:
+				pending_events.erase(e)
+	)
+
+	dialogue.variable_changed.connect(func _on_variable_changed(var_name, value, _previous_value):
+		for e in pending_events:
+			if e.type == 'variable' and e.name == var_name and  typeof(e.value) == typeof(value) and  e.value == value:
+				pending_events.erase(e)
+	)
 
 	pending_events.push_back({ "type": "variable", "name": "xx", "value": true })
 	pending_events.push_back({ "type": "variable", "name": "first_time", "value": 2.0 })
@@ -662,17 +673,27 @@ func test_events():
 	assert_eq(pending_events.size(), 0)
 
 
+func test_events_with_parameters():
+	var interpreter = ClydeDialogue.Interpreter.new()
+	var content = parse("""
+Hi! {set a = 1 }{ trigger some_event(a, "test", true, a + 1) }
+""")
+	interpreter.init(content)
 
-func _on_variable_changed(var_name, value, _previous_value):
-	for e in pending_events:
-		if e.type == 'variable' and e.name == var_name and  typeof(e.value) == typeof(value) and  e.value == value:
-			pending_events.erase(e)
+	var result = { "parameters": null }
 
+	interpreter.event_triggered.connect(func (event_name, params):
+		print("event triggered and all %s %s" % [event_name, params])
+		result.parameters = params
+	)
 
-func _on_event_triggered(event_name):
-	for e in pending_events:
-		if e.type == 'event' and e.name == event_name:
-			pending_events.erase(e)
+	assert_eq_deep(interpreter.get_content().text, 'Hi!')
+
+	while true:
+		if result.parameters != null:
+			break
+
+	assert_eq_deep(result.parameters, [ 1.0, "test", true, 2.0 ])
 
 
 func test_file_path_without_extension():

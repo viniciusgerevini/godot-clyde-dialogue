@@ -10,8 +10,8 @@ func _init(event_entries: GridContainer) -> void:
 	_event_entries = event_entries
 
 
-func record_event(event_name: String):
-	_add_event_record(event_name)
+func record_event(event_name: String, parameters: Array):
+	_add_event_record(event_name, parameters)
 
 
 func clear_event_history():
@@ -44,15 +44,17 @@ func _create_event_history_header():
 	_add_separator()
 
 
-func _add_event_record(event_name: String):
+func _add_event_record(event_name: String, parameters: Array):
 	var type = Label.new()
 	type.text = InterfaceText.get_string(InterfaceText.KEY_DEBUG_EVENT_LABEL)
 	var name = Label.new()
 	name.text = event_name
+	var val = Label.new()
+	val.text = str(parameters)
 	_event_entries.add_child(_time_field())
 	_event_entries.add_child(type)
 	_event_entries.add_child(name)
-	_event_entries.add_child(Label.new()) # value stub
+	_event_entries.add_child(val)
 	_event_entries.add_child(Label.new()) # old value stub
 	_add_separator()
 

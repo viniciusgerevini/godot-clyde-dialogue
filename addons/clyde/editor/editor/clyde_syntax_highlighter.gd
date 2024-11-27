@@ -306,6 +306,11 @@ func _handle_logic_mode(content: String, current_column: int, no_previous_text: 
 	while current_column < content.length():
 		var character = content[current_column]
 
+		if character == "(" or character == ")":
+			regions[current_column] = _symbol_region()
+			current_column += 1
+			continue
+
 		if character == "\"" or character == "'":
 			current_column = _handle_logic_string_literal(current_column, content, regions)
 			continue
@@ -356,7 +361,7 @@ func _handle_link(content: String, current_column: int, regions: Dictionary) -> 
 		current_column += 1
 
 	regions[current_column] = _identifier_region()
-	
+
 	while current_column < content.length() and _identifier_regex.search(content[current_column]) != null:
 		current_column += 1
 
@@ -373,7 +378,7 @@ func _handle_link(content: String, current_column: int, regions: Dictionary) -> 
 
 	while current_column < content.length() and content[current_column] == " ":
 		current_column += 1
-		
+
 	if current_column < content.length():
 		regions[current_column] = _string_literal_region()
 		while current_column < content.length():
