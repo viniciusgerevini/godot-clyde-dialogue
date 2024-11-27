@@ -7,7 +7,7 @@ const DialogueBubbleFixed = preload("res://addons/clyde/helpers/bubbles/dialogue
 signal dialogue_started(dialogue_path, block)
 signal dialogue_ended(dialogue_path, block)
 signal variable_changed(variable_name, value, old_value)
-signal event_triggered(event_name)
+signal event_triggered(event_name, parameters)
 signal speaker_changed(current_speaker, previous_speaker)
 
 var config
@@ -161,8 +161,8 @@ func _on_variable_changed(variable_name: String, value, old_value):
 	emit_signal("variable_changed", variable_name, value, old_value)
 
 
-func _on_event_triggered(event_name: String):
-	emit_signal("event_triggered", event_name)
+func _on_event_triggered(event_name: String, parameters: Array):
+	emit_signal("event_triggered", event_name, parameters)
 
 
 func _next_content() -> void:

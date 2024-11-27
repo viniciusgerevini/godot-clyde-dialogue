@@ -1,7 +1,7 @@
 extends Reference
 
 signal variable_changed(name, value, previous_value)
-signal event_triggered(event_name)
+signal event_triggered(event_name, parameters)
 
 const Memory = preload("./Memory.gd")
 const LogicInterpreter = preload("./LogicInterpreter.gd")
@@ -117,7 +117,7 @@ func _initialise_stack(root):
 
 
 func _initialise_blocks(doc):
-	doc["anchors"] = {}	
+	doc["anchors"] = {}
 	for i in range(doc.blocks.size()):
 		doc.blocks[i]._index = "b_%s" % doc.blocks[i].name
 		doc.anchors[doc.blocks[i].name] = doc.blocks[i]
@@ -302,11 +302,21 @@ func _handle_action_content_node(action_node):
 
 func _handle_action(action_node):
 	if action_node.action.type == 'events':
-		for event in action_node.action.events:
-			emit_signal("event_triggered", event.name)
+		_trigger_events(action_node.action)
 	else:
 		for assignment in action_node.action.assignments:
 			_logic.handle_assignment(assignment)
+
+
+func _trigger_events(events):
+	for event in events.events:
+		var parameters = []
+
+		if event.get("params", null) != null:
+			for p in event.params:
+				parameters.push_back(_logic.get_node_value(p))
+
+		emit_signal("event_triggered", event.name, parameters)
 
 
 func _handle_conditional_content_node(conditional_node, fallback_node = _stack_head().current):
@@ -426,9 +436,7 @@ func _handle_assignments_node(assignment_node):
 
 
 func _handle_events_node(events):
-	for event in events.events:
-		emit_signal("event_triggered", event.name)
-
+	_trigger_events(events)
 	return _handle_next_node(_stack_head().current);
 
 
