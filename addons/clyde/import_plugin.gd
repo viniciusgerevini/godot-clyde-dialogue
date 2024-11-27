@@ -43,7 +43,6 @@ func import(source_file, save_path, options, platform_variants, gen_files):
 	var file = File.new()
 	file.open(source_file, File.READ)
 	var clyde = file.get_as_text()
-	var result = parse(clyde)
 	file.close()
 
 	var container = ClydeDialogueFile.new()
