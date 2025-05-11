@@ -15,11 +15,11 @@ _This branch has the source code for Godot 4. For Godot 3 check the [godot_3](ht
 
 The importer automatically imports `.clyde` files to be used with the interpreter. This improves performance, as the dialogue is parsed beforehand.
 
-Check [USAGE.md](./USAGE.md) for how to use the interpreter.
+Check the [documentation](https://thisisvini.com/clyde/en/latest/godot/index.html) for how to use the interpreter.
 
 You can find usage examples on [/addons/clyde/examples](./addons/clyde/examples)
 
-For more about how to write dialogues using Clyde, check [clyde/LANGUAGE.md](https://github.com/viniciusgerevini/clyde/blob/master/LANGUAGE.md)
+For more about how to write dialogues using Clyde, check the language [documentation](https://thisisvini.com/clyde/en/latest/language/).
 
 ## Instalation
 
@@ -39,7 +39,7 @@ Go to `Project > Project Settings > General > Dialogue`.
 
 ## Helpers
 
-As seen in the USAGE.md, the Clyde interpreter has as simple interface giving you full control on how to display and handle your dialogues. However, there are many different ways you can go about it, which might make it daunting for new developers.
+As seen in the documentation, Clyde's interpreter has as simple interface giving you full control on how to display and handle your dialogues. However, there are many different ways you can go about it, which might make it daunting for new developers.
 
 To help you quick start a project, I included a few helpers with this plugin. By enabling the helpers option in ProjectSettings, a `Dialogue` singleton and a `ClydeDialogueConfig` node will be available, allowing a quick start with no much effort.
 
