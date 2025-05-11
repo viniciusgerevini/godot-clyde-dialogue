@@ -27,8 +27,7 @@ func start(block_name: String = "") -> void
 
 
 # Get next dialogue content.
-# The content may be a line, options or null.
-# If null, it means the dialogue reached an end.
+# The content may be a line, options or end of dialogue.
 func get_content() -> Dictionary
 
 
@@ -223,7 +222,7 @@ func _get_next_content():
 
     # ...
 
-    if content == null:
+    if content.type == "end":
         _dialogue_ended()
 
 
