@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://b07csfwvymaeu"]
 
-[ext_resource type="Script" path="res://addons/clyde/editor/editor/multi_editor.gd" id="1_cgdav"]
+[ext_resource type="Script" uid="uid://cdsjsge6i6y5q" path="res://addons/clyde/editor/editor/multi_editor.gd" id="1_cgdav"]
 [ext_resource type="PackedScene" uid="uid://ds44yak1vowc1" path="res://addons/clyde/editor/editor/search_bar.tscn" id="2_rdvmm"]
 
 [node name="MultiEditor" type="MarginContainer"]

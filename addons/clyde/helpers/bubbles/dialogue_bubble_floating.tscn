@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://c2aifp4pq54ut"]
 
-[ext_resource type="Script" path="res://addons/clyde/helpers/bubbles/dialogue_bubble_floating.gd" id="1_84fwq"]
+[ext_resource type="Script" uid="uid://bg7te8mxnplmv" path="res://addons/clyde/helpers/bubbles/dialogue_bubble_floating.gd" id="1_84fwq"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6p5jo"]
 content_margin_left = 10.0
