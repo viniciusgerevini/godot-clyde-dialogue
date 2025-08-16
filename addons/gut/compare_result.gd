@@ -67,3 +67,4 @@ func set_differences(diffs):
 
 func get_brackets():
 	return null
+

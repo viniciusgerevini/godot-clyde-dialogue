@@ -1,4 +1,4 @@
-extends "res://addons/gut/test.gd"
+extends GutTest
 
 const Parser = preload("res://addons/clyde/parser/Parser.gd")
 

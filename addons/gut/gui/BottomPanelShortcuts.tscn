@@ -1,13 +1,15 @@
 [gd_scene load_steps=3 format=3 uid="uid://bsk32dh41b4gs"]
 
 [ext_resource type="PackedScene" uid="uid://sfb1fw8j6ufu" path="res://addons/gut/gui/ShortcutButton.tscn" id="1"]
-[ext_resource type="Script" uid="uid://d2ntnanl7hgu7" path="res://addons/gut/gui/BottomPanelShortcuts.gd" id="2"]
+[ext_resource type="Script" path="res://addons/gut/gui/BottomPanelShortcuts.gd" id="2"]
 
 [node name="BottomPanelShortcuts" type="Popup"]
 title = "Shortcuts"
 size = Vector2i(500, 350)
 visible = true
 exclusive = true
+unresizable = false
+borderless = false
 script = ExtResource("2")
 
 [node name="Layout" type="VBoxContainer" parent="."]
@@ -147,4 +149,5 @@ custom_minimum_size = Vector2(0, 10)
 layout_mode = 2
 size_flags_horizontal = 3
 
+[connection signal="popup_hide" from="." to="." method="_on_popup_hide"]
 [connection signal="pressed" from="Layout/HBoxContainer/Hide" to="." method="_on_Hide_pressed"]

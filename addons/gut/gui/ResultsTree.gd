@@ -48,8 +48,8 @@ func _ready():
 
 func _test_running_setup():
 	load_json_file('user://.gut_editor.json')
-	
-	
+
+
 func _on_tree_item_selected():
 	var item = _ctrls.tree.get_selected()
 	var item_meta = item.get_metadata(0)
@@ -263,7 +263,7 @@ func _free_childless_scripts():
 
 
 func _show_all_passed():
-	if(_root.get_children() == null):
+	if(_root.get_children().size() == 0):
 		add_centered_text('Everything passed!')
 
 
@@ -274,12 +274,17 @@ func _load_result_tree(j):
 	# 'nothing to see here' should be visible.
 	clear_centered_text()
 
+	var add_count = 0
 	for key in script_keys:
 		if(scripts[key]['props']['tests'] > 0):
+			add_count += 1
 			_add_script_to_tree(key, scripts[key])
 
 	_free_childless_scripts()
-	_show_all_passed()
+	if(add_count == 0):
+		add_centered_text('Nothing was run')
+	else:
+		_show_all_passed()
 
 
 # -------------------
