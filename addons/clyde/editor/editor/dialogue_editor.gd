@@ -87,10 +87,6 @@ func _load_shortcuts():
 			"handler": _toggle_comment,
 		},
 		{
-			"shortcut": shortcuts.get_shortcut_for_command(Shortcuts.CMD_EDITOR_TOGGLE_COMMENT),
-			"handler": _toggle_comment,
-		},
-		{
 			"shortcut": shortcuts.get_shortcut_for_command(Shortcuts.CMD_EDITOR_FONT_SIZE_UP),
 			"handler": _font_size_up,
 		},
