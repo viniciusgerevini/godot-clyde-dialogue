@@ -482,9 +482,17 @@ func _replace_variables(text):
 	var regex = RegEx.create_from_string("\\%(?<variable>[A-z0-9@]*)\\%")
 	for result in regex.search_all(text):
 		var value = _mem.get_variable(result.get_string("variable"))
-		text = text.replace(result.get_string(), str(value) if value != null else "")
+		text = text.replace(result.get_string(), _parse_variable_value_for_print(value) if value != null else "")
 
 	return text
+
+func _parse_variable_value_for_print(value) -> String:
+	# all numbers are saved as float. For backwards compatibility and simplification, when a number
+	# does not have a relevant decimal part (e.g. 5.0), it should be printed as an int (e.g 5)
+	if typeof(value) == TYPE_FLOAT:
+		if fmod(value, 1.0) == 0:
+			return "%d" % value;
+	return str(value)
 
 
 func _handle_variation_mode(variations):
