@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://xs4xc7ybpjcp"]
 
-[ext_resource type="Script" path="res://addons/clyde/editor/player/dialogue_event_bubble.gd" id="1_qc4xu"]
+[ext_resource type="Script" uid="uid://cn88sss2grtqn" path="res://addons/clyde/editor/player/dialogue_event_bubble.gd" id="1_qc4xu"]
 
 [node name="DialogueEventBubble" type="VBoxContainer"]
 modulate = Color(1, 1, 1, 0.933333)

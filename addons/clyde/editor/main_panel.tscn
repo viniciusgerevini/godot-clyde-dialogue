@@ -1,6 +1,6 @@
 [gd_scene load_steps=8 format=3 uid="uid://cux0i1kt0tw3u"]
 
-[ext_resource type="Script" path="res://addons/clyde/editor/main_panel.gd" id="1_vr0bg"]
+[ext_resource type="Script" uid="uid://c1j33ae1l8jdd" path="res://addons/clyde/editor/main_panel.gd" id="1_vr0bg"]
 [ext_resource type="PackedScene" uid="uid://c1vmpgpv2jrpx" path="res://addons/clyde/editor/top_bar.tscn" id="2_u6411"]
 [ext_resource type="PackedScene" uid="uid://y4xxgq3fdok8" path="res://addons/clyde/editor/file_list.tscn" id="3_gbtsb"]
 [ext_resource type="PackedScene" uid="uid://xw1w6iil2jcw" path="res://addons/clyde/editor/block_list.tscn" id="4_thgot"]

@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://dhxsbppxl8v7a"]
 
-[ext_resource type="Script" path="res://addons/clyde/editor/player/dialogue_bubble.gd" id="1_gkd1v"]
+[ext_resource type="Script" uid="uid://btelvsc3hb14p" path="res://addons/clyde/editor/player/dialogue_bubble.gd" id="1_gkd1v"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sail3"]
 bg_color = Color(0.06561, 0.06561, 0.06561, 0.6)
