@@ -498,10 +498,10 @@ func test_external_variables_assignments():
 	)
 
 	assert_eq_deep(interpreter.get_content().type, 'end')
-	wait_frames(5) # wait a few frames to ensure callback was triggered
-	assert_eq(interpreter.get_variable("var"), 2)
+	wait_process_frames(5) # wait a few frames to ensure callback was triggered
+	assert_eq(interpreter.get_variable("var"), 2.0)
 	assert_eq(assignment.var, "var")
-	assert_eq(assignment.value, 1)
+	assert_eq(assignment.value, 1.0)
 
 
 func test_external_variables_interpolation():

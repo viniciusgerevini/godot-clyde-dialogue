@@ -15,6 +15,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### Fixed
 
 - Integer numbers were being interpolated with the decimal part (e.g. 5 was 5.0)
+- Comment shortcut (default ctrl + k) was being triggered twice, effectively not working
 
 
 ## 6.0.0 (2024-11-26)
