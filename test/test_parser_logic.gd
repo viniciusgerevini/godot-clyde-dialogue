@@ -1246,3 +1246,106 @@ func test_empty_block():
 		"conditions": null,
 	}])
 	assert_eq_deep(result, expected)
+
+
+func test_match_with_branches():
+	var result = parse("""
+{ match this_is_a_variable
+	'value_a':
+		This is a line
+	'value_b':
+		This is another line
+	default:
+		This is the default line
+}
+""")
+	var expected = _create_doc_payload([
+		{
+			"type": "match",
+			"condition": { "type": "variable", "name": "this_is_a_variable" },
+			"branches": [
+				{
+					"check":  { "type": 'literal', "name": 'string', "value": 'value_a' },
+					"content": {
+						"type": 'content',
+						"content": [
+							{ "type": 'line', "value": 'This is a line', "speaker": null, "id": null, "tags": [], "id_suffixes": null, },
+						],
+					},
+				},
+				{
+					"check":  { "type": 'literal', "name": 'string', "value": 'value_b' },
+					"content": {
+						"type": 'content',
+						"content": [
+							{ "type": 'line', "value": 'This is another line', "speaker": null, "id": null, "tags": [], "id_suffixes": null, },
+						],
+					},
+				},
+			],
+			"default_branch": {
+				"type": 'content',
+				"content": [
+					{ "type": 'line', "value": 'This is the default line', "speaker": null, "id": null, "tags": [], "id_suffixes": null, },
+				],
+			}
+		},
+	])
+	assert_eq_deep(result, expected)
+
+
+func test_match_with_inline_branches():
+	var result = parse("""
+{
+	match this_is_a_variable
+		true: -> go here
+		default: -> go there
+}
+""")
+	var expected = _create_doc_payload([
+		{
+			"type": "match",
+			"condition": { "type": "variable", "name": "this_is_a_variable" },
+			"branches": [
+				{
+					"check":  { "type": 'literal', "name": 'boolean', "value": true },
+					"content": {
+						"type": 'content',
+						"content": [{ "type": "divert", "target": "go here", }]
+					},
+				},
+			],
+			"default_branch": {
+				"type": 'content',
+				"content": [{ "type": "divert", "target": "go there", }],
+			}
+		},
+	])
+	assert_eq_deep(result, expected)
+
+
+func _test_match_without_default():
+	var result = parse("""
+{
+	match this_is_a_variable
+		true:
+			-> go here
+}
+""")
+	var expected = _create_doc_payload([
+		{
+			"type": "match",
+			"condition": { "type": "variable", "name": "this_is_a_variable" },
+			"branches": [
+				{
+					"check":  { "type": 'literal', "name": 'boolean', "value": true },
+					"content": {
+						"type": 'content',
+						"content": [{ "type": "divert", "target": "go here", }]
+					},
+				},
+			],
+			"default_branch": null,
+		},
+	])
+	assert_eq_deep(result, expected)

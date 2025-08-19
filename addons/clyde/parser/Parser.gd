@@ -167,7 +167,10 @@ func _lines():
 			_tokens.consume([ Lexer.TOKEN_LINE_BREAK ])
 
 		_tokens.consume([Lexer.TOKEN_BRACE_OPEN])
-		if _tokens.has_next([Lexer.TOKEN_KEYWORD_SET, Lexer.TOKEN_KEYWORD_TRIGGER]):
+
+		if _tokens.has_next([Lexer.TOKEN_KEYWORD_MATCH]):
+			lines = [_match_block()]
+		elif _tokens.has_next([Lexer.TOKEN_KEYWORD_SET, Lexer.TOKEN_KEYWORD_TRIGGER]):
 			lines = [_line_with_action()]
 		else:
 			if _tokens.has_next([Lexer.TOKEN_KEYWORD_WHEN]):
@@ -709,9 +712,16 @@ func _expression(min_precedence = 1):
 
 
 func _operand():
+	if _tokens.has_next([Lexer.TOKEN_NOT]):
+		_tokens.consume([Lexer.TOKEN_NOT])
+		return ExpressionNode('not', [_operand()])
+
+	return _value()
+
+
+func _value():
 	_tokens.consume([
 		Lexer.TOKEN_IDENTIFIER,
-		Lexer.TOKEN_NOT,
 		Lexer.TOKEN_NUMBER_LITERAL,
 		Lexer.TOKEN_STRING_LITERAL,
 		Lexer.TOKEN_BOOLEAN_LITERAL,
@@ -719,8 +729,6 @@ func _operand():
 	])
 
 	match _tokens.current_token.token:
-		Lexer.TOKEN_NOT:
-			return ExpressionNode('not', [_operand()])
 		Lexer.TOKEN_IDENTIFIER:
 			return VariableNode(_tokens.current_token.value)
 		Lexer.TOKEN_NUMBER_LITERAL:
@@ -752,6 +760,62 @@ const operator_labels = {
 
 func _operator(operator, lhs, rhs):
 	return ExpressionNode(operator_labels[operator], [lhs, rhs])
+
+
+func _match_block():
+	_tokens.consume([Lexer.TOKEN_KEYWORD_MATCH])
+	var expression = _expression()
+
+	_tokens.consume([Lexer.TOKEN_INDENT])
+
+	var branches = _match_block_branches()
+
+	var default_branch
+
+	if _tokens.has_next([Lexer.TOKEN_KEYWORD_DEFAULT]):
+		_tokens.consume([Lexer.TOKEN_KEYWORD_DEFAULT])
+		default_branch = _match_block_branch_content()
+
+	_tokens.consume([Lexer.TOKEN_DEDENT])
+	_tokens.consume([Lexer.TOKEN_BRACE_CLOSE])
+
+	return MatchBlockNode(expression, branches, default_branch)
+
+
+func _match_block_branches():
+	var branches = []
+
+	while _tokens.has_next([
+		Lexer.TOKEN_IDENTIFIER,
+		Lexer.TOKEN_NUMBER_LITERAL,
+		Lexer.TOKEN_STRING_LITERAL,
+		Lexer.TOKEN_BOOLEAN_LITERAL,
+		Lexer.TOKEN_NULL_TOKEN
+	]):
+		branches.push_back(_match_block_branch())
+
+	return branches;
+
+
+func _match_block_branch():
+	return {
+		"check": _value(),
+		"content": _match_block_branch_content(),
+	}
+
+
+func _match_block_branch_content():
+	var hasIndent = _tokens.has_next([Lexer.TOKEN_INDENT])
+
+	if hasIndent:
+		_tokens.consume([Lexer.TOKEN_INDENT])
+
+	var content = ContentNode(_lines())
+
+	if hasIndent:
+		_tokens.consume([Lexer.TOKEN_DEDENT])
+
+	return content
 
 
 ## NODES
@@ -843,6 +907,22 @@ func EventNode(name, parameters = null):
 	if parameters == null or parameters.size() == 0:
 		return { "type": 'event', "name": name }
 	return { "type": 'event', "name": name, "params": parameters }
+
+
+func MatchBlockNode(condition, branches, defeault_branch):
+	return {
+		"type": "match",
+		"condition": condition,
+		"branches": branches,
+		"default_branch":  defeault_branch,
+	}
+
+
+func MatchBlockBranch(check, content):
+	return {
+		"check": check,
+		"content": content,
+	}
 
 
 func _on_unexpected_token(result: Dictionary):
