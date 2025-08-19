@@ -42,6 +42,8 @@ const TOKEN_IDENTIFIER = "identifier"
 const TOKEN_KEYWORD_SET = "set"
 const TOKEN_KEYWORD_TRIGGER = "trigger"
 const TOKEN_KEYWORD_WHEN = "when"
+const TOKEN_KEYWORD_MATCH = "match"
+const TOKEN_KEYWORD_DEFAULT = "default"
 const TOKEN_ASSIGN = "="
 const TOKEN_ASSIGN_SUM = "+="
 const TOKEN_ASSIGN_SUB = "-="
@@ -59,6 +61,8 @@ const MODE_OPTION = "OPTION"
 const MODE_QSTRING = "QSTRING"
 const MODE_LOGIC = "LOGIC"
 const MODE_VARIATIONS = "VARIATIONS"
+const MODE_MATCH = "MATCH"
+const MODE_MATCH_BODY = "MATCH_BODY"
 
 
 const _token_hints = {
@@ -95,7 +99,7 @@ const _token_hints = {
 
 const _keywords = [
 	'is', 'isnt', 'or', 'and', 'not', 'true', 'false', 'null',
-	'set', 'trigger', 'when'
+	'set', 'trigger', 'when', 'match',
 ]
 
 var _input = ""
@@ -107,6 +111,9 @@ var _length = 0
 var _pending_tokens = []
 var _modes = [ MODE_DEFAULT ]
 var _current_quote = ""
+var _match_body_indent: Array[int] = []
+var _is_inline_match_branch: bool = false
+
 
 static func get_token_friendly_hint(token):
 	return _token_hints.get(token, token)
@@ -181,7 +188,7 @@ func _get_next_token():
 		return _handle_indent()
 
 	if not _is_current_mode(MODE_QSTRING) and _input[_position] == '{':
-		return _handle_logic_block_start()
+		return _handle_logic_or_match_block_start()
 
 	if _is_current_mode(MODE_LOGIC):
 		var response = _handle_logic_block()
@@ -189,6 +196,11 @@ func _get_next_token():
 		if response:
 			return response
 
+	if _is_current_mode(MODE_MATCH):
+		var response = _handle_match_block()
+
+		if response:
+			return response
 
 
 	if _input[_position] == '"' or _input[_position] == "'":
@@ -249,7 +261,10 @@ func _handle_line_breaks():
 		_line += 1
 		_position += 1
 		_column = 0
+
 		if _is_current_mode(MODE_OPTION):
+			_pop_mode()
+		elif _is_current_mode(MODE_MATCH_BODY) && _is_inline_match_branch:
 			_pop_mode()
 
 
@@ -279,6 +294,10 @@ func _handle_indent():
 		var previous_indent = _indent[0]
 		_column += indentation
 		_indent.push_front(indentation)
+
+		if _is_current_mode(MODE_MATCH_BODY):
+			_match_body_indent.push_back(previous_indent)
+
 		return Token(TOKEN_INDENT, initial_line, previous_indent)
 
 	if indentation == _indent[0]:
@@ -290,6 +309,10 @@ func _handle_indent():
 		_indent.pop_front()
 		_column = _indent[0]
 		tokens.push_back(Token(TOKEN_DEDENT, _line, _column))
+
+		if _is_match_body_indent_level(_column):
+			_pop_mode()
+			_match_body_indent.pop_back()
 
 	return tokens
 
@@ -603,6 +626,69 @@ func _handle_variation_item():
 	return Token(TOKEN_MINUS, _line, initial_column)
 
 
+func _handle_logic_or_match_block_start():
+	var block_start = _handle_logic_block_start()
+
+	while _is_valid_position() and _is_tab_space_or_line_break(_input[_position]):
+		if _input[_position] == '\n':
+			_line += 1
+			_column = 0
+		else:
+			_column += 1
+
+		_position += 1
+
+	if _check_sequence(_input, _position, 'match'):
+		var token = Token(TOKEN_KEYWORD_MATCH, _line, _column)
+		_position += 5
+		_column += 5
+
+		_handle_space()
+
+		var statement = _handle_logic_statement()
+		_stack_mode(MODE_MATCH)
+
+
+		if statement == null:
+			return _merge_into_array([block_start, token])
+		return _merge_into_array([block_start, token, statement])
+
+	return block_start
+
+
+func _handle_match_block():
+	if _input[_position] == '}':
+		_column += 1
+		_position += 1
+		_pop_mode() # pop match
+		_pop_mode() # pop logic
+		return Token(TOKEN_BRACE_CLOSE, _line, _column - 1)
+
+	var statement
+
+	if _check_sequence(_input, _position, 'default:'):
+		statement = Token(TOKEN_KEYWORD_DEFAULT, _line, _column)
+		_position += 7
+		_column += 7
+	else:
+		statement = _handle_logic_statement()
+
+	if _input[_position] == ':':
+		_column += 1
+		_position += 1
+		_stack_mode(MODE_MATCH_BODY)
+		_is_inline_match_branch = false
+		var p = _position
+
+		while p < _input.length() and _input[p] != '\n':
+			if _input[p] != ' ':
+				_is_inline_match_branch = true
+				break
+			p += 1
+
+	return statement
+
+
 func _handle_logic_block_start():
 	var initial_column = _column
 	_column += 1
@@ -630,13 +716,17 @@ func _handle_logic_block_stop():
 
 
 func _handle_logic_block():
+	if _input[_position] == '}':
+		return _handle_logic_block_stop()
+
+	return _handle_logic_statement()
+
+
+func _handle_logic_statement():
 	if _input[_position] == '"' or _input[_position] == "'":
 		if _current_quote != null:
 			_current_quote = _input[_position]
 		return _handle_logic_string()
-
-	if _input[_position] == '}':
-		return _handle_logic_block_stop()
 
 	if _input[_position] == '(':
 		return _create_simple_token(TOKEN_BRACKET_OPEN)
@@ -864,6 +954,13 @@ func _is_tab_char(character):
 	tab.compile("[\t ]")
 	return tab.search(character) != null
 
+
+func _is_tab_space_or_line_break(character):
+	var rgx = RegEx.new()
+	rgx.compile("[\n\t ]")
+	return rgx.search(character) != null
+
+
 func _is_valid_position():
 	return _position < _input.length() and _input[_position]
 
@@ -886,3 +983,18 @@ func _is_block_identifier(character):
 func _check_sequence(string, initial_position, value):
 	var sequence = string.substr(initial_position, value.length())
 	return sequence == value
+
+
+func _is_match_body_indent_level(current_indent: int) -> bool:
+	return _is_current_mode(MODE_MATCH_BODY) and _match_body_indent[_match_body_indent.size() - 1] == current_indent
+
+
+func _merge_into_array(items: Array) -> Array:
+	var array = []
+	for item in items:
+		if item is Array:
+			array.append_array(item)
+		else:
+			array.append(item)
+
+	return array
