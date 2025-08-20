@@ -239,7 +239,7 @@ func _handle_options_node(options_node):
 		"speaker": options_node.get("speaker"),
 		"id": options_node.get("id"),
 		"tags": options_node.get("tags"),
-		"name": _replace_variables(_translate_text(options_node.get("id"), options_node.get("name"), options_node.get("id_suffixes"))),
+		"text": _replace_variables(_translate_text(options_node.get("id"), options_node.get("name"), options_node.get("id_suffixes"))),
 		"options": options.map(func(e): return _map_option(e, options.find(e), _config.include_hidden_options)),
 	}
 	if options_node.has("meta"):
@@ -287,7 +287,7 @@ func _map_option(option, _index, include_visibility_prop = false):
 		"speaker": o.get("speaker"),
 		"id": o.get("id"),
 		"tags": o.get("tags"),
-		"label": _replace_variables(_translate_text(o.get("id"), o.get("name"), o.get("id_suffixes"))),
+		"text": _replace_variables(_translate_text(o.get("id"), o.get("name"), o.get("id_suffixes"))),
 	}
 
 	if include_visibility_prop:

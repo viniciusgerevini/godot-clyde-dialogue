@@ -36,10 +36,10 @@ func _configure_line(content: Dictionary, should_show_meta: bool):
 
 
 func _configure_options(content: Dictionary, should_show_meta: bool):
-	if content.name == null:
+	if content.text == null:
 		_content_field.hide()
 	else:
-		_content_field.text = content.name
+		_content_field.text = content.text
 
 	_set_speaker(content)
 	_set_meta(content)
@@ -50,7 +50,7 @@ func _configure_options(content: Dictionary, should_show_meta: bool):
 		var option = content.options[index]
 
 		var do = DialogueOption.instantiate()
-		do.text = "%s. %s" % [index + 1, option.label]
+		do.text = "%s. %s" % [index + 1, option.text]
 		_options_container.add_child(do)
 		do.pressed.connect(_on_option_selected.bind(index))
 

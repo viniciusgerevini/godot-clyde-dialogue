@@ -49,14 +49,14 @@ func _set_up_options(options):
 	for c in _options_container.get_node("items").get_children():
 		c.queue_free()
 
-	_options_container.get_node("name").text = options.get('name') if options.get('name') != null else ''
+	_options_container.get_node("name").text = options.get('text') if options.get('text') != null else ''
 	_options_container.get_node("speaker").text = options.get('speaker') if options.get('speaker') != null else ''
 	_options_container.get_node("speaker").visible = _options_container.get_node("speaker").text != ""
 
 	var index = 0
 	for option in options.options:
 		var btn = Button.new()
-		btn.text = option.label
+		btn.text = option.text
 		btn.connect("button_down",Callable(self,"_on_option_selected").bind(index))
 		_options_container.get_node("items").add_child(btn)
 		index += 1
