@@ -4,9 +4,14 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Unreleased
 
+### Breaking changes
+
+- Support to `match` conditions makes `match` a reserved keyword inside logic blocks.
+
 ### Added
 
 - Added UID files
+- Support to `match` condition blocks
 
 ### Changed
 

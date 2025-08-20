@@ -76,7 +76,6 @@ func _setup_icons():
 	_restart_btn.icon = get_theme_icon("RotateLeft", "EditorIcons")
 	_next_line_btn.icon = get_theme_icon("Play", "EditorIcons")
 	_forward_btn.icon = get_theme_icon("TransitionEnd", "EditorIcons")
-	_polterigeist_btn.icon = get_theme_icon("Joypad", "EditorIcons") # TODO custom icon ghost
 	_polterigeist_btn.icon = load("res://addons/clyde/editor/assets/clyde.svg")
 	_clear_mem_btn.icon = get_theme_icon("History", "EditorIcons")
 	_multi_single_btn.icon = get_theme_icon("MakeFloating", "EditorIcons")

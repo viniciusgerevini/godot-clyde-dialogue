@@ -169,6 +169,7 @@ func _initialize_handlers() -> void:
 		"divert": _handle_divert_node,
 		"assignments": _handle_assignments_node,
 		"events": _handle_events_node,
+		"match": _handle_match_block_node,
 	}
 
 
@@ -330,6 +331,22 @@ func _handle_conditional_content_node(conditional_node, fallback_node = _stack_h
 	if _logic.check_condition(conditional_node.conditions):
 		return _handle_next_node(conditional_node.content);
 	return _handle_next_node(fallback_node)
+
+
+func _handle_match_block_node(node):
+	var condition_value = _logic.get_node_value(node.condition)
+
+	for branch in node.branches:
+		var branch_value = _logic.get_node_value(branch.check)
+		if typeof(branch_value) != typeof(condition_value):
+			continue
+		if condition_value == branch_value:
+			return _handle_next_node(branch.content)
+
+	if node.default_branch != null:
+		return _handle_next_node(node.default_branch)
+
+	return _handle_next_node(_stack_head().current)
 
 
 func _handle_variations_node(variations, attempt = 0):

@@ -758,3 +758,76 @@ second option
 	assert_eq_deep(interpreter.get_content(), first_option)
 	interpreter.choose(0)
 	assert_eq_deep(interpreter.get_content(), second_option)
+
+
+func test_match_right_condition():
+	var interpreter = ClydeDialogue.Interpreter.new()
+	var content = parse("""
+{
+  match fruit
+	'banana':
+		This is a banana
+	'apple':
+		This is an apple
+	default:
+		whatever
+}
+""")
+	interpreter.init(content)
+
+	interpreter.set_variable('fruit', 'apple')
+
+	assert_eq_deep(interpreter.get_content().text, 'This is an apple')
+
+
+func test_match_default_if_no_other_branch_matches():
+	var interpreter = ClydeDialogue.Interpreter.new()
+	var content = parse("""
+{
+  match fruit
+	'banana':
+		This is a banana
+	'apple':
+		This is an apple
+	default:
+		This is the default branch
+}
+""")
+	interpreter.init(content)
+	interpreter.set_variable('fruit', 'pineapple')
+
+	assert_eq_deep(interpreter.get_content().text, 'This is the default branch')
+
+
+func test_match_does_not_show_anything_if_no_matches():
+	var interpreter = ClydeDialogue.Interpreter.new()
+	var content = parse("""
+{
+  match fruit
+	'banana':
+		This is a banana
+	'apple':
+		This is an apple
+}
+continue
+""")
+	interpreter.init(content)
+	interpreter.set_variable('fruit', 'pineapple')
+
+	assert_eq_deep(interpreter.get_content().text, 'continue')
+
+
+func test_match_works_inline():
+	var interpreter = ClydeDialogue.Interpreter.new()
+	var content = parse("""
+{
+  match fruit
+	1: This is a banana
+	'apple': This is an apple
+	default: whatever
+}
+""")
+	interpreter.init(content)
+	interpreter.set_variable('fruit', 'apple')
+
+	assert_eq_deep(interpreter.get_content().text, 'This is an apple')

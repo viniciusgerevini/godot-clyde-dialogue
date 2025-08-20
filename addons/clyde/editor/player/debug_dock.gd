@@ -24,9 +24,6 @@ const DebugHistoryEntries = preload("./debug_dock_history_entries.gd")
 
 @onready var _debug_history = DebugHistoryEntries.new(_event_entries)
 
-# TODO add a button to clear external variables
-
-
 func _ready():
 	_event_scrollbar.changed.connect(_on_scrollbar_changed)
 	_variable_scrollbar.changed.connect(_on_var_scrollbar_changed)

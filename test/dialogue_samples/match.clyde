@@ -1,0 +1,31 @@
+{ set skill_type = 'ranged' }
+{ set hp = 9, can_heal = true }
+
+Hello there!
+
+{ match skill_type
+    'melee':
+        Hero:   I need to get closer!
+        Helper: Wouldn't that be dangerous?
+    'ranged':
+        Hero: I reckon we can hit it from here.
+        Helper: This sounds wise!
+    default:
+        Hero: Not sure what I'm supposed to do
+        Helper: Just wing it!
+}
+
+{ match hp < 10 and can_heal
+    true: -> healing conversation
+    false: -> another block
+}
+
+That's all folks!
+
+== healing conversation
+Helper: Use your healing potion!
+<-
+
+== another block
+Nothing special here
+<-

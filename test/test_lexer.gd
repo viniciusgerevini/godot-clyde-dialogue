@@ -1194,3 +1194,198 @@ func test_imports():
 
 		{ "token": Lexer.TOKEN_EOF, "line": 8, "column": 0, "value": null, },
 	])
+
+
+
+func test_match_with_branches():
+	var lexer = Lexer.new()
+	var tokens = lexer.init("""
+{ match this_is_a_variable
+	'value_a':
+		This is a line
+	'value_b':
+		This is another line
+	default:
+		This is the default line
+}""").get_all()
+	assert_eq_deep(tokens, [
+		{ token = Lexer.TOKEN_LINE_BREAK, line = 1, column = 0, value = null },
+		{ token = Lexer.TOKEN_BRACE_OPEN, line = 1, column = 0, value = null },
+		{ token = Lexer.TOKEN_KEYWORD_MATCH, line = 1, column = 2, value = null },
+		{ token = Lexer.TOKEN_IDENTIFIER, value = 'this_is_a_variable', line = 1, column = 8, },
+		{ token = Lexer.TOKEN_INDENT, line = 2, column = 0, value = null },
+		{ token = Lexer.TOKEN_STRING_LITERAL, value = 'value_a', line = 2, column = 1, },
+
+		{ token = Lexer.TOKEN_INDENT, line = 3, column = 1, value = null },
+		{
+			token = Lexer.TOKEN_TEXT,
+			value = 'This is a line',
+			line = 3,
+			column = 2,
+		},
+		{ token = Lexer.TOKEN_DEDENT, line = 4, column =1, value = null },
+		{ token = Lexer.TOKEN_STRING_LITERAL, value = 'value_b', line = 4, column = 1, },
+
+		{ token = Lexer.TOKEN_INDENT, line = 5, column = 1, value = null },
+		{
+			token = Lexer.TOKEN_TEXT,
+			value = 'This is another line',
+			line = 5,
+			column = 2,
+		},
+		{ token = Lexer.TOKEN_DEDENT, line = 6, column = 1, value = null },
+		{ token = Lexer.TOKEN_KEYWORD_DEFAULT, line = 6, column = 1, value = null },
+		{ token = Lexer.TOKEN_INDENT, line = 7, column = 1, value = null },
+		{
+			token = Lexer.TOKEN_TEXT,
+			value = 'This is the default line',
+			line = 7,
+			column = 2,
+		},
+		{ token = Lexer.TOKEN_DEDENT, line = 8, column = 1, value = null },
+		{ token = Lexer.TOKEN_DEDENT, line = 8, column = 0, value = null },
+		{ token = Lexer.TOKEN_BRACE_CLOSE, line = 8, column = 0, value = null },
+		{ token = Lexer.TOKEN_EOF, line = 8, column = 1, value = null },
+	])
+
+
+func test_match_complex_statement():
+	var lexer = Lexer.new()
+	var tokens = lexer.init("""
+{ match this_is_a_variable && this_other > 10
+	'value_a':
+		This is a line
+}""").get_all()
+
+	assert_eq_deep(tokens, [
+		{ token = Lexer.TOKEN_LINE_BREAK, line = 1, column = 0, value = null },
+		{ token = Lexer.TOKEN_BRACE_OPEN, line = 1, column = 0, value = null },
+		{ token = Lexer.TOKEN_KEYWORD_MATCH, line = 1, column = 2, value = null },
+		{ token = Lexer.TOKEN_IDENTIFIER, value = 'this_is_a_variable', line = 1, column = 8, },
+		{ token = Lexer.TOKEN_AND, line = 1, column = 27, value = null },
+		{ token = Lexer.TOKEN_IDENTIFIER, value = 'this_other', line = 1, column = 30, },
+		{ token = Lexer.TOKEN_GREATER, line = 1, column = 41, value = null },
+		{ token = Lexer.TOKEN_NUMBER_LITERAL, value = '10', line = 1, column = 43, },
+		{ token = Lexer.TOKEN_INDENT, line = 2, column = 0, value = null },
+		{ token = Lexer.TOKEN_STRING_LITERAL, value = 'value_a', line = 2, column = 1, },
+		{ token = Lexer.TOKEN_INDENT, line = 3, column = 1, value = null },
+		{
+			token = Lexer.TOKEN_TEXT,
+			value = 'This is a line',
+			line = 3,
+			column = 2,
+		},
+		{ token = Lexer.TOKEN_DEDENT, line = 4, column = 1, value = null },
+		{ token = Lexer.TOKEN_DEDENT, line = 4, column = 0, value = null },
+		{ token = Lexer.TOKEN_BRACE_CLOSE, line = 4, column = 0, value = null },
+		{ token = Lexer.TOKEN_EOF, line = 4, column = 1, value = null },
+	])
+
+
+func test_match_branches_same_line():
+	var lexer = Lexer.new()
+	var tokens = lexer.init("""
+{ match this_is_a_variable
+	true: This is a line
+	default: This is the default line
+}""").get_all()
+	assert_eq_deep(tokens, [
+		{ token = Lexer.TOKEN_LINE_BREAK, line = 1, column = 0, value = null },
+		{ token = Lexer.TOKEN_BRACE_OPEN, line = 1, column = 0, value = null },
+		{ token = Lexer.TOKEN_KEYWORD_MATCH, line = 1, column = 2, value = null },
+		{ token = Lexer.TOKEN_IDENTIFIER, value = 'this_is_a_variable', line = 1, column = 8, },
+		{ token = Lexer.TOKEN_INDENT, line = 2, column = 0, value = null },
+		{ token = Lexer.TOKEN_BOOLEAN_LITERAL, value = 'true', line = 2, column = 1, },
+		{
+			token = Lexer.TOKEN_TEXT,
+			value = 'This is a line',
+			line = 2,
+			column = 7,
+		},
+		{ token = Lexer.TOKEN_KEYWORD_DEFAULT, line = 3, column = 1, value = null },
+		{
+			token = Lexer.TOKEN_TEXT,
+			value = 'This is the default line',
+			line = 3,
+			column = 10,
+		},
+		{ token = Lexer.TOKEN_DEDENT, line = 4, column = 0, value = null },
+		{ token = Lexer.TOKEN_BRACE_CLOSE, line = 4, column = 0, value = null },
+		{ token = Lexer.TOKEN_EOF, line = 4, column = 1, value = null },
+	])
+
+
+func test_match_mixed_with_content():
+	var lexer = Lexer.new()
+	var tokens = lexer.init("""
+this is a line outside the match
+{ match this_is_a_variable
+	'value_a':
+		This is a line
+}
+this is a line after the match
+""").get_all()
+
+	assert_eq_deep(tokens, [
+		{ token = Lexer.TOKEN_TEXT, value = 'this is a line outside the match', line = 1, column = 0 },
+		{ token = Lexer.TOKEN_LINE_BREAK, line = 2, column = 0, value = null },
+		{ token = Lexer.TOKEN_BRACE_OPEN, line = 2, column = 0, value = null },
+		{ token = Lexer.TOKEN_KEYWORD_MATCH, line = 2, column = 2, value = null },
+		{ token = Lexer.TOKEN_IDENTIFIER, value = 'this_is_a_variable', line = 2, column = 8, },
+		{ token = Lexer.TOKEN_INDENT, line = 3, column = 0, value = null },
+		{ token = Lexer.TOKEN_STRING_LITERAL, value = 'value_a', line = 3, column = 1, },
+		{ token = Lexer.TOKEN_INDENT, line = 4, column = 1, value = null },
+		{
+			token = Lexer.TOKEN_TEXT,
+			value = 'This is a line',
+			line = 4,
+			column = 2,
+		},
+		{ token = Lexer.TOKEN_DEDENT, line = 5, column = 1, value = null },
+		{ token = Lexer.TOKEN_DEDENT, line = 5, column = 0, value = null },
+		{ token = Lexer.TOKEN_BRACE_CLOSE, line = 5, column = 0, value = null },
+		{ token = Lexer.TOKEN_TEXT, value = 'this is a line after the match', line = 6, column = 0 },
+		{ token = Lexer.TOKEN_EOF, line = 7, column = 0, value = null },
+	])
+
+
+func test_match_handles_error_scenario_gracefully():
+	var lexer = Lexer.new()
+	var tokens = lexer.init("""
+{ match
+	true:
+		This is a line
+}
+
+{
+	match this_is_a_variable
+		This
+}
+""").get_all()
+
+	var relevant_tokens = tokens.slice(0, 15)
+
+	assert_eq_deep(relevant_tokens, [
+		{ token = Lexer.TOKEN_LINE_BREAK, line = 1, column = 0, value = null },
+		{ token = Lexer.TOKEN_BRACE_OPEN, line = 1, column = 0, value = null },
+		{ token = Lexer.TOKEN_KEYWORD_MATCH, line = 1, column = 2, value = null },
+		{ token = Lexer.TOKEN_INDENT, line = 2, column = 0, value = null },
+		{ token = Lexer.TOKEN_BOOLEAN_LITERAL, value = 'true', line = 2, column = 1, },
+		{ token = Lexer.TOKEN_INDENT, line = 3, column = 1, value = null },
+		{
+			token = Lexer.TOKEN_TEXT,
+			value = 'This is a line',
+			line = 3,
+			column = 2,
+		},
+		{ token = Lexer.TOKEN_DEDENT, line = 4, column = 1, value = null },
+		{ token = Lexer.TOKEN_DEDENT, line = 4, column = 0, value = null },
+		{ token = Lexer.TOKEN_BRACE_CLOSE, line = 4, column = 0, value = null },
+
+		{ token = Lexer.TOKEN_LINE_BREAK, line = 6, column = 0, value = null },
+		{ token = Lexer.TOKEN_BRACE_OPEN, line = 6, column = 0, value = null },
+		{ token = Lexer.TOKEN_KEYWORD_MATCH, line = 7, column = 1, value = null },
+		{ token = Lexer.TOKEN_IDENTIFIER, value = 'this_is_a_variable', line = 7, column = 7, },
+
+		{ token = Lexer.TOKEN_INDENT, line = 8, column = 0, value = null },
+	])
