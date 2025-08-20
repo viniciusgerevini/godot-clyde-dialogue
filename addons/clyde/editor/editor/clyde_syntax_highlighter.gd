@@ -9,7 +9,7 @@ var _cache = {}
 
 const _logic_english_operators = [ "and", "or", "not", "is", "isnt" ]
 const _logic_operators_and_symbols = [ "=", "*", "/", "+", "-", "?", ",", "<", ">", "|", "%", "&" ]
-const _logic_keywords = [ "set", "when", "trigger" ]
+const _logic_keywords = [ "set", "when", "trigger", "match", "default" ]
 const _options = [ "*", "+", ">" ]
 
 var _escapable_chars_regex = RegEx.create_from_string("[\\\\|\\*\\+\\>\\%\\(\\)\\{\\}\\\"\\'\\$\\#\\:]")
@@ -17,6 +17,8 @@ var _variations_mode_regex = RegEx.create_from_string("^([\\s\\t]*)(cycle|once|s
 var _tag_regex = RegEx.create_from_string("[A-z0-9\\-\\_\\.]")
 var _identifier_regex = RegEx.create_from_string("[A-z0-9\\-\\_]")
 var _leading_spaces_regex = RegEx.create_from_string("^\\s*")
+var _match_headline_regex = RegEx.create_from_string("^\\{?([\\s\\t]*)match([\\s\\t]*)")
+
 
 var _config = {}
 
@@ -40,6 +42,8 @@ func _get_regions(content: String, line_number: int) -> Dictionary:
 	if cached != null and not _has_previous_line_changed(line_number, cached):
 		return cached.regions
 
+	var is_in_match_mode = false
+	var match_body_start = -1
 	var is_in_logic_mode = false
 	var is_in_variation_mode = false
 	var is_in_quote_mode = false
@@ -52,34 +56,45 @@ func _get_regions(content: String, line_number: int) -> Dictionary:
 
 	var prev_q_mode = false
 	var prev_l_mode = false
+	var prev_m_mode = false
 	var prev_v_mode = false
+	var prev_mb_start = -1
 
 	if line_number > 0:
 		var previous_line = _get_from_cache(line_number - 1)
 		if previous_line != null:
 			is_in_quote_mode = previous_line.meta.on_q_mode
 			is_in_logic_mode = previous_line.meta.on_l_mode
+			is_in_match_mode = previous_line.meta.on_m_mode
+			match_body_start = previous_line.meta.mb_start
 			is_in_variation_mode = previous_line.meta.on_v_mode
 			quote_char = previous_line.meta.quote_char
 			prev_q_mode = previous_line.meta.on_q_mode
 			prev_l_mode = previous_line.meta.on_l_mode
+			prev_m_mode = previous_line.meta.on_m_mode
 			prev_v_mode = previous_line.meta.on_v_mode
+			prev_mb_start = previous_line.meta.mb_start
 
 	if content.begins_with("--"):
 		regions[current_column] = _comment_region()
 		_set_cache(line_number, content, regions, {
 			"on_q_mode": is_in_quote_mode,
 			"on_l_mode": is_in_logic_mode,
+			"on_m_mode": is_in_match_mode,
+			"mb_start": match_body_start,
 			"on_v_mode": is_in_variation_mode,
 			"has_divert": has_divert,
 			"quote_char": quote_char,
 			"prev_on_q_mode": prev_q_mode,
 			"prev_on_l_mode": prev_l_mode,
+			"prev_on_m_mode": prev_m_mode,
 			"prev_on_v_mode": prev_v_mode,
+			"prev_mb_start": prev_mb_start,
 		})
 		return regions
 
 	var is_first_content_in_line = true
+	var is_match_block_inline = false
 
 	while current_column < content.length():
 		var has_no_text_content = uninterrupted_text.strip_edges().is_empty()
@@ -91,6 +106,18 @@ func _get_regions(content: String, line_number: int) -> Dictionary:
 			was_last_region_text = false
 			continue
 
+		# match block
+		if is_in_match_mode:
+			var result = _handle_match_mode(content, current_column, match_body_start, is_match_block_inline, regions)
+
+			is_in_match_mode = result.is_in_match_mode
+			current_column = result.current_column
+			is_speaker_allowed = result.is_speaker_allowed
+			match_body_start = result.match_body_start
+			is_match_block_inline = result.get("is_match_block_inline", is_match_block_inline)
+			if not result.continue_with_regular_format:
+				continue
+
 		# logic blocks
 		if is_in_logic_mode:
 			var result = _handle_logic_mode(content, current_column, has_no_text_content, regions)
@@ -98,6 +125,11 @@ func _get_regions(content: String, line_number: int) -> Dictionary:
 			current_column = result.current_column
 			is_speaker_allowed = result.is_speaker_allowed
 			was_last_region_text = false
+
+			if is_in_logic_mode and not is_in_match_mode:
+				is_in_match_mode = _is_match_headline(content)
+				is_in_logic_mode = false
+
 			continue
 
 		# logic block start
@@ -107,6 +139,7 @@ func _get_regions(content: String, line_number: int) -> Dictionary:
 			was_last_region_text = false
 			current_column += 1
 			is_speaker_allowed = false
+
 			continue
 
 		# line in quotes
@@ -242,12 +275,16 @@ func _get_regions(content: String, line_number: int) -> Dictionary:
 	_set_cache(line_number, content, regions, {
 		"on_q_mode": is_in_quote_mode,
 		"on_l_mode": is_in_logic_mode,
+		"on_m_mode": is_in_match_mode,
+		"mb_start": match_body_start,
 		"on_v_mode": is_in_variation_mode,
 		"quote_char": quote_char,
 		"has_divert": has_divert,
 		"prev_on_q_mode": prev_q_mode,
 		"prev_on_l_mode": prev_l_mode,
+		"prev_on_m_mode": prev_m_mode,
 		"prev_on_v_mode": prev_v_mode,
+		"prev_mb_start": prev_mb_start,
 	})
 
 	return regions;
@@ -279,9 +316,13 @@ func _default_meta():
 		"on_q_mode": false,
 		"on_l_mode": false,
 		"on_v_mode": false,
+		"on_m_mode": false,
+		"mb_start": -1,
 		"quote_char": "",
 		"prev_on_q_mode": false,
 		"prev_on_l_mode": false,
+		"prev_on_m_mode": false,
+		"prev_mb_start": -1,
 		"prev_on_v_mode": false,
 		"has_divert": false,
 	}
@@ -298,11 +339,13 @@ func _has_previous_line_changed(line_number: int, cached: Dictionary) -> bool:
 	return (
 		previous_line.meta.on_q_mode != cached.meta.prev_on_q_mode ||
 		previous_line.meta.on_l_mode != cached.meta.prev_on_l_mode ||
+		previous_line.meta.on_m_mode != cached.meta.prev_on_m_mode ||
+		previous_line.meta.mb_start != cached.meta.prev_mb_start ||
 		previous_line.meta.on_v_mode != cached.meta.prev_on_v_mode
 	)
 
 
-func _handle_logic_mode(content: String, current_column: int, no_previous_text: bool, regions: Dictionary):
+func _handle_logic_mode(content: String, current_column: int, no_previous_text: bool, regions: Dictionary, end_char: String = "}"):
 	while current_column < content.length():
 		var character = content[current_column]
 
@@ -333,7 +376,7 @@ func _handle_logic_mode(content: String, current_column: int, no_previous_text: 
 			continue
 
 		# logic block end
-		if character == "}":
+		if character == "}" or character == end_char:
 			regions[current_column] = _symbol_region()
 			current_column += 1
 			return {
@@ -349,6 +392,66 @@ func _handle_logic_mode(content: String, current_column: int, no_previous_text: 
 		"is_in_logic_mode": true,
 		"current_column": current_column,
 		"is_speaker_allowed": no_previous_text
+	}
+
+
+func _handle_match_mode(content: String, current_column: int, match_body_start: int, is_match_block_inline: bool, regions: Dictionary):
+	if is_match_block_inline: # inline
+		return {
+			"continue_with_regular_format": content.length() > current_column,
+			"is_in_match_mode": true,
+			"current_column": current_column,
+			"match_body_start": 9999999999,
+			"is_speaker_allowed": true,
+		}
+
+	if match_body_start == -2: # this means, it's the start of the block
+		var indentation = _get_indentation(content, current_column)
+		current_column += indentation
+		match_body_start = current_column
+
+	if match_body_start > -1:
+		var indent = _get_indentation(content, 0)
+
+		if indent >= match_body_start:
+			return {
+				"continue_with_regular_format": content.length() > current_column,
+				"is_in_match_mode": true,
+				"current_column": current_column,
+				"match_body_start": match_body_start,
+				"is_speaker_allowed": true
+			}
+
+	var r = _handle_logic_mode(content, current_column, false, regions, ":")
+	current_column = r.current_column
+
+	var is_in_match_mode = true
+	var is_speaker_allowed = false
+
+	if not r.is_in_logic_mode:
+		if content[current_column - 1] == ":":
+			match_body_start = -2
+			is_speaker_allowed = true
+			regions[current_column] = _text_region()
+
+			if content.length() > current_column:
+				var remaining = content.substr(current_column)
+				var leading_spaces = _leading_spaces_regex.search(remaining)
+
+				if remaining.length() > leading_spaces.get_end():
+					match_body_start = -3
+					is_match_block_inline = true
+		else:
+			is_in_match_mode = false
+			match_body_start = -1
+
+	return {
+		"continue_with_regular_format": false,
+		"is_in_match_mode": is_in_match_mode,
+		"current_column": current_column,
+		"match_body_start": match_body_start,
+		"is_speaker_allowed": is_speaker_allowed,
+		"is_match_block_inline": is_match_block_inline,
 	}
 
 
@@ -467,7 +570,7 @@ func _handle_variation_mode_start(content: String, current_column: int, regions:
 		if result != null:
 			regions[current_column + result.get_start(2)] = _keyword_region()
 			if result.get_start(3) != -1:
-				regions[current_column + result.get_start(3)] =_text_region()
+				regions[current_column + result.get_start(3)] = _text_region()
 			if result.get_start(4) != -1:
 				regions[current_column + result.get_start(4)] = _keyword_region()
 			if result.get_start(5) != -1:
@@ -565,3 +668,14 @@ func _was_escaped(content: String, current_column: int) -> bool:
 
 func _can_be_escaped(character: String) -> bool:
 	return _escapable_chars_regex.search(character) != null
+
+
+func _is_match_headline(content: String) -> bool:
+	return _match_headline_regex.search(content) != null
+
+
+func _get_indentation(content: String, current_column: int) -> int:
+	var index = current_column
+	while content.length() > index and (content[index] == " " or content[index] == "\t"):
+		index += 1
+	return index
