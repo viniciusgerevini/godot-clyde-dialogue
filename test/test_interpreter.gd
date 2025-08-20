@@ -822,7 +822,7 @@ func test_match_works_inline():
 	var content = parse("""
 {
   match fruit
-	'banana': This is a banana
+	1: This is a banana
 	'apple': This is an apple
 	default: whatever
 }

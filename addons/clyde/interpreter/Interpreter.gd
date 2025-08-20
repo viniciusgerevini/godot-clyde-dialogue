@@ -338,6 +338,8 @@ func _handle_match_block_node(node):
 
 	for branch in node.branches:
 		var branch_value = _logic.get_node_value(branch.check)
+		if typeof(branch_value) != typeof(condition_value):
+			continue
 		if condition_value == branch_value:
 			return _handle_next_node(branch.content)
 
