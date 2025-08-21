@@ -20,9 +20,7 @@ const CSV_EXPORTER_CFG_DELIMITER = "csv_delimiter"
 const CSV_EXPORTER_CFG_QUOTE_TYPE = "csv_quote_type"
 const CSV_EXPORTER_RECORDED_PATHS = "csv_recorded_paths"
 
-
-# TODO better docs
-const ONLINE_DOCS_URL = "https://github.com/viniciusgerevini/godot-clyde-dialogue/blob/godot_4/USAGE.md"
+const ONLINE_DOCS_URL = "https://thisisvini.com/clyde"
 const REPORT_ISSUE_URL = "https://github.com/viniciusgerevini/godot-clyde-dialogue/issues"
 
 func _init():
