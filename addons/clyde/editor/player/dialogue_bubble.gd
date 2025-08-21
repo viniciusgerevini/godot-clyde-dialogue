@@ -53,6 +53,8 @@ func _configure_options(content: Dictionary, should_show_meta: bool):
 		do.text = "%s. %s" % [index + 1, option.text]
 		_options_container.add_child(do)
 		do.pressed.connect(_on_option_selected.bind(index))
+		if option.visited:
+			do.modulate.a = 0.7
 
 
 func _set_speaker(content: Dictionary):

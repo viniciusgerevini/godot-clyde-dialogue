@@ -33,7 +33,8 @@ func _option(option):
 		"text": option.get("text"),
 		"speaker": option.get("speaker"),
 		"id": option.get("id"),
-		"tags": option.get("tags", [])
+		"tags": option.get("tags", []),
+		"visited": option.get("visited", false),
 	}
 
 
@@ -247,6 +248,35 @@ func test_include_hidden_options():
 
 	interpreter.choose(1)
 	assert_eq(interpreter.get_content().text, "line b")
+
+
+func test_option_include_visited_information():
+	var interpreter = ClydeDialogue.Interpreter.new()
+	var content = parse("""
++ a
+  line a
+  <-
++ b
+  line b
+  <-
+""")
+	interpreter.init(content)
+
+	# get options
+	interpreter.get_content()
+	# choose first
+	interpreter.choose(0)
+	interpreter.get_content()
+
+	var options = interpreter.get_content()
+
+	assert_eq_deep(
+		options.options,
+		[
+			_option({ "text": "a", "visited": true }),
+			_option({ "text": "b", "visited": false })
+		]
+	)
 
 
 func test_blocks_and_diverts():
