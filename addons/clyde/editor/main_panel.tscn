@@ -65,6 +65,7 @@ visible = false
 [connection signal="close_file_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_close_file_triggered"]
 [connection signal="close_other_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_close_other_triggered"]
 [connection signal="create_csv_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_create_csv_triggered"]
+[connection signal="dock_button_pressed" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_dock_button_pressed"]
 [connection signal="execute_dialogue" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_execute_dialogue"]
 [connection signal="generate_ids_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_generate_ids_triggered"]
 [connection signal="new_file_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_new_file_triggered"]

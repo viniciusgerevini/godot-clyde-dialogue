@@ -84,3 +84,6 @@ CSV_EXPORTER_EXPORT,Export CSV
 CSV_FILE_EXISTS_WARNING,Selected file already exists. Content will be overwritten.
 CSV_EXPORTER_SUCCEED,CSV export succeeded
 CSV_EXPORTER_FAIL,CSV export failed
+EDITOR_WINDOW_TITLE,Clyde Dialogue
+PLAYER_WINDOW_TITLE,Clyde Dialogue Player
+DOCK_WINDOW,Dock/Undock window

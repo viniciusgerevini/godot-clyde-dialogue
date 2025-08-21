@@ -1,6 +1,9 @@
 @tool
 extends MarginContainer
 
+signal dock_button_pressed
+
+const DockableWindow = preload("./windows/dockable_window.gd")
 const DebugPanel = preload("./player/debug_dock.tscn")
 const InterfaceText = preload("./config/interface_text.gd")
 const Settings = preload("./config/settings.gd")
@@ -38,7 +41,10 @@ var editor_plugin: EditorPlugin
 
 var _debug_panel
 
+var _dockable_player
+
 func _ready():
+	_configure_dockable_player()
 	_load_config()
 	_open_files = _load_open_files()
 	_load_recents()
@@ -48,6 +54,24 @@ func _ready():
 
 	self.tree_exiting.connect(_on_tree_exiting)
 
+
+func _configure_dockable_player() -> void:
+	_dockable_player = DockableWindow.new(
+		$HSplitContainer,
+		editor_plugin.get_editor_interface().get_base_control(),
+		player
+	)
+	_dockable_player.title = InterfaceText.get_string(InterfaceText.KEY_PLAYER_WINDOW_TITLE)
+	_dockable_player.content_margin_left = 10
+	_dockable_player.content_margin_right = 10
+	_dockable_player.content_margin_bottom = 10
+
+	_dockable_player.window_docked.connect(func():
+		player.show_close_button()
+	)
+	_dockable_player.window_undocked.connect(func():
+		player.hide_close_button()
+	)
 
 func _on_block_list_block_selected(line, column):
 	editor.go_to_position(line, column)
@@ -633,3 +657,10 @@ func load_file(path):
 
 func _on_player_close_triggered():
 	_toggle_player()
+	if not player.visible:
+		editor.clear_executing_line(player._dialogue_key)
+
+
+
+func _on_top_bar_dock_button_pressed() -> void:
+	dock_button_pressed.emit()
