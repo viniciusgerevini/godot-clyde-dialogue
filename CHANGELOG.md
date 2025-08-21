@@ -13,6 +13,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 - Added UID files
 - Support to `match` condition blocks
+- Options now have a "visited" property to indicate if they were accessed before
 
 ### Changed
 
