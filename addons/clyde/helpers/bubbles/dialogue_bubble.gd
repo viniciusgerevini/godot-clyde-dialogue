@@ -132,7 +132,7 @@ func _setup_options(content: Dictionary):
 	_fallback_option = null
 	for option in content.options:
 		var i: Button = DialogueOption.instantiate()
-		i.text = option.label
+		i.text = option.text
 		i.button_group = button_group
 		i.pressed.connect(_on_option_pressed.bind(i))
 		_options_container.add_child(i)
@@ -140,7 +140,7 @@ func _setup_options(content: Dictionary):
 			if option.tags.has("fallback"):
 				_fallback_option  = i
 
-	var content_name = content.get("name")
+	var content_name = content.get("text")
 	if content_name == null or content_name.strip_edges().is_empty():
 		_text_field.hide()
 	else:

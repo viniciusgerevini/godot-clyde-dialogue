@@ -20,7 +20,7 @@ func _line(line):
 func _options(options):
 	return {
 		"type": "options",
-		"name": options.get("name"),
+		"text": options.get("text"),
 		"id": options.get("id"),
 		"tags": options.get("tags", []),
 		"speaker": options.get("speaker"),
@@ -30,7 +30,7 @@ func _options(options):
 
 func _option(option):
 	return {
-		"label": option.get("label"),
+		"text": option.get("text"),
 		"speaker": option.get("speaker"),
 		"id": option.get("id"),
 		"tags": option.get("tags", [])
@@ -162,14 +162,14 @@ first topics $abc&suffix1
 	interpreter.set_variable("suffix1", "P");
 	interpreter.set_variable("suffix2", "S");
 	var first_options = interpreter.get_content();
-	assert_eq(first_options.name, "simple key with suffix 1")
-	assert_eq(first_options.options[0].label, "simple key with only suffix 2")
+	assert_eq(first_options.text, "simple key with suffix 1")
+	assert_eq(first_options.options[0].text, "simple key with only suffix 2")
 
 	interpreter.choose(0);
 	interpreter.get_content()
 
 	var second_options = interpreter.get_content();
-	assert_eq(second_options.options[0].label, "simple key with suffix 1 and 2")
+	assert_eq(second_options.options[0].text, "simple key with suffix 1 and 2")
 
 
 func test_interpreter_option_id_lookup_suffix():
@@ -190,7 +190,7 @@ func test_options():
 
 	var first_part = [
 		_line({ "type": "line", "text": "what do you want to talk about?", "speaker": "npc" }),
-		_options({ "options": [_option({ "label": "Life" }), _option({ "label": "The universe" }), _option({ "label": "Everything else...", "tags": ["some_tag"] })] }),
+		_options({ "options": [_option({ "text": "Life" }), _option({ "text": "The universe" }), _option({ "text": "Everything else...", "tags": ["some_tag"] })] }),
 		]
 
 	var life_option = [
@@ -212,7 +212,7 @@ func test_fallback_options():
 	var content = parse("*= a\n>= b\nend")
 	interpreter.init(content)
 
-	assert_eq_deep(interpreter.get_content(), _options({ "options": [_option({ "label": "a" }), _option({ "label": "b" }) ] }))
+	assert_eq_deep(interpreter.get_content(), _options({ "options": [_option({ "text": "a" }), _option({ "text": "b" }) ] }))
 	interpreter.choose(0)
 	assert_eq_deep(interpreter.get_content().text, "a")
 	assert_eq_deep(interpreter.get_content().text, "end")
@@ -236,8 +236,8 @@ func test_include_hidden_options():
 	assert_eq_deep(
 		options.options,
 		[
-			_option_with_visibility_prop({ "label": "a", "is_visible": false }),
-			_option_with_visibility_prop({ "label": "b", "is_visible": true })
+			_option_with_visibility_prop({ "text": "a", "is_visible": false }),
+			_option_with_visibility_prop({ "text": "b", "is_visible": true })
 		]
 	)
 
@@ -256,28 +256,28 @@ func test_blocks_and_diverts():
 
 	var initial_dialogue = [
 		_line({ "type": "line", "text": "what do you want to talk about?", "speaker": "npc" }),
-		_options({ "options": [_option({ "label": "Life" }),_option({ "label": "The universe" }), _option({ "label": "Everything else..." }), _option({ "label": "Goodbye!" })] }),
+		_options({ "options": [_option({ "text": "Life" }),_option({ "text": "The universe" }), _option({ "text": "Everything else..." }), _option({ "text": "Goodbye!" })] }),
 	]
 
 	var life_option = [
 		_line({ "type": "line", "text": "I want to talk about life!", "speaker": "player" }),
 		_line({ "type": "line", "text": "Well! That's too complicated...", "speaker": "npc" }),
 		# back to initial dialogue
-		_options({ "options": [_option({ "label": "The universe" }), _option({ "label": "Everything else..." }), _option({ "label": "Goodbye!" })] })
+		_options({ "options": [_option({ "text": "The universe" }), _option({ "text": "Everything else..." }), _option({ "text": "Goodbye!" })] })
 	]
 
 	var everything_option = [
 		_line({ "type": "line", "text": "What about everything else?", "speaker": "player" }),
 		_line({ "type": "line", "text": "I don't have time for this...", "speaker": "npc" }),
 		# back to initial dialogue
-		_options({ "options": [_option({ "label": "The universe" }), _option({ "label": "Goodbye!" })] })
+		_options({ "options": [_option({ "text": "The universe" }), _option({ "text": "Goodbye!" })] })
 	]
 
 	var universe_option = [
 		_line({ "type": "line", "text": "I want to talk about the universe!", "speaker": "player" }),
 		_line({ "type": "line", "text": "That's too complex!", "speaker": "npc" }),
 		# back to initial dialogue
-		_options({ "options": [_option({ "label": "Goodbye!" })] })
+		_options({ "options": [_option({ "text": "Goodbye!" })] })
 	]
 
 	var goodbye_option = [
@@ -463,7 +463,7 @@ func test_variables():
 	assert_eq_deep(dialogue.get_content().text, "hey {you}")
 	assert_eq_deep(
 		dialogue.get_content(),
-		_options({ "options": [_option({ "label": "Life" }), _option({ "label": "The universe" })] })
+		_options({ "options": [_option({ "text": "Life" }), _option({ "text": "The universe" })] })
 	)
 	dialogue.choose(1)
 
@@ -622,8 +622,8 @@ func test_changing_block_order_does_not_affect_persistence():
 	var block_2_options = interpreter.get_content()
 
 
-	assert_eq_deep(block_1_options, _options({ "options": [_option({ "label": "option 2" })] }))
-	assert_eq_deep(block_2_options, _options({ "options": [_option({ "label": "option 1" }), _option({ "label": "option 2" })] }))
+	assert_eq_deep(block_1_options, _options({ "options": [_option({ "text": "option 2" })] }))
+	assert_eq_deep(block_2_options, _options({ "options": [_option({ "text": "option 1" }), _option({ "text": "option 2" })] }))
 
 
 func test_events():
@@ -749,9 +749,9 @@ second option
 
 	var first_line = _line({ "type": "line", "text": "first line" })
 	first_line.meta = { "line": 1, "column": 0 }
-	var first_option = _options({ "options": [_option({"label": "first option"})] })
+	var first_option = _options({ "options": [_option({"text": "first option"})] })
 	first_option.meta = { "line": 2, "column": 0 }
-	var second_option = _options({ "name": "second option", "options": [_option({"label": "option"})] })
+	var second_option = _options({ "text": "second option", "options": [_option({"text": "option"})] })
 	second_option.meta = { "line": 3, "column": 0 }
 
 	assert_eq_deep(interpreter.get_content(), first_line)

@@ -7,6 +7,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### Breaking changes
 
 - Support to `match` conditions makes `match` a reserved keyword inside logic blocks.
+- Dialogue Option `name` and `label` changed to `text`. Only impacts interpreter. No need to re-import.
 
 ### Added
 
@@ -16,6 +17,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### Changed
 
 - Updated GUT (test harness)
+- Dialogue Option `name` and `label` are now named `text`
 
 ### Fixed
 
