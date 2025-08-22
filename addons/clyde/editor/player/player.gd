@@ -10,6 +10,7 @@ signal variable_changed(var_name, value, old_value)
 signal external_variable_changed(var_name, value, old_value)
 signal event_triggered(event_name, parameters)
 signal close_triggered
+signal dock_button_pressed
 
 const InterfaceText = preload("../config/interface_text.gd")
 const Settings = preload("../config/settings.gd")
@@ -18,7 +19,7 @@ const DialogueEventBubble = preload("./dialogue_event_bubble.tscn")
 
 var _settings = Settings.new()
 
-@onready var _dialogue_title_field = $HBoxContainer/VBoxContainer/MarginContainer/dialogue_name
+@onready var _dialogue_title_field: Label = $HBoxContainer/VBoxContainer/MarginContainer/dialogue_name
 @onready var _lines_container = $HBoxContainer/VBoxContainer/LinesMargin/lines/dialogue_lines
 @onready var _scroll_container = $HBoxContainer/VBoxContainer/LinesMargin/lines
 
@@ -30,7 +31,8 @@ var _settings = Settings.new()
 @onready var _multi_single_btn := $HBoxContainer/VBoxContainer/actions/multi_single
 @onready var _show_meta_btn = $HBoxContainer/VBoxContainer/actions/show_meta
 @onready var _show_debug_btn = $HBoxContainer/VBoxContainer/actions/show_debug
-@onready var _close_btn = $HBoxContainer/VBoxContainer/MarginContainer/close
+@onready var _close_btn = $HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/close
+@onready var _dock_btn = $HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/dock
 
 @onready var _block_selection_field = $HBoxContainer/VBoxContainer/actions/Block
 @onready var _scrollbar: VScrollBar = _scroll_container.get_v_scroll_bar()
@@ -82,6 +84,7 @@ func _setup_icons():
 	_show_meta_btn.icon = get_theme_icon("GuiEllipsis", "EditorIcons")
 	_show_debug_btn.icon = get_theme_icon("Debug", "EditorIcons")
 	_close_btn.icon = get_theme_icon("Close", "EditorIcons")
+	_dock_btn.icon = get_theme_icon("MakeFloating", "EditorIcons")
 
 
 func _load_config():
@@ -100,6 +103,7 @@ func set_dialogue(key: String, parsed_document: Dictionary):
 
 	_dialogue_key = key
 	_dialogue_title_field.text = key.get_file()
+	_dialogue_title_field.tooltip_text = key
 	_dialogue = ClydeDialogue.new()
 	_dialogue._load_parsed_doc(parsed_document)
 	_restart_btn.disabled = false
@@ -380,3 +384,15 @@ func get_external_variables():
 		_external_variables = _settings.get_external_variables()
 
 	return _external_variables.duplicate()
+
+
+func _on_dock_button_up() -> void:
+	dock_button_pressed.emit()
+
+
+func hide_close_button() -> void:
+	_close_btn.hide()
+
+
+func show_close_button() -> void:
+	_close_btn.show()

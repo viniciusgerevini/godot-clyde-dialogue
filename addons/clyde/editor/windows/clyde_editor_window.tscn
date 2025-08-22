@@ -1,0 +1,25 @@
+[gd_scene load_steps=3 format=3 uid="uid://ckqayti103e35"]
+
+[ext_resource type="Script" uid="uid://cxt6wxxcc7xat" path="res://addons/clyde/editor/windows/clyde_editor_window.gd" id="1_0jnn2"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0jnn2"]
+resource_local_to_scene = true
+bg_color = Color(0.21, 0.24, 0.29, 1)
+
+[node name="ClydeEditorWindow" type="Window"]
+title = "Clyde Dialogue"
+initial_position = 1
+size = Vector2i(800, 600)
+wrap_controls = true
+min_size = Vector2i(800, 600)
+script = ExtResource("1_0jnn2")
+
+[node name="panel" type="PanelContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_0jnn2")

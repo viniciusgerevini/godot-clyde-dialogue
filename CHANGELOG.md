@@ -14,16 +14,20 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Added UID files
 - Support to `match` condition blocks
 - Options now have a "visited" property to indicate if they were accessed before
+- Dock / Undock editor and player
 
 ### Changed
 
 - Updated GUT (test harness)
 - Dialogue Option `name` and `label` are now named `text`
+- "Follow Executing Line" menu case
+- Clear executing line when closing player
 
 ### Fixed
 
 - Integer numbers were being interpolated with the decimal part (e.g. 5 was 5.0)
 - Comment shortcut (default ctrl + k) was being triggered twice, effectively not working
+- Docs URLs
 
 
 ## 6.0.0 (2024-11-26)

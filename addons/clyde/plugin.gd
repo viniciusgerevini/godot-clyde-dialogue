@@ -1,9 +1,11 @@
 @tool
 extends EditorPlugin
 
+
 const ImportPlugin = preload("import_plugin.gd")
 const MainPanel = preload("./editor/main_panel.tscn")
 const InterfaceText = preload("./editor/config/interface_text.gd")
+const DockableWindow = preload("./editor/windows/dockable_window.gd")
 
 const SETTING_SOURCE_FOLDER := "dialogue/source_folder"
 const DEFAULT_SOURCE_FOLDER := "res://dialogues/"
@@ -16,6 +18,10 @@ const HELPERS_ENABLED := "dialogue/enable_helpers"
 var _import_plugin
 var _main_panel
 var _helpers_enabled = false
+
+
+var _dockable_main_panel
+
 
 func _enter_tree():
 	_import_plugin = ImportPlugin.new()
@@ -83,15 +89,23 @@ func _exit_tree() -> void:
 
 	if is_instance_valid(_main_panel):
 		_main_panel.queue_free()
+		_dockable_main_panel = null
 
 
 func _setup_main_panel() -> void:
 	InterfaceText.plugin_version = get_plugin_version()
 	if not ProjectSettings.get_setting(MAIN_EDITOR_ENABLED, true):
 		return
+
 	_main_panel = MainPanel.instantiate()
 	_main_panel.editor_plugin = self
-	get_editor_interface().get_editor_main_screen().add_child(_main_panel)
+
+	_dockable_main_panel = DockableWindow.new(
+		get_editor_interface().get_editor_main_screen(),
+		get_editor_interface().get_base_control(),
+		_main_panel
+	)
+
 	_make_visible(false)
 
 
@@ -101,7 +115,8 @@ func _has_main_screen() -> bool:
 
 func _make_visible(is_visible: bool) -> void:
 	if is_instance_valid(_main_panel):
-		_main_panel.visible = is_visible
+		if _dockable_main_panel.is_docked:
+			_main_panel.visible = is_visible
 
 
 func _get_plugin_name() -> String:

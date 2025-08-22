@@ -3,7 +3,7 @@
 ## Clyde is a language for writing game dialogues.
 ## It supports branching dialogues, translations and interfacing with your game through variables and events.
 ##
-## @tutorial: https://github.com/viniciusgerevini/godot-clyde-dialogue/blob/godot_4/USAGE.md
+## @tutorial: https://thisisvini.com/clyde
 class_name ClydeDialogue extends RefCounted
 
 ## The interpreter used to run the dialogue.

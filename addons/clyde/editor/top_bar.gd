@@ -31,12 +31,15 @@ signal create_csv_triggered
 signal open_online_docs_triggered
 signal report_issue_triggered
 
+signal dock_button_pressed
+
 @onready var _file_menu: PopupMenu = $file_menu.get_popup()
 @onready var _tool_menu: PopupMenu = $tool_menu.get_popup()
 @onready var _recents_submenu: PopupMenu = _create_recents_submenu()
 @onready var _help_menu: PopupMenu = $help_menu.get_popup()
 
 @onready var _execute_dialogue := $right_icons/MarginContainer/execute_dialogue
+@onready var _dock_button := $right_icons/FloatContainer/dock_button
 
 enum FileMenu {
 	NEW_FILE = 100,
@@ -277,6 +280,9 @@ func _initialize_right_icons(_shortcuts):
 	_execute_dialogue.icon = get_theme_icon("Play", "EditorIcons")
 	_execute_dialogue.tooltip_text = InterfaceText.get_string(InterfaceText.KEY_EXECUTE_DIALOGUE)
 
+	_dock_button.icon = get_theme_icon("MakeFloating", "EditorIcons")
+	_dock_button.tooltip_text = InterfaceText.get_string(InterfaceText.KEY_DOCK_WINDOW)
+
 
 func refresh(open_file_count: int):
 	if open_file_count > 0:
@@ -353,3 +359,7 @@ func set_recents(recent_files: Array):
 		_recents_submenu.add_item(path.get_file())
 	_recents_submenu.add_separator()
 	_add_item(_recents_submenu, InterfaceText.KEY_FILE_MENU_RECENT_CLEAR_RECENTS, RecentSubMenu.CLEAR_RECENTS)
+
+
+func _on_dock_button_pressed() -> void:
+	dock_button_pressed.emit()
