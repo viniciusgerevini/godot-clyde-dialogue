@@ -1,0 +1,24 @@
+name: Godot tests
+
+on:
+  push:
+    branches: [ "godot_4" ]
+  pull_request:
+    branches: [ "godot_4" ]
+
+env:
+  GODO_VERSION: 4.4.1
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    container:
+      image: barichello/godot-ci:4.4.1
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup
+      run: godot --headless --import -gexit
+    - name: Tests
+      run: godot --headless -s addons/gut/gut_cmdln.gd --path "$PWD" -gdir=res://test/ -gexit
+
+      
