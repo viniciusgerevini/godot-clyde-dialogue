@@ -1,10 +1,18 @@
 extends MarginContainer
 
+# NOTE This example requires the helpers option to be enabled in Project Settings.
+
 @onready var _dialogue_start_button := $Button
 
 var _is_dialogue_running := false
 
-# NOTE This example requires the helpers option to be enabled in Project Settings.
+
+# NOTE: This Dialogue overwrite is only required for these examples to prevent
+# startup errors when the Dialogue helper is not enabled.
+# Feel free to remove this line if you have the helpers enabled
+@onready
+var Dialogue = get_tree().root.get_node("Dialogue") if get_tree().root.has_node("Dialogue") else {}
+
 
 func _ready():
 	_setup_dialogue_events()

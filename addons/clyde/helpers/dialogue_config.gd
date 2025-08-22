@@ -27,7 +27,9 @@ extends Node
 
 
 func _ready():
-	Dialogue.config = self
+	# Accessing the autoload this way to prevent startup warnings when helpers are disabled
+	if get_tree().root.has_node("Dialogue"):
+		get_tree().root.get_node("Dialogue").config = self
 
 
 func load_data(dialogue_path: String, block_name: String) -> Dictionary:
