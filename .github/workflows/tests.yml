@@ -19,6 +19,6 @@ jobs:
     - name: Setup
       run: godot --headless --import -gexit
     - name: Tests
-      run: godot --headless -s --path "$PWD" -gdir=res://test addons/gut/gut_cmdln.gd -gexit
+      run: godot --headless -s addons/gut/gut_cmdln.gd --path "$PWD" -gdir=res://test/ -gexit
 
       
