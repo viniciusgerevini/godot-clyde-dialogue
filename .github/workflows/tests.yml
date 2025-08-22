@@ -2,9 +2,9 @@ name: Godot tests
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "godot_4" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "godot_4" ]
 
 env:
   GODO_VERSION: 4.4.1
