@@ -6,10 +6,9 @@ extends VBoxContainer
 
 
 func _setup_color():
-	var current_style = $PanelContainer.get_theme_stylebox("panel")
+	var color = EditorInterface.get_editor_settings().get_setting("interface/theme/accent_color")
 	var style = StyleBoxFlat.new()
-	var color = current_style.get_bg_color().darkened(0.1)
-	color.a = 0.8
+	color.a = 0.1
 	style.set_bg_color(color)
 	style.set_corner_radius_all(5)
 	$PanelContainer.add_theme_stylebox_override("panel", style)
