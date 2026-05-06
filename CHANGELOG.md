@@ -2,6 +2,17 @@
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## 7.0.1 (2026-05-06)
+
+### Fixed
+
+- Godot 4.6 changed the default PanelContainer style box, which caused warnings in the event bubble.
+
+
+### Thanks
+
+- Thanks to @GiannisGG for reporting this issue
+
 ## 7.0.0 (2025-09-08)
 
 ### Breaking changes
