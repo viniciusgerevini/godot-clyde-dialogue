@@ -1,3 +1,0 @@
-extends PanelContainer
-
-# TODO settings

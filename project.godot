@@ -14,8 +14,7 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 
 [application]
 
-config/name="clyde-plugin"
-run/main_scene="uid://cr3u7sd0nn8ln"
+config/name="Clyde Dialogue"
 config/features=PackedStringArray("4.6")
 boot_splash/show_image=false
 config/icon="res://icon.png"
