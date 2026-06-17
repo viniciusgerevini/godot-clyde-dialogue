@@ -300,7 +300,7 @@ func _toggle_entries_that_require_files(enabled: bool):
 		_file_menu.set_item_disabled(_file_menu.get_item_index(i), not enabled)
 
 	for i in _tool_disabled_when_no_file:
-		_tool_menu.set_item_disabled(_file_menu.get_item_index(i), not enabled)
+		_tool_menu.set_item_disabled(_tool_menu.get_item_index(i), not enabled)
 
 
 func set_lists_visibility(is_visible: bool):

@@ -38,7 +38,7 @@ func undock() -> void:
 	_window.content_margin_right = content_margin_right
 	_window.content_margin_top = content_margin_top
 	_window.content_margin_bottom = content_margin_bottom
-	_window.base_color = window_base_color
+	_window.window_base_color = window_base_color
 
 	_dock.remove_child(_panel)
 	_window.add_panel(_panel)

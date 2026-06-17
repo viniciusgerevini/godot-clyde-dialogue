@@ -99,8 +99,6 @@ func editor_settings() -> Dictionary[String, Variant]:
 	if typeof(dictionary["indent_use_spaces"]) == TYPE_INT:
 		# This is an enum in Editor settings. Couldn't find the right type so comparing agains the int value
 		dictionary["indent_use_spaces"] = dictionary["indent_use_spaces"] == 1
-	else:
-		print(typeof(dictionary["indent_use_spaces"]))
 
 	if dictionary["show_line_length_guidelines"]:
 		dictionary["line_length_guidelines"] = [
