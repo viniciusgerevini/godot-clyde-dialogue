@@ -69,7 +69,7 @@ func _store_options_node(node: Dictionary, file: FileAccess, options: Dictionary
 		"id": node.id,
 		"value": node.name,
 		"speaker": node.speaker,
-		"tags": node.tag,
+		"tags": node.tags,
 	}, file, options)
 
 	_store_lines(node.content, file, options)
