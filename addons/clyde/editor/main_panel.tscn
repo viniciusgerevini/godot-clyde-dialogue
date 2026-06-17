@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://cux0i1kt0tw3u"]
+[gd_scene format=3 uid="uid://cux0i1kt0tw3u"]
 
 [ext_resource type="Script" uid="uid://c1j33ae1l8jdd" path="res://addons/clyde/editor/main_panel.gd" id="1_vr0bg"]
 [ext_resource type="PackedScene" uid="uid://c1vmpgpv2jrpx" path="res://addons/clyde/editor/top_bar.tscn" id="2_u6411"]
@@ -8,7 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://po7pmftb1orn" path="res://addons/clyde/editor/player/player.tscn" id="6_laobm"]
 [ext_resource type="PackedScene" uid="uid://bm1ht3mndadas" path="res://addons/clyde/editor/tools/csv_exporter.tscn" id="7_wy00i"]
 
-[node name="MainPanel" type="MarginContainer"]
+[node name="MainPanel" type="MarginContainer" unique_id=2082229284]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -22,42 +22,43 @@ theme_override_constants/margin_right = 4
 theme_override_constants/margin_bottom = 4
 script = ExtResource("1_vr0bg")
 
-[node name="HSplitContainer" type="HSplitContainer" parent="."]
+[node name="HSplitContainer" type="HSplitContainer" parent="." unique_id=1203409495]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="HSplitContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="HSplitContainer" unique_id=531125310]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="TopBar" parent="HSplitContainer/VBoxContainer" instance=ExtResource("2_u6411")]
+[node name="TopBar" parent="HSplitContainer/VBoxContainer" unique_id=1138329017 instance=ExtResource("2_u6411")]
 layout_mode = 2
 
-[node name="HSplitContainer" type="HSplitContainer" parent="HSplitContainer/VBoxContainer"]
+[node name="HSplitContainer" type="HSplitContainer" parent="HSplitContainer/VBoxContainer" unique_id=757139814]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Lists" type="VBoxContainer" parent="HSplitContainer/VBoxContainer/HSplitContainer"]
+[node name="Lists" type="VBoxContainer" parent="HSplitContainer/VBoxContainer/HSplitContainer" unique_id=1010821007]
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
 
-[node name="VSplitContainer" type="VSplitContainer" parent="HSplitContainer/VBoxContainer/HSplitContainer/Lists"]
+[node name="VSplitContainer" type="VSplitContainer" parent="HSplitContainer/VBoxContainer/HSplitContainer/Lists" unique_id=139413326]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="FileList" parent="HSplitContainer/VBoxContainer/HSplitContainer/Lists/VSplitContainer" instance=ExtResource("3_gbtsb")]
+[node name="FileList" parent="HSplitContainer/VBoxContainer/HSplitContainer/Lists/VSplitContainer" unique_id=1544226639 instance=ExtResource("3_gbtsb")]
 layout_mode = 2
 
-[node name="BlockList" parent="HSplitContainer/VBoxContainer/HSplitContainer/Lists/VSplitContainer" instance=ExtResource("4_thgot")]
+[node name="BlockList" parent="HSplitContainer/VBoxContainer/HSplitContainer/Lists/VSplitContainer" unique_id=556610527 instance=ExtResource("4_thgot")]
 layout_mode = 2
 
-[node name="MultiEditor" parent="HSplitContainer/VBoxContainer/HSplitContainer" instance=ExtResource("5_6qvkm")]
+[node name="MultiEditor" parent="HSplitContainer/VBoxContainer/HSplitContainer" unique_id=1868817518 instance=ExtResource("5_6qvkm")]
 layout_mode = 2
 
-[node name="Player" parent="HSplitContainer" instance=ExtResource("6_laobm")]
+[node name="Player" parent="HSplitContainer" unique_id=1736101762 instance=ExtResource("6_laobm")]
+visible = false
 layout_mode = 2
 
-[node name="CsvExporterWindow" parent="." instance=ExtResource("7_wy00i")]
+[node name="CsvExporterWindow" parent="." unique_id=470081709 instance=ExtResource("7_wy00i")]
 visible = false
 
 [connection signal="clear_recent_files_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_clear_recent_files_triggered"]

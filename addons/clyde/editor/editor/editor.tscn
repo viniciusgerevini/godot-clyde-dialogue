@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://ccsjekeu2tgxr"]
+[gd_scene format=3 uid="uid://ccsjekeu2tgxr"]
 
 [ext_resource type="Script" uid="uid://6dhfywfqmjbx" path="res://addons/clyde/editor/editor/editor.gd" id="1_7djvi"]
 [ext_resource type="PackedScene" uid="uid://itwcdoycxjc3" path="res://addons/clyde/editor/editor/dialogue_editor.tscn" id="2_y3ceu"]
@@ -8,7 +8,7 @@
 [sub_resource type="SyntaxHighlighter" id="SyntaxHighlighter_s6rha"]
 script = ExtResource("3_v1074")
 
-[node name="Editor" type="VBoxContainer"]
+[node name="Editor" type="VBoxContainer" unique_id=384197408]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -18,11 +18,11 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1_7djvi")
 
-[node name="DialogueEditor" parent="." instance=ExtResource("2_y3ceu")]
+[node name="DialogueEditor" parent="." unique_id=959223839 instance=ExtResource("2_y3ceu")]
 layout_mode = 2
 syntax_highlighter = SubResource("SyntaxHighlighter_s6rha")
 
-[node name="StatusBar" parent="." instance=ExtResource("4_eek30")]
+[node name="StatusBar" parent="." unique_id=816147132 instance=ExtResource("4_eek30")]
 layout_mode = 2
 
 [connection signal="caret_changed" from="DialogueEditor" to="." method="_on_dialogue_editor_caret_changed"]

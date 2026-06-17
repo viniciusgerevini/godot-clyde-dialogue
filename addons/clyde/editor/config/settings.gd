@@ -2,7 +2,9 @@ extends RefCounted
 
 signal settings_changed
 
-var _editor_settings: EditorSettings
+const ClydeEditorSettings = preload("./editor_settings/clyde_editor_settings.gd")
+
+var _editor_settings: ClydeEditorSettings
 
 const EDITOR_CFG_SHOW_LISTS = "show_lists"
 const EDITOR_CFG_SHOW_PLAYER = "show_player"
@@ -23,8 +25,8 @@ const CSV_EXPORTER_RECORDED_PATHS = "csv_recorded_paths"
 const ONLINE_DOCS_URL = "https://thisisvini.com/clyde"
 const REPORT_ISSUE_URL = "https://github.com/viniciusgerevini/godot-clyde-dialogue/issues"
 
-func _init():
-	_editor_settings = EditorInterface.get_editor_settings()
+func _init(editor_settings: ClydeEditorSettings):
+	_editor_settings = editor_settings
 	_editor_settings.settings_changed.connect(_on_settings_changed)
 
 

@@ -5,6 +5,7 @@ signal parsing_finished(result)
 signal content_changed
 signal search_requested
 
+const Settings = preload("../config/settings.gd")
 const ParseWorker = preload("../parse_worker.gd")
 
 @onready var editor: CodeEdit = $DialogueEditor
@@ -14,7 +15,8 @@ const ParseWorker = preload("../parse_worker.gd")
 
 var _parsed_document
 
-func _ready():
+func setup(settings: Settings):
+	editor.setup(settings)
 	parse_worker.processing_finished.connect(_on_parsing_finished)
 	parse_worker.processing_failed.connect(_on_parsing_failed)
 

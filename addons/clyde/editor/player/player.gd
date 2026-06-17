@@ -17,7 +17,7 @@ const Settings = preload("../config/settings.gd")
 const DialogueBubble = preload("./dialogue_bubble.tscn")
 const DialogueEventBubble = preload("./dialogue_event_bubble.tscn")
 
-var _settings = Settings.new()
+var _settings: Settings
 
 @onready var _dialogue_title_field: Label = $HBoxContainer/VBoxContainer/MarginContainer/dialogue_name
 @onready var _lines_container = $HBoxContainer/VBoxContainer/LinesMargin/lines/dialogue_lines
@@ -45,7 +45,8 @@ var _dialogue_data = {}
 var _external_variables := {}
 var _has_external_variables_changed := false
 
-func _ready():
+func setup(settings: Settings):
+	_settings = settings
 	_load_config()
 	_scrollbar.changed.connect(_on_scrollbar_changed)
 	_setup_actions()

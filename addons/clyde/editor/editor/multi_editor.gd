@@ -6,6 +6,7 @@ signal editor_removed(key: String)
 signal content_changed
 signal parsing_finished(result: Dictionary)
 
+const Settings = preload("../config/settings.gd")
 const DialogueEditor = preload("res://addons/clyde/editor/editor/editor.tscn")
 
 @onready var _editors_container = $container/editors
@@ -13,11 +14,16 @@ const DialogueEditor = preload("res://addons/clyde/editor/editor/editor.tscn")
 @onready var _current_editor = _default_editor
 @onready var _search_bar = $container/search_bar
 
+var _settings: Settings
 var _editors = {}
 var _current_editor_key
 var _latest_execution
 
 var _search_info
+
+func setup(settings: Settings) -> void:
+	_settings = settings
+
 
 func switch_editor(key: String):
 	if key == "":
@@ -53,6 +59,7 @@ func change_editor_key(old_key: String, new_key: String):
 func _create_editor():
 	var e = DialogueEditor.instantiate()
 	_editors_container.add_child(e)
+	e.setup(_settings)
 	return e
 
 

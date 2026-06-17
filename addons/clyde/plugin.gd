@@ -3,7 +3,7 @@ extends EditorPlugin
 
 
 const ImportPlugin = preload("import_plugin.gd")
-const MainPanel = preload("./editor/main_panel.tscn")
+const MainPanel = preload("./editor/editor_main_panel.tscn")
 const InterfaceText = preload("./editor/config/interface_text.gd")
 const DockableWindow = preload("./editor/windows/dockable_window.gd")
 

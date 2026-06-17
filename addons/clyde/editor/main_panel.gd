@@ -3,13 +3,14 @@ extends MarginContainer
 
 signal dock_button_pressed
 
+const AppRoot = preload("./app_root/wrapper.gd")
 const DockableWindow = preload("./windows/dockable_window.gd")
 const DebugPanel = preload("./player/debug_dock.tscn")
 const InterfaceText = preload("./config/interface_text.gd")
 const Settings = preload("./config/settings.gd")
 const IdGenerator = preload("./tools/id_generator.gd")
 
-var _settings = Settings.new()
+var _settings: Settings
 
 @onready
 var editor = $HSplitContainer/VBoxContainer/HSplitContainer/MultiEditor
@@ -37,13 +38,17 @@ var _persisted_content = {}
 var _should_sync_editor_and_player = true
 var _should_follow_executing_line = true
 
-var editor_plugin: EditorPlugin
-
+var _app_root: AppRoot
 var _debug_panel
 
 var _dockable_player
 
-func _ready():
+func setup(app_root: AppRoot, settings: Settings):
+	_app_root = app_root
+	_settings = settings
+	editor.setup(_settings)
+	player.setup(_settings)
+	_csv_exporter_dialog.setup(_settings)
 	_configure_dockable_player()
 	_load_config()
 	_open_files = _load_open_files()
@@ -58,7 +63,7 @@ func _ready():
 func _configure_dockable_player() -> void:
 	_dockable_player = DockableWindow.new(
 		$HSplitContainer,
-		editor_plugin.get_editor_interface().get_base_control(),
+		_app_root.get_root_node(),
 		player
 	)
 	_dockable_player.title = InterfaceText.get_string(InterfaceText.KEY_PLAYER_WINDOW_TITLE)
@@ -393,22 +398,21 @@ func _on_player_toggle_debug_panel(is_visible):
 
 func _create_debug_panel():
 	if _debug_panel != null:
-		editor_plugin.add_control_to_bottom_panel(_debug_panel, InterfaceText.get_string(InterfaceText.KEY_DEBUG_PANEL_NAME))
-		editor_plugin.make_bottom_panel_item_visible(_debug_panel)
+		_app_root.set_debug_panel(_debug_panel)
+		_app_root.make_debug_panel_visible()
 		return
 
 	_debug_panel = DebugPanel.instantiate()
-	editor_plugin.add_control_to_bottom_panel(_debug_panel, InterfaceText.get_string(InterfaceText.KEY_DEBUG_PANEL_NAME))
+	_app_root.set_debug_panel(_debug_panel)
 	_debug_panel.load_data(player.get_data())
 	_debug_panel.load_external_variables(player.get_external_variables())
 	_debug_panel.variable_changed.connect(_on_debug_variable_changed)
 	_debug_panel.external_variable_changed.connect(_on_debug_external_variable_changed)
-	editor_plugin.make_bottom_panel_item_visible(_debug_panel)
+	_app_root.make_debug_panel_visible()
 
 
 func _remove_debug_panel():
-	if is_instance_valid(_debug_panel) and is_instance_valid(editor_plugin) and _debug_panel.is_inside_tree():
-		editor_plugin.remove_control_from_bottom_panel(_debug_panel)
+	_app_root.remove_debug_panel()
 
 
 func _on_tree_exiting():

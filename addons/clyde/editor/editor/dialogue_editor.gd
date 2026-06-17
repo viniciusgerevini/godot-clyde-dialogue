@@ -8,7 +8,7 @@ const Settings = preload("../config/settings.gd")
 const Shortcuts = preload("../config/shortcuts.gd")
 const ClydeSyntaxHighlighter = preload("./clyde_syntax_highlighter.gd")
 
-var _settings = Settings.new()
+var _settings: Settings
 
 var editor_theme_config
 
@@ -23,7 +23,8 @@ var _shortcuts = []
 var _should_follow_execution = true
 
 
-func _ready():
+func setup(settings: Settings):
+	_settings = settings
 	editor_theme_config = _load_theme_config()
 	syntax_highlighter = ClydeSyntaxHighlighter.new()
 

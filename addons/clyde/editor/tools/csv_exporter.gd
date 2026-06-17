@@ -5,9 +5,8 @@ const InterfaceText = preload("../config/interface_text.gd")
 const Settings = preload("../config/settings.gd")
 const CsvHelper = preload("./csv.gd")
 
-
-var _settings = Settings.new()
-var _csv_helper = CsvHelper.new()
+var _settings: Settings
+var _csv_helper: CsvHelper
 
 @onready var file_label: Label = $MarginContainer/VBoxContainer/csv_file_container/file_label
 @onready var file_btn: Button = $MarginContainer/VBoxContainer/csv_file_container/HBoxContainer/file_btn
@@ -31,7 +30,9 @@ var _csv_helper = CsvHelper.new()
 var _file_path = ""
 var _parsed_document
 
-func _ready():
+func setup(settings: Settings):
+	_settings = settings
+	_csv_helper = CsvHelper.new(_settings)
 	_setup_fields()
 	_setup_warning()
 

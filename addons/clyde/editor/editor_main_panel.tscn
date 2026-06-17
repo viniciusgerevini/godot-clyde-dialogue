@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://cw0is8u3va1i8"]
+
+[ext_resource type="Script" uid="uid://dku5nwp2leur7" path="res://addons/clyde/editor/editor_main_panel.gd" id="1_vdap2"]
+[ext_resource type="PackedScene" uid="uid://cux0i1kt0tw3u" path="res://addons/clyde/editor/main_panel.tscn" id="2_q7kra"]
+
+[node name="EditorMainPanel" type="MarginContainer" unique_id=1726770200]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_vdap2")
+
+[node name="MainPanel" parent="." unique_id=2082229284 instance=ExtResource("2_q7kra")]
+layout_mode = 2
+
+[connection signal="dock_button_pressed" from="MainPanel" to="." method="_on_main_panel_dock_button_pressed"]

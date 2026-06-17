@@ -67,7 +67,8 @@ func stop_worker():
 	mutex.unlock()
 
 	semaphore.post()
-	thread.wait_to_finish()
+	if thread.is_started():
+		thread.wait_to_finish()
 
 
 func _parse(input):

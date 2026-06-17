@@ -3,7 +3,11 @@ extends RefCounted
 const InterfaceText = preload("../config/interface_text.gd")
 const Settings = preload("../config/settings.gd")
 
-var _settings = Settings.new()
+var _settings: Settings
+
+func _init(settings: Settings) -> void:
+	_settings = settings
+
 
 func create_csv_file(file_path: String, parsed_document: Dictionary) -> bool:
 	var options = {
