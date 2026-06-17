@@ -63,7 +63,7 @@ func _load_config():
 
 
 func _setup_warning():
-	var warning_color: Color = EditorInterface.get_editor_settings().get_setting("text_editor/theme/highlighting/comment_markers/warning_color")
+	var warning_color: Color = _settings.editor_color_scheme()["warning_color"]
 	warning_color = warning_color.lightened(0.3)
 	warning_label.add_theme_color_override("font_color", warning_color)
 	warning_label.text = InterfaceText.get_string(InterfaceText.KEY_CSV_FILE_EXISTS_WARNING)
@@ -160,7 +160,7 @@ func _verify_file():
 
 func _success_message():
 	save_message.text = InterfaceText.get_string(InterfaceText.KEY_CSV_EXPORTER_SUCCEED)
-	var success_color = EditorInterface.get_editor_settings().get_setting("text_editor/theme/highlighting/safe_line_number_color")
+	var success_color = _settings.editor_color_scheme()["success_color"]
 	success_color.a = 1
 	save_message.add_theme_color_override("font_color", success_color)
 	save_message.get_parent().show()
@@ -168,7 +168,7 @@ func _success_message():
 
 func _failure_message():
 	save_message.text = InterfaceText.get_string(InterfaceText.KEY_CSV_EXPORTER_FAIL)
-	var error_color = EditorInterface.get_editor_settings().get_setting("text_editor/theme/highlighting/mark_color")
+	var error_color = _settings.editor_color_scheme()["error_color"]
 	error_color.a = 1
 	save_message.add_theme_color_override("font_color", error_color)
 	save_message.get_parent().show()

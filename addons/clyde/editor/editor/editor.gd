@@ -17,6 +17,7 @@ var _parsed_document
 
 func setup(settings: Settings):
 	editor.setup(settings)
+	status_bar.setup(settings.editor_color_scheme()["error_color"])
 	parse_worker.processing_finished.connect(_on_parsing_finished)
 	parse_worker.processing_failed.connect(_on_parsing_failed)
 

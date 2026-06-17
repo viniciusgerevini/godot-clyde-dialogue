@@ -23,3 +23,7 @@ func set_project_metadata(section: String, key: String, data: Variant) -> void:
 
 func _on_settings_changed():
 	settings_changed.emit()
+
+
+func get_interface_scale() -> float:
+	return EditorInterface.get_editor_scale()

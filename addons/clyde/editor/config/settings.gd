@@ -77,7 +77,7 @@ func editor_settings():
 		"scroll_smooth": _get_editor_setting("text_editor/behavior/navigation/smooth_scrolling"),
 		"scroll_v_scroll_speed": _get_editor_setting("text_editor/behavior/navigation/v_scroll_speed"),
 		"wrap_mode": _get_editor_setting("text_editor/appearance/lines/word_wrap"),
-		"font_size": _get_editor_setting("interface/editor/code_font_size") * EditorInterface.get_editor_scale(),
+		"font_size": _get_editor_setting("interface/editor/code_font_size") * _editor_settings.get_interface_scale(),
 	}
 
 
@@ -96,7 +96,17 @@ func editor_color_scheme():
 		"number_literal": _get_editor_setting("text_editor/theme/highlighting/number_color"),
 		"boolean_literal": _get_editor_setting("text_editor/theme/highlighting/keyword_color"),
 		"string_literal": _get_editor_setting("text_editor/theme/highlighting/string_color"),
+		"warning_color": _get_editor_setting("text_editor/theme/highlighting/comment_markers/warning_color"),
+		"success_color": _get_editor_setting("text_editor/theme/highlighting/safe_line_number_color"),
+		"error_color": _get_editor_setting("text_editor/theme/highlighting/mark_color"),
 	}
+
+func get_theme_accent_color() -> Color:
+	return _get_editor_setting("interface/theme/accent_color")
+
+
+func get_theme_base_color() -> Color:
+	return _get_editor_setting("interface/theme/base_color")
 
 
 func _on_settings_changed():

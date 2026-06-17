@@ -105,6 +105,7 @@ func _setup_main_panel() -> void:
 		get_editor_interface().get_base_control(),
 		_main_panel
 	)
+	_dockable_main_panel.window_base_color = get_editor_interface().get_editor_settings().get_setting("interface/theme/base_color")
 
 	_make_visible(false)
 

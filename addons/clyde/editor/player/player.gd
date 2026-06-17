@@ -259,6 +259,7 @@ func _add_dialogue_bubble(content: Dictionary):
 	_adjust_previous_line_visibility()
 
 	var bubble = DialogueBubble.instantiate()
+	bubble.chosen_option_color = _settings.get_theme_accent_color()
 	_lines_container.add_child(bubble)
 	bubble.set_content(content, _show_meta_btn.button_pressed)
 	bubble.bubble_clicked.connect(_on_bubble_clicked)
@@ -302,7 +303,7 @@ func _add_event_line(text: String, second_line = null):
 	_adjust_previous_line_visibility()
 	var bubble = DialogueEventBubble.instantiate()
 	_lines_container.add_child(bubble)
-	bubble.set_label(text, second_line)
+	bubble.set_label(_settings.get_theme_accent_color(), text, second_line)
 
 
 func _remove_lines():

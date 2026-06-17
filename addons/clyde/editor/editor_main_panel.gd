@@ -10,7 +10,6 @@ var editor_plugin: EditorPlugin
 
 @onready var _main_panel = $MainPanel
 
-# TODO EditorInterface
 # TODO EditorFileDialogue
 
 func _ready() -> void:
@@ -30,3 +29,11 @@ func load_file(path: String) -> void:
 
 func _on_main_panel_dock_button_pressed() -> void:
 	dock_button_pressed.emit()
+
+
+func _on_main_panel_file_system_scan_requested() -> void:
+	EditorInterface.get_resource_filesystem().scan()
+
+
+func _on_main_panel_show_in_file_system_triggered(file_path: String) -> void:
+	EditorInterface.get_file_system_dock().navigate_to_path(ProjectSettings.localize_path(file_path))

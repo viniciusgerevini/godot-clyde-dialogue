@@ -17,3 +17,5 @@ script = ExtResource("1_vdap2")
 layout_mode = 2
 
 [connection signal="dock_button_pressed" from="MainPanel" to="." method="_on_main_panel_dock_button_pressed"]
+[connection signal="file_system_scan_requested" from="MainPanel" to="." method="_on_main_panel_file_system_scan_requested"]
+[connection signal="show_in_file_system_triggered" from="MainPanel" to="." method="_on_main_panel_show_in_file_system_triggered"]

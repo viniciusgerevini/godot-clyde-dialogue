@@ -1,6 +1,8 @@
 @tool
 extends MarginContainer
 
+signal file_system_scan_requested
+signal show_in_file_system_triggered(file_path: String)
 signal dock_button_pressed
 
 const AppRoot = preload("./app_root/wrapper.gd")
@@ -70,6 +72,7 @@ func _configure_dockable_player() -> void:
 	_dockable_player.content_margin_left = 10
 	_dockable_player.content_margin_right = 10
 	_dockable_player.content_margin_bottom = 10
+	_dockable_player.window_base_color = _settings.get_theme_base_color()
 
 	_dockable_player.window_docked.connect(func():
 		player.show_close_button()
@@ -157,7 +160,7 @@ func _on_top_bar_save_all_triggered():
 		if file_list.is_unsaved(o):
 			_save_file(o, editor.get_content(o))
 			file_list.mark_saved(o)
-	EditorInterface.get_resource_filesystem().scan()
+	file_system_scan_requested.emit()
 
 
 func _on_top_bar_save_as_triggered():
@@ -170,12 +173,12 @@ func _on_top_bar_save_as_triggered():
 func _on_top_bar_save_file_triggered():
 	_save_file(_current_file_path, editor.get_content())
 	file_list.mark_saved(_current_file_path)
-	EditorInterface.get_resource_filesystem().scan()
+	file_system_scan_requested.emit()
 
 
 func _on_top_bar_show_in_filesystem_triggered():
 	if _current_file_path != "":
-		EditorInterface.get_file_system_dock().navigate_to_path(ProjectSettings.localize_path(_current_file_path))
+		show_in_file_system_triggered.emit(_current_file_path)
 
 
 func _on_top_bar_close_all_triggered():
@@ -308,7 +311,7 @@ func _on_save_as_dialog_file_selected(path, dialogue_modal):
 	file_list.select_file(path)
 	editor.set_content(content)
 	dialogue_modal.queue_free()
-	EditorInterface.get_resource_filesystem().scan()
+	file_system_scan_requested.emit()
 
 
 func _save_file(path: String, content: String):
@@ -558,7 +561,7 @@ func _unsaved_file_close_confirmation_dialog():
 
 func _on_unsaved_close_confirmed(c):
 	_save_file(_current_file_path, editor.get_content())
-	EditorInterface.get_resource_filesystem().scan()
+	file_system_scan_requested.emit()
 	c.queue_free()
 	_close_current_file()
 

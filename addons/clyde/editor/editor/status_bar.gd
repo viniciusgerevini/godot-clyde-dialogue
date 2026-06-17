@@ -14,8 +14,7 @@ var _ok_icon = $CenterContainer/loading_container/ok
 @onready
 var _warning_icon = $CenterContainer/loading_container/warning
 
-func _ready():
-	var error_color = EditorInterface.get_editor_settings().get_setting("text_editor/theme/highlighting/mark_color")
+func setup(error_color: Color):
 	error_color.a = 1
 	error_hint.add_theme_color_override("font_color", error_color)
 	_configure_loading_icon()

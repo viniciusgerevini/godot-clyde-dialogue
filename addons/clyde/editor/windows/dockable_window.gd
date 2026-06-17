@@ -17,6 +17,7 @@ var content_margin_left: int = -1
 var content_margin_right: int = -1
 var content_margin_top: int = -1
 var content_margin_bottom: int = -1
+var window_base_color: Color
 
 func _init(dock: Node, window_parent: Node, panel: Node) -> void:
 	_dock = dock
@@ -37,6 +38,7 @@ func undock() -> void:
 	_window.content_margin_right = content_margin_right
 	_window.content_margin_top = content_margin_top
 	_window.content_margin_bottom = content_margin_bottom
+	_window.base_color = window_base_color
 
 	_dock.remove_child(_panel)
 	_window.add_panel(_panel)
