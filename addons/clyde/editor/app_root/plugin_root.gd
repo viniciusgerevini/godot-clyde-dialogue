@@ -26,3 +26,7 @@ func remove_debug_panel() -> void:
 
 func make_debug_panel_visible() -> void:
 	_editor_plugin.make_bottom_panel_item_visible(_debug_panel)
+
+
+func create_file_dialog() -> FileDialog:
+	return EditorFileDialog.new()

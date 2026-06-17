@@ -1,10 +1,12 @@
 @tool
 extends PopupPanel
 
+const AppRoot = preload("../app_root/wrapper.gd")
 const InterfaceText = preload("../config/interface_text.gd")
 const Settings = preload("../config/settings.gd")
 const CsvHelper = preload("./csv.gd")
 
+var _app_root: AppRoot
 var _settings: Settings
 var _csv_helper: CsvHelper
 
@@ -30,7 +32,8 @@ var _csv_helper: CsvHelper
 var _file_path = ""
 var _parsed_document
 
-func setup(settings: Settings):
+func setup(app_root: AppRoot, settings: Settings):
+	_app_root = app_root
 	_settings = settings
 	_csv_helper = CsvHelper.new(_settings)
 	_setup_fields()
@@ -95,9 +98,9 @@ func _on_line_edit_focus_exited():
 func _on_file_btn_button_up():
 	save_message.get_parent().hide()
 	self.hide()
-	var file_dialog = EditorFileDialog.new()
-	file_dialog.file_mode = EditorFileDialog.FILE_MODE_SAVE_FILE
-	file_dialog.access = EditorFileDialog.ACCESS_FILESYSTEM
+	var file_dialog = _app_root.create_file_dialog()
+	file_dialog.file_mode = FileDialog.FILE_MODE_SAVE_FILE
+	file_dialog.access = FileDialog.ACCESS_FILESYSTEM
 	file_dialog.set_filters(PackedStringArray(["*.csv"]))
 	get_parent().add_child(file_dialog)
 	if file_input.text != "":

@@ -17,6 +17,7 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 config/name="clyde-plugin"
 run/main_scene="uid://cr3u7sd0nn8ln"
 config/features=PackedStringArray("4.6")
+boot_splash/show_image=false
 config/icon="res://icon.png"
 
 [autoload]
@@ -27,10 +28,6 @@ Dialogue="*uid://com7sq4jrg1n2"
 
 enable_helpers=true
 source_folder="res://test/dialogue_samples"
-
-[display]
-
-window/stretch/mode="canvas_items"
 
 [editor_plugins]
 

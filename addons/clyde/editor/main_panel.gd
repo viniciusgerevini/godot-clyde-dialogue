@@ -50,7 +50,7 @@ func setup(app_root: AppRoot, settings: Settings):
 	_settings = settings
 	editor.setup(_settings)
 	player.setup(_settings)
-	_csv_exporter_dialog.setup(_settings)
+	_csv_exporter_dialog.setup(_app_root, _settings)
 	_configure_dockable_player()
 	_load_config()
 	_open_files = _load_open_files()
@@ -245,9 +245,9 @@ func _load_blocks():
 
 
 func _open_file_dialog():
-	var file_dialog = EditorFileDialog.new()
-	file_dialog.file_mode = EditorFileDialog.FILE_MODE_OPEN_FILES
-	file_dialog.access = EditorFileDialog.ACCESS_FILESYSTEM
+	var file_dialog = _app_root.create_file_dialog()
+	file_dialog.file_mode = FileDialog.FILE_MODE_OPEN_FILES
+	file_dialog.access = FileDialog.ACCESS_FILESYSTEM
 	file_dialog.files_selected.connect(_on_open_dialog_file_selected.bind(file_dialog))
 	file_dialog.set_filters(PackedStringArray(["*.clyde"]))
 	file_dialog.current_dir = ProjectSettings.globalize_path(_get_source_folder())
@@ -285,10 +285,10 @@ func _load_file_content(path: String) -> String:
 	return file.get_as_text()
 
 
-func _create_save_file_dialogue() -> EditorFileDialog:
-	var file_dialog = EditorFileDialog.new()
-	file_dialog.file_mode = EditorFileDialog.FILE_MODE_SAVE_FILE
-	file_dialog.access = EditorFileDialog.ACCESS_FILESYSTEM
+func _create_save_file_dialogue() -> FileDialog:
+	var file_dialog = _app_root.create_file_dialog()
+	file_dialog.file_mode = FileDialog.FILE_MODE_SAVE_FILE
+	file_dialog.access = FileDialog.ACCESS_FILESYSTEM
 	file_dialog.set_filters(PackedStringArray(["*.clyde"]))
 	get_parent().add_child(file_dialog)
 	return file_dialog
@@ -650,7 +650,7 @@ func _toggle_follow_execution(should_persist: bool = true):
 		editor.refresh_config()
 
 
-func _on_csv_file_selected(path: String, dialog: EditorFileDialog):
+func _on_csv_file_selected(path: String, dialog: FileDialog):
 	dialog.queue_free()
 
 
