@@ -390,7 +390,7 @@ func search_next(search_obj: Dictionary):
 
 
 func search_previous(search_obj: Dictionary):
-	var column = get_caret_column() - 1
+	var column = get_caret_column() - search_obj.text.length() - 1
 	var line = get_caret_line()
 	if column < 0:
 		line -= 1
