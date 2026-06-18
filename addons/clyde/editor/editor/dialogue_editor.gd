@@ -324,7 +324,7 @@ func _font_size_down():
 
 
 func _font_reset():
-	_settings.font_size()
+	_settings.clear_font_size()
 
 
 func _on_symbol_lookup(symbol, line, column):

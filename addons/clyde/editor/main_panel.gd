@@ -259,8 +259,14 @@ func _open_file_dialog():
 func _on_open_dialog_file_selected(paths, dialogue_modal):
 	dialogue_modal.queue_free()
 
-	for path in paths:
-		_open_file(path)
+	for path: String in paths:
+		if path.ends_with(".clyde"):
+			_open_file(path)
+		else:
+			OS.alert(InterfaceText.get_string(
+				InterfaceText.KEY_WRONG_FILE_FORMAT_MESSAGE) % path,
+				InterfaceText.get_string(InterfaceText.KEY_WRONG_FILE_FORMAT_TITLE)
+			)
 
 
 func _open_file(path, include_in_open_list: bool = true, include_in_recents: bool = true):

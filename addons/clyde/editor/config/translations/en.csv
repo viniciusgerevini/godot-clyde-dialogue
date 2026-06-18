@@ -87,3 +87,5 @@ CSV_EXPORTER_FAIL,CSV export failed
 EDITOR_WINDOW_TITLE,Clyde Dialogue
 PLAYER_WINDOW_TITLE,Clyde Dialogue Player
 DOCK_WINDOW,Dock/Undock window
+WRONG_FILE_FORMAT_TITLE,Wrong file extension
+WRONG_FILE_FORMAT_MESSAGE,"Trying to open not supported file: %s"
