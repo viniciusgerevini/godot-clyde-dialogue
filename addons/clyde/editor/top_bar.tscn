@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://d3kxplyw63ybc" path="res://addons/clyde/editor/top_bar.gd" id="1_wdnc4"]
 
-[sub_resource type="DPITexture" id="DPITexture_wyb41"]
+[sub_resource type="DPITexture" id="DPITexture_wnp3n"]
 _source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\"><path fill=\"#ff5d5d\" d=\"M2 1v8.586l1.293-1.293a1 1 0 0 1 1.414 0L7 10.587l2.293-2.293a1 1 0 0 1 1.414 0L13 10.586l1-1V6H9V1H2zm8 0v4h4zm-6 9.414-2 2V15h12v-2.586l-.293.293a1 1 0 0 1-1.414 0L10 10.414l-2.293 2.293a1 1 0 0 1-1.414 0L4 10.414z\"/></svg>
 "
 
@@ -111,10 +111,10 @@ text = "Help"
 switch_on_hover = true
 item_count = 3
 popup/item_0/text = "Online Documentation"
-popup/item_0/icon = SubResource("DPITexture_wyb41")
+popup/item_0/icon = SubResource("DPITexture_wnp3n")
 popup/item_0/id = 100
 popup/item_1/text = "Report Issue"
-popup/item_1/icon = SubResource("DPITexture_wyb41")
+popup/item_1/icon = SubResource("DPITexture_wnp3n")
 popup/item_1/id = 200
 popup/item_2/text = "v7.0.1"
 popup/item_2/id = 300
@@ -133,7 +133,7 @@ theme_override_constants/margin_right = 5
 layout_mode = 2
 tooltip_text = "Dock/Undock window"
 focus_mode = 0
-icon = SubResource("DPITexture_wyb41")
+icon = SubResource("DPITexture_wnp3n")
 flat = true
 
 [node name="MarginContainer" type="MarginContainer" parent="right_icons" unique_id=1096303049]
@@ -145,7 +145,7 @@ layout_mode = 2
 tooltip_text = "Execute Dialogue"
 focus_mode = 0
 disabled = true
-icon = SubResource("DPITexture_wyb41")
+icon = SubResource("DPITexture_wnp3n")
 flat = true
 
 [connection signal="pressed" from="right_icons/FloatContainer/dock_button" to="." method="_on_dock_button_pressed"]

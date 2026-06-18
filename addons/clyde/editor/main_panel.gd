@@ -1,6 +1,7 @@
 @tool
 extends MarginContainer
 
+signal current_file_changed(file_path: String)
 signal file_system_scan_requested
 signal show_in_file_system_triggered(file_path: String)
 signal dock_button_pressed
@@ -121,6 +122,7 @@ func _on_multi_editor_parsing_finished(result):
 
 
 func _on_multi_editor_editor_switched(key):
+	current_file_changed.emit(key)
 	if key == _current_file_path:
 		return
 	file_list.select_file(key)

@@ -192,7 +192,7 @@ func _add_item(menu: PopupMenu, text_key: String, id: int, shortcuts: Shortcuts 
 
 func _on_item_list_item_clicked(index, _at_position, mouse_button_index):
 	if mouse_button_index == MOUSE_BUTTON_RIGHT:
-		_menu.position = get_viewport().get_mouse_position()
+		_menu.position = Vector2(get_window().position) + get_viewport().get_mouse_position()
 		_menu.popup()
 
 
