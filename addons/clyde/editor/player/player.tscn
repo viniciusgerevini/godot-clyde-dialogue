@@ -106,29 +106,34 @@ layout_mode = 2
 tooltip_text = "Restart Dialogue"
 disabled = true
 icon = SubResource("ImageTexture_nmkci")
+flat = true
 
 [node name="next_line" type="Button" parent="HBoxContainer/VBoxContainer/actions" unique_id=342864222]
 layout_mode = 2
 tooltip_text = "Next Line"
 disabled = true
 icon = SubResource("ImageTexture_nmkci")
+flat = true
 
 [node name="forward" type="Button" parent="HBoxContainer/VBoxContainer/actions" unique_id=206792124]
 layout_mode = 2
 tooltip_text = "Foward to Next Choice"
 disabled = true
 icon = SubResource("ImageTexture_nmkci")
+flat = true
 
 [node name="poltergeist" type="Button" parent="HBoxContainer/VBoxContainer/actions" unique_id=691886547]
 layout_mode = 2
 tooltip_text = "Poltergeist Mode (auto-select)"
 disabled = true
 icon = ExtResource("2_m8qso")
+flat = true
 
 [node name="clear_mem" type="Button" parent="HBoxContainer/VBoxContainer/actions" unique_id=993069167]
 layout_mode = 2
 tooltip_text = "Clear Memory"
 icon = SubResource("ImageTexture_nmkci")
+flat = true
 
 [node name="multi_single" type="Button" parent="HBoxContainer/VBoxContainer/actions" unique_id=590401400]
 layout_mode = 2
@@ -136,6 +141,7 @@ tooltip_text = "Toggle Multi-Bubble Mode"
 toggle_mode = true
 button_pressed = true
 icon = SubResource("ImageTexture_nmkci")
+flat = true
 
 [node name="show_meta" type="Button" parent="HBoxContainer/VBoxContainer/actions" unique_id=451086842]
 layout_mode = 2
@@ -143,12 +149,14 @@ tooltip_text = "Show Metadata"
 toggle_mode = true
 button_pressed = true
 icon = SubResource("ImageTexture_nmkci")
+flat = true
 
 [node name="show_debug" type="Button" parent="HBoxContainer/VBoxContainer/actions" unique_id=6932086]
 layout_mode = 2
 tooltip_text = "Show Debug Panel"
 toggle_mode = true
 icon = SubResource("ImageTexture_nmkci")
+flat = true
 
 [connection signal="button_up" from="HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/dock" to="." method="_on_dock_button_up"]
 [connection signal="button_up" from="HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/close" to="." method="_on_close_button_up"]

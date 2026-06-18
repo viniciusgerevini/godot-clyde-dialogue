@@ -10,24 +10,24 @@ var _app_root: AppRoot
 var _settings: Settings
 var _csv_helper: CsvHelper
 
-@onready var file_label: Label = $MarginContainer/VBoxContainer/csv_file_container/file_label
-@onready var file_btn: Button = $MarginContainer/VBoxContainer/csv_file_container/HBoxContainer/file_btn
-@onready var file_input: LineEdit = $MarginContainer/VBoxContainer/csv_file_container/HBoxContainer/LineEdit
-@onready var option_include_meta: CheckBox = $MarginContainer/VBoxContainer/options_container/include_metadata
-@onready var option_include_header: CheckBox = $MarginContainer/VBoxContainer/options_container/include_header
-@onready var option_locale: LineEdit = $MarginContainer/VBoxContainer/options_container/GridContainer/header_locale
-@onready var option_locale_label: Label = $MarginContainer/VBoxContainer/options_container/GridContainer/locale_label
-@onready var option_delimiter: LineEdit = $MarginContainer/VBoxContainer/options_container/GridContainer/delimiter
-@onready var option_delimiter_label: Label = $MarginContainer/VBoxContainer/options_container/GridContainer/delimiter_label
-@onready var options_label: Label = $MarginContainer/VBoxContainer/options_container/options
-@onready var export_btn: Button = $MarginContainer/VBoxContainer/buttons/export_btn
-@onready var cancel_btn: Button = $MarginContainer/VBoxContainer/buttons/cancel
+@onready var file_label: Label = $Container/MarginContainer/VBoxContainer/csv_file_container/file_label
+@onready var file_btn: Button = $Container/MarginContainer/VBoxContainer/csv_file_container/HBoxContainer/file_btn
+@onready var file_input: LineEdit = $Container/MarginContainer/VBoxContainer/csv_file_container/HBoxContainer/LineEdit
+@onready var option_include_meta: CheckBox = $Container/MarginContainer/VBoxContainer/options_container/include_metadata
+@onready var option_include_header: CheckBox = $Container/MarginContainer/VBoxContainer/options_container/include_header
+@onready var option_locale: LineEdit = $Container/MarginContainer/VBoxContainer/options_container/GridContainer/header_locale
+@onready var option_locale_label: Label = $Container/MarginContainer/VBoxContainer/options_container/GridContainer/locale_label
+@onready var option_delimiter: LineEdit = $Container/MarginContainer/VBoxContainer/options_container/GridContainer/delimiter
+@onready var option_delimiter_label: Label = $Container/MarginContainer/VBoxContainer/options_container/GridContainer/delimiter_label
+@onready var options_label: Label = $Container/MarginContainer/VBoxContainer/options_container/options
+@onready var export_btn: Button = $Container/MarginContainer/VBoxContainer/buttons/export_btn
+@onready var cancel_btn: Button = $Container/MarginContainer/VBoxContainer/buttons/cancel
 
-@onready var warning_container = $MarginContainer/VBoxContainer/csv_file_container/warning
-@onready var warning_icon = $MarginContainer/VBoxContainer/csv_file_container/warning/TextureRect
-@onready var warning_label = $MarginContainer/VBoxContainer/csv_file_container/warning/Label
+@onready var warning_container = $Container/MarginContainer/VBoxContainer/csv_file_container/warning
+@onready var warning_icon = $Container/MarginContainer/VBoxContainer/csv_file_container/warning/TextureRect
+@onready var warning_label = $Container/MarginContainer/VBoxContainer/csv_file_container/warning/Label
 
-@onready var save_message = $MarginContainer/VBoxContainer/HBoxContainer/save_message
+@onready var save_message = $Container/MarginContainer/VBoxContainer/HBoxContainer/save_message
 
 var _file_path = ""
 var _parsed_document

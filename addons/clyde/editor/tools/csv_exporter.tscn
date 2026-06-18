@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://bm1ht3mndadas"]
+[gd_scene format=3 uid="uid://bm1ht3mndadas"]
 
 [ext_resource type="Script" uid="uid://cir12bk0kn7ya" path="res://addons/clyde/editor/tools/csv_exporter.gd" id="1_06a4e"]
 
@@ -14,22 +14,26 @@ data = {
 [sub_resource type="ImageTexture" id="ImageTexture_prkd0"]
 image = SubResource("Image_185u2")
 
-[node name="CsvExporterWindow" type="PopupPanel"]
+[node name="CsvExporterWindow" type="PopupPanel" unique_id=308601081]
+oversampling_override = 1.0
 size = Vector2i(608, 418)
 visible = true
 script = ExtResource("1_06a4e")
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
-custom_minimum_size = Vector2(600, 0)
+[node name="Container" type="PanelContainer" parent="." unique_id=243063747]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 4.0
 offset_top = 4.0
-offset_right = 604.0
-offset_bottom = 414.0
+offset_right = -4.0
+offset_bottom = -4.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Container" unique_id=2129547584]
+custom_minimum_size = Vector2(600, 0)
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/margin_left = 10
@@ -37,119 +41,119 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Container/MarginContainer" unique_id=1700294355]
 layout_mode = 2
 theme_override_constants/separation = 15
 
-[node name="csv_file_container" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
+[node name="csv_file_container" type="VBoxContainer" parent="Container/MarginContainer/VBoxContainer" unique_id=1332334861]
 layout_mode = 2
 
-[node name="file_label" type="Label" parent="MarginContainer/VBoxContainer/csv_file_container"]
+[node name="file_label" type="Label" parent="Container/MarginContainer/VBoxContainer/csv_file_container" unique_id=1986866396]
 layout_mode = 2
 text = "CSV File"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/csv_file_container"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Container/MarginContainer/VBoxContainer/csv_file_container" unique_id=819379315]
 layout_mode = 2
 tooltip_text = "File to store CSV lines. Previous content will be replaced."
 
-[node name="LineEdit" type="LineEdit" parent="MarginContainer/VBoxContainer/csv_file_container/HBoxContainer"]
+[node name="LineEdit" type="LineEdit" parent="Container/MarginContainer/VBoxContainer/csv_file_container/HBoxContainer" unique_id=1075593268]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 text = "res://.csv"
 editable = false
 
-[node name="file_btn" type="Button" parent="MarginContainer/VBoxContainer/csv_file_container/HBoxContainer"]
+[node name="file_btn" type="Button" parent="Container/MarginContainer/VBoxContainer/csv_file_container/HBoxContainer" unique_id=403788883]
 layout_mode = 2
 text = "Select file"
 
-[node name="warning" type="HBoxContainer" parent="MarginContainer/VBoxContainer/csv_file_container"]
+[node name="warning" type="HBoxContainer" parent="Container/MarginContainer/VBoxContainer/csv_file_container" unique_id=1979957538]
 visible = false
 layout_mode = 2
 
-[node name="TextureRect" type="TextureRect" parent="MarginContainer/VBoxContainer/csv_file_container/warning"]
+[node name="TextureRect" type="TextureRect" parent="Container/MarginContainer/VBoxContainer/csv_file_container/warning" unique_id=859050658]
 custom_minimum_size = Vector2(16, 0)
 layout_mode = 2
 size_flags_vertical = 4
 texture = SubResource("ImageTexture_prkd0")
 
-[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/csv_file_container/warning"]
+[node name="Label" type="Label" parent="Container/MarginContainer/VBoxContainer/csv_file_container/warning" unique_id=1795257422]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.804, 0.727, 0.636, 1)
 text = "Selected file already exists. Content will be overwritten."
 
-[node name="options_container" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
+[node name="options_container" type="VBoxContainer" parent="Container/MarginContainer/VBoxContainer" unique_id=379936551]
 layout_mode = 2
 
-[node name="options" type="Label" parent="MarginContainer/VBoxContainer/options_container"]
+[node name="options" type="Label" parent="Container/MarginContainer/VBoxContainer/options_container" unique_id=2077710739]
 layout_mode = 2
 text = "Option"
 horizontal_alignment = 1
 
-[node name="GridContainer" type="GridContainer" parent="MarginContainer/VBoxContainer/options_container"]
+[node name="GridContainer" type="GridContainer" parent="Container/MarginContainer/VBoxContainer/options_container" unique_id=319522227]
 layout_mode = 2
 theme_override_constants/h_separation = 20
 columns = 2
 
-[node name="locale_label" type="Label" parent="MarginContainer/VBoxContainer/options_container/GridContainer"]
+[node name="locale_label" type="Label" parent="Container/MarginContainer/VBoxContainer/options_container/GridContainer" unique_id=151258876]
 layout_mode = 2
 size_flags_horizontal = 3
 tooltip_text = "The locale of the original dialogue to be used in the header. It can be any value. Check Godot's supported locales."
 mouse_filter = 1
 text = "Locale"
 
-[node name="header_locale" type="LineEdit" parent="MarginContainer/VBoxContainer/options_container/GridContainer"]
+[node name="header_locale" type="LineEdit" parent="Container/MarginContainer/VBoxContainer/options_container/GridContainer" unique_id=1937826865]
 layout_mode = 2
 text = "en"
 placeholder_text = "en"
 
-[node name="delimiter_label" type="Label" parent="MarginContainer/VBoxContainer/options_container/GridContainer"]
+[node name="delimiter_label" type="Label" parent="Container/MarginContainer/VBoxContainer/options_container/GridContainer" unique_id=1969865075]
 layout_mode = 2
 tooltip_text = "Symbol used to separate columns. Default ','. Has to be one character."
 mouse_filter = 1
 text = "Column delimiter"
 
-[node name="delimiter" type="LineEdit" parent="MarginContainer/VBoxContainer/options_container/GridContainer"]
+[node name="delimiter" type="LineEdit" parent="Container/MarginContainer/VBoxContainer/options_container/GridContainer" unique_id=1039367297]
 layout_mode = 2
 text = ","
 placeholder_text = ","
 max_length = 1
 
-[node name="include_metadata" type="CheckBox" parent="MarginContainer/VBoxContainer/options_container"]
+[node name="include_metadata" type="CheckBox" parent="Container/MarginContainer/VBoxContainer/options_container" unique_id=140422094]
 layout_mode = 2
 tooltip_text = "Adds extra line to CSV file with extra data. (i.e. speaker and tags)"
 text = "Include metadata"
 
-[node name="include_header" type="CheckBox" parent="MarginContainer/VBoxContainer/options_container"]
+[node name="include_header" type="CheckBox" parent="Container/MarginContainer/VBoxContainer/options_container" unique_id=1679996350]
 layout_mode = 2
 tooltip_text = "Include file header (id, locale)"
 button_pressed = true
 text = "Include header"
 
-[node name="buttons" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+[node name="buttons" type="HBoxContainer" parent="Container/MarginContainer/VBoxContainer" unique_id=308353993]
 layout_mode = 2
 
-[node name="cancel" type="Button" parent="MarginContainer/VBoxContainer/buttons"]
+[node name="cancel" type="Button" parent="Container/MarginContainer/VBoxContainer/buttons" unique_id=598545922]
 layout_mode = 2
 text = "Cancel"
 
-[node name="export_btn" type="Button" parent="MarginContainer/VBoxContainer/buttons"]
+[node name="export_btn" type="Button" parent="Container/MarginContainer/VBoxContainer/buttons" unique_id=1395676038]
 layout_mode = 2
 text = "Export CSV"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Container/MarginContainer/VBoxContainer" unique_id=1893077091]
 visible = false
 layout_mode = 2
 
-[node name="save_message" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="save_message" type="Label" parent="Container/MarginContainer/VBoxContainer/HBoxContainer" unique_id=613298284]
 layout_mode = 2
 
 [connection signal="popup_hide" from="." to="." method="_on_popup_hide"]
-[connection signal="focus_exited" from="MarginContainer/VBoxContainer/csv_file_container/HBoxContainer/LineEdit" to="." method="_on_line_edit_focus_exited"]
-[connection signal="button_up" from="MarginContainer/VBoxContainer/csv_file_container/HBoxContainer/file_btn" to="." method="_on_file_btn_button_up"]
-[connection signal="focus_entered" from="MarginContainer/VBoxContainer/options_container/GridContainer/header_locale" to="." method="_on_header_locale_focus_entered"]
-[connection signal="focus_entered" from="MarginContainer/VBoxContainer/options_container/GridContainer/delimiter" to="." method="_on_delimiter_focus_entered"]
-[connection signal="focus_entered" from="MarginContainer/VBoxContainer/options_container/include_metadata" to="." method="_on_include_metadata_focus_entered"]
-[connection signal="focus_entered" from="MarginContainer/VBoxContainer/options_container/include_header" to="." method="_on_include_header_focus_entered"]
-[connection signal="button_up" from="MarginContainer/VBoxContainer/buttons/cancel" to="." method="_on_cancel_button_up"]
-[connection signal="button_up" from="MarginContainer/VBoxContainer/buttons/export_btn" to="." method="_on_export_btn_button_up"]
+[connection signal="focus_exited" from="Container/MarginContainer/VBoxContainer/csv_file_container/HBoxContainer/LineEdit" to="." method="_on_line_edit_focus_exited"]
+[connection signal="button_up" from="Container/MarginContainer/VBoxContainer/csv_file_container/HBoxContainer/file_btn" to="." method="_on_file_btn_button_up"]
+[connection signal="focus_entered" from="Container/MarginContainer/VBoxContainer/options_container/GridContainer/header_locale" to="." method="_on_header_locale_focus_entered"]
+[connection signal="focus_entered" from="Container/MarginContainer/VBoxContainer/options_container/GridContainer/delimiter" to="." method="_on_delimiter_focus_entered"]
+[connection signal="focus_entered" from="Container/MarginContainer/VBoxContainer/options_container/include_metadata" to="." method="_on_include_metadata_focus_entered"]
+[connection signal="focus_entered" from="Container/MarginContainer/VBoxContainer/options_container/include_header" to="." method="_on_include_header_focus_entered"]
+[connection signal="button_up" from="Container/MarginContainer/VBoxContainer/buttons/cancel" to="." method="_on_cancel_button_up"]
+[connection signal="button_up" from="Container/MarginContainer/VBoxContainer/buttons/export_btn" to="." method="_on_export_btn_button_up"]
