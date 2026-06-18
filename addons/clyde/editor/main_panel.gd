@@ -677,3 +677,7 @@ func _on_player_close_triggered():
 
 func _on_top_bar_dock_button_pressed() -> void:
 	dock_button_pressed.emit()
+
+
+func hide_top_bar_dock_button() -> void:
+	top_bar.hide_dock_button()

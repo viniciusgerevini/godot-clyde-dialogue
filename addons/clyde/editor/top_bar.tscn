@@ -1,24 +1,16 @@
-[gd_scene load_steps=4 format=3 uid="uid://c1vmpgpv2jrpx"]
+[gd_scene format=3 uid="uid://c1vmpgpv2jrpx"]
 
 [ext_resource type="Script" uid="uid://d3kxplyw63ybc" path="res://addons/clyde/editor/top_bar.gd" id="1_wdnc4"]
 
-[sub_resource type="Image" id="Image_wnp3n"]
-data = {
-"data": PackedByteArray(255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 92, 92, 0, 255, 92, 92, 0, 255, 92, 92, 0, 255, 92, 92, 0, 255, 92, 92, 0, 255, 92, 92, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 0, 255, 92, 92, 127, 255, 92, 92, 0, 255, 92, 92, 0, 255, 92, 92, 0, 255, 92, 92, 0, 255, 92, 92, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 0, 255, 93, 93, 255, 255, 92, 92, 127, 255, 92, 92, 0, 255, 92, 92, 0, 255, 92, 92, 0, 255, 92, 92, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 92, 92, 127, 255, 92, 92, 0, 255, 92, 92, 0, 255, 92, 92, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 92, 92, 127, 255, 92, 92, 0, 255, 92, 92, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 92, 92, 0, 255, 92, 92, 0, 255, 92, 92, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 231, 255, 90, 90, 54, 255, 94, 94, 57, 255, 93, 93, 233, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 231, 255, 90, 90, 54, 255, 94, 94, 57, 255, 93, 93, 233, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 0, 255, 93, 93, 0, 255, 91, 91, 0, 255, 91, 91, 0, 255, 91, 91, 42, 255, 90, 90, 0, 255, 94, 94, 0, 255, 91, 91, 42, 255, 93, 93, 233, 255, 92, 92, 232, 255, 93, 93, 41, 255, 90, 90, 0, 255, 94, 94, 0, 255, 91, 91, 42, 255, 93, 93, 233, 255, 92, 92, 232, 255, 92, 92, 0, 255, 92, 92, 0, 255, 91, 91, 0, 255, 91, 91, 0, 255, 91, 91, 0, 255, 91, 91, 45, 255, 93, 93, 44, 255, 91, 91, 0, 255, 91, 91, 42, 255, 91, 91, 42, 255, 93, 93, 0, 255, 91, 91, 45, 255, 93, 93, 44, 255, 91, 91, 0, 255, 91, 91, 42, 255, 91, 91, 42, 255, 91, 91, 0, 255, 91, 91, 0, 255, 91, 91, 0, 255, 91, 91, 0, 255, 91, 91, 45, 255, 92, 92, 235, 255, 92, 92, 234, 255, 89, 89, 43, 255, 91, 91, 0, 255, 91, 91, 0, 255, 91, 91, 45, 255, 92, 92, 235, 255, 92, 92, 234, 255, 89, 89, 43, 255, 91, 91, 0, 255, 91, 91, 0, 255, 91, 91, 0, 255, 91, 91, 0, 255, 92, 92, 0, 255, 92, 92, 0, 255, 92, 92, 235, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 233, 255, 91, 91, 59, 255, 92, 92, 61, 255, 92, 92, 235, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 233, 255, 91, 91, 59, 255, 92, 92, 61, 255, 92, 92, 0, 255, 92, 92, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 0),
-"format": "RGBA8",
-"height": 16,
-"mipmaps": false,
-"width": 16
-}
+[sub_resource type="DPITexture" id="DPITexture_wyb41"]
+_source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\"><path fill=\"#ff5d5d\" d=\"M2 1v8.586l1.293-1.293a1 1 0 0 1 1.414 0L7 10.587l2.293-2.293a1 1 0 0 1 1.414 0L13 10.586l1-1V6H9V1H2zm8 0v4h4zm-6 9.414-2 2V15h12v-2.586l-.293.293a1 1 0 0 1-1.414 0L10 10.414l-2.293 2.293a1 1 0 0 1-1.414 0L4 10.414z\"/></svg>
+"
 
-[sub_resource type="ImageTexture" id="ImageTexture_j0i0o"]
-image = SubResource("Image_wnp3n")
-
-[node name="TopBar" type="HBoxContainer"]
+[node name="TopBar" type="HBoxContainer" unique_id=2056588653]
 size_flags_horizontal = 3
 script = ExtResource("1_wdnc4")
 
-[node name="file_menu" type="MenuButton" parent="."]
+[node name="file_menu" type="MenuButton" parent="." unique_id=2119717967]
 layout_mode = 2
 text = "File"
 switch_on_hover = true
@@ -60,7 +52,7 @@ popup/item_13/text = "Close Others"
 popup/item_13/id = 1000
 popup/item_13/disabled = true
 
-[node name="tool_menu" type="MenuButton" parent="."]
+[node name="tool_menu" type="MenuButton" parent="." unique_id=656197812]
 layout_mode = 2
 text = "Tools"
 switch_on_hover = true
@@ -82,14 +74,13 @@ popup/item_3/checked = true
 popup/item_3/id = 201
 popup/item_4/text = "Player"
 popup/item_4/id = -1
-popup/item_4/disabled = true
 popup/item_4/separator = true
 popup/item_5/text = "Execute Dialogue"
 popup/item_5/id = 300
+popup/item_5/disabled = true
 popup/item_6/text = "Show Dialogue Player"
 popup/item_6/checkable = 1
 popup/item_6/id = 200
-popup/item_6/disabled = true
 popup/item_7/text = "Dialogue"
 popup/item_7/id = -1
 popup/item_7/separator = true
@@ -98,8 +89,9 @@ popup/item_8/id = 600
 popup/item_8/disabled = true
 popup/item_9/text = "Create Translation CSV..."
 popup/item_9/id = 500
+popup/item_9/disabled = true
 
-[node name="view_menu" type="MenuButton" parent="."]
+[node name="view_menu" type="MenuButton" parent="." unique_id=1377970607]
 visible = false
 layout_mode = 2
 text = "View"
@@ -113,47 +105,47 @@ popup/item_1/text = "Show dialogue player"
 popup/item_1/checkable = 1
 popup/item_1/id = 200
 
-[node name="help_menu" type="MenuButton" parent="."]
+[node name="help_menu" type="MenuButton" parent="." unique_id=1427606762]
 layout_mode = 2
 text = "Help"
 switch_on_hover = true
 item_count = 3
 popup/item_0/text = "Online Documentation"
-popup/item_0/icon = SubResource("ImageTexture_j0i0o")
+popup/item_0/icon = SubResource("DPITexture_wyb41")
 popup/item_0/id = 100
 popup/item_1/text = "Report Issue"
-popup/item_1/icon = SubResource("ImageTexture_j0i0o")
+popup/item_1/icon = SubResource("DPITexture_wyb41")
 popup/item_1/id = 200
-popup/item_2/text = "v6.0.0"
+popup/item_2/text = "v7.0.1"
 popup/item_2/id = 300
 popup/item_2/disabled = true
 
-[node name="right_icons" type="HBoxContainer" parent="."]
+[node name="right_icons" type="HBoxContainer" parent="." unique_id=27629265]
 layout_mode = 2
 size_flags_horizontal = 3
 alignment = 2
 
-[node name="FloatContainer" type="MarginContainer" parent="right_icons"]
+[node name="FloatContainer" type="MarginContainer" parent="right_icons" unique_id=1967666333]
 layout_mode = 2
 theme_override_constants/margin_right = 5
 
-[node name="dock_button" type="Button" parent="right_icons/FloatContainer"]
+[node name="dock_button" type="Button" parent="right_icons/FloatContainer" unique_id=2023470887]
 layout_mode = 2
 tooltip_text = "Dock/Undock window"
 focus_mode = 0
-icon = SubResource("ImageTexture_j0i0o")
+icon = SubResource("DPITexture_wyb41")
 flat = true
 
-[node name="MarginContainer" type="MarginContainer" parent="right_icons"]
+[node name="MarginContainer" type="MarginContainer" parent="right_icons" unique_id=1096303049]
 layout_mode = 2
 theme_override_constants/margin_right = 5
 
-[node name="execute_dialogue" type="Button" parent="right_icons/MarginContainer"]
+[node name="execute_dialogue" type="Button" parent="right_icons/MarginContainer" unique_id=697876016]
 layout_mode = 2
 tooltip_text = "Execute Dialogue"
 focus_mode = 0
 disabled = true
-icon = SubResource("ImageTexture_j0i0o")
+icon = SubResource("DPITexture_wyb41")
 flat = true
 
 [connection signal="pressed" from="right_icons/FloatContainer/dock_button" to="." method="_on_dock_button_pressed"]

@@ -363,3 +363,7 @@ func set_recents(recent_files: Array):
 
 func _on_dock_button_pressed() -> void:
 	dock_button_pressed.emit()
+
+
+func hide_dock_button() -> void:
+	_dock_button.hide()
