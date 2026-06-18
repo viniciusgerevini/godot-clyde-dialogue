@@ -53,6 +53,7 @@ func add_file(file_path: String):
 		"is_visible": true,
 	}
 	_items.set_item_metadata(_files[file_path].index, file_path)
+	_items.set_item_tooltip(_files[file_path].index, file_path)
 
 
 func remove_file(file_path: String):
@@ -111,6 +112,7 @@ func reload_list():
 				get_theme_icon("Script", "EditorIcons")
 			)
 			_items.set_item_metadata(_files[file_path].index, file_path)
+			_items.set_item_tooltip(_files[file_path].index, file_path)
 		else:
 			file.is_visible = false
 
