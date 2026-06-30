@@ -93,6 +93,7 @@ func _exit_tree() -> void:
 
 
 func _setup_main_panel() -> void:
+	InterfaceText.load_strings_for_current_locale()
 	InterfaceText.plugin_version = get_plugin_version()
 	if not ProjectSettings.get_setting(MAIN_EDITOR_ENABLED, true):
 		return

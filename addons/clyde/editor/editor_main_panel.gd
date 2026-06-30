@@ -5,6 +5,8 @@ signal dock_button_pressed
 const ClydeEditorSettings = preload("./config/settings.gd")
 const ClydeInEditorSettings = preload("./config/editor_settings/in_editor_settings.gd")
 const PluginRoot = preload("./app_root/plugin_root.gd")
+const AboutWindow = preload("./help/about.tscn")
+const InterfaceText = preload("res://addons/clyde/editor/config/interface_text.gd")
 
 var editor_plugin: EditorPlugin
 
@@ -37,3 +39,21 @@ func _on_main_panel_file_system_scan_requested() -> void:
 
 func _on_main_panel_show_in_file_system_triggered(file_path: String) -> void:
 	EditorInterface.get_file_system_dock().navigate_to_path(ProjectSettings.localize_path(file_path))
+
+
+func _on_main_panel_about_triggered() -> void:
+	var about: Window = AboutWindow.instantiate()
+	add_child(about)
+	about.set_license_notice(_get_license_content())
+	about.setup(
+		InterfaceText.get_string(InterfaceText.KEY_ABOUT_WINDOW_TITLE),
+		InterfaceText.get_string(InterfaceText.KEY_ABOUT_TITLE),
+		InterfaceText.get_string(InterfaceText.KEY_ABOUT_DESCRIPTION),
+		InterfaceText.plugin_version,
+	)
+	about.popup_centered()
+
+
+func _get_license_content() -> String:
+	var file: FileAccess = FileAccess.open("res://addons/clyde/LICENSE", FileAccess.READ)
+	return file.get_as_text()

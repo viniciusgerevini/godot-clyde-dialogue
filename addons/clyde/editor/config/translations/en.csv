@@ -35,6 +35,7 @@ MENU_TOOL,Tools
 MENU_HELP,Help
 HELP_ONLINE_DOCS,Online Documentation
 HELP_REPORT_ISSUE,Report Issue
+HELP_ABOUT,About...
 TOOL_MENU_PLAYER_SECTION,Player
 TOOL_MENU_EDITOR_SECTION,Editor
 TOOL_MENU_PLAYER_SYNC,Sync Changes with Player
@@ -89,3 +90,6 @@ PLAYER_WINDOW_TITLE,Clyde Dialogue Player
 DOCK_WINDOW,Dock/Undock window
 WRONG_FILE_FORMAT_TITLE,Wrong file extension
 WRONG_FILE_FORMAT_MESSAGE,"Trying to open not supported file: %s"
+ABOUT_WINDOW_TITLE,"About Clyde Dialogue"
+ABOUT_TITLE,"Clyde Dialogue Plugin"
+ABOUT_DESCRIPTION,"The Clyde dialogue plugin and the Clyde language were created by Vinicius Gerevini ([url=https://thisisvini.com]thisisvini.com[/url]) and distributed under the [url=LICENSE]MIT License[/url]."

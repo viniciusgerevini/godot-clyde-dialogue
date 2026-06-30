@@ -3,6 +3,7 @@
 signal settings_changed
 
 @abstract func get_setting(key: String) -> Variant
+@abstract func get_interface_setting(key: String) -> Variant
 @abstract func get_color_scheme_setting(key: String) -> Color
 @abstract func get_project_metadata(section: String, key: String, default: Variant = null) -> Variant
 @abstract func set_project_metadata(section: String, key: String, data: Variant) -> void

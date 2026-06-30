@@ -43,6 +43,7 @@ const KEY_MENU_TOOL = "MENU_TOOL"
 const KEY_MENU_HELP = "MENU_HELP"
 const KEY_HELP_ONLINE_DOCS = "HELP_ONLINE_DOCS"
 const KEY_HELP_REPORT_ISSUE = "HELP_REPORT_ISSUE"
+const KEY_HELP_ABOUT = "HELP_ABOUT"
 const KEY_DEBUG_PANEL_NAME = "DEBUG_PANEL_NAME"
 const KEY_DEBUG_VARIABLES_LABEL = "DEBUG_VARIABLES_LABEL"
 const KEY_DEBUG_EXT_VARIABLES_LABEL = "DEBUG_EXT_VARIABLES_LABEL"
@@ -97,6 +98,10 @@ const KEY_DOCK_WINDOW = "DOCK_WINDOW"
 const KEY_WRONG_FILE_FORMAT_TITLE = "WRONG_FILE_FORMAT_TITLE"
 const KEY_WRONG_FILE_FORMAT_MESSAGE = "WRONG_FILE_FORMAT_MESSAGE"
 
+const KEY_ABOUT_WINDOW_TITLE = "ABOUT_WINDOW_TITLE"
+const KEY_ABOUT_TITLE = "ABOUT_TITLE"
+const KEY_ABOUT_DESCRIPTION = "ABOUT_DESCRIPTION"
+
 static var plugin_version := ""
 
 static var _loaded_locale := "en"
@@ -105,30 +110,33 @@ static var _default_locale := "en"
 static var _entries = {}
 static var _fallback = {}
 
+const TRANSLATIONS_PATH: String = "res://addons/clyde/editor/config/translations/%s.csv"
+
 static func get_string(key: String) -> String:
-	_load_strings()
 	if _entries.has(key):
 		return _entries[key]
 	return _fallback[key]
 
 
-static func _load_strings() -> void:
+static func load_strings_for_current_locale(translations_path: String = TRANSLATIONS_PATH) -> void:
 	var locale = TranslationServer.get_tool_locale()
-	if locale == _loaded_locale and not _entries.is_empty():
-		return
-	if not FileAccess.file_exists(_locale_translation_path(locale)):
-		locale = _default_locale
 
-	_load_entries_for_locale(_default_locale, _fallback)
-	if locale != _default_locale:
-		_load_entries_for_locale(locale, _entries)
+	_load_entries_from_file(
+		translations_path % _default_locale,
+		_fallback
+	)
+
+	var locale_file = translations_path % locale
+
+	if locale != _default_locale and FileAccess.file_exists(locale_file):
+		_load_entries_from_file(locale_file, _entries)
 	else:
 		_entries = _fallback
 	_loaded_locale = locale
 
 
-static func _load_entries_for_locale(locale: String, dictionary: Dictionary) -> void:
-	var file = FileAccess.open(_locale_translation_path(locale), FileAccess.READ)
+static func _load_entries_from_file(translation_file_path: String, dictionary: Dictionary) -> void:
+	var file = FileAccess.open(translation_file_path, FileAccess.READ)
 	var header = file.get_csv_line()
 	if header.size() < 2:
 		return
@@ -139,7 +147,3 @@ static func _load_entries_for_locale(locale: String, dictionary: Dictionary) -> 
 			continue
 		dictionary[line[0]] = line[1]
 	return
-
-
-static func _locale_translation_path(locale: String) -> String:
-	return "res://addons/clyde/editor/config/translations/%s.csv" % locale

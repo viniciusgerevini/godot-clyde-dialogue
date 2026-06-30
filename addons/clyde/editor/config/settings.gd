@@ -123,11 +123,11 @@ func editor_color_scheme() -> Dictionary[String, Color]:
 
 
 func get_theme_accent_color() -> Color:
-	return _editor_settings.get_color_scheme_setting("accent_color")
+	return Color(_editor_settings.get_interface_setting("accent_color"))
 
 
 func get_theme_base_color() -> Color:
-	return _editor_settings.get_color_scheme_setting("base_color")
+	return Color(_editor_settings.get_interface_setting("base_color"))
 
 
 func _on_settings_changed():

@@ -1,0 +1,89 @@
+[gd_scene format=3 uid="uid://dmpvpk2y4pdun"]
+
+[ext_resource type="Script" uid="uid://cf84m58h68ptk" path="res://addons/clyde/editor/help/about.gd" id="1_u3u3e"]
+[ext_resource type="Texture2D" uid="uid://d05r8uu5a8oru" path="res://icon.png" id="2_uucx6"]
+
+[node name="About" type="Window" unique_id=1224362528]
+oversampling_override = 1.0
+title = "About"
+position = Vector2i(0, 36)
+size = Vector2i(452, 175)
+wrap_controls = true
+transient = true
+script = ExtResource("1_u3u3e")
+
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=698841819]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer" unique_id=1839278597]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer" unique_id=170082002]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=2082718019]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1701857123]
+layout_mode = 2
+texture = ExtResource("2_uucx6")
+stretch_mode = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1075586537]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 20
+
+[node name="title" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=1909369316]
+layout_mode = 2
+mouse_filter = 0
+text = "Clyde Dialogue"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=1777274118]
+layout_mode = 2
+
+[node name="description" type="RichTextLabel" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer" unique_id=1115243835]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+focus_mode = 2
+bbcode_enabled = true
+text = "Notice"
+fit_content = true
+context_menu_enabled = true
+shortcut_keys_enabled = false
+selection_enabled = true
+deselect_on_focus_loss_enabled = false
+drag_and_drop_selection_enabled = false
+
+[node name="version" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer" unique_id=1917315279]
+layout_mode = 2
+mouse_filter = 0
+text = "v0.0.1"
+horizontal_alignment = 2
+
+[node name="license" type="RichTextLabel" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=1337249139]
+visible = false
+custom_minimum_size = Vector2(0, 200)
+layout_mode = 2
+size_flags_vertical = 3
+focus_mode = 2
+bbcode_enabled = true
+text = "license"
+context_menu_enabled = true
+shortcut_keys_enabled = false
+selection_enabled = true
+deselect_on_focus_loss_enabled = false
+drag_and_drop_selection_enabled = false
+
+[connection signal="close_requested" from="." to="." method="_on_close_requested"]
+[connection signal="meta_clicked" from="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer/description" to="." method="_on_description_meta_clicked"]

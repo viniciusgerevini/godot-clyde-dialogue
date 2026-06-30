@@ -30,6 +30,7 @@ signal create_csv_triggered
 
 signal open_online_docs_triggered
 signal report_issue_triggered
+signal about_triggered
 
 signal dock_button_pressed
 
@@ -72,7 +73,7 @@ enum RecentSubMenu {
 enum HelpMenu {
 	ONLINE_DOCS = 100,
 	REPORT_ISSUE = 200,
-	VERSION = 300,
+	ABOUT = 300,
 }
 
 var _disabled_when_no_file = [
@@ -118,6 +119,7 @@ var _tool_menu_triggers = {
 var _help_menu_triggers = {
 	HelpMenu.ONLINE_DOCS: open_online_docs_triggered,
 	HelpMenu.REPORT_ISSUE: report_issue_triggered,
+	HelpMenu.ABOUT: about_triggered,
 }
 
 var _recent_files_paths = []
@@ -231,8 +233,7 @@ func _initilize_help_menu(_shortcuts):
 		InterfaceText.get_string(InterfaceText.KEY_HELP_REPORT_ISSUE),
 		HelpMenu.REPORT_ISSUE
 	)
-	_help_menu.add_item("v%s" % InterfaceText.plugin_version, HelpMenu.VERSION)
-	_help_menu.set_item_disabled(_help_menu.get_item_index(HelpMenu.VERSION), true)
+	_add_item(_help_menu, InterfaceText.KEY_HELP_ABOUT, HelpMenu.ABOUT)
 
 
 func _initialize_recents_submenu():

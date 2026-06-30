@@ -61,6 +61,7 @@ layout_mode = 2
 [node name="CsvExporterWindow" parent="." unique_id=470081709 instance=ExtResource("7_wy00i")]
 visible = false
 
+[connection signal="about_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_about_triggered"]
 [connection signal="clear_recent_files_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_clear_recent_files_triggered"]
 [connection signal="close_all_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_close_all_triggered"]
 [connection signal="close_file_triggered" from="HSplitContainer/VBoxContainer/TopBar" to="." method="_on_top_bar_close_file_triggered"]

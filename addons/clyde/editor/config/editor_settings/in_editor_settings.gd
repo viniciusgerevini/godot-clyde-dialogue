@@ -45,6 +45,9 @@ var _settings_map: Dictionary[String, String] = {
 	"warning_color": "text_editor/theme/highlighting/comment_markers/warning_color",
 	"success_color": "text_editor/theme/highlighting/safe_line_number_color",
 	"error_color": "text_editor/theme/highlighting/mark_color",
+}
+
+var _interface_settings_map: Dictionary[String, String] = {
 	"accent_color": "interface/theme/accent_color",
 	"base_color": "interface/theme/base_color",
 }
@@ -56,6 +59,10 @@ func _init():
 
 func get_setting(key: String) -> Variant:
 	return _editor_settings.get_setting(_settings_map.get(key, key))
+
+
+func get_interface_setting(key: String) -> Variant:
+	return _editor_settings.get_setting(_interface_settings_map.get(key, key))
 
 
 func get_color_scheme_setting(key: String) -> Color:

@@ -5,6 +5,7 @@ signal current_file_changed(file_path: String)
 signal file_system_scan_requested
 signal show_in_file_system_triggered(file_path: String)
 signal dock_button_pressed
+signal about_triggered
 
 const AppRoot = preload("./app_root/wrapper.gd")
 const DockableWindow = preload("./windows/dockable_window.gd")
@@ -683,3 +684,7 @@ func _on_top_bar_dock_button_pressed() -> void:
 
 func hide_top_bar_dock_button() -> void:
 	top_bar.hide_dock_button()
+
+
+func _on_top_bar_about_triggered() -> void:
+	about_triggered.emit()
