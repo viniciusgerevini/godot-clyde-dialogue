@@ -289,6 +289,7 @@ func _map_option(option, _index, include_visibility_prop = false):
 		"tags": o.get("tags"),
 		"text": _replace_variables(_translate_text(o.get("id"), o.get("name"), o.get("id_suffixes"))),
 		"visited": _mem.was_already_accessed(option._index),
+		"mode": o.get("mode"),
 	}
 
 	if include_visibility_prop:
