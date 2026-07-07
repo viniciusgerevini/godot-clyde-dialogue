@@ -278,7 +278,7 @@ func test_option_include_visited_information():
 		]
 	)
 	
-func test_option_include_visited_information():
+func test_option_include_mode():
 	var interpreter = ClydeDialogue.Interpreter.new()
 	var content = parse("""
 + a
