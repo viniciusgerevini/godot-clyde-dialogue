@@ -9,7 +9,7 @@ var _cache = {}
 
 const _logic_english_operators = [ "and", "or", "not", "is", "isnt" ]
 const _logic_operators_and_symbols = [ "=", "*", "/", "+", "-", "?", ",", "<", ">", "|", "%", "&" ]
-const _logic_keywords = [ "set", "when", "trigger", "match", "default" ]
+const _logic_keywords = [ "set", "when", "trigger", "match", "default", "group" ]
 const _options = [ "*", "+", ">" ]
 
 var _escapable_chars_regex = RegEx.create_from_string("[\\\\|\\*\\+\\>\\%\\(\\)\\{\\}\\\"\\'\\$\\#\\:]")
