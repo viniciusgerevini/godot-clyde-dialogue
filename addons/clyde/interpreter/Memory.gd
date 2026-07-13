@@ -9,6 +9,7 @@ var _mem = {
 	"variables": {},
 	"internal": {},
 	"e_variables": {},
+	"option_groups": {},
 }
 
 var _external_variable_prefix = "@"
@@ -21,6 +22,15 @@ func set_as_accessed(id):
 
 func was_already_accessed(id):
 	return _mem.access.has(str(id))
+
+
+func set_group_as_accessed(group_id):
+	_mem.option_groups[str(group_id)] = true
+	print_debug(_mem)
+
+
+func group_was_already_chosen(id):
+	return _mem.option_groups.has(str(id))
 
 
 func set_variable(id: String, value: Variant) -> Variant:
@@ -81,6 +91,7 @@ func get_all() -> Dictionary:
 		"access": _mem.access,
 		"variables": _mem.variables,
 		"internal": _mem.internal,
+		"option_groups": _mem.option_groups,
 	}
 
 
@@ -95,6 +106,7 @@ func clear() -> void:
 		"variables": {},
 		"internal": {},
 		"e_variables": {},
+		"option_groups": {},
 	}
 
 
