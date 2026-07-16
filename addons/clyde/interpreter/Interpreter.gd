@@ -288,8 +288,17 @@ func _prepare_option(option, index, should_include_hidden = false, is_visible = 
 	return option
 
 
+func _get_recursive_option_groups(option):
+	var groups: Array = []
+	var opt_iter = option
+	while opt_iter.has('action'):
+		if opt_iter.action.type == 'option_groups':
+			groups += opt_iter.action.groups
+		opt_iter = opt_iter.get('content')
+	return groups
+
+
 func _check_if_option_valid(option):
-	print_debug("checking option %s" % str(option))
 	if option == null:
 		return false
 	
@@ -298,22 +307,14 @@ func _check_if_option_valid(option):
 	if _mem.was_already_accessed(option._index):
 		return option.mode != 'once'
 	
+	var groups = _get_recursive_option_groups(option)
+	
 	# options with no groups are valid
-	if option.get('action') == null \
-			or option.action.type != 'option_groups' \
-			or (option.action.type == 'option_groups' and option.action.groups.size() == 0):
+	if groups.size() == 0:
 		return true
 	
-	# all that remains is unchosen grouped options
-	# these are valid if and only if none of their groups have been chosen
-	var groups =  option.action.groups
-	print_debug(groups)
-	var map = groups.map(func(group): return group["id"])
-	#var any = map.any(_mem.group_was_already_chosen)
-	#print_debug("\tgroups %s\r\n" % str(groups) \
-	#	+ "\tmap %s\r\n" % str(map) \
-	#	+ "\tany %s" % str(any))
-	return not option.action.groups.map(func(group): return group.id).any(_mem.group_was_already_chosen)
+	# unchosen grouped options are valid iff none of their groups have been chose
+	return not groups.map(func(grp): return grp.id).any(_mem.group_was_already_chosen)
 
 func _map_option(option, _index, include_visibility_prop = false):
 	var o = option
@@ -353,7 +354,8 @@ func _handle_action(action_node):
 	if action_node.action.type == 'events':
 		_trigger_events(action_node.action)
 	elif action_node.action.type == 'option_groups':
-		_set_groups_as_chosen(action_node.action)
+		var groups = _get_recursive_option_groups(action_node)
+		_set_groups_as_chosen(groups)
 	else:
 		for assignment in action_node.action.assignments:
 			_logic.handle_assignment(assignment)
@@ -370,7 +372,7 @@ func _trigger_events(events):
 
 
 func _set_groups_as_chosen(groups):
-	for group in groups.groups:
+	for group in groups:
 		_mem.set_group_as_accessed(group.id)
 
 

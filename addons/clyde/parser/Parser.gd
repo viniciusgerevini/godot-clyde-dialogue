@@ -904,7 +904,7 @@ func ConditionalContentNode(conditions, content = null):
 
 func ActionContentNode(action, content = null):
 	return { "type": 'action_content', "action": action, "content": content }
-
+	
 
 func ExpressionNode(name, elements):
 	return { "type": 'expression', "name": name, "elements": elements }
