@@ -15,11 +15,9 @@ const EDITOR_CFG_EDITOR_FOLLOW_EXECUTION = "follow_execution"
 
 
 const CSV_EXPORTER_CFG_INCLUDE_METADATA = "csv_include_metadata"
-const CSV_EXPORTER_CFG_ALWAYS_USE_QUOTES = "csv_use_quotes"
 const CSV_EXPORTER_CFG_INCLUDE_HEADER = "csv_include_header"
 const CSV_EXPORTER_CFG_HEADER_LOCALE = "csv_header_locale"
 const CSV_EXPORTER_CFG_DELIMITER = "csv_delimiter"
-const CSV_EXPORTER_CFG_QUOTE_TYPE = "csv_quote_type"
 const CSV_EXPORTER_RECORDED_PATHS = "csv_recorded_paths"
 
 const ONLINE_DOCS_URL = "https://thisisvini.com/clyde"

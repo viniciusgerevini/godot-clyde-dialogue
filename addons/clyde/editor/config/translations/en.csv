@@ -70,21 +70,26 @@ GENERATE_LINE_IDS,Generate Line IDs
 CREATE_CSV,Create Translation CSV...
 CSV_EXPORTER_WINDOW_TITLE,Export dialogue lines as CSV
 CSV_EXPORTER_FILE,CSV File
-CSV_EXPORTER_NEW_FILE,Select file
+CSV_EXPORTER_SOURCE_FILE,Dialogue File
+CSV_EXPORTER_NEW_FILE,Select File
 CSV_EXPORTER_NEW_FILE_DESC,File to store CSV lines. Previous content will be replaced.
-CSV_EXPORTER_INCLUDE_METADATA,Include metadata
+CSV_EXPORTER_INCLUDE_METADATA,Include Metadata
 CSV_EXPORTER_INCLUDE_METADATA_DESC,Adds extra line to CSV file with extra data. (i.e. speaker and tags)
-CSV_EXPORTER_INCLUDE_HEADER,Include header
+CSV_EXPORTER_INCLUDE_HEADER,Include Header
 CSV_EXPORTER_INCLUDE_HEADER_DESC,"Include file header (id, locale)"
 CSV_EXPORTER_HEADER_LOCALE,Locale
 CSV_EXPORTER_HEADER_LOCALE_DESC,The locale of the original dialogue to be used in the header. It can be any value. Check Godot's supported locales.
-CSV_EXPORTER_DELIMITER,Column delimiter
+CSV_EXPORTER_DELIMITER,Column Delimiter
 CSV_EXPORTER_DELIMITER_DESC,"Symbol used to separate columns. Default ','. Has to be one character."
-CSV_EXPORTER_OPTIONS,Option
-CSV_EXPORTER_EXPORT,Export CSV
 CSV_FILE_EXISTS_WARNING,Selected file already exists. Content will be overwritten.
+CSV_EXPORTER_OPTIONS,Options
+CSV_EXPORTER_EXPORT,Export CSV
 CSV_EXPORTER_SUCCEED,CSV export succeeded
 CSV_EXPORTER_FAIL,CSV export failed
+CSV_EXPORTER_SOURCE_FILE_NOT_FOUND,Dialogue file not found
+CSV_EXPORTER_FILE_PARSE_FAIL,Failed to parse dialogue file
+CSV_EXPORTER_NOTE,Note: only lines with IDs are exported
+FILE_NOT_FOUND,File not found
 EDITOR_WINDOW_TITLE,Clyde Dialogue
 PLAYER_WINDOW_TITLE,Clyde Dialogue Player
 DOCK_WINDOW,Dock/Undock window

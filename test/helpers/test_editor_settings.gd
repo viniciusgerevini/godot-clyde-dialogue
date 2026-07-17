@@ -1,0 +1,37 @@
+extends "res://addons/clyde/editor/config/editor_settings/clyde_editor_settings.gd"
+
+var in_memory_settings: Dictionary = {}
+
+func get_setting(key: String) -> Variant:
+	return in_memory_settings.get(key)
+
+
+func get_interface_setting(key: String) -> Variant:
+	return in_memory_settings.get(key)
+
+
+func get_color_scheme_setting(key: String) -> Color:
+	return Color(in_memory_settings.get(key))
+
+
+func get_project_metadata(section: String, key: String, default: Variant = null) -> Variant:
+	print(in_memory_settings)
+	return in_memory_settings.get(section, {}).get(key, default)
+
+
+func set_project_metadata(section: String, key: String, data: Variant) -> void:
+	if not in_memory_settings.has(section):
+		in_memory_settings[section] = {}
+	in_memory_settings[section][key] = data
+
+
+func get_interface_scale() -> float:
+	return get_setting("scale")
+
+
+func change_font_size(_offset: float) -> void:
+	pass
+
+
+func clear_font_size() -> void:
+	pass

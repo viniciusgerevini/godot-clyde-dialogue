@@ -620,10 +620,7 @@ func _get_source_folder():
 
 
 func _on_top_bar_create_csv_triggered():
-	var parsed = editor.get_parsed_document()
-	if parsed == null:
-		printerr("dialogue not compiled")
-	_csv_exporter_dialog.set_current_file(_current_file_path, parsed)
+	_csv_exporter_dialog.set_current_file(_current_file_path)
 	_csv_exporter_dialog.popup_centered()
 
 
