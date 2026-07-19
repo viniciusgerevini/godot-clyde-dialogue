@@ -1,11 +1,13 @@
 @tool
 extends EditorPlugin
 
-
 const ImportPlugin = preload("import_plugin.gd")
 const MainPanel = preload("./editor/editor_main_panel.tscn")
 const InterfaceText = preload("./editor/config/interface_text.gd")
 const DockableWindow = preload("./editor/windows/dockable_window.gd")
+const ClydeEditorSettings = preload("./editor/config/settings.gd")
+const ClydeInEditorSettings = preload("./editor/config/editor_settings/in_editor_settings.gd")
+const ClydeGodotEditorSyntaxHighlighter = preload("./editor/syntax/editor_syntax_highlighter.gd")
 
 const SETTING_SOURCE_FOLDER := "dialogue/source_folder"
 const DEFAULT_SOURCE_FOLDER := "res://dialogues/"
@@ -19,9 +21,11 @@ var _import_plugin
 var _main_panel
 var _helpers_enabled = false
 
+var _editor_settings: ClydeEditorSettings
 
 var _dockable_main_panel
 
+var _editor_syntax_highlighter: ClydeGodotEditorSyntaxHighlighter
 
 func _enter_tree():
 	_import_plugin = ImportPlugin.new()
@@ -30,12 +34,14 @@ func _enter_tree():
 	_setup_main_panel()
 	_setup_helpers()
 	_listen_to_project_settings_changes()
+	_register_syntax_highligher()
 
 
 func _disable_plugin():
 	remove_import_plugin(_import_plugin)
 	_import_plugin = null
 	_clear_project_settings()
+	_unregister_syntax_highligher()
 
 
 func _setup_project_settings():
@@ -93,6 +99,8 @@ func _exit_tree() -> void:
 
 
 func _setup_main_panel() -> void:
+	_editor_settings = ClydeEditorSettings.new(ClydeInEditorSettings.new())
+
 	InterfaceText.load_strings_for_current_locale()
 	InterfaceText.plugin_version = get_plugin_version()
 	if not ProjectSettings.get_setting(MAIN_EDITOR_ENABLED, true):
@@ -100,6 +108,7 @@ func _setup_main_panel() -> void:
 
 	_main_panel = MainPanel.instantiate()
 	_main_panel.editor_plugin = self
+	_main_panel.settings = _editor_settings
 
 	_dockable_main_panel = DockableWindow.new(
 		get_editor_interface().get_editor_main_screen(),
@@ -182,3 +191,23 @@ func _on_project_settings_changed():
 		_register_helper_types()
 	else:
 		_remove_helper_types()
+
+
+# TODO
+# Validate if possible for better or future integration:
+# - can I push errors to the status bar?
+# - can I mark lines with error?
+# - can I keep track of open clyde files and watch them? (for when player is running)
+# - can I move cursor to a given line? ( useful for when playing)
+# - can I add icons to the gutter? (for when playing dialogues)
+# - can it support autocomplete
+
+func _register_syntax_highligher() -> void:
+	_editor_syntax_highlighter = ClydeGodotEditorSyntaxHighlighter.new()
+	_editor_syntax_highlighter.settings = _editor_settings
+	EditorInterface.get_script_editor().register_syntax_highlighter(_editor_syntax_highlighter)
+
+
+func _unregister_syntax_highligher() -> void:
+	EditorInterface.get_script_editor().unregister_syntax_highlighter(_editor_syntax_highlighter)
+	_editor_syntax_highlighter = null
