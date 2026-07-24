@@ -7,7 +7,7 @@ const InterfaceText = preload("./editor/config/interface_text.gd")
 const DockableWindow = preload("./editor/windows/dockable_window.gd")
 const ClydeEditorSettings = preload("./editor/config/settings.gd")
 const ClydeInEditorSettings = preload("./editor/config/editor_settings/in_editor_settings.gd")
-const ClydeGodotEditorSyntaxHighlighter = preload("./editor/syntax/editor_syntax_highlighter.gd")
+const BuiltInEditorFeatures = preload("./editor/built_in/editor_features.gd")
 
 const SETTING_SOURCE_FOLDER := "dialogue/source_folder"
 const DEFAULT_SOURCE_FOLDER := "res://dialogues/"
@@ -25,7 +25,7 @@ var _editor_settings: ClydeEditorSettings
 
 var _dockable_main_panel
 
-var _editor_syntax_highlighter: ClydeGodotEditorSyntaxHighlighter
+var _editor_features: BuiltInEditorFeatures
 
 func _enter_tree():
 	_import_plugin = ImportPlugin.new()
@@ -34,14 +34,14 @@ func _enter_tree():
 	_setup_main_panel()
 	_setup_helpers()
 	_listen_to_project_settings_changes()
-	_register_syntax_highligher()
+	_enhance_builtin_editor()
 
 
 func _disable_plugin():
 	remove_import_plugin(_import_plugin)
 	_import_plugin = null
 	_clear_project_settings()
-	_unregister_syntax_highligher()
+	_clear_builtin_editor()
 
 
 func _setup_project_settings():
@@ -193,21 +193,10 @@ func _on_project_settings_changed():
 		_remove_helper_types()
 
 
-# TODO
-# Validate if possible for better or future integration:
-# - can I push errors to the status bar?
-# - can I mark lines with error?
-# - can I keep track of open clyde files and watch them? (for when player is running)
-# - can I move cursor to a given line? ( useful for when playing)
-# - can I add icons to the gutter? (for when playing dialogues)
-# - can it support autocomplete
-
-func _register_syntax_highligher() -> void:
-	_editor_syntax_highlighter = ClydeGodotEditorSyntaxHighlighter.new()
-	_editor_syntax_highlighter.settings = _editor_settings
-	EditorInterface.get_script_editor().register_syntax_highlighter(_editor_syntax_highlighter)
+func _enhance_builtin_editor() -> void:
+	_editor_features = BuiltInEditorFeatures.new(EditorInterface.get_script_editor(), _editor_settings)
 
 
-func _unregister_syntax_highligher() -> void:
-	EditorInterface.get_script_editor().unregister_syntax_highlighter(_editor_syntax_highlighter)
-	_editor_syntax_highlighter = null
+func _clear_builtin_editor() -> void:
+	_editor_features.unregister()
+	_editor_features = null

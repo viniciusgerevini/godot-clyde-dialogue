@@ -6,6 +6,7 @@ signal search_requested
 
 const Settings = preload("../config/settings.gd")
 const Shortcuts = preload("../config/shortcuts.gd")
+const DialogueEditorDecorator = preload("./dialogue_editor_decorator.gd")
 const ClydeSyntaxHighlighter = preload("./clyde_syntax_highlighter.gd")
 
 var _settings: Settings
@@ -22,9 +23,11 @@ var _shortcuts = []
 
 var _should_follow_execution = true
 
+var editor: DialogueEditorDecorator
 
 func setup(settings: Settings):
 	_settings = settings
+	editor = DialogueEditorDecorator.new(self, _settings)
 	editor_theme_config = _load_theme_config()
 	syntax_highlighter = ClydeSyntaxHighlighter.new()
 
@@ -287,32 +290,7 @@ func _gui_input(event: InputEvent) -> void:
 
 
 func _toggle_comment():
-	begin_complex_operation()
-	var comment_symbol = "--"
-	var operation = null
-
-	for caret_index in range(0, get_caret_count()):
-		var from = 0
-		var to = 0
-		if has_selection(caret_index):
-			from = get_selection_from_line(caret_index)
-			to = get_selection_to_line(caret_index) + 1
-		else:
-			from = get_caret_line(caret_index)
-			to = from + 1
-
-		for line in range(from, to):
-			var line_text = get_line(line)
-			# comment toggle is based on first line in selection
-			if operation == null:
-				operation = "del" if line_text.begins_with(comment_symbol) else "add"
-
-			if operation == "add":
-				set_line(line, comment_symbol + line_text)
-			elif line_text.begins_with(comment_symbol):
-				set_line(line, line_text.substr(comment_symbol.length()))
-
-	end_complex_operation()
+	editor.toggle_comment()
 
 
 func _font_size_up():
