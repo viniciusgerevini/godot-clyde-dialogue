@@ -26,7 +26,6 @@ syntax_highlighter = SubResource("SyntaxHighlighter_s6rha")
 layout_mode = 2
 
 [connection signal="caret_changed" from="DialogueEditor" to="." method="_on_dialogue_editor_caret_changed"]
-[connection signal="finished_change" from="DialogueEditor" to="." method="_on_dialogue_editor_finished_change"]
 [connection signal="search_requested" from="DialogueEditor" to="." method="_on_dialogue_editor_search_requested"]
 [connection signal="text_changed" from="DialogueEditor" to="." method="_on_dialogue_editor_text_changed"]
 [connection signal="error_hint_clicked" from="StatusBar" to="." method="_on_status_bar_error_hint_clicked"]

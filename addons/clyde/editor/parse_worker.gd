@@ -80,3 +80,7 @@ func _parse(input):
 func _on_parsing_failure(result):
 	_just_failed = true
 	processing_failed.emit(result)
+
+
+func _exit_tree() -> void:
+	stop_worker()

@@ -6,30 +6,17 @@ signal content_changed
 signal search_requested
 
 const Settings = preload("../config/settings.gd")
-const ParseWorker = preload("../parse_worker.gd")
 
 @onready var editor: CodeEdit = $DialogueEditor
 @onready var status_bar = $StatusBar
 
-@onready var parse_worker = ParseWorker.new()
-
-var _parsed_document
 
 func setup(settings: Settings):
 	editor.setup(settings)
 	status_bar.setup(settings.editor_color_scheme()["error_color"])
-	parse_worker.processing_finished.connect(_on_parsing_finished)
-	parse_worker.processing_failed.connect(_on_parsing_failed)
 
-
-func _exit_tree():
-	parse_worker.stop_worker()
-
-
-func _on_dialogue_editor_finished_change():
-	status_bar.clear_errors()
-	status_bar.set_loading()
-	parse_worker.parse(editor.text)
+	editor.parsing_finished.connect(_on_parsing_finished)
+	editor.parsing_failed.connect(_on_parsing_failed)
 
 
 func _on_dialogue_editor_caret_changed():
@@ -37,6 +24,7 @@ func _on_dialogue_editor_caret_changed():
 
 
 func _on_dialogue_editor_text_changed():
+	status_bar.clear_errors()
 	status_bar.set_loading()
 	content_changed.emit()
 
@@ -50,25 +38,21 @@ func go_to_position(line: int, column: int):
 
 
 func _on_parsing_finished():
-	_parsed_document = parse_worker.get_parse_result()
 	status_bar.call_deferred("clear_errors")
-	editor.call_deferred("clear_errors")
-	editor.call_deferred("set_parsed_document", _parsed_document)
 	status_bar.call_deferred("clear_status")
-	call_deferred("_notify_parsing_finished", _parsed_document)
+	call_deferred("_notify_parsing_finished", editor.get_parsed_document())
 
 
 func _notify_parsing_finished(parsed_doc):
-	parsing_finished.emit(_parsed_document)
+	parsing_finished.emit(parsed_doc)
 
 
 func _on_parsing_failed(result):
 	status_bar.call_deferred("add_error", result)
-	editor.call_deferred("add_error", result)
 
 
 func get_parsed_document():
-	return _parsed_document
+	return editor.get_parsed_document()
 
 
 func get_content():
@@ -78,7 +62,7 @@ func get_content():
 func set_content(content: String):
 	if content != editor.text:
 		editor.text = content
-		_on_dialogue_editor_finished_change()
+		_on_dialogue_editor_text_changed()
 
 
 func set_executing_line(line: int):

@@ -10,15 +10,6 @@ static func enhance(editor: CodeEdit, settings: ClydeEditorSettings) -> void:
 	var dialogue_editor: DialogueEditorDecorator = DialogueEditorDecorator.new(editor, settings, true)
 	_load_editor_comment_shortcut()
 	_setup_event_listeners(dialogue_editor)
-	# TODO setup autocomplete
-	#   - to reuse, might have to change the autocomplete callback to use signals instead
-	# TODO setup parser
-	#  - if parser fails
-	#    - mark line in red
-	#    - add error message to status bar
-	#  - cleanup old errors
-	# TODO how to surface errors? (probably a floater or custom status bar)
-	# TODO maybe turn parsing into an editor setting
 
 
 static func _load_editor_comment_shortcut() -> void:

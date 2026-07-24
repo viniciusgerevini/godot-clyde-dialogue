@@ -1,6 +1,9 @@
 @tool
 extends RefCounted
 
+signal parsing_finished
+signal parsing_failed(result: Dictionary)
+
 const ClydeEditorSettings = preload("../config/settings.gd")
 const ParseWorker = preload("../parse_worker.gd")
 const Debouncer = preload("../util/debouncer.gd")
@@ -30,6 +33,10 @@ func get_code_edit() -> CodeEdit:
 	return editor
 
 
+func get_parsed_document() -> Dictionary:
+	return _parsed_doc
+
+
 func _setup_parse_worker() -> void:
 	_parse_worker = ParseWorker.new()
 	_parse_worker.processing_finished.connect(_on_parsing_finished)
@@ -55,13 +62,14 @@ func _setup_parse_worker() -> void:
 func _on_parsing_finished() -> void:
 	_parsed_doc = _parse_worker.get_parse_result()
 	_clear_errors()
-
+	parsing_finished.emit()
 
 func _on_parsing_failed(result) -> void:
 	if _is_new_parsing_execution:
 		_is_new_parsing_execution = false
 		_clear_errors()
 	_set_error(result)
+	parsing_failed.emit(result)
 
 
 func _on_text_changed() -> void:
