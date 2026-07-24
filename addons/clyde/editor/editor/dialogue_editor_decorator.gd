@@ -4,10 +4,12 @@ extends RefCounted
 const ClydeEditorSettings = preload("../config/settings.gd")
 const ParseWorker = preload("../parse_worker.gd")
 const Debouncer = preload("../util/debouncer.gd")
+const AutoComplete = preload("./auto_complete.gd")
 
 var editor: CodeEdit
 var _parse_worker: ParseWorker
 var _editor_settings: ClydeEditorSettings
+var _auto_complete: AutoComplete
 
 var _parsed_doc: Dictionary
 var _error_lines: Dictionary = {}
@@ -18,8 +20,10 @@ var _is_new_parsing_execution: bool = false
 func _init(code_edit: CodeEdit, settings: ClydeEditorSettings, parse_on_change: bool = false) -> void:
 	editor = code_edit
 	_editor_settings = settings
+	_auto_complete = AutoComplete.new(settings)
 	if parse_on_change:
 		_setup_parse_worker()
+		_on_text_changed.call_deferred()
 
 
 func get_code_edit() -> CodeEdit:
@@ -41,6 +45,11 @@ func _setup_parse_worker() -> void:
 	editor.symbol_lookup_on_click = true
 	editor.symbol_lookup.connect(_on_symbol_lookup)
 	editor.symbol_validate.connect(_on_symbol_validate)
+
+	editor.code_completion_enabled = true
+	editor.code_completion_prefixes = _auto_complete.auto_complete_prefixes
+	editor.code_completion_requested.connect(_on_code_completion_requested)
+	editor.delimiter_strings = []
 
 
 func _on_parsing_finished() -> void:
@@ -76,9 +85,8 @@ func _set_error(error: Dictionary) -> void:
 		return
 
 	if error.reason == "unexpected_token":
-		_error_lines[error.line] = "Unexpected token '%s' on column %s. Expected: %s" % [
+		_error_lines[error.line] = "Unexpected token '%s'. Expected: %s" % [
 			error.friendly_token_name,
-			error.column + 1,
 			" , ".join(error.expected_hints)
 		]
 	else:
@@ -126,13 +134,17 @@ func _handle_go_to_block_from_divert(symbol: String, line: int, column: int) -> 
 			break
 
 
-func _get_hover_position() -> Vector2:
+func _get_hover_position() -> Vector2i:
 	return editor.get_line_column_at_pos(editor.get_local_mouse_pos())
 
 
 func _find_divert_with_text(symbol: String, text: String):
 	var identifier = RegEx.create_from_string("-> [A-Z|a-z|0-9|_| ]*%s[A-Z|a-z|0-9|_| ]*" % symbol)
 	return identifier.search(text)
+
+
+func _on_code_completion_requested() -> void:
+	_auto_complete.trigger_auto_complete(editor, _parsed_doc)
 
 
 func go_to_position(line: int, column: int, adjust_viewport: bool = false):
