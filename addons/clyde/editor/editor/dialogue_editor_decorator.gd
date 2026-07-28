@@ -57,6 +57,7 @@ func _setup_parse_worker() -> void:
 	editor.code_completion_prefixes = _auto_complete.auto_complete_prefixes
 	editor.code_completion_requested.connect(_on_code_completion_requested)
 	editor.delimiter_strings = []
+	editor.gutters_draw_executing_lines = true
 
 
 func _on_parsing_finished() -> void:
@@ -187,3 +188,14 @@ func toggle_comment() -> void:
 				editor.set_line(line, line_text.substr(comment_symbol.length()))
 
 	editor.end_complex_operation()
+
+
+func set_executing_line(line: int) -> void:
+	editor.clear_executing_lines()
+	editor.set_line_as_executing(line, true)
+	editor.set_caret_line(line)
+	editor.center_viewport_to_caret()
+
+
+func clear_executing_line() -> void:
+	editor.clear_executing_lines()

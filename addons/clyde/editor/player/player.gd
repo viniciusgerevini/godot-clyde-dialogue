@@ -52,14 +52,6 @@ enum ActioBarMenuId {
 	MOVE_ACTION_BAR,
 }
 
-# TODO
-# - bottom cation bar.
-#  - Create three dots menu:
-#  - move multi bubble dialogue option to menu
-#  - move metadata option to menu
-#  - new option: Follow current line in script editor
-#  - new option: Watch for file changes
-
 var _is_action_bar_at_top: bool = false
 
 func setup(settings: Settings):

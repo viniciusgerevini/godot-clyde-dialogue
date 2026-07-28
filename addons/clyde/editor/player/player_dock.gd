@@ -4,32 +4,39 @@ extends MarginContainer
 const InterfaceText = preload("../config/interface_text.gd")
 const Settings = preload("../config/settings.gd")
 const ParseWorker = preload("../parse_worker.gd")
+const BuiltInEditorFeatures = preload("../built_in/editor_features.gd")
+const DebugPanel = preload("./debug_dock.tscn")
+const AppRoot = preload("../app_root/wrapper.gd")
 
 var _parse_worker: ParseWorker
 var _current_file_path: String = ""
 var _parsed_doc: Dictionary
-# - add menu on dialogue name:
+
+# - TODO dots dialgoue menu:
 #   - show current dialogue in script editor
 #   - show current dialogue in file system
 #   - close dialogue
 
+# TODO drag and drop from file system and editor to player
 
-# - player
-#   - open files selector
-# 	- open file menu
-#   - menu with settings
-#   - select current selected script editor file
-#   - move player options to menu in player
-#   - on click bubble, select right position in script file
+# TODO on click dialogue menu load itesm
+# - first item Open File...
+#    - this will open file selector with .clyde as filter
+#    - on select file, open dialogue (should open script editor as well?)
 
+# TODO dialogue player welcome screen?
+#   - Open dialogue
+#   - About
+#   - Help
 
-
-# dialogue selector
-# - on click, list all dialogues ope
-# - get all open dialogues on startup
-
+# TODO script editor context menu
+#  - Open in Dialogue Player
+#  - generate ids
 
 var _settings: Settings
+var _editor_features: BuiltInEditorFeatures
+var _app_root: AppRoot
+var _debug_panel
 
 @onready var _player: MarginContainer = $VBoxContainer/Player
 @onready var _dialogue_path: LineEdit = $VBoxContainer/HBoxContainer/dialogue_path
@@ -44,8 +51,10 @@ var _is_follow_line_enabled: bool = true
 
 var _is_new_parsing_execution: bool = false
 
-func setup(settings: Settings) -> void:
+func setup(app_root: AppRoot, settings: Settings, editor_features: BuiltInEditorFeatures) -> void:
+	_app_root = app_root
 	_settings = settings
+	_editor_features = editor_features
 	_player.setup(settings)
 
 	_dialogue_menu.icon = get_theme_icon("Load", "EditorIcons")
@@ -60,34 +69,6 @@ func _load_settings() -> void:
 	_is_file_watch_enabled = cfg.get(_settings.EDITOR_CFG_PLAYER_WATCH_FILE, true)
 	_is_follow_line_enabled = cfg.get(_settings.EDITOR_CFG_EDITOR_FOLLOW_EXECUTION, true)
 
-
-
-
-
-	# on click dialogue menu load itesm
-	# - first item Open File...
-	#    - this will open file selector with .clyde as filter
-	#    - on select file, open dialogue (should open script editor as well?)
-	# - other items is the list of dialogues open in script editor
-	#    - when script selected, load dialogue
-	# - load icon in menu
-
-	# - add spinner to signify dialogue is being parsed (maybe a message saying loading dialogue file)
-
-
-# - dialogue player welcome screen?
-#   - Open dialogue
-#   - About
-#   - Help
-
-# drag and drop to player
-#  - file system
-#  - script editor
-
-# script editor context menu
-#  - Open in Dialogue Player
-
-# settings to move action bar to the top
 
 func _setup_parse_worker() -> void:
 	_parse_worker = ParseWorker.new()
@@ -156,6 +137,7 @@ func _on_open_menu_index_pressed(index: int) -> void:
 
 	if selected_id == OPEN_DIALOGUE_ENTRY_ID:
 		print("OPEN FILE SELECTOR")
+		# TODO open file selector
 		return
 
 	set_dialogue_path(item_value)
@@ -163,7 +145,14 @@ func _on_open_menu_index_pressed(index: int) -> void:
 
 func _on_player_content_finished_changing(dialogue_key: String, content: Dictionary) -> void:
 	if _is_follow_line_enabled:
-		print("FOLLOW LINE ")
+		if _editor_features.has_open_editor_for_file(dialogue_key):
+			var editor = _editor_features.get_editor_for_file(dialogue_key)
+
+			if content.type == ClydeDialogue.CONTENT_TYPE_END:
+				editor.clear_executing_line()
+			else:
+				_editor_features.open_file(dialogue_key)
+				editor.set_executing_line(content.meta.line)
 
 
 func _on_player_follow_line_toggled(is_enabled: bool) -> void:
@@ -176,28 +165,66 @@ func _on_player_watch_file_toggled(is_enabled: bool) -> void:
 
 
 func _on_player_position_selected(dialogue_key: String, line: int, column: int) -> void:
-	pass # Replace with function body.
+	if _editor_features.has_open_editor_for_file(dialogue_key):
+		_editor_features.open_file(dialogue_key)
+		var editor = _editor_features.get_editor_for_file(dialogue_key)
+		editor.go_to_position(line, column)
 
 
 func _on_player_toggle_debug_panel(is_visible: bool) -> void:
-	pass # Replace with function body.
+	if is_visible:
+		_create_debug_panel()
+	else:
+		_remove_debug_panel()
 
 
 func _on_player_event_triggered(event_name: Variant, parameters: Variant) -> void:
-	pass # Replace with function body.
+	if _debug_panel != null:
+		_debug_panel.record_event(event_name, parameters)
 
 
 func _on_player_external_variable_changed(var_name: Variant, value: Variant, old_value: Variant) -> void:
-	pass # Replace with function body.
+	if _debug_panel != null:
+		_debug_panel.set_external_variable(var_name, value, old_value)
 
 
 func _on_player_variable_changed(var_name: Variant, value: Variant, old_value: Variant) -> void:
-	pass # Replace with function body.
+	if _debug_panel != null:
+		_debug_panel.set_variable(var_name, value, old_value)
 
 
 func _on_player_dialogue_mem_clean() -> void:
-	pass # Replace with function body.
+	if _debug_panel != null:
+		_debug_panel.load_data(_player.get_data(), true)
 
 
 func _on_player_dialogue_reset(dialogue_key: Variant) -> void:
-	pass # Replace with function body.
+	if _editor_features.has_open_editor_for_file(dialogue_key):
+		var editor = _editor_features.get_editor_for_file(dialogue_key)
+		editor.clear_executing_line()
+
+
+func _create_debug_panel() -> void:
+	if _debug_panel != null:
+		_app_root.set_debug_panel(_debug_panel)
+		_app_root.make_debug_panel_visible()
+		return
+	_debug_panel = DebugPanel.instantiate()
+	_app_root.set_debug_panel(_debug_panel)
+	_debug_panel.load_data(_player.get_data())
+	_debug_panel.load_external_variables(_player.get_external_variables())
+	_debug_panel.variable_changed.connect(_on_debug_variable_changed)
+	_debug_panel.external_variable_changed.connect(_on_debug_external_variable_changed)
+	_app_root.make_debug_panel_visible()
+
+
+func _remove_debug_panel() -> void:
+	_app_root.remove_debug_panel()
+
+
+func _on_debug_variable_changed(var_name: String, value) -> void:
+	_player.set_variable(var_name, value)
+
+
+func _on_debug_external_variable_changed(var_name: String, value) -> void:
+	_player.set_external_variable(var_name, value)

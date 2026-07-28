@@ -3,12 +3,13 @@ extends RefCounted
 const ClydeEditorSettings = preload("../config/settings.gd")
 const ClydeGodotEditorSyntaxHighlighter = preload("../syntax/editor_syntax_highlighter.gd")
 const EditorEnhancements = preload("./editor_enhancements.gd")
+const DialogueEditorDecorator = preload("../editor/dialogue_editor_decorator.gd")
 
 var _script_editor: ScriptEditor
 var _settings: ClydeEditorSettings
 var _editor_syntax_highlighter: ClydeGodotEditorSyntaxHighlighter
 
-var _open_files: Dictionary[String, CodeEdit] = {}
+var _open_files: Dictionary[String, DialogueEditorDecorator] = {}
 
 func _init(editor: ScriptEditor, settings: ClydeEditorSettings) -> void:
 	_script_editor = editor
@@ -35,13 +36,14 @@ func _unregister_syntax_highligher() -> void:
 
 
 func _on_new_highlighter_instantiated(editor: CodeEdit) -> void:
-	_register_open_file(editor)
-	EditorEnhancements.enhance(editor, _settings)
+	_register_open_file(EditorEnhancements.enhance(editor, _settings))
+
 
 
 # Currently Godot does not provide any way to match the editor with its file path.
 # My solution here is very hacky and brittle, but I will roll with it for now
-func _register_open_file(editor: CodeEdit) -> void:
+func _register_open_file(dialogue_editor: DialogueEditorDecorator) -> void:
+	var editor: CodeEdit = dialogue_editor.get_code_edit()
 	# sorry
 	await editor.get_tree().create_timer(0.5).timeout
 	# I'm sorry
@@ -54,4 +56,16 @@ func _register_open_file(editor: CodeEdit) -> void:
 
 	var file_path = open_scripts.get(editor_index)
 
-	_open_files[file_path] = editor
+	_open_files[file_path] = dialogue_editor
+
+
+func has_open_editor_for_file(file_path: String) -> bool:
+	return _open_files.has(file_path) and is_instance_valid(_open_files[file_path])
+
+
+func get_editor_for_file(file_path: String) -> DialogueEditorDecorator:
+	return _open_files[file_path]
+
+
+func open_file(file_path: String) -> void:
+	EditorInterface.edit_resource(load(file_path))

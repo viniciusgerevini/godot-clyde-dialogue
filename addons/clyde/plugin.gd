@@ -2,21 +2,9 @@
 extends EditorPlugin
 
 # TODO
-# - player
-# 	- move to doc
-#	- provide a way to select file (either from open files or open a new one)
-#   - select current selected script editor file
-#   - move player options to menu in player
-#   - on click bubble, select right position in script file
-# - buil-in editor
-#    - follow execution
 # - context menus (play dialogue)
-#    - file system
-#        - play dialogue
 #    - script list
-#         - play dialogue
 #         - generate ids
-#    - resource inspector (?)
 # - move docs and tools to another place (maybe a Clyde bottom dock)
 # - remove main screen plugin
 # - maybe editor wide shortcuts
@@ -28,7 +16,7 @@ extends EditorPlugin
 const ImportPlugin = preload("import_plugin.gd")
 const ScriptEditorContextMenuPlugin = preload("./editor/context_menus/script_editor_context_menu.gd")
 const FileSystemContextMenuPlugin = preload("./editor/context_menus/file_system_context_menu.gd")
-const MainPanel = preload("./editor/editor_main_panel.tscn")
+#const MainPanel = preload("./editor/editor_main_panel.tscn")
 const InterfaceText = preload("./editor/config/interface_text.gd")
 const DockableWindow = preload("./editor/windows/dockable_window.gd")
 const ClydeEditorSettings = preload("./editor/config/settings.gd")
@@ -41,11 +29,11 @@ const DEFAULT_SOURCE_FOLDER := "res://dialogues/"
 
 const SETTING_ID_SUFFIX_LOOKUP_SEPARATOR := "dialogue/id_suffix_lookup_separator"
 const DEFAULT_ID_SUFFIX_LOOKUP_SEPARATOR := "&"
-const MAIN_EDITOR_ENABLED := "dialogue/enable_editor"
+#const MAIN_EDITOR_ENABLED := "dialogue/enable_editor"
 const HELPERS_ENABLED := "dialogue/enable_helpers"
 
 var _import_plugin
-var _main_panel
+#var _main_panel
 var _player_dock: PlayerDock
 var _script_editor_context_menu_plugin: ScriptEditorContextMenuPlugin
 var _file_system_context_menu_plugin: FileSystemContextMenuPlugin
@@ -53,7 +41,7 @@ var _helpers_enabled = false
 
 var _editor_settings: ClydeEditorSettings
 
-var _dockable_main_panel
+#var _dockable_main_panel
 
 var _editor_features: BuiltInEditorFeatures
 
@@ -97,13 +85,13 @@ func _setup_project_settings():
 		"type": TYPE_STRING,
 	})
 
-	if not ProjectSettings.has_setting(MAIN_EDITOR_ENABLED):
-		ProjectSettings.set(MAIN_EDITOR_ENABLED, true)
-	ProjectSettings.set_initial_value(MAIN_EDITOR_ENABLED, true)
-	ProjectSettings.add_property_info({
-		"name": MAIN_EDITOR_ENABLED,
-		"type": TYPE_BOOL,
-	})
+	#if not ProjectSettings.has_setting(MAIN_EDITOR_ENABLED):
+		#ProjectSettings.set(MAIN_EDITOR_ENABLED, true)
+	#ProjectSettings.set_initial_value(MAIN_EDITOR_ENABLED, true)
+	#ProjectSettings.add_property_info({
+		#"name": MAIN_EDITOR_ENABLED,
+		#"type": TYPE_BOOL,
+	#})
 
 	if not ProjectSettings.has_setting(HELPERS_ENABLED):
 		ProjectSettings.set(HELPERS_ENABLED, false)
@@ -115,11 +103,13 @@ func _setup_project_settings():
 
 	ProjectSettings.save()
 
+	# TODO change this editor setting to allow opening clyde files in the editor
+	# - docks/filesystem/textfile_extensions
 
 func _clear_project_settings():
 	ProjectSettings.clear(SETTING_SOURCE_FOLDER)
 	ProjectSettings.clear(SETTING_ID_SUFFIX_LOOKUP_SEPARATOR)
-	ProjectSettings.clear(MAIN_EDITOR_ENABLED)
+	#ProjectSettings.clear(MAIN_EDITOR_ENABLED)
 	ProjectSettings.save()
 
 
@@ -128,39 +118,39 @@ func _exit_tree() -> void:
 		remove_import_plugin(_import_plugin)
 		_import_plugin = null
 
-	if is_instance_valid(_main_panel):
-		_main_panel.queue_free()
-		_dockable_main_panel = null
+	#if is_instance_valid(_main_panel):
+		#_main_panel.queue_free()
+		#_dockable_main_panel = null
 
 
 func _setup_main_panel() -> void:
 	InterfaceText.load_strings_for_current_locale()
 	InterfaceText.plugin_version = get_plugin_version()
-	if not ProjectSettings.get_setting(MAIN_EDITOR_ENABLED, true):
-		return
+	#if not ProjectSettings.get_setting(MAIN_EDITOR_ENABLED, true):
+		#return
 
-	_main_panel = MainPanel.instantiate()
-	_main_panel.editor_plugin = self
-	_main_panel.settings = _editor_settings
+	#_main_panel = MainPanel.instantiate()
+	#_main_panel.editor_plugin = self
+	#_main_panel.settings = _editor_settings
 
-	_dockable_main_panel = DockableWindow.new(
-		get_editor_interface().get_editor_main_screen(),
-		get_editor_interface().get_base_control(),
-		_main_panel
-	)
-	_dockable_main_panel.window_base_color = get_editor_interface().get_editor_settings().get_setting("interface/theme/base_color")
+	#_dockable_main_panel = DockableWindow.new(
+		#get_editor_interface().get_editor_main_screen(),
+		#get_editor_interface().get_base_control(),
+		#_main_panel
+	#)
+	#_dockable_main_panel.window_base_color = get_editor_interface().get_editor_settings().get_setting("interface/theme/base_color")
 
-	_make_visible(false)
+	#_make_visible(false)
+
+#
+#func _has_main_screen() -> bool:
+	#return ProjectSettings.get_setting(MAIN_EDITOR_ENABLED, true)
 
 
-func _has_main_screen() -> bool:
-	return ProjectSettings.get_setting(MAIN_EDITOR_ENABLED, true)
-
-
-func _make_visible(is_visible: bool) -> void:
-	if is_instance_valid(_main_panel):
-		if _dockable_main_panel.is_docked:
-			_main_panel.visible = is_visible
+#func _make_visible(is_visible: bool) -> void:
+	#if is_instance_valid(_main_panel):
+		#if _dockable_main_panel.is_docked:
+			#_main_panel.visible = is_visible
 
 
 func _get_plugin_name() -> String:
@@ -171,22 +161,22 @@ func _get_plugin_icon() -> Texture2D:
 	return load(get_script().resource_path.get_base_dir() + "/editor/assets/clyde.svg")
 
 
-func _build() -> bool:
-	if is_instance_valid(_main_panel):
-		_main_panel.prepare_for_project_run()
-	return true
+#func _build() -> bool:
+	#if is_instance_valid(_main_panel):
+		#_main_panel.prepare_for_project_run()
+	#return true
 
 
-func _handles(object) -> bool:
-	if not is_instance_valid(_main_panel):
-		return false
-	return object is ClydeDialogueFile
+#func _handles(object) -> bool:
+	#if not is_instance_valid(_main_panel):
+		#return false
+	#return object is ClydeDialogueFile
 
 
-func _edit(object):
-	if object == null:
-		return
-	_main_panel.load_file(object.resource_path)
+#func _edit(object):
+	#if object == null:
+		#return
+	#_main_panel.load_file(object.resource_path)
 
 
 func _setup_helpers():
@@ -237,7 +227,7 @@ func _clear_builtin_editor() -> void:
 
 func _register_player_dock() -> void:
 	_player_dock = PlayerDock.new()
-	_player_dock.register_dock(self, _editor_settings)
+	_player_dock.register_dock(self, _editor_settings, _editor_features)
 
 
 func _unregister_player_dock() -> void:

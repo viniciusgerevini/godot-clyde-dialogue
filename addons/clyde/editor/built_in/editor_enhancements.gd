@@ -6,11 +6,11 @@ const DialogueEditorDecorator = preload("../editor/dialogue_editor_decorator.gd"
 
 static var _comment_shortcut: Shortcut
 
-static func enhance(editor: CodeEdit, settings: ClydeEditorSettings) -> void:
+static func enhance(editor: CodeEdit, settings: ClydeEditorSettings) -> DialogueEditorDecorator:
 	var dialogue_editor: DialogueEditorDecorator = DialogueEditorDecorator.new(editor, settings, true)
 	_load_editor_comment_shortcut()
 	_setup_event_listeners(dialogue_editor)
-
+	return dialogue_editor
 
 static func _load_editor_comment_shortcut() -> void:
 	var settings := EditorInterface.get_editor_settings()

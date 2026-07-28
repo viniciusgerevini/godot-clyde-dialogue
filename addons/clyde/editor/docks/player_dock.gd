@@ -4,11 +4,14 @@ extends RefCounted
 const ClydeEditorSettings = preload("../config/settings.gd")
 const InterfaceText = preload("../config/interface_text.gd")
 const PlayerDock = preload("../player/player_dock.tscn")
+const BuiltInEditorFeatures = preload("../built_in/editor_features.gd")
+const PluginRoot = preload("../app_root/plugin_root.gd")
 
 var _dock: EditorDock
 var _player
 
-func register_dock(editor_root: EditorPlugin, settings: ClydeEditorSettings) -> void:
+func register_dock(editor_root: EditorPlugin, settings: ClydeEditorSettings, editor_features: BuiltInEditorFeatures) -> void:
+	var plugin_root: PluginRoot = PluginRoot.new(editor_root)
 	_dock = EditorDock.new()
 	_dock.title = InterfaceText.get_string(InterfaceText.KEY_DIALOGUE_PLAYER)
 	_dock.dock_icon = settings.get_plugin_icon()
@@ -16,7 +19,7 @@ func register_dock(editor_root: EditorPlugin, settings: ClydeEditorSettings) -> 
 	_player = PlayerDock.instantiate()
 	_dock.add_child(_player)
 	editor_root.add_dock(_dock)
-	_player.setup(settings)
+	_player.setup(plugin_root, settings, editor_features)
 
 
 func unregister_dock(editor_root: EditorPlugin) -> void:
