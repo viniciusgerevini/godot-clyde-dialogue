@@ -21,6 +21,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/margin_top = 10
 script = ExtResource("1_nuwy5")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=937332768]
@@ -30,36 +31,10 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/VBoxContainer" unique_id=1581218789]
-layout_mode = 2
-
-[node name="dialogue_name" type="Label" parent="HBoxContainer/VBoxContainer/MarginContainer" unique_id=72806765]
-layout_mode = 2
-mouse_filter = 1
-text = "No dialogue"
-horizontal_alignment = 1
-
-[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/VBoxContainer/MarginContainer" unique_id=183251896]
-layout_mode = 2
-size_flags_horizontal = 8
-
-[node name="dock" type="Button" parent="HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer" unique_id=1848988745]
-custom_minimum_size = Vector2(16, 0)
-layout_mode = 2
-size_flags_horizontal = 8
-icon = SubResource("ImageTexture_nmkci")
-flat = true
-
-[node name="close" type="Button" parent="HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer" unique_id=8917753]
-custom_minimum_size = Vector2(16, 0)
-layout_mode = 2
-size_flags_horizontal = 8
-icon = SubResource("ImageTexture_nmkci")
-flat = true
-
 [node name="LinesMargin" type="MarginContainer" parent="HBoxContainer/VBoxContainer" unique_id=315001004]
 layout_mode = 2
 size_flags_vertical = 3
+theme_override_constants/margin_top = 10
 theme_override_constants/margin_bottom = 40
 
 [node name="lines" type="ScrollContainer" parent="HBoxContainer/VBoxContainer/LinesMargin" unique_id=938479439]
@@ -135,22 +110,6 @@ tooltip_text = "Clear Memory"
 icon = SubResource("ImageTexture_nmkci")
 flat = true
 
-[node name="multi_single" type="Button" parent="HBoxContainer/VBoxContainer/actions" unique_id=590401400]
-layout_mode = 2
-tooltip_text = "Toggle Multi-Bubble Mode"
-toggle_mode = true
-button_pressed = true
-icon = SubResource("ImageTexture_nmkci")
-flat = true
-
-[node name="show_meta" type="Button" parent="HBoxContainer/VBoxContainer/actions" unique_id=451086842]
-layout_mode = 2
-tooltip_text = "Show Metadata"
-toggle_mode = true
-button_pressed = true
-icon = SubResource("ImageTexture_nmkci")
-flat = true
-
 [node name="show_debug" type="Button" parent="HBoxContainer/VBoxContainer/actions" unique_id=6932086]
 layout_mode = 2
 tooltip_text = "Show Debug Panel"
@@ -158,14 +117,13 @@ toggle_mode = true
 icon = SubResource("ImageTexture_nmkci")
 flat = true
 
-[connection signal="button_up" from="HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/dock" to="." method="_on_dock_button_up"]
-[connection signal="button_up" from="HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/close" to="." method="_on_close_button_up"]
+[node name="menu" type="MenuButton" parent="HBoxContainer/VBoxContainer/actions" unique_id=367021193]
+layout_mode = 2
+
 [connection signal="item_selected" from="HBoxContainer/VBoxContainer/actions/Block" to="." method="_on_block_item_selected"]
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/actions/restart" to="." method="_on_restart_pressed"]
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/actions/next_line" to="." method="_on_next_line_pressed"]
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/actions/forward" to="." method="_on_forward_pressed"]
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/actions/poltergeist" to="." method="_on_poltergeist_pressed"]
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/actions/clear_mem" to="." method="_on_clear_mem_pressed"]
-[connection signal="toggled" from="HBoxContainer/VBoxContainer/actions/multi_single" to="." method="_on_multi_single_toggled"]
-[connection signal="toggled" from="HBoxContainer/VBoxContainer/actions/show_meta" to="." method="_on_show_meta_toggled"]
 [connection signal="toggled" from="HBoxContainer/VBoxContainer/actions/show_debug" to="." method="_on_show_debug_toggled"]

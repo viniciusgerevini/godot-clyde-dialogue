@@ -8,6 +8,8 @@ var _script_editor: ScriptEditor
 var _settings: ClydeEditorSettings
 var _editor_syntax_highlighter: ClydeGodotEditorSyntaxHighlighter
 
+var _open_files: Dictionary[String, CodeEdit] = {}
+
 func _init(editor: ScriptEditor, settings: ClydeEditorSettings) -> void:
 	_script_editor = editor
 	_settings = settings
@@ -33,4 +35,23 @@ func _unregister_syntax_highligher() -> void:
 
 
 func _on_new_highlighter_instantiated(editor: CodeEdit) -> void:
+	_register_open_file(editor)
 	EditorEnhancements.enhance(editor, _settings)
+
+
+# Currently Godot does not provide any way to match the editor with its file path.
+# My solution here is very hacky and brittle, but I will roll with it for now
+func _register_open_file(editor: CodeEdit) -> void:
+	# sorry
+	await editor.get_tree().create_timer(0.5).timeout
+	# I'm sorry
+	var text_editor = editor.get_parent().get_parent()
+	var editor_index: int = _script_editor.get_open_script_editors().find(text_editor)
+	# sooo, sorry
+	var editor_layout = ConfigFile.new()
+	editor_layout.load("res://.godot/editor/editor_layout.cfg")
+	var open_scripts: Array = editor_layout.get_value("ScriptEditor", "open_scripts")
+
+	var file_path = open_scripts.get(editor_index)
+
+	_open_files[file_path] = editor

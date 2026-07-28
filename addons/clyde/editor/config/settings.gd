@@ -12,6 +12,8 @@ const EDITOR_CFG_SYNC_PLAYER = "sync_player"
 const EDITOR_CFG_PLAYER_SHOW_MULTI_BUBBLE = "player_multi_bubble"
 const EDITOR_CFG_PLAYER_SHOW_METADATA = "player_metadata"
 const EDITOR_CFG_EDITOR_FOLLOW_EXECUTION = "follow_execution"
+const EDITOR_CFG_PLAYER_BAR_POSITION = "player_bar_position"
+const EDITOR_CFG_PLAYER_WATCH_FILE = "watch_file"
 
 
 const CSV_EXPORTER_CFG_INCLUDE_METADATA = "csv_include_metadata"
@@ -191,3 +193,11 @@ func get_external_variables() -> Dictionary:
 
 func set_external_variables(variables: Dictionary) -> void:
 	_editor_settings.set_project_metadata("clyde", "ext_variables", variables)
+
+
+static func get_plugin_icon() -> Texture2D:
+	return load("res://addons/clyde/editor/assets/clyde.svg")
+
+
+func get_open_dialogues_paths() -> Array[String]:
+	return _editor_settings.get_open_dialogues_paths()

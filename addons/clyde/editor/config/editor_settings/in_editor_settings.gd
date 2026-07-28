@@ -92,3 +92,13 @@ func change_font_size(offset: float):
 
 func clear_font_size():
 	_editor_settings.set_setting("interface/editor/code_font_size", 14)
+
+
+func get_open_dialogues_paths() -> Array[String]:
+	# at the moment there is no better way to get open clyde files
+	var editor_layout = ConfigFile.new()
+	editor_layout.load("res://.godot/editor/editor_layout.cfg")
+	var open_scripts: Array = editor_layout.get_value("ScriptEditor", "open_scripts")
+	var clyde_files: Array[String] = []
+	clyde_files.append_array(open_scripts)
+	return clyde_files.filter(func (script: String): return script.ends_with(".clyde"))

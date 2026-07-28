@@ -10,3 +10,4 @@ signal settings_changed
 @abstract func get_interface_scale() -> float
 @abstract func change_font_size(offset: float) -> void
 @abstract func clear_font_size() -> void
+@abstract func get_open_dialogues_paths() -> Array[String]

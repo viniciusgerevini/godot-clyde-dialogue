@@ -121,7 +121,6 @@ func _on_multi_editor_parsing_finished(result):
 		_on_top_bar_execute_dialogue()
 
 
-
 func _on_multi_editor_editor_switched(key):
 	current_file_changed.emit(key)
 	if key == _current_file_path:

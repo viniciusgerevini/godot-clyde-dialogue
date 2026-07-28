@@ -9,8 +9,9 @@ signal dialogue_mem_clean
 signal variable_changed(var_name, value, old_value)
 signal external_variable_changed(var_name, value, old_value)
 signal event_triggered(event_name, parameters)
-signal close_triggered
-signal dock_button_pressed
+
+signal follow_line_toggled(is_enabled: bool)
+signal watch_file_toggled(is_enabled: bool)
 
 const InterfaceText = preload("../config/interface_text.gd")
 const Settings = preload("../config/settings.gd")
@@ -19,23 +20,21 @@ const DialogueEventBubble = preload("./dialogue_event_bubble.tscn")
 
 var _settings: Settings
 
-@onready var _dialogue_title_field: Label = $HBoxContainer/VBoxContainer/MarginContainer/dialogue_name
 @onready var _lines_container = $HBoxContainer/VBoxContainer/LinesMargin/lines/dialogue_lines
 @onready var _scroll_container = $HBoxContainer/VBoxContainer/LinesMargin/lines
+@onready var _actions_container: HBoxContainer = $HBoxContainer/VBoxContainer/actions
 
-@onready var _restart_btn = $HBoxContainer/VBoxContainer/actions/restart
-@onready var _next_line_btn = $HBoxContainer/VBoxContainer/actions/next_line
-@onready var _forward_btn = $HBoxContainer/VBoxContainer/actions/forward
-@onready var _polterigeist_btn = $HBoxContainer/VBoxContainer/actions/poltergeist
-@onready var _clear_mem_btn = $HBoxContainer/VBoxContainer/actions/clear_mem
-@onready var _multi_single_btn := $HBoxContainer/VBoxContainer/actions/multi_single
-@onready var _show_meta_btn = $HBoxContainer/VBoxContainer/actions/show_meta
-@onready var _show_debug_btn = $HBoxContainer/VBoxContainer/actions/show_debug
-@onready var _close_btn = $HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/close
-@onready var _dock_btn = $HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/dock
+@onready var _restart_btn: Button = $HBoxContainer/VBoxContainer/actions/restart
+@onready var _next_line_btn: Button = $HBoxContainer/VBoxContainer/actions/next_line
+@onready var _forward_btn: Button = $HBoxContainer/VBoxContainer/actions/forward
+@onready var _polterigeist_btn: Button = $HBoxContainer/VBoxContainer/actions/poltergeist
+@onready var _clear_mem_btn: Button = $HBoxContainer/VBoxContainer/actions/clear_mem
+@onready var _show_debug_btn: Button = $HBoxContainer/VBoxContainer/actions/show_debug
+@onready var _action_bar_menu_btn: MenuButton = $HBoxContainer/VBoxContainer/actions/menu
 
 @onready var _block_selection_field = $HBoxContainer/VBoxContainer/actions/Block
 @onready var _scrollbar: VScrollBar = _scroll_container.get_v_scroll_bar()
+
 
 var _dialogue: ClydeDialogue
 var _dialogue_key: String
@@ -45,18 +44,88 @@ var _dialogue_data = {}
 var _external_variables := {}
 var _has_external_variables_changed := false
 
+enum ActioBarMenuId {
+	BUBBLE_MODE,
+	METADATA,
+	FOLLOW_LINE,
+	WATCH_FILE,
+	MOVE_ACTION_BAR,
+}
+
+# TODO
+# - bottom cation bar.
+#  - Create three dots menu:
+#  - move multi bubble dialogue option to menu
+#  - move metadata option to menu
+#  - new option: Follow current line in script editor
+#  - new option: Watch for file changes
+
+var _is_action_bar_at_top: bool = false
+
 func setup(settings: Settings):
 	_settings = settings
-	_load_config()
 	_scrollbar.changed.connect(_on_scrollbar_changed)
 	_setup_actions()
+	_load_config()
 	_add_initial_line()
 
 
 func _setup_actions():
+	_setup_menu()
 	_setup_strings()
 	_setup_icons()
 	clear_dialogue()
+
+
+func _setup_menu() -> void:
+	var menu: PopupMenu = _action_bar_menu_btn.get_popup()
+	menu.clear()
+	menu.hide_on_checkable_item_selection = false
+
+	menu.id_pressed.connect(_on_action_menu_item_pressed)
+
+	menu.add_check_item(
+		InterfaceText.get_string(InterfaceText.KEY_PLAYER_FOLLOW_LINE),
+		ActioBarMenuId.FOLLOW_LINE
+	)
+	menu.add_check_item(
+		InterfaceText.get_string(InterfaceText.KEY_PLAYER_WATCH_FILE),
+		ActioBarMenuId.WATCH_FILE
+	)
+
+	menu.add_separator()
+
+	menu.add_item(
+		InterfaceText.get_string(InterfaceText.KEY_PLAYER_ACTION_BAR_MOVE_TOP),
+		ActioBarMenuId.MOVE_ACTION_BAR
+	)
+
+	menu.add_separator()
+
+	menu.add_check_item(
+		InterfaceText.get_string(InterfaceText.KEY_PLAYER_BALLOONS_TOOLTIP),
+		ActioBarMenuId.BUBBLE_MODE
+	)
+	menu.add_check_item(
+		InterfaceText.get_string(InterfaceText.KEY_PLAYER_SHOW_META_TOOLTIP),
+		ActioBarMenuId.METADATA
+	)
+
+
+func _set_action_menu_item(item_id: ActioBarMenuId, state: bool) -> void:
+	var menu: PopupMenu = _action_bar_menu_btn.get_popup()
+	menu.set_item_checked(menu.get_item_index(item_id), state)
+
+
+func _is_action_menu_item_checked(item_id: ActioBarMenuId) -> bool:
+	var menu: PopupMenu = _action_bar_menu_btn.get_popup()
+	return menu.is_item_checked(menu.get_item_index(item_id))
+
+
+func _toggle_menu_item(item_id: ActioBarMenuId) -> bool:
+	var new_value: bool = not _is_action_menu_item_checked(item_id)
+	_set_action_menu_item(item_id, new_value)
+	return new_value
 
 
 func _setup_strings():
@@ -65,14 +134,10 @@ func _setup_strings():
 	_forward_btn.tooltip_text = InterfaceText.get_string(InterfaceText.KEY_PLAYER_FORWARD_TOOLTIP)
 	_polterigeist_btn.tooltip_text = InterfaceText.get_string(InterfaceText.KEY_PLAYER_POLTERGEIST_TOOLTIP)
 	_clear_mem_btn.tooltip_text = InterfaceText.get_string(InterfaceText.KEY_PLAYER_CLEAR_MEM_TOOLTIP)
-	_multi_single_btn.tooltip_text = InterfaceText.get_string(InterfaceText.KEY_PLAYER_BALLOONS_TOOLTIP)
-	_show_meta_btn.tooltip_text = InterfaceText.get_string(InterfaceText.KEY_PLAYER_SHOW_META_TOOLTIP)
 	_show_debug_btn.tooltip_text = InterfaceText.get_string(InterfaceText.KEY_PLAYER_SHOW_DEBUG_TOOLTIP)
 
 	_block_selection_field.add_item(InterfaceText.get_string(InterfaceText.KEY_DEFAULT_BLOCK))
 	_block_selection_field.tooltip_text = InterfaceText.get_string(InterfaceText.KEY_PLAYER_BLOCK_SELECTION_TOOLTIP)
-
-	_dialogue_title_field.text = InterfaceText.get_string(InterfaceText.KEY_NO_DIALOGUE)
 
 
 func _setup_icons():
@@ -81,18 +146,43 @@ func _setup_icons():
 	_forward_btn.icon = get_theme_icon("TransitionEnd", "EditorIcons")
 	_polterigeist_btn.icon = load("res://addons/clyde/editor/assets/clyde.svg")
 	_clear_mem_btn.icon = get_theme_icon("History", "EditorIcons")
-	_multi_single_btn.icon = get_theme_icon("MakeFloating", "EditorIcons")
-	_show_meta_btn.icon = get_theme_icon("GuiEllipsis", "EditorIcons")
 	_show_debug_btn.icon = get_theme_icon("Debug", "EditorIcons")
-	_close_btn.icon = get_theme_icon("Close", "EditorIcons")
-	_dock_btn.icon = get_theme_icon("MakeFloating", "EditorIcons")
+
+	_action_bar_menu_btn.icon = get_theme_icon("GuiTabMenu", "EditorIcons")
 
 
 func _load_config():
 	var cfg = _settings.get_editor_config()
-	_multi_single_btn.button_pressed = cfg.get(_settings.EDITOR_CFG_PLAYER_SHOW_MULTI_BUBBLE, true)
-	_show_meta_btn.button_pressed = cfg.get(_settings.EDITOR_CFG_PLAYER_SHOW_METADATA, false)
+
+	_set_action_menu_item(ActioBarMenuId.BUBBLE_MODE, cfg.get(_settings.EDITOR_CFG_PLAYER_SHOW_MULTI_BUBBLE, true))
+	_set_action_menu_item(ActioBarMenuId.METADATA, cfg.get(_settings.EDITOR_CFG_PLAYER_SHOW_METADATA, false))
+
+	_set_action_menu_item(ActioBarMenuId.WATCH_FILE, cfg.get(_settings.EDITOR_CFG_PLAYER_WATCH_FILE, true))
+	_set_action_menu_item(ActioBarMenuId.FOLLOW_LINE, cfg.get(_settings.EDITOR_CFG_EDITOR_FOLLOW_EXECUTION, true))
+
+	_set_action_bar_position(cfg.get(_settings.EDITOR_CFG_PLAYER_BAR_POSITION, false))
+
 	_external_variables = _settings.get_external_variables()
+
+
+func _set_action_bar_position(is_top: bool) -> void:
+	if _is_action_bar_at_top == is_top:
+		return
+
+	_is_action_bar_at_top = is_top
+
+	var menu: PopupMenu = _action_bar_menu_btn.get_popup()
+	menu.set_item_text(
+		menu.get_item_index(ActioBarMenuId.MOVE_ACTION_BAR),
+		InterfaceText.get_string(
+			InterfaceText.KEY_PLAYER_ACTION_BAR_MOVE_BOTTOM if is_top else InterfaceText.KEY_PLAYER_ACTION_BAR_MOVE_TOP
+		)
+	)
+
+	if _is_action_bar_at_top:
+		_actions_container.get_parent().move_child(_actions_container, 0)
+	else:
+		_actions_container.move_to_front()
 
 
 func set_dialogue(key: String, parsed_document: Dictionary):
@@ -103,8 +193,6 @@ func set_dialogue(key: String, parsed_document: Dictionary):
 	_update_external_variables()
 
 	_dialogue_key = key
-	_dialogue_title_field.text = key.get_file()
-	_dialogue_title_field.tooltip_text = key
 	_dialogue = ClydeDialogue.new()
 	_dialogue._load_parsed_doc(parsed_document)
 	_restart_btn.disabled = false
@@ -115,10 +203,10 @@ func set_dialogue(key: String, parsed_document: Dictionary):
 	_dialogue_has_ended = false
 	_is_waiting_for_choice = false
 	_load_blocks(parsed_document)
-
+#
 	if _dialogue_data.has(key):
 		_dialogue.load_data(_dialogue_data[key])
-
+#
 	_dialogue.variable_changed.connect(_on_variable_changed)
 	_dialogue.event_triggered.connect(_on_event_triggered)
 
@@ -130,11 +218,14 @@ func set_dialogue(key: String, parsed_document: Dictionary):
 
 
 func _load_blocks(parsed_document: Dictionary):
-	_block_selection_field.clear()
-
-	_block_selection_field.add_item(InterfaceText.get_string(InterfaceText.KEY_DEFAULT_BLOCK))
+	_set_default_block()
 	for b in parsed_document.blocks:
 		_block_selection_field.add_item(b.name)
+
+
+func _set_default_block() -> void:
+	_block_selection_field.clear()
+	_block_selection_field.add_item(InterfaceText.get_string(InterfaceText.KEY_DEFAULT_BLOCK))
 
 
 func clear_dialogue():
@@ -146,6 +237,12 @@ func clear_dialogue():
 	_block_selection_field.disabled = true
 	_dialogue_has_ended = false
 	_is_waiting_for_choice = false
+	_remove_lines()
+	_set_default_block()
+
+
+func add_event_line(text: String) -> void:
+	_add_event_line(text)
 
 
 func _on_block_item_selected(index):
@@ -211,14 +308,6 @@ func _on_clear_mem_pressed():
 	_on_restart_pressed()
 
 
-func _on_multi_single_toggled(toggled_on):
-	if toggled_on:
-		_show_all_lines()
-	else:
-		_hide_previous_lines()
-	_settings.set_config(_settings.EDITOR_CFG_PLAYER_SHOW_MULTI_BUBBLE, toggled_on)
-
-
 func _on_show_meta_toggled(toggled_on):
 	if toggled_on:
 		for c in get_tree().get_nodes_in_group("clyde_dialogue_line_meta"):
@@ -232,6 +321,60 @@ func _on_show_meta_toggled(toggled_on):
 
 func _on_show_debug_toggled(toggled_on):
 	toggle_debug_panel.emit(toggled_on)
+
+
+func _on_action_menu_item_pressed(item_id: int) -> void:
+	match item_id:
+		ActioBarMenuId.BUBBLE_MODE:
+			_toggle_bubble_mode()
+		ActioBarMenuId.METADATA:
+			_toggle_metadata()
+		ActioBarMenuId.FOLLOW_LINE:
+			_toggle_follow_line()
+		ActioBarMenuId.WATCH_FILE:
+			_toggle_watch_file()
+		ActioBarMenuId.MOVE_ACTION_BAR:
+			_toggle_move_action_bar()
+
+
+func _toggle_bubble_mode():
+	var result: bool = _toggle_item_and_persist(ActioBarMenuId.BUBBLE_MODE, _settings.EDITOR_CFG_PLAYER_SHOW_MULTI_BUBBLE)
+	if result:
+		_show_all_lines()
+	else:
+		_hide_previous_lines()
+
+
+func _toggle_metadata():
+	var result: bool = _toggle_item_and_persist(ActioBarMenuId.METADATA, _settings.EDITOR_CFG_PLAYER_SHOW_METADATA)
+	if result:
+		for c in get_tree().get_nodes_in_group("clyde_dialogue_line_meta"):
+			if c.get_child_count() > 0:
+				c.show()
+	else:
+		for c in get_tree().get_nodes_in_group("clyde_dialogue_line_meta"):
+			c.hide()
+
+
+func _toggle_follow_line() -> void:
+	var result: bool = _toggle_item_and_persist(ActioBarMenuId.FOLLOW_LINE, _settings.EDITOR_CFG_EDITOR_FOLLOW_EXECUTION)
+	follow_line_toggled.emit(result)
+
+
+func _toggle_watch_file() -> void:
+	var result: bool = _toggle_item_and_persist(ActioBarMenuId.WATCH_FILE, _settings.EDITOR_CFG_PLAYER_WATCH_FILE)
+	watch_file_toggled.emit(result)
+
+
+func _toggle_move_action_bar():
+	var result: bool = _toggle_item_and_persist(ActioBarMenuId.MOVE_ACTION_BAR, _settings.EDITOR_CFG_PLAYER_BAR_POSITION)
+	_set_action_bar_position(result)
+
+
+func _toggle_item_and_persist(item_id: int, cfg_key: String) -> bool:
+	var result: bool = _toggle_menu_item(item_id)
+	_settings.set_config(cfg_key, result)
+	return result
 
 
 func _add_start_dialogue_line(block_name):
@@ -261,7 +404,7 @@ func _add_dialogue_bubble(content: Dictionary):
 	var bubble = DialogueBubble.instantiate()
 	bubble.chosen_option_color = _settings.get_theme_accent_color()
 	_lines_container.add_child(bubble)
-	bubble.set_content(content, _show_meta_btn.button_pressed)
+	bubble.set_content(content, _is_action_menu_item_checked(ActioBarMenuId.METADATA))
 	bubble.bubble_clicked.connect(_on_bubble_clicked)
 	bubble.option_selected.connect(_on_option_selected)
 	return bubble
@@ -289,7 +432,7 @@ func _hide_previous_lines():
 
 
 func _adjust_previous_line_visibility():
-	if not _multi_single_btn.button_pressed and _lines_container.get_child_count() > 0:
+	if not _is_action_menu_item_checked(ActioBarMenuId.BUBBLE_MODE) and _lines_container.get_child_count() > 0:
 		_lines_container.get_child(_lines_container.get_child_count() -1).hide()
 
 
@@ -359,11 +502,6 @@ func _add_initial_line():
 	_add_event_line(message)
 
 
-func _on_close_button_up():
-	_update_external_variables()
-	close_triggered.emit()
-
-
 func _external_variable_fetch(var_name: String) -> Variant:
 	return _external_variables.get(var_name, null)
 
@@ -386,15 +524,3 @@ func get_external_variables():
 		_external_variables = _settings.get_external_variables()
 
 	return _external_variables.duplicate()
-
-
-func _on_dock_button_up() -> void:
-	dock_button_pressed.emit()
-
-
-func hide_close_button() -> void:
-	_close_btn.hide()
-
-
-func show_close_button() -> void:
-	_close_btn.show()

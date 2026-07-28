@@ -98,3 +98,13 @@ WRONG_FILE_FORMAT_MESSAGE,"Trying to open not supported file: %s"
 ABOUT_WINDOW_TITLE,"About Clyde Dialogue"
 ABOUT_TITLE,"Clyde Dialogue Plugin"
 ABOUT_DESCRIPTION,"The Clyde dialogue plugin and the Clyde language were created by Vinicius Gerevini ([url=https://thisisvini.com]thisisvini.com[/url]) and distributed under the [url=LICENSE]MIT License[/url]."
+DIALOGUE_PLAYER,Dialogue Player
+OPEN_IN_DIALOGUE_PLAYER,Open in Dialogue Player
+PLAYER_OPEN_MENU,Open File...
+PLAYER_FOLLOW_LINE,Show Current Line In Script Editor
+PLAYER_WATCH_FILE,Watch For File Changes
+PLAYER_ACTION_BAR_MOVE_TOP,Move Action Bar to Top
+PLAYER_ACTION_BAR_MOVE_BOTTOM,Move Action Bar to Bottom
+PLAYER_STATUS_SUCCESS,Dialogue parsed successfully
+PLAYER_STATUS_FAIL,Failed to parse dialogue
+PLAYER_STATUS_LOADING,Parsing dialogue File...

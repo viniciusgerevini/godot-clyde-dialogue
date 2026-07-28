@@ -1,13 +1,40 @@
 @tool
 extends EditorPlugin
 
+# TODO
+# - player
+# 	- move to doc
+#	- provide a way to select file (either from open files or open a new one)
+#   - select current selected script editor file
+#   - move player options to menu in player
+#   - on click bubble, select right position in script file
+# - buil-in editor
+#    - follow execution
+# - context menus (play dialogue)
+#    - file system
+#        - play dialogue
+#    - script list
+#         - play dialogue
+#         - generate ids
+#    - resource inspector (?)
+# - move docs and tools to another place (maybe a Clyde bottom dock)
+# - remove main screen plugin
+# - maybe editor wide shortcuts
+#   - execute dialogue
+#   - next/previous option in player
+#   - open/close player
+#
+
 const ImportPlugin = preload("import_plugin.gd")
+const ScriptEditorContextMenuPlugin = preload("./editor/context_menus/script_editor_context_menu.gd")
+const FileSystemContextMenuPlugin = preload("./editor/context_menus/file_system_context_menu.gd")
 const MainPanel = preload("./editor/editor_main_panel.tscn")
 const InterfaceText = preload("./editor/config/interface_text.gd")
 const DockableWindow = preload("./editor/windows/dockable_window.gd")
 const ClydeEditorSettings = preload("./editor/config/settings.gd")
 const ClydeInEditorSettings = preload("./editor/config/editor_settings/in_editor_settings.gd")
 const BuiltInEditorFeatures = preload("./editor/built_in/editor_features.gd")
+const PlayerDock = preload("./editor/docks/player_dock.gd")
 
 const SETTING_SOURCE_FOLDER := "dialogue/source_folder"
 const DEFAULT_SOURCE_FOLDER := "res://dialogues/"
@@ -19,6 +46,9 @@ const HELPERS_ENABLED := "dialogue/enable_helpers"
 
 var _import_plugin
 var _main_panel
+var _player_dock: PlayerDock
+var _script_editor_context_menu_plugin: ScriptEditorContextMenuPlugin
+var _file_system_context_menu_plugin: FileSystemContextMenuPlugin
 var _helpers_enabled = false
 
 var _editor_settings: ClydeEditorSettings
@@ -28,6 +58,7 @@ var _dockable_main_panel
 var _editor_features: BuiltInEditorFeatures
 
 func _enter_tree():
+	_editor_settings = ClydeEditorSettings.new(ClydeInEditorSettings.new())
 	_import_plugin = ImportPlugin.new()
 	add_import_plugin(_import_plugin)
 	_setup_project_settings()
@@ -35,6 +66,8 @@ func _enter_tree():
 	_setup_helpers()
 	_listen_to_project_settings_changes()
 	_enhance_builtin_editor()
+	_register_player_dock()
+	_register_context_menu_plugin()
 
 
 func _disable_plugin():
@@ -42,6 +75,8 @@ func _disable_plugin():
 	_import_plugin = null
 	_clear_project_settings()
 	_clear_builtin_editor()
+	_unregister_player_dock()
+	_unregister_context_menu_plugin()
 
 
 func _setup_project_settings():
@@ -99,8 +134,6 @@ func _exit_tree() -> void:
 
 
 func _setup_main_panel() -> void:
-	_editor_settings = ClydeEditorSettings.new(ClydeInEditorSettings.new())
-
 	InterfaceText.load_strings_for_current_locale()
 	InterfaceText.plugin_version = get_plugin_version()
 	if not ProjectSettings.get_setting(MAIN_EDITOR_ENABLED, true):
@@ -200,3 +233,34 @@ func _enhance_builtin_editor() -> void:
 func _clear_builtin_editor() -> void:
 	_editor_features.unregister()
 	_editor_features = null
+
+
+func _register_player_dock() -> void:
+	_player_dock = PlayerDock.new()
+	_player_dock.register_dock(self, _editor_settings)
+
+
+func _unregister_player_dock() -> void:
+	if _player_dock:
+		_player_dock.unregister_dock(self)
+		_player_dock = null
+
+
+func _register_context_menu_plugin() -> void:
+	_script_editor_context_menu_plugin = ScriptEditorContextMenuPlugin.new()
+	_file_system_context_menu_plugin = FileSystemContextMenuPlugin.new()
+
+	_script_editor_context_menu_plugin.player_requested.connect(_on_player_requested)
+	_file_system_context_menu_plugin.player_requested.connect(_on_player_requested)
+
+	add_context_menu_plugin(EditorContextMenuPlugin.CONTEXT_SLOT_FILESYSTEM, _file_system_context_menu_plugin)
+	add_context_menu_plugin(EditorContextMenuPlugin.CONTEXT_SLOT_SCRIPT_EDITOR, _script_editor_context_menu_plugin)
+
+
+func _unregister_context_menu_plugin() -> void:
+	remove_context_menu_plugin(_script_editor_context_menu_plugin)
+	remove_context_menu_plugin(_file_system_context_menu_plugin)
+
+
+func _on_player_requested(dialogue_path: String) -> void:
+	_player_dock.open_dock(dialogue_path)
