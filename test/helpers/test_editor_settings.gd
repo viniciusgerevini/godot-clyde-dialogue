@@ -35,3 +35,7 @@ func change_font_size(_offset: float) -> void:
 
 func clear_font_size() -> void:
 	pass
+
+
+func get_open_dialogues_paths() -> Array[String]:
+	return []

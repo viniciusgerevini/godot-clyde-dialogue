@@ -32,7 +32,7 @@ var _settings: Settings
 @onready var _show_debug_btn: Button = $HBoxContainer/VBoxContainer/actions/show_debug
 @onready var _action_bar_menu_btn: MenuButton = $HBoxContainer/VBoxContainer/actions/menu
 
-@onready var _block_selection_field = $HBoxContainer/VBoxContainer/actions/Block
+@onready var _block_selection_field: OptionButton = $HBoxContainer/VBoxContainer/actions/Block
 @onready var _scrollbar: VScrollBar = _scroll_container.get_v_scroll_bar()
 
 
@@ -178,6 +178,10 @@ func _set_action_bar_position(is_top: bool) -> void:
 
 
 func set_dialogue(key: String, parsed_document: Dictionary):
+	var previous_key: String = _dialogue_key
+	var selected_block_index: int = _block_selection_field.selected
+	var selected_block_name: String = _block_selection_field.get_item_text(selected_block_index)
+
 	# persist previous data
 	if _dialogue != null:
 		_dialogue_data[_dialogue_key] = _dialogue.get_data()
@@ -205,7 +209,12 @@ func set_dialogue(key: String, parsed_document: Dictionary):
 	_dialogue.on_external_variable_fetch(_external_variable_fetch)
 	_dialogue.on_external_variable_update(_external_variable_update)
 
-	_remove_lines()
+	if previous_key == _dialogue_key:
+		if selected_block_index > 0 and _dialogue.has_block(selected_block_name):
+			_select_block_by_name(selected_block_name)
+	else:
+		_remove_lines()
+
 	_add_dialogue_loaded_line()
 
 
@@ -218,6 +227,14 @@ func _load_blocks(parsed_document: Dictionary):
 func _set_default_block() -> void:
 	_block_selection_field.clear()
 	_block_selection_field.add_item(InterfaceText.get_string(InterfaceText.KEY_DEFAULT_BLOCK))
+
+
+func _select_block_by_name(block: String) -> void:
+	for i in _block_selection_field.item_count:
+		if _block_selection_field.get_item_text(i) == block:
+			_block_selection_field.select(i)
+			break
+	_dialogue.start(block)
 
 
 func clear_dialogue():
@@ -257,7 +274,7 @@ func _on_restart_pressed():
 
 
 func _on_next_line_pressed():
-	if _is_waiting_for_choice:
+	if _is_waiting_for_choice or _dialogue == null:
 		return
 	var content = _dialogue.get_content()
 	_add_dialogue_bubble(content)
@@ -516,3 +533,12 @@ func get_external_variables():
 		_external_variables = _settings.get_external_variables()
 
 	return _external_variables.duplicate()
+
+
+func set_existing_lines_as_outdated():
+	for c in _lines_container.get_children():
+		c.modulate.a = 0.8
+		if c.has_signal("bubble_clicked") and c.bubble_clicked.is_connected(_on_bubble_clicked):
+			c.bubble_clicked.disconnect(_on_bubble_clicked)
+		if c.has_signal("option_selected") and c.option_selected.is_connected(_on_option_selected):
+			c.option_selected.disconnect(_on_option_selected)

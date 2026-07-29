@@ -12,17 +12,7 @@ var _parse_worker: ParseWorker
 var _current_file_path: String = ""
 var _parsed_doc: Dictionary
 
-# - TODO dots dialgoue menu:
-#   - show current dialogue in script editor
-#   - show current dialogue in file system
-#   - close dialogue
-
 # TODO drag and drop from file system and editor to player
-
-# TODO on click dialogue menu load itesm
-# - first item Open File...
-#    - this will open file selector with .clyde as filter
-#    - on select file, open dialogue (should open script editor as well?)
 
 # TODO dialogue player welcome screen?
 #   - Open dialogue
@@ -37,6 +27,7 @@ var _settings: Settings
 var _editor_features: BuiltInEditorFeatures
 var _app_root: AppRoot
 var _debug_panel
+var _open_file_last_modified_time: int = 0
 
 @onready var _player: MarginContainer = $VBoxContainer/Player
 @onready var _dialogue_path: LineEdit = $VBoxContainer/HBoxContainer/dialogue_path
@@ -62,6 +53,9 @@ func setup(app_root: AppRoot, settings: Settings, editor_features: BuiltInEditor
 
 	_load_settings()
 	_setup_parse_worker()
+
+	if _is_file_watch_enabled:
+		_listen_for_file_system_changes()
 
 
 func _load_settings() -> void:
@@ -90,11 +84,19 @@ func _on_parsing_failed(result) -> void:
 
 
 func set_dialogue_path(dialogue_path: String) -> void:
+	if _is_follow_line_enabled and _current_file_path != "":
+		_clear_executing_line(_current_file_path)
+
 	_dialogue_path.text = dialogue_path.get_file()
 	_dialogue_path.tooltip_text = dialogue_path
+
+	if _current_file_path != dialogue_path:
+		_player.clear_dialogue()
+	else:
+		_player.set_existing_lines_as_outdated()
+
 	_current_file_path = dialogue_path
 
-	_player.clear_dialogue()
 	_player.add_event_line(InterfaceText.get_string(InterfaceText.KEY_PLAYER_STATUS_LOADING))
 
 	_parse_file(_current_file_path)
@@ -106,7 +108,9 @@ func _parse_file(dialogue_path: String) -> void:
 	if file == null:
 		_status.set_error(file.get_open_error())
 		_player.add_event_line.call_deferred(file.get_open_error())
+		_open_file_last_modified_time = 0
 		return
+	_open_file_last_modified_time = FileAccess.get_modified_time(dialogue_path)
 	var content = file.get_as_text()
 	_parse_worker.parse(content)
 
@@ -136,9 +140,11 @@ func _on_open_menu_index_pressed(index: int) -> void:
 	var item_value: String = menu.get_item_text(index)
 
 	if selected_id == OPEN_DIALOGUE_ENTRY_ID:
-		print("OPEN FILE SELECTOR")
-		# TODO open file selector
+		_open_file_dialog()
 		return
+
+	if _is_follow_line_enabled:
+		_editor_features.open_file(item_value)
 
 	set_dialogue_path(item_value)
 
@@ -155,13 +161,24 @@ func _on_player_content_finished_changing(dialogue_key: String, content: Diction
 				editor.set_executing_line(content.meta.line)
 
 
+func _clear_executing_line(dialogue_key: String) -> void:
+	if _editor_features.has_open_editor_for_file(dialogue_key):
+		var editor = _editor_features.get_editor_for_file(dialogue_key)
+		editor.clear_executing_line()
+
+
 func _on_player_follow_line_toggled(is_enabled: bool) -> void:
 	_is_follow_line_enabled = is_enabled
+	if not _is_follow_line_enabled and _current_file_path != "":
+		_clear_executing_line(_current_file_path)
 
 
 func _on_player_watch_file_toggled(is_enabled: bool) -> void:
 	_is_file_watch_enabled = is_enabled
-	# TODO either start or stop watching
+	if _is_file_watch_enabled:
+		_listen_for_file_system_changes()
+	else:
+		_stop_listening_for_changes()
 
 
 func _on_player_position_selected(dialogue_key: String, line: int, column: int) -> void:
@@ -228,3 +245,51 @@ func _on_debug_variable_changed(var_name: String, value) -> void:
 
 func _on_debug_external_variable_changed(var_name: String, value) -> void:
 	_player.set_external_variable(var_name, value)
+
+
+func _open_file_dialog():
+	var file_dialog = _app_root.create_file_dialog()
+	file_dialog.file_mode = FileDialog.FILE_MODE_OPEN_FILES
+	file_dialog.access = FileDialog.ACCESS_FILESYSTEM
+	file_dialog.files_selected.connect(_on_open_dialog_file_selected.bind(file_dialog))
+	file_dialog.set_filters(PackedStringArray(["*.clyde"]))
+	file_dialog.current_dir = ProjectSettings.globalize_path(_get_source_folder())
+
+	get_parent().add_child(file_dialog)
+	file_dialog.popup_centered_ratio()
+
+
+func _on_open_dialog_file_selected(paths, dialogue_modal):
+	dialogue_modal.queue_free()
+
+	for path: String in paths:
+		if path.ends_with(".clyde"):
+			_editor_features.open_file(path)
+			set_dialogue_path(path)
+		else:
+			OS.alert(InterfaceText.get_string(
+				InterfaceText.KEY_WRONG_FILE_FORMAT_MESSAGE) % path,
+				InterfaceText.get_string(InterfaceText.KEY_WRONG_FILE_FORMAT_TITLE)
+			)
+
+
+func _get_source_folder():
+	return ProjectSettings.get_setting("dialogue/source_folder") if ProjectSettings.has_setting("dialogue/source_folder") else "res://dialogues/"
+
+
+func _listen_for_file_system_changes() -> void:
+	var fs: EditorFileSystem = EditorInterface.get_resource_filesystem()
+	fs.filesystem_changed.connect(_on_file_system_changed)
+
+
+func _stop_listening_for_changes() -> void:
+	var fs: EditorFileSystem = EditorInterface.get_resource_filesystem()
+	fs.filesystem_changed.disconnect(_on_file_system_changed)
+
+
+func _on_file_system_changed() -> void:
+	if _current_file_path == "" or not FileAccess.file_exists(_current_file_path):
+		return
+
+	if FileAccess.get_modified_time(_current_file_path) != _open_file_last_modified_time:
+		_parse_file(_current_file_path)
