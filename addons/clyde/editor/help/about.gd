@@ -284,8 +284,11 @@ This tool generates a CSV file with the dialogue file lines, to help with transl
 
 You can select the delimiter (i.e , or ;), if it should include header, and if it should include a metadata column (this column will contain the speaker and any tags associated with the line).
 
-You can access this tool via the tools menu (Project > Tools > Clyde Dialogue > Create Dialogue CSV...).
-
+You can access this tool via:
+[ul]
+The tools menu (Project > Tools > Clyde Dialogue > Create Dialogue CSV...).
+In the FileSystem dock or Script Editor script list context menu when right-clicking a .clyde file.
+[/ul]
 ''',
 	"LANGUAGE": '''[center][b]Language[/b][/center]
 [hr]
