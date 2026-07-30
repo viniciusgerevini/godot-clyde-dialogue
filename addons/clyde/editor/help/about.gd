@@ -166,8 +166,7 @@ const manuals = {
 	"EDITOR": '''[center][b]Editor[/b][/center]
 [hr]
 
-This plugin enhances Godot's script editor to support authoring dialogues in the engine.
-To use it, just open or create any [code].clyde[/code] file in the Script Editor.
+This plugin enhances Godot's script editor to support authoring dialogues in the engine. Just open or create any [code].clyde[/code] file in the Script Editor.
 
 [b]Syntax highlighting:[/b]
 Special characters, logic blocks and special elements, like speakers, are highlighted for easy reading, following your defined colorscheme.
@@ -200,7 +199,7 @@ In the Tools menu, "Project > Tools > Clyde > Open Dialogue Player"
 [b]Executing Dialogues[/b]
 
 To load a dialogue you can use the button with the folder icon in the player's top right corner.
-This menu will have the list of all open *.clyde files in the Script Editor and give you the option to "Open File".
+This menu will show a list with all open *.clyde files and give you the option to open a new one.
 
 You can also open a specific Clyde file from the Script Editor script list and FileSytem list by right-clicking the file and selecting "Open in Dialogue Player".
 

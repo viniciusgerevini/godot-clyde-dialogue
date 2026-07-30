@@ -85,8 +85,8 @@ func _setup_project_settings():
 
 	ProjectSettings.save()
 
-	# TODO change this editor setting to allow opening clyde files in the editor
-	# - docks/filesystem/textfile_extensions
+	_register_clyde_file_in_editor_settings()
+
 
 func _clear_project_settings():
 	ProjectSettings.clear(SETTING_SOURCE_FOLDER)
@@ -228,3 +228,10 @@ func _on_about_requested() -> void:
 	self.add_child(about)
 	about.setup(_editor_settings)
 	about.popup_centered()
+
+
+func _register_clyde_file_in_editor_settings() -> void:
+	var editor_settings: EditorSettings = self.get_editor_interface().get_editor_settings()
+	var textfiles: String = editor_settings.get_setting("docks/filesystem/textfile_extensions")
+	if not textfiles.contains("clyde"):
+		editor_settings.set_setting("docks/filesystem/textfile_extensions", textfiles + ",clyde")
