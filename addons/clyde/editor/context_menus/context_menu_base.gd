@@ -1,6 +1,7 @@
 extends EditorContextMenuPlugin
 
 signal player_requested(file_path: String)
+signal csv_exporter_requested(file_path: String)
 
 const ClydeEditorSettings = preload("../config/settings.gd")
 const InterfaceText = preload("../config/interface_text.gd")
@@ -18,6 +19,10 @@ func _register_menu(path: String) -> void:
 		_open_in_dialogue_player,
 		ClydeEditorSettings.get_plugin_icon()
 	)
+	add_context_menu_item(
+		InterfaceText.get_string(InterfaceText.KEY_CREATE_CSV),
+		_on_create_csv
+	)
 	_register_extra_menus()
 
 
@@ -27,3 +32,7 @@ func _register_extra_menus() -> void:
 
 func _open_in_dialogue_player(file) -> void:
 	player_requested.emit(file.resource_path)
+
+
+func _on_create_csv(file) -> void:
+	csv_exporter_requested.emit(file.resource_path)

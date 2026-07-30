@@ -1,15 +1,6 @@
 @tool
 extends EditorPlugin
 
-# TODO
-# - move docs and tools to another place (maybe a Clyde bottom dock)
-# - remove main screen plugin
-# - maybe editor wide shortcuts
-#   - execute dialogue
-#   - next/previous option in player
-#   - open/close player
-#
-
 const ImportPlugin = preload("import_plugin.gd")
 const ScriptEditorContextMenuPlugin = preload("./editor/context_menus/script_editor_context_menu.gd")
 const FileSystemContextMenuPlugin = preload("./editor/context_menus/file_system_context_menu.gd")
@@ -186,6 +177,9 @@ func _register_context_menu_plugin() -> void:
 	_script_editor_context_menu_plugin.player_requested.connect(_on_player_requested)
 	_file_system_context_menu_plugin.player_requested.connect(_on_player_requested)
 
+	_script_editor_context_menu_plugin.csv_exporter_requested.connect(_on_csv_exporter_requested)
+	_file_system_context_menu_plugin.csv_exporter_requested.connect(_on_csv_exporter_requested)
+
 	_script_editor_context_menu_plugin.line_id_generation_requested.connect(_on_line_id_generation_requested)
 
 	add_context_menu_plugin(EditorContextMenuPlugin.CONTEXT_SLOT_FILESYSTEM, _file_system_context_menu_plugin)
@@ -208,22 +202,24 @@ func _on_line_id_generation_requested(dialogue_path: String) -> void:
 func _register_tool_menu() -> void:
 	_tool_menu.setup(self)
 	_tool_menu.player_requested.connect(_on_player_requested.bind(""))
-	_tool_menu.csv_exporter_requested.connect(_on_csv_exporter_requested)
+	_tool_menu.csv_exporter_requested.connect(_on_csv_exporter_requested.bind(""))
 	_tool_menu.about_requested.connect(_on_about_requested)
 
 
 func _unregister_tool_menu() -> void:
 	_tool_menu.remove(self)
 	_tool_menu.player_requested.disconnect(_on_player_requested.bind(""))
-	_tool_menu.csv_exporter_requested.connect(_on_csv_exporter_requested)
+	_tool_menu.csv_exporter_requested.connect(_on_csv_exporter_requested.bind(""))
 	_tool_menu.about_requested.connect(_on_about_requested)
 
 
-func _on_csv_exporter_requested() -> void:
+func _on_csv_exporter_requested(dialogue_file: String) -> void:
 	var app_root: PluginRoot = PluginRoot.new(self)
 	var exporter = CsvExporterDialogue.instantiate()
 	self.add_child(exporter)
 	exporter.setup(app_root, _editor_settings)
+	if dialogue_file != "":
+		exporter.set_current_file(dialogue_file)
 	exporter.popup_centered()
 
 
