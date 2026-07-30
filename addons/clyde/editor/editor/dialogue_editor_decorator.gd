@@ -4,10 +4,12 @@ extends RefCounted
 signal parsing_finished
 signal parsing_failed(result: Dictionary)
 
+const InterfaceText = preload("../config/interface_text.gd")
 const ClydeEditorSettings = preload("../config/settings.gd")
 const ParseWorker = preload("../parse_worker.gd")
 const Debouncer = preload("../util/debouncer.gd")
 const AutoComplete = preload("./auto_complete.gd")
+const IdGenerator = preload("../tools/id_generator.gd")
 
 var editor: CodeEdit
 var _parse_worker: ParseWorker
@@ -19,6 +21,7 @@ var _error_lines: Dictionary = {}
 
 var _is_new_parsing_execution: bool = false
 
+const OPEN_PLAYER_MENU_INDEX: int = 9999
 
 func _init(code_edit: CodeEdit, settings: ClydeEditorSettings, parse_on_change: bool = false) -> void:
 	editor = code_edit
@@ -199,3 +202,8 @@ func set_executing_line(line: int) -> void:
 
 func clear_executing_line() -> void:
 	editor.clear_executing_lines()
+
+
+func generate_line_ids() -> void:
+	var id_generator = IdGenerator.new()
+	editor.text = id_generator.add_ids_to_content(editor.text)

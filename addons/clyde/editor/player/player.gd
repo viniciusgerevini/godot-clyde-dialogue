@@ -52,7 +52,7 @@ enum ActioBarMenuId {
 	MOVE_ACTION_BAR,
 }
 
-var _is_action_bar_at_top: bool = false
+var _is_action_bar_at_top: bool = true
 
 func setup(settings: Settings):
 	_settings = settings
@@ -88,7 +88,7 @@ func _setup_menu() -> void:
 	menu.add_separator()
 
 	menu.add_item(
-		InterfaceText.get_string(InterfaceText.KEY_PLAYER_ACTION_BAR_MOVE_TOP),
+		InterfaceText.get_string(InterfaceText.KEY_PLAYER_ACTION_BAR_MOVE_BOTTOM),
 		ActioBarMenuId.MOVE_ACTION_BAR
 	)
 
@@ -152,7 +152,7 @@ func _load_config():
 	_set_action_menu_item(ActioBarMenuId.WATCH_FILE, cfg.get(_settings.EDITOR_CFG_PLAYER_WATCH_FILE, true))
 	_set_action_menu_item(ActioBarMenuId.FOLLOW_LINE, cfg.get(_settings.EDITOR_CFG_EDITOR_FOLLOW_EXECUTION, true))
 
-	_set_action_bar_position(cfg.get(_settings.EDITOR_CFG_PLAYER_BAR_POSITION, false))
+	_set_action_bar_position(cfg.get(_settings.EDITOR_CFG_PLAYER_BAR_POSITION, true))
 
 	_external_variables = _settings.get_external_variables()
 
@@ -376,7 +376,8 @@ func _toggle_watch_file() -> void:
 
 
 func _toggle_move_action_bar():
-	var result: bool = _toggle_item_and_persist(ActioBarMenuId.MOVE_ACTION_BAR, _settings.EDITOR_CFG_PLAYER_BAR_POSITION)
+	var result: bool = not _is_action_bar_at_top
+	_settings.set_config(_settings.EDITOR_CFG_PLAYER_BAR_POSITION, result)
 	_set_action_bar_position(result)
 
 

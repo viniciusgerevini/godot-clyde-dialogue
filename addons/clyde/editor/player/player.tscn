@@ -31,23 +31,6 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="LinesMargin" type="MarginContainer" parent="HBoxContainer/VBoxContainer" unique_id=315001004]
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_bottom = 40
-
-[node name="lines" type="ScrollContainer" parent="HBoxContainer/VBoxContainer/LinesMargin" unique_id=938479439]
-layout_mode = 2
-size_flags_vertical = 3
-follow_focus = true
-
-[node name="dialogue_lines" type="VBoxContainer" parent="HBoxContainer/VBoxContainer/LinesMargin/lines" unique_id=353600820]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_constants/separation = 10
-
 [node name="actions" type="HBoxContainer" parent="HBoxContainer/VBoxContainer" unique_id=548423408]
 layout_mode = 2
 alignment = 1
@@ -119,6 +102,23 @@ flat = true
 
 [node name="menu" type="MenuButton" parent="HBoxContainer/VBoxContainer/actions" unique_id=367021193]
 layout_mode = 2
+
+[node name="LinesMargin" type="MarginContainer" parent="HBoxContainer/VBoxContainer" unique_id=315001004]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_bottom = 40
+
+[node name="lines" type="ScrollContainer" parent="HBoxContainer/VBoxContainer/LinesMargin" unique_id=938479439]
+layout_mode = 2
+size_flags_vertical = 3
+follow_focus = true
+
+[node name="dialogue_lines" type="VBoxContainer" parent="HBoxContainer/VBoxContainer/LinesMargin/lines" unique_id=353600820]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 10
 
 [connection signal="item_selected" from="HBoxContainer/VBoxContainer/actions/Block" to="." method="_on_block_item_selected"]
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/actions/restart" to="." method="_on_restart_pressed"]

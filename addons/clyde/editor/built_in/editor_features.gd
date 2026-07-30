@@ -69,3 +69,8 @@ func get_editor_for_file(file_path: String) -> DialogueEditorDecorator:
 
 func open_file(file_path: String) -> void:
 	EditorInterface.edit_resource(load(file_path))
+
+
+func generate_line_ids(file_path: String) -> void:
+	if has_open_editor_for_file(file_path):
+		get_editor_for_file(file_path).generate_line_ids()

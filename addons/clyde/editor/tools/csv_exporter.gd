@@ -46,6 +46,7 @@ func setup(app_root: AppRoot, settings: Settings):
 	_csv_helper = CsvHelper.new(_settings)
 	_setup_fields()
 	_setup_warning()
+	_setup_background()
 
 
 func _setup_fields():
@@ -276,3 +277,10 @@ func _on_parsing_failure(result):
 		],
 		InterfaceText.get_string(InterfaceText.KEY_CSV_EXPORTER_FILE_PARSE_FAIL)
 	)
+
+
+func _setup_background() -> void:
+	var base_color: Color = _settings.get_theme_base_color()
+	var panel = StyleBoxFlat.new()
+	panel.bg_color = base_color
+	$Container.add_theme_stylebox_override("panel", panel)

@@ -2,9 +2,6 @@
 extends EditorPlugin
 
 # TODO
-# - context menus (play dialogue)
-#    - script list
-#         - generate ids
 # - move docs and tools to another place (maybe a Clyde bottom dock)
 # - remove main screen plugin
 # - maybe editor wide shortcuts
@@ -16,33 +13,33 @@ extends EditorPlugin
 const ImportPlugin = preload("import_plugin.gd")
 const ScriptEditorContextMenuPlugin = preload("./editor/context_menus/script_editor_context_menu.gd")
 const FileSystemContextMenuPlugin = preload("./editor/context_menus/file_system_context_menu.gd")
-#const MainPanel = preload("./editor/editor_main_panel.tscn")
 const InterfaceText = preload("./editor/config/interface_text.gd")
 const DockableWindow = preload("./editor/windows/dockable_window.gd")
 const ClydeEditorSettings = preload("./editor/config/settings.gd")
 const ClydeInEditorSettings = preload("./editor/config/editor_settings/in_editor_settings.gd")
 const BuiltInEditorFeatures = preload("./editor/built_in/editor_features.gd")
 const PlayerDock = preload("./editor/docks/player_dock.gd")
+const ToolMenu = preload("./editor/tool_menu/setup.gd")
+const CsvExporterDialogue = preload("./editor/tools/csv_exporter.tscn")
+const PluginRoot = preload("./editor/app_root/plugin_root.gd")
+const AboutWindow = preload("./editor/help/about.tscn")
 
 const SETTING_SOURCE_FOLDER := "dialogue/source_folder"
 const DEFAULT_SOURCE_FOLDER := "res://dialogues/"
 
 const SETTING_ID_SUFFIX_LOOKUP_SEPARATOR := "dialogue/id_suffix_lookup_separator"
 const DEFAULT_ID_SUFFIX_LOOKUP_SEPARATOR := "&"
-#const MAIN_EDITOR_ENABLED := "dialogue/enable_editor"
 const HELPERS_ENABLED := "dialogue/enable_helpers"
 
 var _import_plugin
-#var _main_panel
 var _player_dock: PlayerDock
 var _script_editor_context_menu_plugin: ScriptEditorContextMenuPlugin
 var _file_system_context_menu_plugin: FileSystemContextMenuPlugin
+var _tool_menu: ToolMenu = ToolMenu.new()
 var _helpers_enabled = false
 
+
 var _editor_settings: ClydeEditorSettings
-
-#var _dockable_main_panel
-
 var _editor_features: BuiltInEditorFeatures
 
 func _enter_tree():
@@ -56,6 +53,7 @@ func _enter_tree():
 	_enhance_builtin_editor()
 	_register_player_dock()
 	_register_context_menu_plugin()
+	_register_tool_menu()
 
 
 func _disable_plugin():
@@ -65,6 +63,7 @@ func _disable_plugin():
 	_clear_builtin_editor()
 	_unregister_player_dock()
 	_unregister_context_menu_plugin()
+	_unregister_tool_menu()
 
 
 func _setup_project_settings():
@@ -85,14 +84,6 @@ func _setup_project_settings():
 		"type": TYPE_STRING,
 	})
 
-	#if not ProjectSettings.has_setting(MAIN_EDITOR_ENABLED):
-		#ProjectSettings.set(MAIN_EDITOR_ENABLED, true)
-	#ProjectSettings.set_initial_value(MAIN_EDITOR_ENABLED, true)
-	#ProjectSettings.add_property_info({
-		#"name": MAIN_EDITOR_ENABLED,
-		#"type": TYPE_BOOL,
-	#})
-
 	if not ProjectSettings.has_setting(HELPERS_ENABLED):
 		ProjectSettings.set(HELPERS_ENABLED, false)
 	ProjectSettings.set_initial_value(HELPERS_ENABLED, false)
@@ -109,7 +100,6 @@ func _setup_project_settings():
 func _clear_project_settings():
 	ProjectSettings.clear(SETTING_SOURCE_FOLDER)
 	ProjectSettings.clear(SETTING_ID_SUFFIX_LOOKUP_SEPARATOR)
-	#ProjectSettings.clear(MAIN_EDITOR_ENABLED)
 	ProjectSettings.save()
 
 
@@ -118,39 +108,10 @@ func _exit_tree() -> void:
 		remove_import_plugin(_import_plugin)
 		_import_plugin = null
 
-	#if is_instance_valid(_main_panel):
-		#_main_panel.queue_free()
-		#_dockable_main_panel = null
-
 
 func _setup_main_panel() -> void:
 	InterfaceText.load_strings_for_current_locale()
 	InterfaceText.plugin_version = get_plugin_version()
-	#if not ProjectSettings.get_setting(MAIN_EDITOR_ENABLED, true):
-		#return
-
-	#_main_panel = MainPanel.instantiate()
-	#_main_panel.editor_plugin = self
-	#_main_panel.settings = _editor_settings
-
-	#_dockable_main_panel = DockableWindow.new(
-		#get_editor_interface().get_editor_main_screen(),
-		#get_editor_interface().get_base_control(),
-		#_main_panel
-	#)
-	#_dockable_main_panel.window_base_color = get_editor_interface().get_editor_settings().get_setting("interface/theme/base_color")
-
-	#_make_visible(false)
-
-#
-#func _has_main_screen() -> bool:
-	#return ProjectSettings.get_setting(MAIN_EDITOR_ENABLED, true)
-
-
-#func _make_visible(is_visible: bool) -> void:
-	#if is_instance_valid(_main_panel):
-		#if _dockable_main_panel.is_docked:
-			#_main_panel.visible = is_visible
 
 
 func _get_plugin_name() -> String:
@@ -159,24 +120,6 @@ func _get_plugin_name() -> String:
 
 func _get_plugin_icon() -> Texture2D:
 	return load(get_script().resource_path.get_base_dir() + "/editor/assets/clyde.svg")
-
-
-#func _build() -> bool:
-	#if is_instance_valid(_main_panel):
-		#_main_panel.prepare_for_project_run()
-	#return true
-
-
-#func _handles(object) -> bool:
-	#if not is_instance_valid(_main_panel):
-		#return false
-	#return object is ClydeDialogueFile
-
-
-#func _edit(object):
-	#if object == null:
-		#return
-	#_main_panel.load_file(object.resource_path)
 
 
 func _setup_helpers():
@@ -243,6 +186,8 @@ func _register_context_menu_plugin() -> void:
 	_script_editor_context_menu_plugin.player_requested.connect(_on_player_requested)
 	_file_system_context_menu_plugin.player_requested.connect(_on_player_requested)
 
+	_script_editor_context_menu_plugin.line_id_generation_requested.connect(_on_line_id_generation_requested)
+
 	add_context_menu_plugin(EditorContextMenuPlugin.CONTEXT_SLOT_FILESYSTEM, _file_system_context_menu_plugin)
 	add_context_menu_plugin(EditorContextMenuPlugin.CONTEXT_SLOT_SCRIPT_EDITOR, _script_editor_context_menu_plugin)
 
@@ -254,3 +199,36 @@ func _unregister_context_menu_plugin() -> void:
 
 func _on_player_requested(dialogue_path: String) -> void:
 	_player_dock.open_dock(dialogue_path)
+
+
+func _on_line_id_generation_requested(dialogue_path: String) -> void:
+	_editor_features.generate_line_ids(dialogue_path)
+
+
+func _register_tool_menu() -> void:
+	_tool_menu.setup(self)
+	_tool_menu.player_requested.connect(_on_player_requested.bind(""))
+	_tool_menu.csv_exporter_requested.connect(_on_csv_exporter_requested)
+	_tool_menu.about_requested.connect(_on_about_requested)
+
+
+func _unregister_tool_menu() -> void:
+	_tool_menu.remove(self)
+	_tool_menu.player_requested.disconnect(_on_player_requested.bind(""))
+	_tool_menu.csv_exporter_requested.connect(_on_csv_exporter_requested)
+	_tool_menu.about_requested.connect(_on_about_requested)
+
+
+func _on_csv_exporter_requested() -> void:
+	var app_root: PluginRoot = PluginRoot.new(self)
+	var exporter = CsvExporterDialogue.instantiate()
+	self.add_child(exporter)
+	exporter.setup(app_root, _editor_settings)
+	exporter.popup_centered()
+
+
+func _on_about_requested() -> void:
+	var about: Window = AboutWindow.instantiate()
+	self.add_child(about)
+	about.setup(_editor_settings)
+	about.popup_centered()

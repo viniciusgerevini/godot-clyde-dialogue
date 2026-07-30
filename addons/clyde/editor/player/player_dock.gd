@@ -19,9 +19,7 @@ var _parsed_doc: Dictionary
 #   - About
 #   - Help
 
-# TODO script editor context menu
-#  - Open in Dialogue Player
-#  - generate ids
+# TODO CSV generation
 
 var _settings: Settings
 var _editor_features: BuiltInEditorFeatures
@@ -84,6 +82,9 @@ func _on_parsing_failed(result) -> void:
 
 
 func set_dialogue_path(dialogue_path: String) -> void:
+	if dialogue_path == "":
+		return
+
 	if _is_follow_line_enabled and _current_file_path != "":
 		_clear_executing_line(_current_file_path)
 

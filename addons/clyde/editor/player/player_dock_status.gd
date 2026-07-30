@@ -9,6 +9,9 @@ const InterfaceText = preload("../config/interface_text.gd")
 
 
 func _ready() -> void:
+	_ok_icon.hide()
+	_warning_icon.hide()
+	_loading_icon.hide()
 	_configure_icons()
 
 

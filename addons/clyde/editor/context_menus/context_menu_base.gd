@@ -18,6 +18,11 @@ func _register_menu(path: String) -> void:
 		_open_in_dialogue_player,
 		ClydeEditorSettings.get_plugin_icon()
 	)
+	_register_extra_menus()
+
+
+func _register_extra_menus() -> void:
+	pass
 
 
 func _open_in_dialogue_player(file) -> void:

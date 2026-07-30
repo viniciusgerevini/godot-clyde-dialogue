@@ -30,12 +30,13 @@ FILE_MENU_CLOSE_ALL,Close All
 FILE_MENU_CLOSE_OTHER,Close Others
 TOOL_MENU_SHOW_LISTS,Show Lists
 TOOL_MENU_SHOW_PLAYER,Show Dialogue Player
+OPEN_DIALOGUE_PLAYER,Open Dialogue Player
 MENU_FILE,File
 MENU_TOOL,Tools
 MENU_HELP,Help
 HELP_ONLINE_DOCS,Online Documentation
 HELP_REPORT_ISSUE,Report Issue
-HELP_ABOUT,About...
+HELP_ABOUT,About and Help...
 TOOL_MENU_PLAYER_SECTION,Player
 TOOL_MENU_EDITOR_SECTION,Editor
 TOOL_MENU_PLAYER_SYNC,Sync Changes with Player
@@ -67,7 +68,7 @@ RELOAD_UNSAVED_FILE,File has unsaved changes. Reload from disk?
 DISCARD,Discard
 DIALOGUE,Dialogue
 GENERATE_LINE_IDS,Generate Line IDs
-CREATE_CSV,Create Translation CSV...
+CREATE_CSV,Create Dialogue CSV...
 CSV_EXPORTER_WINDOW_TITLE,Export dialogue lines as CSV
 CSV_EXPORTER_FILE,CSV File
 CSV_EXPORTER_SOURCE_FILE,Dialogue File
@@ -97,7 +98,7 @@ WRONG_FILE_FORMAT_TITLE,Wrong file extension
 WRONG_FILE_FORMAT_MESSAGE,"Trying to open not supported file: %s"
 ABOUT_WINDOW_TITLE,"About Clyde Dialogue"
 ABOUT_TITLE,"Clyde Dialogue Plugin"
-ABOUT_DESCRIPTION,"The Clyde dialogue plugin and the Clyde language were created by Vinicius Gerevini ([url=https://thisisvini.com]thisisvini.com[/url]) and distributed under the [url=LICENSE]MIT License[/url]."
+ABOUT_DESCRIPTION,"The Clyde Dialogue Plugin and the Clyde Language were created by Vinicius Gerevini ([url=https://thisisvini.com]thisisvini.com[/url]) and distributed under the [url=LICENSE]MIT License[/url]."
 DIALOGUE_PLAYER,Dialogue Player
 OPEN_IN_DIALOGUE_PLAYER,Open in Dialogue Player
 PLAYER_OPEN_MENU,Open File...
@@ -108,3 +109,11 @@ PLAYER_ACTION_BAR_MOVE_BOTTOM,Move Action Bar to Bottom
 PLAYER_STATUS_SUCCESS,Dialogue parsed successfully
 PLAYER_STATUS_FAIL,Failed to parse dialogue
 PLAYER_STATUS_LOADING,Parsing dialogue File...
+PLUGIN_HELP_AND_INFO,Plugin Help and Information
+VIEW_LICENSE,View License
+BACK,Back
+EDITOR,Editor
+PLAYER,Player
+DEBUGGER,Debugger
+TOOLS,Tools
+LANGUAGE,The Language and Examples
