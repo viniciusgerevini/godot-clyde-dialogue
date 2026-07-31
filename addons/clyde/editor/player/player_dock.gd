@@ -4,7 +4,7 @@ extends MarginContainer
 const InterfaceText = preload("../config/interface_text.gd")
 const Settings = preload("../config/settings.gd")
 const ParseWorker = preload("../parse_worker.gd")
-const BuiltInEditorFeatures = preload("../built_in/editor_features.gd")
+const BuiltInEditorFeatures = preload("../editor/editor_features.gd")
 const DebugPanel = preload("./debug_dock.tscn")
 
 var _parse_worker: ParseWorker

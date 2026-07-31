@@ -2,7 +2,7 @@
 extends RefCounted
 
 const ClydeEditorSettings = preload("../config/settings.gd")
-const DialogueEditorDecorator = preload("../editor/dialogue_editor_decorator.gd")
+const DialogueEditorDecorator = preload("./dialogue_editor_decorator.gd")
 
 static var _comment_shortcut: Shortcut
 

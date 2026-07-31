@@ -4,7 +4,7 @@ extends RefCounted
 const ClydeEditorSettings = preload("../config/settings.gd")
 const InterfaceText = preload("../config/interface_text.gd")
 const PlayerDock = preload("../player/player_dock.tscn")
-const BuiltInEditorFeatures = preload("../built_in/editor_features.gd")
+const BuiltInEditorFeatures = preload("../editor/editor_features.gd")
 
 var _dock: EditorDock
 var _player
