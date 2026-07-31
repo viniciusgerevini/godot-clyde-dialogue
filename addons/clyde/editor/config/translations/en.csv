@@ -8,39 +8,15 @@ PLAYER_BALLOONS_TOOLTIP,Toggle Multi-Bubble Mode
 PLAYER_SHOW_META_TOOLTIP,Show Metadata
 PLAYER_SHOW_DEBUG_TOOLTIP,Show Debug Panel
 DEFAULT_BLOCK,Default
-NO_DIALOGUE,No Dialogue
 PLAYER_BLOCK_SELECTION_TOOLTIP,Selected Block
 PLAYER_DIALOGUE_STARTED_MESSAGE,Dialogue Started
-EXECUTE_DIALOGUE,Execute Dialogue
 DIALOGUE_END,Dialogue Ended
 DIALOGUE_LOADED,Dialogue Loaded
 DIALOGUE_NOT_LOADED,No Dialogue Loaded
-FILE_MENU_NEW_FILE,New File...
-FILE_MENU_OPEN_FILE,Open...
-FILE_MENU_OPEN_RECENT,Open Recent
-FILE_MENU_RECENT_CLEAR_RECENTS,Clear Recent Files
-FILE_MENU_OPEN_RECENT_NO_RECENTS,No recent files
-FILE_MENU_SAVE_FILE,Save
-FILE_MENU_SAVE_AS,Save As...
-FILE_MENU_SAVE_ALL,Save All
-FILE_MENU_RELOAD_FROM_DISK,Reload from Disk
-FILE_MENU_SHOW_IN_FILESYSTEM,Show in FileSystem
-FILE_MENU_CLOSE,Close
-FILE_MENU_CLOSE_ALL,Close All
-FILE_MENU_CLOSE_OTHER,Close Others
-TOOL_MENU_SHOW_LISTS,Show Lists
-TOOL_MENU_SHOW_PLAYER,Show Dialogue Player
 OPEN_DIALOGUE_PLAYER,Open Dialogue Player
-MENU_FILE,File
-MENU_TOOL,Tools
-MENU_HELP,Help
 HELP_ONLINE_DOCS,Online Documentation
 HELP_REPORT_ISSUE,Report Issue
 HELP_ABOUT,About and Help...
-TOOL_MENU_PLAYER_SECTION,Player
-TOOL_MENU_EDITOR_SECTION,Editor
-TOOL_MENU_PLAYER_SYNC,Sync Changes with Player
-TOOL_MENU_FOLLOW_EXECUTION,Follow Executing Line
 DEBUG_PANEL_NAME,Clyde Debug
 DEBUG_VARIABLES_LABEL,Variables
 DEBUG_EXT_VARIABLES_LABEL,External Variables
@@ -58,15 +34,6 @@ DEBUG_SAVE,Save
 DEBUG_REMOVE,Remove
 DEBUG_ADD_VARIABLE,Add Variable
 DEBUG_CANCEL,Cancel
-COPY_FILE_PATH,Copy File Path
-FILTER_FILES,Filter Files
-FILTER_BLOCKS,Filter Blocks
-SORT,Sort
-CLOSE_UNSAVED_FILE_MESSAGE,Close and save changes?
-CLOSE_UNSAVED_FILES_MESSAGE,Some files have unsaved changes. Are you sure you want to close them?
-RELOAD_UNSAVED_FILE,File has unsaved changes. Reload from disk?
-DISCARD,Discard
-DIALOGUE,Dialogue
 GENERATE_LINE_IDS,Generate Line IDs
 CREATE_CSV,Create Dialogue CSV...
 CSV_EXPORTER_WINDOW_TITLE,Export dialogue lines as CSV
@@ -91,9 +58,6 @@ CSV_EXPORTER_SOURCE_FILE_NOT_FOUND,Dialogue file not found
 CSV_EXPORTER_FILE_PARSE_FAIL,Failed to parse dialogue file
 CSV_EXPORTER_NOTE,Note: only lines with IDs are exported
 FILE_NOT_FOUND,File not found
-EDITOR_WINDOW_TITLE,Clyde Dialogue
-PLAYER_WINDOW_TITLE,Clyde Dialogue Player
-DOCK_WINDOW,Dock/Undock window
 WRONG_FILE_FORMAT_TITLE,Wrong file extension
 WRONG_FILE_FORMAT_MESSAGE,"Trying to open not supported file: %s"
 ABOUT_WINDOW_TITLE,"About Clyde Dialogue"
