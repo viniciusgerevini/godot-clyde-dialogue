@@ -61,30 +61,30 @@ func _setup_strings() -> void:
 	_license.text = _get_license_content()
 
 	_main_report_button.text = InterfaceText.get_string(InterfaceText.KEY_HELP_REPORT_ISSUE)
-	_main_report_button.icon = get_theme_icon("ExternalLink", "EditorIcons")
+	_main_report_button.icon = _settings.get_theme_icon("external_link")
 
 	_main_online_docs_button.text = InterfaceText.get_string(InterfaceText.KEY_HELP_ONLINE_DOCS)
-	_main_online_docs_button.icon = get_theme_icon("ExternalLink", "EditorIcons")
+	_main_online_docs_button.icon = _settings.get_theme_icon("external_link")
 
 	_main_help_button.text = InterfaceText.get_string(InterfaceText.KEY_PLUGIN_HELP_AND_INFO)
-	_main_help_button.icon = get_theme_icon("Info", "EditorIcons")
+	_main_help_button.icon = _settings.get_theme_icon("help")
 
 	_main_license_button.text = InterfaceText.get_string(InterfaceText.KEY_VIEW_LICENSE)
-	_main_license_button.icon = get_theme_icon("ShaderDock", "EditorIcons")
+	_main_license_button.icon = _settings.get_theme_icon("help_license")
 
 	_license_back_button.text = InterfaceText.get_string(InterfaceText.KEY_BACK)
 
 	_help_back_button.text = InterfaceText.get_string(InterfaceText.KEY_BACK)
 	_help_editor_button.text = InterfaceText.get_string(InterfaceText.KEY_EDITOR)
-	_help_editor_button.icon = get_theme_icon("Script", "EditorIcons")
+	_help_editor_button.icon = _settings.get_theme_icon("help_editor")
 	_help_player_button.text = InterfaceText.get_string(InterfaceText.KEY_PLAYER)
-	_help_player_button.icon = get_theme_icon("PlayScene", "EditorIcons")
+	_help_player_button.icon = _settings.get_theme_icon("help_player")
 	_help_debugger_button.text = InterfaceText.get_string(InterfaceText.KEY_DEBUGGER)
-	_help_debugger_button.icon = get_theme_icon("Debug", "EditorIcons")
+	_help_debugger_button.icon = _settings.get_theme_icon("help_debugger")
 	_help_tools_button.text = InterfaceText.get_string(InterfaceText.KEY_TOOLS)
-	_help_tools_button.icon = get_theme_icon("Tools", "EditorIcons")
+	_help_tools_button.icon = _settings.get_theme_icon("help_tools")
 	_help_language_button.text = InterfaceText.get_string(InterfaceText.KEY_LANGUAGE)
-	_help_language_button.icon = get_theme_icon("AcceptDialog", "EditorIcons")
+	_help_language_button.icon = _settings.get_theme_icon("help_language")
 
 	_help_text_back.text = InterfaceText.get_string(InterfaceText.KEY_BACK)
 

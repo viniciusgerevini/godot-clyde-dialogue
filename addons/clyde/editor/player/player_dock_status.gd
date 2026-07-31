@@ -2,17 +2,18 @@
 extends CenterContainer
 
 const InterfaceText = preload("../config/interface_text.gd")
+const Settings = preload("../config/settings.gd")
 
 @onready var _loading_icon: AnimatedSprite2D = $container/loading
 @onready var _ok_icon: Sprite2D = $container/ok
 @onready var _warning_icon: Sprite2D = $container/warning
 
 
-func _ready() -> void:
+func setup(settings: Settings) -> void:
 	_ok_icon.hide()
 	_warning_icon.hide()
 	_loading_icon.hide()
-	_configure_icons()
+	_configure_icons(settings)
 
 
 func set_loading() -> void:
@@ -39,12 +40,12 @@ func set_error(error_message: String) -> void:
 	])
 
 
-func _configure_icons():
+func _configure_icons(settings: Settings):
 	_loading_icon.sprite_frames.clear("default")
 	for i in range(8):
-		var icon = get_theme_icon("Progress%s" % (i + 1), "EditorIcons")
+		var icon = settings.get_theme_icon("progress_%s" % (i + 1))
 		_loading_icon.sprite_frames.add_frame("default", icon)
 	_loading_icon.play("default")
 
-	_ok_icon.texture = get_theme_icon("StatusSuccess", "EditorIcons")
-	_warning_icon.texture = get_theme_icon("StatusError", "EditorIcons")
+	_ok_icon.texture = settings.get_theme_icon("status_success")
+	_warning_icon.texture = settings.get_theme_icon("status_error")

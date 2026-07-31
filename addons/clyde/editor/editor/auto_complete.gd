@@ -28,7 +28,6 @@ func _init(settings: ClydeEditorSettings) -> void:
 
 
 func trigger_auto_complete(editor: CodeEdit, parsed_doc: Dictionary) -> void:
-	print("AUTO COMPELTE TRIGGERED")
 	var line_number = editor.get_caret_line()
 	var column_number = editor.get_caret_column()
 	var line = editor.get_line(line_number)
@@ -60,7 +59,7 @@ func _block_autocompletion(editor: CodeEdit, parsed_doc: Dictionary, line: Strin
 				block.name, # display
 				block.name, # to insert
 				_settings.editor_color_scheme().identifier,
-				editor.get_theme_icon("MoveRight", "EditorIcons"),
+				_settings.get_theme_icon("autocomplete_block"),
 			)
 	# default END divert
 	editor.add_code_completion_option(
@@ -68,7 +67,7 @@ func _block_autocompletion(editor: CodeEdit, parsed_doc: Dictionary, line: Strin
 		"END", # display
 		"END", # to insert
 		_settings.editor_color_scheme().identifier,
-		editor.get_theme_icon("PickerShapeRectangleWheel", "EditorIcons"),
+		_settings.get_theme_icon("autocomplete_block_end"),
 	)
 	if has_options_available:
 		editor.update_code_completion_options(true)
@@ -98,7 +97,7 @@ func _variation_autocompletion(editor: CodeEdit, line: String, caret_column: int
 				option, # display
 				option, # to insert
 				_settings.editor_color_scheme().keyword, # color
-				editor.get_theme_icon("KeyValue", "EditorIcons"),
+				_settings.get_theme_icon("autocomplete_variation"),
 			)
 	if has_options_available:
 		editor.update_code_completion_options(true)

@@ -6,7 +6,6 @@ const Settings = preload("../config/settings.gd")
 const ParseWorker = preload("../parse_worker.gd")
 const BuiltInEditorFeatures = preload("../built_in/editor_features.gd")
 const DebugPanel = preload("./debug_dock.tscn")
-const AppRoot = preload("../app_root/wrapper.gd")
 
 var _parse_worker: ParseWorker
 var _current_file_path: String = ""
@@ -14,16 +13,9 @@ var _parsed_doc: Dictionary
 
 # TODO drag and drop from file system and editor to player
 
-# TODO dialogue player welcome screen?
-#   - Open dialogue
-#   - About
-#   - Help
-
-# TODO CSV generation
-
 var _settings: Settings
 var _editor_features: BuiltInEditorFeatures
-var _app_root: AppRoot
+var _editor_plugin: EditorPlugin
 var _debug_panel
 var _open_file_last_modified_time: int = 0
 
@@ -40,13 +32,13 @@ var _is_follow_line_enabled: bool = true
 
 var _is_new_parsing_execution: bool = false
 
-func setup(app_root: AppRoot, settings: Settings, editor_features: BuiltInEditorFeatures) -> void:
-	_app_root = app_root
+func setup(editor_plugin: EditorPlugin, settings: Settings, editor_features: BuiltInEditorFeatures) -> void:
+	_editor_plugin = editor_plugin
 	_settings = settings
 	_editor_features = editor_features
 	_player.setup(settings)
-
-	_dialogue_menu.icon = get_theme_icon("Load", "EditorIcons")
+	_status.setup(settings)
+	_dialogue_menu.icon = _settings.get_theme_icon("load")
 	_dialogue_menu.get_popup().index_pressed.connect(_on_open_menu_index_pressed)
 
 	_load_settings()
@@ -125,7 +117,7 @@ func _load_open_paths() -> void:
 	menu.clear()
 
 	menu.add_icon_item(
-		get_theme_icon("Load", "EditorIcons"),
+		_settings.get_theme_icon("load"),
 		InterfaceText.get_string(InterfaceText.KEY_PLAYER_OPEN_MENU),
 		OPEN_DIALOGUE_ENTRY_ID
 	)
@@ -224,20 +216,28 @@ func _on_player_dialogue_reset(dialogue_key: Variant) -> void:
 
 func _create_debug_panel() -> void:
 	if _debug_panel != null:
-		_app_root.set_debug_panel(_debug_panel)
-		_app_root.make_debug_panel_visible()
+		_editor_plugin.add_control_to_bottom_panel(
+			_debug_panel,
+			InterfaceText.get_string(InterfaceText.KEY_DEBUG_PANEL_NAME)
+		)
+		_editor_plugin.make_bottom_panel_item_visible(_debug_panel)
 		return
 	_debug_panel = DebugPanel.instantiate()
-	_app_root.set_debug_panel(_debug_panel)
+	_editor_plugin.add_control_to_bottom_panel(
+		_debug_panel,
+		InterfaceText.get_string(InterfaceText.KEY_DEBUG_PANEL_NAME)
+	)
+	_debug_panel.setup(_settings)
 	_debug_panel.load_data(_player.get_data())
 	_debug_panel.load_external_variables(_player.get_external_variables())
 	_debug_panel.variable_changed.connect(_on_debug_variable_changed)
 	_debug_panel.external_variable_changed.connect(_on_debug_external_variable_changed)
-	_app_root.make_debug_panel_visible()
+	_editor_plugin.make_bottom_panel_item_visible(_debug_panel)
 
 
 func _remove_debug_panel() -> void:
-	_app_root.remove_debug_panel()
+	if is_instance_valid(_debug_panel) and is_instance_valid(_editor_plugin) and _debug_panel.is_inside_tree():
+		_editor_plugin.remove_control_from_bottom_panel(_debug_panel)
 
 
 func _on_debug_variable_changed(var_name: String, value) -> void:
@@ -249,7 +249,7 @@ func _on_debug_external_variable_changed(var_name: String, value) -> void:
 
 
 func _open_file_dialog():
-	var file_dialog = _app_root.create_file_dialog()
+	var file_dialog = EditorFileDialog.new()
 	file_dialog.file_mode = FileDialog.FILE_MODE_OPEN_FILES
 	file_dialog.access = FileDialog.ACCESS_FILESYSTEM
 	file_dialog.files_selected.connect(_on_open_dialog_file_selected.bind(file_dialog))

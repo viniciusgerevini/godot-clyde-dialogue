@@ -1,4 +1,8 @@
+##
+## Clyde Editor Setting implementation to use in Godot Editor's plugin
+##
 extends "./clyde_editor_settings.gd"
+
 
 var _editor_settings: EditorSettings
 
@@ -52,6 +56,44 @@ var _interface_settings_map: Dictionary[String, String] = {
 	"base_color": "interface/theme/base_color",
 }
 
+var _theme_icon_map: Dictionary[String, String] = {
+	"status_success": "StatusSuccess",
+	"status_error": "StatusError",
+	"status_warning": "StatusWarning",
+	"save": "Save",
+	"edit": "Edit",
+	"remove": "Remove",
+	"close": "Close",
+	"load": "Load",
+	"dialogue_restart": "RotateLeft",
+	"dialogue_next_line": "Play",
+	"dialogue_forward": "TransitionEnd",
+	"dialogue_clear_mem": "History",
+	"dialogue_show_debug": "Debug",
+	"menu_icon": "GuiTabMenu",
+	"add_var": "Add",
+	"progress_1": "Progress1",
+	"progress_2": "Progress2",
+	"progress_3": "Progress3",
+	"progress_4": "Progress4",
+	"progress_5": "Progress5",
+	"progress_6": "Progress6",
+	"progress_7": "Progress7",
+	"progress_8": "Progress8",
+	"autocomplete_block": "MoveRight",
+	"autocomplete_block_end": "PickerShapeRectangleWheel",
+	"autocomplete_variation": "KeyValue",
+	"external_link": "ExternalLink",
+	"help": "Info",
+	"help_license": "ShaderDock",
+	"help_editor": "Script",
+	"help_player": "PlayScene",
+	"help_debugger": "Debug",
+	"help_tools": "Tools",
+	"help_language": "AcceptDialog",
+}
+
+
 func _init():
 	_editor_settings = EditorInterface.get_editor_settings()
 	_editor_settings.settings_changed.connect(_on_settings_changed)
@@ -102,3 +144,9 @@ func get_open_dialogues_paths() -> Array[String]:
 	var clyde_files: Array[String] = []
 	clyde_files.append_array(open_scripts)
 	return clyde_files.filter(func (script: String): return script.ends_with(".clyde"))
+
+
+func get_theme_icon(icon_name: String) -> Texture2D:
+	if _theme_icon_map.has(icon_name):
+		return EditorInterface.get_base_control().get_theme_icon(_theme_icon_map[icon_name], "EditorIcons")
+	return load("res://addons/clyde/editor/assets/clyde.svg")

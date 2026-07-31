@@ -128,7 +128,7 @@ const KEY_TOOLS = "TOOLS"
 const KEY_LANGUAGE = "LANGUAGE"
 
 static var plugin_version := ""
-
+static var initialized := false
 static var _loaded_locale := "en"
 static var _default_locale := "en"
 
@@ -136,6 +136,7 @@ static var _entries = {}
 static var _fallback = {}
 
 const TRANSLATIONS_PATH: String = "res://addons/clyde/editor/config/translations/%s.csv"
+
 
 static func get_string(key: String) -> String:
 	if _entries.has(key):
@@ -158,7 +159,7 @@ static func load_strings_for_current_locale(translations_path: String = TRANSLAT
 	else:
 		_entries = _fallback
 	_loaded_locale = locale
-
+	initialized = true
 
 static func _load_entries_from_file(translation_file_path: String, dictionary: Dictionary) -> void:
 	var file = FileAccess.open(translation_file_path, FileAccess.READ)

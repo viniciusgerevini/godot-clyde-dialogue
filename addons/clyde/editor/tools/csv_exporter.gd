@@ -1,13 +1,11 @@
 @tool
 extends Window
 
-const AppRoot = preload("../app_root/wrapper.gd")
 const InterfaceText = preload("../config/interface_text.gd")
 const Settings = preload("../config/settings.gd")
 const CsvHelper = preload("./csv.gd")
 const Parser = preload("../../parser/Parser.gd")
 
-var _app_root: AppRoot
 var _settings: Settings
 var _csv_helper: CsvHelper
 
@@ -40,8 +38,7 @@ var _csv_helper: CsvHelper
 
 var _file_path = ""
 
-func setup(app_root: AppRoot, settings: Settings):
-	_app_root = app_root
+func setup(settings: Settings):
 	_settings = settings
 	_csv_helper = CsvHelper.new(_settings)
 	_setup_fields()
@@ -83,7 +80,7 @@ func _setup_warning():
 	warning_color = warning_color.lightened(0.3)
 	warning_label.add_theme_color_override("font_color", warning_color)
 	warning_label.text = InterfaceText.get_string(InterfaceText.KEY_CSV_FILE_EXISTS_WARNING)
-	warning_icon.texture = get_theme_icon("StatusWarning", "EditorIcons")
+	warning_icon.texture = _settings.get_theme_icon("status_warning")
 
 
 func _on_export_btn_button_up():
@@ -122,7 +119,7 @@ func _on_line_edit_focus_exited():
 
 func _on_file_btn_button_up():
 	save_message.get_parent().hide()
-	var file_dialog = _app_root.create_file_dialog()
+	var file_dialog = EditorFileDialog.new()
 	file_dialog.file_mode = FileDialog.FILE_MODE_SAVE_FILE
 	file_dialog.access = FileDialog.ACCESS_FILESYSTEM
 	file_dialog.set_filters(PackedStringArray(["*.csv"]))
@@ -229,7 +226,7 @@ func _on_close_requested() -> void:
 
 func _on_source_file_btn_button_up() -> void:
 	save_message.get_parent().hide()
-	var file_dialog = _app_root.create_file_dialog()
+	var file_dialog = EditorFileDialog.new()
 	file_dialog.file_mode = FileDialog.FILE_MODE_OPEN_FILE
 	file_dialog.access = FileDialog.ACCESS_FILESYSTEM
 	file_dialog.set_filters(PackedStringArray(["*.clyde"]))

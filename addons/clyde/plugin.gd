@@ -5,14 +5,12 @@ const ImportPlugin = preload("import_plugin.gd")
 const ScriptEditorContextMenuPlugin = preload("./editor/context_menus/script_editor_context_menu.gd")
 const FileSystemContextMenuPlugin = preload("./editor/context_menus/file_system_context_menu.gd")
 const InterfaceText = preload("./editor/config/interface_text.gd")
-const DockableWindow = preload("./editor/windows/dockable_window.gd")
 const ClydeEditorSettings = preload("./editor/config/settings.gd")
 const ClydeInEditorSettings = preload("./editor/config/editor_settings/in_editor_settings.gd")
 const BuiltInEditorFeatures = preload("./editor/built_in/editor_features.gd")
 const PlayerDock = preload("./editor/docks/player_dock.gd")
 const ToolMenu = preload("./editor/tool_menu/setup.gd")
 const CsvExporterDialogue = preload("./editor/tools/csv_exporter.tscn")
-const PluginRoot = preload("./editor/app_root/plugin_root.gd")
 const AboutWindow = preload("./editor/help/about.tscn")
 
 const SETTING_SOURCE_FOLDER := "dialogue/source_folder"
@@ -28,7 +26,6 @@ var _script_editor_context_menu_plugin: ScriptEditorContextMenuPlugin
 var _file_system_context_menu_plugin: FileSystemContextMenuPlugin
 var _tool_menu: ToolMenu = ToolMenu.new()
 var _helpers_enabled = false
-
 
 var _editor_settings: ClydeEditorSettings
 var _editor_features: BuiltInEditorFeatures
@@ -214,10 +211,9 @@ func _unregister_tool_menu() -> void:
 
 
 func _on_csv_exporter_requested(dialogue_file: String) -> void:
-	var app_root: PluginRoot = PluginRoot.new(self)
 	var exporter = CsvExporterDialogue.instantiate()
 	self.add_child(exporter)
-	exporter.setup(app_root, _editor_settings)
+	exporter.setup(_editor_settings)
 	if dialogue_file != "":
 		exporter.set_current_file(dialogue_file)
 	exporter.popup_centered()

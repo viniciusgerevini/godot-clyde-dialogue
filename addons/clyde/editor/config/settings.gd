@@ -201,3 +201,7 @@ static func get_plugin_icon() -> Texture2D:
 
 func get_open_dialogues_paths() -> Array[String]:
 	return _editor_settings.get_open_dialogues_paths()
+
+
+func get_theme_icon(icon_name) -> Texture2D:
+	return _editor_settings.get_theme_icon(icon_name)

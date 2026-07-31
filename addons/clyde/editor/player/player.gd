@@ -63,8 +63,8 @@ func setup(settings: Settings):
 
 
 func _setup_actions():
-	_setup_menu()
 	_setup_strings()
+	_setup_menu()
 	_setup_icons()
 	clear_dialogue()
 
@@ -121,6 +121,9 @@ func _toggle_menu_item(item_id: ActioBarMenuId) -> bool:
 
 
 func _setup_strings():
+	if not InterfaceText.initialized:
+		InterfaceText.load_strings_for_current_locale()
+
 	_restart_btn.tooltip_text = InterfaceText.get_string(InterfaceText.KEY_PLAYER_RESTART_TOOLTIP)
 	_next_line_btn.tooltip_text = InterfaceText.get_string(InterfaceText.KEY_PLAYER_NEXT_LINE_TOOLTIP)
 	_forward_btn.tooltip_text = InterfaceText.get_string(InterfaceText.KEY_PLAYER_FORWARD_TOOLTIP)
@@ -133,14 +136,14 @@ func _setup_strings():
 
 
 func _setup_icons():
-	_restart_btn.icon = get_theme_icon("RotateLeft", "EditorIcons")
-	_next_line_btn.icon = get_theme_icon("Play", "EditorIcons")
-	_forward_btn.icon = get_theme_icon("TransitionEnd", "EditorIcons")
+	_restart_btn.icon = _settings.get_theme_icon("dialogue_restart")
+	_next_line_btn.icon = _settings.get_theme_icon("dialogue_next_line")
+	_forward_btn.icon = _settings.get_theme_icon("dialogue_forward")
 	_polterigeist_btn.icon = load("res://addons/clyde/editor/assets/clyde.svg")
-	_clear_mem_btn.icon = get_theme_icon("History", "EditorIcons")
-	_show_debug_btn.icon = get_theme_icon("Debug", "EditorIcons")
+	_clear_mem_btn.icon = _settings.get_theme_icon("dialogue_clear_mem")
+	_show_debug_btn.icon = _settings.get_theme_icon("dialogue_show_debug")
 
-	_action_bar_menu_btn.icon = get_theme_icon("GuiTabMenu", "EditorIcons")
+	_action_bar_menu_btn.icon = _settings.get_theme_icon("menu_icon")
 
 
 func _load_config():
