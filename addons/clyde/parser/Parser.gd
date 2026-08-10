@@ -567,6 +567,10 @@ func _logic_block():
 	if _tokens.has_next([Lexer.TOKEN_KEYWORD_TRIGGER]):
 		var events = _events()
 		return ActionContentNode(events)
+	
+	if _tokens.has_next([Lexer.TOKEN_KEYWORD_GROUP]):
+		var option_groups = _option_groups()
+		return ActionContentNode(option_groups)
 
 	if _tokens.has_next([Lexer.TOKEN_KEYWORD_WHEN]):
 		_tokens.consume([Lexer.TOKEN_KEYWORD_WHEN])
@@ -600,7 +604,6 @@ func _events():
 
 	return EventsNode(events)
 
-
 func _event(event_name: String):
 	if not _tokens.has_next([Lexer.TOKEN_BRACKET_OPEN]):
 		return EventNode(event_name)
@@ -616,6 +619,22 @@ func _event(event_name: String):
 
 	return EventNode(event_name, params)
 
+func _option_groups():
+	_tokens.consume([Lexer.TOKEN_KEYWORD_GROUP])
+	_tokens.consume([Lexer.TOKEN_IDENTIFIER])
+	var groups = [_option_group(_tokens.current_token.value)]
+	
+	while _tokens.has_next([Lexer.TOKEN_COMMA]):
+		_tokens.consume([Lexer.TOKEN_COMMA])
+		_tokens.consume([Lexer.TOKEN_IDENTIFIER])
+		groups.push_back(_option_group(_tokens.current_token.value))
+	
+	_tokens.consume([Lexer.TOKEN_BRACE_CLOSE])
+	
+	return OptionGroupsNode(groups)
+
+func _option_group(group_id):
+	return OptionGroupNode(group_id)
 
 func _conditional_line():
 	var expression = _condition()
@@ -885,7 +904,7 @@ func ConditionalContentNode(conditions, content = null):
 
 func ActionContentNode(action, content = null):
 	return { "type": 'action_content', "action": action, "content": content }
-
+	
 
 func ExpressionNode(name, elements):
 	return { "type": 'expression', "name": name, "elements": elements }
@@ -907,6 +926,14 @@ func EventNode(name, parameters = null):
 	if parameters == null or parameters.size() == 0:
 		return { "type": 'event', "name": name }
 	return { "type": 'event', "name": name, "params": parameters }
+
+
+func OptionGroupsNode(groups):
+	return { "type": 'option_groups', "groups": groups }
+
+
+func OptionGroupNode(id):
+	return { "type": 'option_group', "id": id }
 
 
 func MatchBlockNode(condition, branches, defeault_branch):

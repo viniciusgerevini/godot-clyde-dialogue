@@ -44,6 +44,7 @@ const TOKEN_KEYWORD_TRIGGER = "trigger"
 const TOKEN_KEYWORD_WHEN = "when"
 const TOKEN_KEYWORD_MATCH = "match"
 const TOKEN_KEYWORD_DEFAULT = "default"
+const TOKEN_KEYWORD_GROUP = "group"
 const TOKEN_ASSIGN = "="
 const TOKEN_ASSIGN_SUM = "+="
 const TOKEN_ASSIGN_SUB = "-="
@@ -99,7 +100,7 @@ const _token_hints = {
 
 const _keywords = [
 	'is', 'isnt', 'or', 'and', 'not', 'true', 'false', 'null',
-	'set', 'trigger', 'when', 'match',
+	'set', 'trigger', 'when', 'match', 'group',
 ]
 
 var _input = ""
@@ -863,6 +864,8 @@ func _handle_logic_descpritive_operator(value, initial_column):
 			return Token(TOKEN_KEYWORD_TRIGGER, _line, initial_column)
 		'when':
 			return Token(TOKEN_KEYWORD_WHEN, _line, initial_column)
+		'group':
+			return Token(TOKEN_KEYWORD_GROUP, _line, initial_column)
 
 
 func _handle_logic_not():

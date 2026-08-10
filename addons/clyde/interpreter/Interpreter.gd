@@ -154,6 +154,15 @@ func _generate_index() -> String:
 	return "%s_%s" % [_stack_head().current._index, _stack_head().content_index]
 
 
+func _get_from_content(content, key):
+	if content.has(key):
+		return content[key]
+	elif !content.has("content"):
+		return null
+	else:
+		return _get_from_content(content.content, key)
+
+
 func _initialize_handlers() -> void:
 	_handlers = {
 		"document": _handle_document_node,
@@ -222,6 +231,7 @@ func _handle_options_node(options_node):
 	_add_to_stack(options_node)
 
 	var options = _get_visible_options(options_node.content)
+	print_debug("FINAL OPTIONS LIST: " + str(options))
 
 	_mem.set_internal_variable('OPTIONS_COUNT', options.size())
 
@@ -250,24 +260,25 @@ func _handle_options_node(options_node):
 func _get_visible_options(options):
 	return options.map(func (e):
 		return _prepare_option(e, options.find(e), _config.include_hidden_options)
-	).filter(_check_if_option_not_accessed)
+	).filter(_check_if_option_valid)
 
 
 func _prepare_option(option, index, should_include_hidden = false, is_visible = true):
+	print_debug("Option: %s (%s)\r\n%s" % [_get_from_content(option, "name"), option.type, str(option)])
 	if option.get("index") == null:
 		option._index = "%s_%s" % [_generate_index(), index]
 
 	if option.type == 'conditional_content':
 		option.content._index = option._index;
 
-		var is_visible_option = !!_logic.check_condition(option.conditions)
+		var is_visible_option = _logic.check_condition(option.conditions)
 		if should_include_hidden or is_visible_option:
 			return _prepare_option(option.content, index, should_include_hidden, is_visible_option)
 		return null
 
 	if option.type == 'action_content':
 		option.content._index = option._index
-		option.mode = option.content.mode
+		option.mode = _get_from_content(option, "mode")
 		var content = _prepare_option(option.content, index, should_include_hidden)
 		if content == null:
 			return null
@@ -277,18 +288,47 @@ func _prepare_option(option, index, should_include_hidden = false, is_visible = 
 	return option
 
 
-func _check_if_option_not_accessed(option):
-	return option != null and not (option.mode == 'once' and _mem.was_already_accessed(option._index))
+func _get_recursive_option_groups(option):
+	var groups: Array = []
+	var opt_iter = option
+	while opt_iter.has('action'):
+		if opt_iter.action.type == 'option_groups':
+			groups += opt_iter.action.groups
+		opt_iter = opt_iter.get('content')
+	return groups
 
+
+func _check_if_option_valid(option):
+	if option == null:
+		return false
+	
+	# already-chosen "once" options are not valid
+	# other already-chosen options are valid regardless of groups
+	if _mem.was_already_accessed(option._index):
+		return option.mode != 'once'
+	
+	var groups = _get_recursive_option_groups(option)
+	
+	# options with no groups are valid
+	if groups.size() == 0:
+		return true
+	
+	# unchosen grouped options are valid iff none of their groups have been chose
+	return not groups.map(func(grp): return grp.id).any(_mem.group_was_already_chosen)
 
 func _map_option(option, _index, include_visibility_prop = false):
-	var o = option if option.type == 'option' else option.content
+	var o = option
+	while o.type != 'option':
+		if !o.has('content'):
+			break
+		o = o.content
 	var result = {
 		"speaker": o.get("speaker"),
 		"id": o.get("id"),
 		"tags": o.get("tags"),
 		"text": _replace_variables(_translate_text(o.get("id"), o.get("name"), o.get("id_suffixes"))),
 		"visited": _mem.was_already_accessed(option._index),
+		"mode": o.get("mode"),
 	}
 
 	if include_visibility_prop:
@@ -313,6 +353,9 @@ func _handle_action_content_node(action_node):
 func _handle_action(action_node):
 	if action_node.action.type == 'events':
 		_trigger_events(action_node.action)
+	elif action_node.action.type == 'option_groups':
+		var groups = _get_recursive_option_groups(action_node)
+		_set_groups_as_chosen(groups)
 	else:
 		for assignment in action_node.action.assignments:
 			_logic.handle_assignment(assignment)
@@ -326,6 +369,11 @@ func _trigger_events(events):
 			parameters = event.params.map(_logic.get_node_value)
 
 		event_triggered.emit(event.name, parameters)
+
+
+func _set_groups_as_chosen(groups):
+	for group in groups:
+		_mem.set_group_as_accessed(group.id)
 
 
 func _handle_conditional_content_node(conditional_node, fallback_node = _stack_head().current):
