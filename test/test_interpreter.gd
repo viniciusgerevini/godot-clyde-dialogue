@@ -277,6 +277,38 @@ func test_option_include_visited_information():
 			_option({ "text": "b", "visited": false })
 		]
 	)
+	
+func test_option_include_mode():
+	var interpreter = ClydeDialogue.Interpreter.new()
+	var content = parse("""
++ a
+  line a
+  <-
+* b
+  line b
+  <-
+> c
+  line c
+  <-
+""")
+	interpreter.init(content)
+
+	# get options
+	interpreter.get_content()
+	# choose first
+	interpreter.choose(0)
+	interpreter.get_content()
+
+	var options = interpreter.get_content()
+
+	assert_eq_deep(
+		options.options,
+		[
+			_option({ "text": "a", "mode": "sticky" }),
+			_option({ "text": "b", "mode": "once" }),
+			_option({ "text": "c", "mode": "fallback" }),
+		]
+	)
 
 
 func test_blocks_and_diverts():
