@@ -39,3 +39,7 @@ func clear_font_size() -> void:
 
 func get_open_dialogues_paths() -> Array[String]:
 	return []
+
+
+func get_theme_icon(_icon_name: String) -> Texture2D:
+	return load("res://addons/clyde/editor/assets/clyde.svg")
