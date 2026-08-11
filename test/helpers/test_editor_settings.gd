@@ -15,7 +15,6 @@ func get_color_scheme_setting(key: String) -> Color:
 
 
 func get_project_metadata(section: String, key: String, default: Variant = null) -> Variant:
-	print(in_memory_settings)
 	return in_memory_settings.get(section, {}).get(key, default)
 
 
