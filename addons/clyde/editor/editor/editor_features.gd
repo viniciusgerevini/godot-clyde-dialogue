@@ -39,7 +39,6 @@ func _on_new_highlighter_instantiated(editor: CodeEdit) -> void:
 	_register_open_file(EditorEnhancements.enhance(editor, _settings))
 
 
-
 # Currently Godot does not provide any way to match the editor with its file path.
 # My solution here is very hacky and brittle, but I will roll with it for now
 func _register_open_file(dialogue_editor: DialogueEditorDecorator) -> void:

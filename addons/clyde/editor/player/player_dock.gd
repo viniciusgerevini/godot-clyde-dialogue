@@ -11,8 +11,6 @@ var _parse_worker: ParseWorker
 var _current_file_path: String = ""
 var _parsed_doc: Dictionary
 
-# TODO drag and drop from file system and editor to player
-
 var _settings: Settings
 var _editor_features: BuiltInEditorFeatures
 var _editor_plugin: EditorPlugin

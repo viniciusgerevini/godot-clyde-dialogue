@@ -1,5 +1,5 @@
 ##
-## Clyde Editor Setting implementation to use in Godot Editor's plugin
+## Clyde Editor Settings implementation to use in Godot Editor's plugin
 ##
 extends "./clyde_editor_settings.gd"
 

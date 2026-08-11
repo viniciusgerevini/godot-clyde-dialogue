@@ -31,15 +31,15 @@ func trigger_auto_complete(editor: CodeEdit, parsed_doc: Dictionary) -> void:
 	var line_number = editor.get_caret_line()
 	var column_number = editor.get_caret_column()
 	var line = editor.get_line(line_number)
-#
+
 	for rule in _parse_not_required_handlers:
 		if line.contains(rule) and _parse_not_required_handlers[rule].call(editor, line, column_number):
 			return
-#
-	# bellow here any rule that requires document lookup
+
+	# bellow this check goes any rules that require document lookup
 	if parsed_doc == null:
 		return
-#
+
 	for rule in _parsed_required_handlers:
 		if line.contains(rule) and _parsed_required_handlers[rule].call(editor, parsed_doc, line, column_number):
 			return
@@ -96,7 +96,7 @@ func _variation_autocompletion(editor: CodeEdit, line: String, caret_column: int
 				CodeEdit.KIND_CONSTANT,
 				option, # display
 				option, # to insert
-				_settings.editor_color_scheme().keyword, # color
+				_settings.editor_color_scheme().keyword,
 				_settings.get_theme_icon("autocomplete_variation"),
 			)
 	if has_options_available:

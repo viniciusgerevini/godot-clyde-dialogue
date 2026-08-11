@@ -160,7 +160,7 @@ func _show_help_content(content: String) -> void:
 	_help_text_field.text = manuals[content]
 	_help_text_field.scroll_to_line(0)
 
-# I'll keep this here for nwo as it's easy to edit. Will likely move to somewhere else
+# I'll keep this here for now as it's easy to edit. Will likely move to somewhere else
 # when translating the plugin
 const manuals = {
 	"EDITOR": '''[center][b]Editor[/b][/center]

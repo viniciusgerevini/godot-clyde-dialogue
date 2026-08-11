@@ -1,7 +1,8 @@
 ##
 ## Clyde Editor Settings interface. This abstraction allows running the plugin code with
-## different settings implementations. For example, there is a demo that re-uses the code completion
-## and player.
+## different settings implementations.
+## For example, in the plugin, it sources configurations from the editor and project setttings, while
+## there is a demo that implements a different class that gets it's values from a configuration object
 ##
 @abstract extends RefCounted
 

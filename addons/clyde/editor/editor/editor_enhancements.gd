@@ -12,6 +12,7 @@ static func enhance(editor: CodeEdit, settings: ClydeEditorSettings) -> Dialogue
 	_setup_event_listeners(dialogue_editor)
 	return dialogue_editor
 
+
 static func _load_editor_comment_shortcut() -> void:
 	var settings := EditorInterface.get_editor_settings()
 	_comment_shortcut = settings.get_shortcut("script_text_editor/toggle_comment")

@@ -1,3 +1,7 @@
+##
+## Helper script for translation strings.
+## This is required because I'm not able to register translation files in the editor.
+##
 @tool
 
 const KEY_DEFAULT_BLOCK = "DEFAULT_BLOCK"

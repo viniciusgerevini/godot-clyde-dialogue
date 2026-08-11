@@ -68,6 +68,7 @@ func _on_parsing_finished() -> void:
 	_clear_errors()
 	parsing_finished.emit()
 
+
 func _on_parsing_failed(result) -> void:
 	if _is_new_parsing_execution:
 		_is_new_parsing_execution = false
