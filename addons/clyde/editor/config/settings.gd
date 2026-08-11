@@ -1,7 +1,5 @@
 extends RefCounted
 
-signal settings_changed
-
 const ClydeEditorSettings = preload("./editor_settings/clyde_editor_settings.gd")
 
 var _editor_settings: ClydeEditorSettings
@@ -44,38 +42,9 @@ const COLORSCHEME: Array[String] = [
 	"error_color",
 ]
 
-const BASE_SETTINGS: Array[String] = [
-	"auto_brace_completion_enabled",
-	"auto_brace_completion_highlight_matching",
-	"code_completion_enabled",
-	"gutters_draw_line_numbers",
-	"gutters_zero_pad_line_numbers",
-	"show_line_length_guidelines",
-	"line_length_guideline_hard_column",
-	"line_length_guideline_soft_column",
-	"indent_automatic",
-	"indent_size",
-	"indent_use_spaces",
-	"autowrap_mode",
-	"caret_blink",
-	"caret_blink_interval",
-	"caret_type",
-	"drag_and_drop_selection_enabled",
-	"draw_spaces",
-	"draw_tabs",
-	"highlight_current_line",
-	"minimap_draw",
-	"minimap_width",
-	"scroll_past_end_of_file",
-	"scroll_smooth",
-	"scroll_v_scroll_speed",
-	"wrap_mode",
-	"font_size",
-]
 
 func _init(editor_settings: ClydeEditorSettings):
 	_editor_settings = editor_settings
-	_editor_settings.settings_changed.connect(_on_settings_changed)
 
 
 func _get_editor_setting(key: String):
@@ -84,33 +53,6 @@ func _get_editor_setting(key: String):
 
 func change_font_size(offset: float):
 	_editor_settings.change_font_size(offset)
-
-
-func clear_font_size():
-	_editor_settings.clear_font_size()
-
-
-func editor_settings() -> Dictionary[String, Variant]:
-	var dictionary: Dictionary[String, Variant] = {}
-
-	for c in BASE_SETTINGS:
-		dictionary[c] = _editor_settings.get_setting(c)
-
-	if typeof(dictionary["indent_use_spaces"]) == TYPE_INT:
-		# This is an enum in Editor settings. Couldn't find the right type so comparing agains the int value
-		dictionary["indent_use_spaces"] = dictionary["indent_use_spaces"] == 1
-
-	if dictionary["show_line_length_guidelines"]:
-		dictionary["line_length_guidelines"] = [
-			dictionary["line_length_guideline_hard_column"],
-			dictionary["line_length_guideline_soft_column"],
-		]
-	else:
-		dictionary["line_length_guidelines"] = []
-
-	dictionary["font_size"] = dictionary["font_size"] * _editor_settings.get_interface_scale()
-
-	return dictionary
 
 
 func editor_color_scheme() -> Dictionary[String, Color]:
@@ -123,15 +65,11 @@ func editor_color_scheme() -> Dictionary[String, Color]:
 
 
 func get_theme_accent_color() -> Color:
-	return Color(_editor_settings.get_interface_setting("accent_color"))
+	return Color(_editor_settings.get_color_scheme_setting("accent_color"))
 
 
 func get_theme_base_color() -> Color:
-	return Color(_editor_settings.get_interface_setting("base_color"))
-
-
-func _on_settings_changed():
-	settings_changed.emit()
+	return Color(_editor_settings.get_color_scheme_setting("base_color"))
 
 
 func get_editor_config():

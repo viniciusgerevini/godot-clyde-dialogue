@@ -18,13 +18,60 @@ var _should_follow_execution = true
 
 var editor: DialogueEditorDecorator
 
+const DEFAULT_SETTINGS = {
+	"auto_brace_completion_enabled": true,
+	"auto_brace_completion_highlight_matching": true,
+	"code_completion_enabled": true,
+	"gutters_draw_line_numbers": true,
+	"gutters_zero_pad_line_numbers": false,
+	"line_length_guideline_hard_column": 100,
+	"line_length_guideline_soft_column": 80,
+	"indent_automatic": true,
+	"indent_size": 4,
+	"indent_use_spaces": false,
+	"autowrap_mode": 3,
+	"caret_blink": true,
+	"caret_blink_interval": 0.5,
+	"caret_type": 0,
+	"drag_and_drop_selection_enabled": true,
+	"draw_spaces": true,
+	"draw_tabs": true,
+	"highlight_current_line": true,
+	"minimap_draw": true,
+	"minimap_width": 80,
+	"scroll_past_end_of_file": true,
+	"scroll_smooth": true,
+	"scroll_v_scroll_speed": 80,
+	"wrap_mode": 0,
+	"font_size": 14.0,
+}
+
+const DEFAULT_COLOR_SCHEME = {
+	"background": "#1d2229ff",
+	"current_line": "#ffffff12",
+	"error_line": "#ff786b4d",
+	"comment": "#cdcfd280",
+	"identifier": "#bce0ffff",
+	"symbol": "#abc9ffff",
+	"text": "#cdcfd2ff",
+	"tag": "#57b3ffff",
+	"keyword": "#ff7085ff",
+	"operator": "#ff8cccff",
+	"number_literal": "#a1ffe0ff",
+	"boolean_literal": "#ff7085ff",
+	"string_literal": "#ffeda1ff",
+	"warning_color": "#b89c7aff",
+	"success_color": "#cdf8d2bf",
+	"error_color": "#ff786b4d",
+}
+
+var _current_font_size: float = DEFAULT_SETTINGS.font_size
+
 func setup(settings: Settings):
 	_settings = settings
 	editor = DialogueEditorDecorator.new(self, _settings, true)
 	editor_theme_config = _load_theme_config()
 	syntax_highlighter = ClydeSyntaxHighlighter.new()
-
-	_settings.settings_changed.connect(_on_settings_changed)
 
 	editor.parsing_finished.connect(func(): parsing_finished.emit.call_deferred())
 	editor.parsing_failed.connect(func(result): parsing_failed.emit.call_deferred(result))
@@ -34,37 +81,41 @@ func setup(settings: Settings):
 
 
 func _load_text_editor_config():
-	var settings = _settings.editor_settings()
-	self.auto_brace_completion_enabled = settings.auto_brace_completion_enabled
-	self.auto_brace_completion_highlight_matching = settings.auto_brace_completion_highlight_matching
-	self.gutters_draw_line_numbers = settings.gutters_draw_line_numbers
-	self.gutters_zero_pad_line_numbers = settings.gutters_zero_pad_line_numbers
-	self.indent_automatic = settings.indent_automatic
-	self.indent_size = settings.indent_size
-	self.indent_use_spaces = settings.indent_use_spaces
-	self.line_length_guidelines = settings.line_length_guidelines
-	self.autowrap_mode = settings.autowrap_mode
-	self.caret_blink = settings.caret_blink
-	self.caret_blink_interval = settings.caret_blink_interval
-	self.caret_type = settings.caret_type
-	self.drag_and_drop_selection_enabled = settings.drag_and_drop_selection_enabled
-	self.draw_spaces = settings.draw_spaces
-	self.draw_tabs = settings.draw_tabs
-	self.highlight_current_line = settings.highlight_current_line
-	self.minimap_draw = settings.minimap_draw
-	self.minimap_width = settings.minimap_width
-	self.scroll_past_end_of_file = settings.scroll_past_end_of_file
-	self.scroll_smooth = settings.scroll_smooth
-	self.scroll_v_scroll_speed = settings.scroll_v_scroll_speed
-	self.wrap_mode = settings.wrap_mode
+	self.auto_brace_completion_enabled = DEFAULT_SETTINGS.auto_brace_completion_enabled
+	self.auto_brace_completion_highlight_matching = DEFAULT_SETTINGS.auto_brace_completion_highlight_matching
+	self.gutters_draw_line_numbers = DEFAULT_SETTINGS.gutters_draw_line_numbers
+	self.gutters_zero_pad_line_numbers = DEFAULT_SETTINGS.gutters_zero_pad_line_numbers
+	self.indent_automatic = DEFAULT_SETTINGS.indent_automatic
+	self.indent_size = DEFAULT_SETTINGS.indent_size
+	self.indent_use_spaces = DEFAULT_SETTINGS.indent_use_spaces
+	self.autowrap_mode = DEFAULT_SETTINGS.autowrap_mode
+	self.caret_blink = DEFAULT_SETTINGS.caret_blink
+	self.caret_blink_interval = DEFAULT_SETTINGS.caret_blink_interval
+	self.caret_type = DEFAULT_SETTINGS.caret_type
+	self.drag_and_drop_selection_enabled = DEFAULT_SETTINGS.drag_and_drop_selection_enabled
+	self.draw_spaces = DEFAULT_SETTINGS.draw_spaces
+	self.draw_tabs = DEFAULT_SETTINGS.draw_tabs
+	self.highlight_current_line = DEFAULT_SETTINGS.highlight_current_line
+	self.minimap_draw = DEFAULT_SETTINGS.minimap_draw
+	self.minimap_width = DEFAULT_SETTINGS.minimap_width
+	self.scroll_past_end_of_file = DEFAULT_SETTINGS.scroll_past_end_of_file
+	self.scroll_smooth = DEFAULT_SETTINGS.scroll_smooth
+	self.scroll_v_scroll_speed = DEFAULT_SETTINGS.scroll_v_scroll_speed
+	self.wrap_mode = DEFAULT_SETTINGS.wrap_mode
 
-	add_theme_font_size_override("font_size", settings.font_size)
+	add_theme_font_size_override("font_size", DEFAULT_SETTINGS.font_size)
 
-	refresh_config()
+	_should_follow_execution = true
+
 
 func _load_theme_config():
+	var colors: Dictionary[String, Color] = {}
+
+	for c in DEFAULT_COLOR_SCHEME:
+		colors[c] = Color(DEFAULT_COLOR_SCHEME[c])
+
 	return {
-		"color_scheme": _settings.editor_color_scheme()
+		"color_scheme": colors
 	}
 
 
@@ -88,12 +139,6 @@ func _load_shortcuts():
 			"handler": _font_reset,
 		},
 	]
-
-
-func _on_settings_changed():
-	editor_theme_config = _load_theme_config()
-	_load_text_editor_config()
-
 
 
 func go_to_position(line: int, column: int, adjust_viewport: bool = false):
@@ -125,15 +170,18 @@ func _toggle_comment():
 
 
 func _font_size_up():
-	_settings.change_font_size(+1)
+	_current_font_size += 1
+	_update_editor_font_size(_current_font_size)
 
 
 func _font_size_down():
-	_settings.change_font_size(-1)
+	_current_font_size -= 1
+	_update_editor_font_size(_current_font_size)
 
 
 func _font_reset():
-	_settings.clear_font_size()
+	_current_font_size = DEFAULT_SETTINGS.font_size
+	_update_editor_font_size(_current_font_size)
 
 
 func clear_search():
@@ -199,5 +247,5 @@ func set_executing_line(line: int):
 		center_viewport_to_caret()
 
 
-func refresh_config():
-	_should_follow_execution = _settings.get_config(_settings.EDITOR_CFG_EDITOR_FOLLOW_EXECUTION, true)
+func _update_editor_font_size(font_size: float) -> void:
+	add_theme_font_size_override("font_size", font_size)
