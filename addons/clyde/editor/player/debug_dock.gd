@@ -4,7 +4,7 @@ extends HBoxContainer
 signal variable_changed(var_name: String, value)
 signal external_variable_changed(var_name: String, value)
 
-const DebugEntryActions = preload("./debug_entry_actions.tscn")
+const Settings = preload("../config/settings.gd")
 const InterfaceText = preload("../config/interface_text.gd")
 const DebugVariables = preload("./debug_dock_variables.gd")
 const DebugHistoryEntries = preload("./debug_dock_history_entries.gd")
@@ -19,12 +19,21 @@ const DebugHistoryEntries = preload("./debug_dock_history_entries.gd")
 @onready var _add_var_btn: Button = $HSplitContainer/var_tabs/variables/MarginContainer/add_btn
 @onready var _add_ext_var_btn: Button = $HSplitContainer/var_tabs/external_variables/MarginContainer/add_btn
 
-@onready var _variables = DebugVariables.new(_debug_entries, _add_var_btn)
-@onready var _external_variables = DebugVariables.new(_ext_var_entries, _add_ext_var_btn)
-
 @onready var _debug_history = DebugHistoryEntries.new(_event_entries)
 
-func _ready():
+var _variables: DebugVariables
+var _external_variables: DebugVariables
+
+
+var _settings: Settings
+
+func setup(settings: Settings):
+	_settings = settings
+
+	_variables = DebugVariables.new(_settings, _debug_entries, _add_var_btn)
+	_external_variables = DebugVariables.new(_settings, _ext_var_entries, _add_ext_var_btn)
+
+
 	_event_scrollbar.changed.connect(_on_scrollbar_changed)
 	_variable_scrollbar.changed.connect(_on_var_scrollbar_changed)
 	_external_variable_scrollbar.changed.connect(_on_ext_var_scrollbar_changed)
@@ -33,9 +42,9 @@ func _ready():
 	_var_tabs.set_tab_title(1, InterfaceText.get_string(InterfaceText.KEY_DEBUG_EXT_VARIABLES_LABEL))
 
 	$HSplitContainer/history/Label.text = InterfaceText.get_string(InterfaceText.KEY_DEBUG_HISTORY_LABEL)
-	_add_var_btn.icon = get_theme_icon("Add", "EditorIcons")
+	_add_var_btn.icon = _settings.get_theme_icon("add_var")
 	_add_var_btn.tooltip_text = InterfaceText.get_string(InterfaceText.KEY_DEBUG_ADD_VARIABLE)
-	_add_ext_var_btn.icon = get_theme_icon("Add", "EditorIcons")
+	_add_ext_var_btn.icon = _settings.get_theme_icon("add_var")
 	_add_ext_var_btn.tooltip_text = InterfaceText.get_string(InterfaceText.KEY_DEBUG_ADD_VARIABLE)
 
 	_variables.variable_changed.connect(_on_variable_changed)

@@ -7,13 +7,13 @@ on:
     branches: [ "godot_4" ]
 
 env:
-  GODO_VERSION: 4.4.1
+  GODO_VERSION: 4.7.2
 
 jobs:
   test:
     runs-on: ubuntu-latest
     container:
-      image: barichello/godot-ci:4.4.1
+      image: barichello/godot-ci:4.7.2
     steps:
     - uses: actions/checkout@v4
     - name: Setup

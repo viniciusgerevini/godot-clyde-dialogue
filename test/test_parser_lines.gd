@@ -161,3 +161,142 @@ vincent:
 		}
 
 		assert_eq_deep(result, expected)
+
+
+func test_multiline_with_nesting_in_eof():
+	var result = parse("""
+Clyde:
+	Clyde is a language for writing game dialogues.
+	It supports branching, translations and interfacing
+			with your game through variables and events.
+
+""")
+
+	var expected = {
+		"type": 'document',
+		"content": [{
+			"type": 'content',
+			"content": [
+				{ "type": 'line', "value": 'Clyde is a language for writing game dialogues.', "id": null, "speaker": 'Clyde', "tags": [], "id_suffixes": null },
+				{ "type": 'line', "value": 'It supports branching, translations and interfacing with your game through variables and events.', "id": null, "speaker": 'Clyde', "tags": [], "id_suffixes": null },
+			]
+		}],
+		"blocks": [],
+		"links": {},
+	}
+
+	assert_eq_deep(result, expected)
+
+
+func test_option_with_multline_in_eof():
+	var result = parse("""
+*
+	Clyde:
+		It supports branching, translations and interfacing
+				with your game through variables and events.
+
+""")
+
+	var expected = {
+		"type": "document",
+		"content": [{
+				"type": "content",
+				"content": [{
+						"type": "options",
+						"name": null,
+						"content": [{
+								"type": "option",
+								"name": "It supports branching, translations and interfacing with your game through variables and events.",
+								"mode": "once",
+								"content": {
+									"type": "content",
+									"content": [{
+											"type": "line",
+											"value": "It supports branching, translations and interfacing with your game through variables and events.",
+											"id": null,
+											"speaker": "Clyde",
+											"tags": [],
+											"id_suffixes": null
+										}]
+									},
+									"id": null,
+									"speaker": "Clyde",
+									"tags": [],
+									"id_suffixes": null
+							}],
+						"id": null,
+						"speaker": null,
+						"tags": [],
+						"id_suffixes": null
+					}]
+				}],
+			"blocks": [],
+			"links": {}
+		}
+
+	assert_eq_deep(result, expected)
+
+
+func test_conditional_with_multline_break_in_eof():
+	var result = parse("""
+{ is_true }
+		Clyde: It supports branching, translations and interfacing
+			aaaa
+
+""")
+	var expected = { "type": "document", "content": [{ "type": "content", "content": [{ "type": "conditional_content", "conditions": { "type": "variable", "name": "is_true" }, "content": { "type": "content", "content": [{ "type": "line", "value": "It supports branching, translations and interfacing aaaa", "id": null, "speaker": "Clyde", "tags": [], "id_suffixes": null }] } }] }], "blocks": [], "links": {  } }
+
+	assert_eq_deep(result, expected)
+
+
+func test_another_multiline_edge_case():
+	var result = parse("""Clyde:
+	Clyde is a language for writing game dialogues.
+		It supports branching, translations and 
+		interfacing with your game through variables
+		and events.
+		Do you want to hear more?
+			+ Yes
+				-> yes branch
+			+ No, thanks
+				-> no branch
+""")
+
+	var expected = {
+		"type": "document",
+		"content": [{
+			"type": "content",
+			"content": [{
+				"type": "options",
+				"name": "Clyde is a language for writing game dialogues. It supports branching, translations and interfacing with your game through variables and events. Do you want to hear more?",
+				"content": [{
+					"type": "option",
+					"name": "Yes",
+					"mode": "sticky",
+					"content": { "type": "content", "content": [{ "type": "divert", "target": "yes branch" }] },
+					"id": null,
+					"speaker": null,
+					"tags": [],
+					"id_suffixes": null
+				},
+				{
+					"type": "option",
+					"name": "No, thanks",
+					"mode": "sticky",
+					"content": { "type": "content", "content": [{ "type": "divert", "target": "no branch" }] },
+					"id": null,
+					"speaker": null,
+					"tags": [],
+					"id_suffixes": null
+				}],
+				"id": null,
+				"speaker": "Clyde",
+				"tags": [],
+				"id_suffixes": null
+			}]
+		}],
+		"blocks": [],
+		"links": {}
+	}
+
+	assert_eq_deep(result, expected)

@@ -1,0 +1,60 @@
+[gd_scene format=3 uid="uid://b2nvhli0v8ep0"]
+
+[ext_resource type="Script" uid="uid://c5adtk1vgueuh" path="res://addons/clyde/editor/player/player_dock_status.gd" id="1_31tmd"]
+
+[sub_resource type="DPITexture" id="DPITexture_31tmd"]
+_source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\"><path fill=\"#ff5d5d\" d=\"M2 1v8.586l1.293-1.293a1 1 0 0 1 1.414 0L7 10.587l2.293-2.293a1 1 0 0 1 1.414 0L13 10.586l1-1V6H9V1H2zm8 0v4h4zm-6 9.414-2 2V15h12v-2.586l-.293.293a1 1 0 0 1-1.414 0L10 10.414l-2.293 2.293a1 1 0 0 1-1.414 0L4 10.414z\"/></svg>
+"
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_pyks8"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("DPITexture_31tmd")
+}, {
+"duration": 1.0,
+"texture": SubResource("DPITexture_31tmd")
+}, {
+"duration": 1.0,
+"texture": SubResource("DPITexture_31tmd")
+}, {
+"duration": 1.0,
+"texture": SubResource("DPITexture_31tmd")
+}, {
+"duration": 1.0,
+"texture": SubResource("DPITexture_31tmd")
+}, {
+"duration": 1.0,
+"texture": SubResource("DPITexture_31tmd")
+}, {
+"duration": 1.0,
+"texture": SubResource("DPITexture_31tmd")
+}, {
+"duration": 1.0,
+"texture": SubResource("DPITexture_31tmd")
+}],
+"loop": true,
+"name": &"default",
+"speed": 8.0
+}]
+
+[node name="player_dock_status" type="CenterContainer" unique_id=2017535331]
+custom_minimum_size = Vector2(24, 0)
+mouse_filter = 0
+script = ExtResource("1_31tmd")
+
+[node name="container" type="MarginContainer" parent="." unique_id=67895388]
+layout_mode = 2
+
+[node name="loading" type="AnimatedSprite2D" parent="container" unique_id=258079541]
+visible = false
+sprite_frames = SubResource("SpriteFrames_pyks8")
+frame_progress = 0.5526263
+
+[node name="ok" type="Sprite2D" parent="container" unique_id=1379018802]
+visible = false
+texture = SubResource("DPITexture_31tmd")
+
+[node name="warning" type="Sprite2D" parent="container" unique_id=1454106537]
+visible = false
+texture = SubResource("DPITexture_31tmd")

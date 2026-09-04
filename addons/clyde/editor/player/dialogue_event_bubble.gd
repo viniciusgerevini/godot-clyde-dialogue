@@ -5,8 +5,7 @@ extends VBoxContainer
 @onready var _sublabel = $PanelContainer/MarginContainer/VBoxContainer/SubLabel
 
 
-func _setup_color():
-	var color = EditorInterface.get_editor_settings().get_setting("interface/theme/accent_color")
+func _setup_color(color: Color):
 	var style = StyleBoxFlat.new()
 	color.a = 0.1
 	style.set_bg_color(color)
@@ -16,8 +15,8 @@ func _setup_color():
 	_sublabel.modulate.a = 0.9
 
 
-func set_label(text: String, sub_label):
-	_setup_color()
+func set_label(color: Color, text: String, sub_label):
+	_setup_color(color)
 	_label.text = text
 	if sub_label != null:
 		_sublabel.text = "[ %s ]" % sub_label

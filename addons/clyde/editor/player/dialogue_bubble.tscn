@@ -1,15 +1,15 @@
-[gd_scene load_steps=3 format=3 uid="uid://dhxsbppxl8v7a"]
+[gd_scene format=3 uid="uid://dhxsbppxl8v7a"]
 
 [ext_resource type="Script" uid="uid://btelvsc3hb14p" path="res://addons/clyde/editor/player/dialogue_bubble.gd" id="1_gkd1v"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sail3"]
-bg_color = Color(0.06561, 0.06561, 0.06561, 0.6)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3y6kl"]
+bg_color = Color(0.059049, 0.059049, 0.059049, 0.6)
 corner_radius_top_left = 5
 corner_radius_top_right = 5
 corner_radius_bottom_right = 5
 corner_radius_bottom_left = 5
 
-[node name="DialogueBubble" type="PanelContainer"]
+[node name="DialogueBubble" type="PanelContainer" unique_id=1156960845]
 custom_minimum_size = Vector2(40, 40)
 anchors_preset = 15
 anchor_right = 1.0
@@ -17,41 +17,41 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
-theme_override_styles/panel = SubResource("StyleBoxFlat_sail3")
+theme_override_styles/panel = SubResource("StyleBoxFlat_3y6kl")
 script = ExtResource("1_gkd1v")
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=807105853]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=1114118037]
 layout_mode = 2
 
-[node name="speaker" type="Label" parent="MarginContainer/VBoxContainer"]
+[node name="speaker" type="Label" parent="MarginContainer/VBoxContainer" unique_id=1903701946]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 text = "Speaker"
 autowrap_mode = 2
 
-[node name="content" type="Label" parent="MarginContainer/VBoxContainer"]
+[node name="content" type="Label" parent="MarginContainer/VBoxContainer" unique_id=1504060947]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 text = "-"
 autowrap_mode = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer" unique_id=2136351917]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_right = 10
 
-[node name="options" type="VBoxContainer" parent="MarginContainer/VBoxContainer/MarginContainer"]
+[node name="options" type="VBoxContainer" parent="MarginContainer/VBoxContainer/MarginContainer" unique_id=98528931]
 visible = false
 layout_mode = 2
 
-[node name="line_meta" type="HFlowContainer" parent="MarginContainer/VBoxContainer" groups=["clyde_dialogue_line_meta"]]
+[node name="line_meta" type="HFlowContainer" parent="MarginContainer/VBoxContainer" unique_id=1956623004 groups=["clyde_dialogue_line_meta"]]
 visible = false
 layout_mode = 2
 size_flags_vertical = 8

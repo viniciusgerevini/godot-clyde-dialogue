@@ -1,0 +1,197 @@
+[gd_scene format=3 uid="uid://dmpvpk2y4pdun"]
+
+[ext_resource type="Script" uid="uid://cf84m58h68ptk" path="res://addons/clyde/editor/help/about.gd" id="1_u3u3e"]
+[ext_resource type="Texture2D" uid="uid://d05r8uu5a8oru" path="res://icon.png" id="2_uucx6"]
+
+[node name="About" type="Window" unique_id=1224362528]
+oversampling_override = 1.0
+title = "About"
+position = Vector2i(0, 36)
+size = Vector2i(800, 519)
+wrap_controls = true
+transient = true
+script = ExtResource("1_u3u3e")
+
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=698841819]
+custom_minimum_size = Vector2(800, 0)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer" unique_id=1839278597]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer" unique_id=170082002]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=2082718019]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="TextureRect" type="TextureRect" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1701857123]
+layout_mode = 2
+texture = ExtResource("2_uucx6")
+stretch_mode = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1075586537]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 20
+
+[node name="title" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=1909369316]
+layout_mode = 2
+mouse_filter = 0
+text = "Clyde Dialogue"
+
+[node name="main_page" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=1777274118]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 20
+
+[node name="description" type="RichTextLabel" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/main_page" unique_id=1115243835]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+focus_mode = 2
+bbcode_enabled = true
+text = "Notice"
+fit_content = true
+context_menu_enabled = true
+shortcut_keys_enabled = false
+selection_enabled = true
+deselect_on_focus_loss_enabled = false
+drag_and_drop_selection_enabled = false
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/main_page" unique_id=1518303646]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="help" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/main_page/VBoxContainer" unique_id=2124208058]
+layout_mode = 2
+text = "Plugin Help and Information"
+alignment = 0
+
+[node name="license" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/main_page/VBoxContainer" unique_id=234848050]
+layout_mode = 2
+text = "View License"
+alignment = 0
+
+[node name="report" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/main_page/VBoxContainer" unique_id=732985157]
+layout_mode = 2
+text = "Report an issue"
+alignment = 0
+
+[node name="online_docs" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/main_page/VBoxContainer" unique_id=1171539610]
+layout_mode = 2
+text = "Open Online Documentation"
+alignment = 0
+
+[node name="version" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/main_page" unique_id=1917315279]
+layout_mode = 2
+mouse_filter = 0
+text = "v0.0.1"
+horizontal_alignment = 2
+
+[node name="license_page" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=187892535]
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 10
+
+[node name="license" type="RichTextLabel" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/license_page" unique_id=1337249139]
+custom_minimum_size = Vector2(0, 200)
+layout_mode = 2
+size_flags_vertical = 3
+focus_mode = 2
+bbcode_enabled = true
+text = "license"
+context_menu_enabled = true
+shortcut_keys_enabled = false
+selection_enabled = true
+deselect_on_focus_loss_enabled = false
+drag_and_drop_selection_enabled = false
+
+[node name="back" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/license_page" unique_id=413852561]
+layout_mode = 2
+text = "Back"
+
+[node name="help_page" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=1869149757]
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="editor" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/help_page" unique_id=1328970926]
+layout_mode = 2
+text = "Editor"
+alignment = 0
+
+[node name="player" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/help_page" unique_id=439080662]
+layout_mode = 2
+text = "Player"
+alignment = 0
+
+[node name="debugger" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/help_page" unique_id=1794864484]
+layout_mode = 2
+text = "Debugger"
+alignment = 0
+
+[node name="tools" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/help_page" unique_id=2032021206]
+layout_mode = 2
+text = "Tools"
+alignment = 0
+
+[node name="language" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/help_page" unique_id=879332376]
+layout_mode = 2
+text = "The Language"
+alignment = 0
+
+[node name="back" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/help_page" unique_id=1608840975]
+layout_mode = 2
+text = "Back"
+alignment = 0
+
+[node name="help_text_page" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=356078658]
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="help_text_field" type="RichTextLabel" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/help_text_page" unique_id=1899987261]
+custom_minimum_size = Vector2(0, 200)
+layout_mode = 2
+size_flags_vertical = 3
+focus_mode = 2
+theme_override_constants/line_separation = 2
+theme_override_constants/paragraph_separation = 8
+bbcode_enabled = true
+text = "info"
+context_menu_enabled = true
+shortcut_keys_enabled = false
+selection_enabled = true
+deselect_on_focus_loss_enabled = false
+drag_and_drop_selection_enabled = false
+
+[node name="back" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/help_text_page" unique_id=83270075]
+layout_mode = 2
+
+[connection signal="close_requested" from="." to="." method="_on_close_requested"]
+[connection signal="meta_clicked" from="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/main_page/description" to="." method="_on_description_meta_clicked"]
+[connection signal="button_down" from="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/main_page/VBoxContainer/help" to="." method="_on_main_help_button_down"]
+[connection signal="button_down" from="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/main_page/VBoxContainer/license" to="." method="_on_license_button_down"]
+[connection signal="button_down" from="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/main_page/VBoxContainer/report" to="." method="_on_main_report_button_down"]
+[connection signal="button_down" from="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/main_page/VBoxContainer/online_docs" to="." method="_on_main_online_docs_button_down"]
+[connection signal="button_down" from="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/license_page/back" to="." method="_on_back_button_down"]
+[connection signal="button_down" from="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/help_page/editor" to="." method="_on_help_editor_button_down"]
+[connection signal="button_down" from="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/help_page/player" to="." method="_on_help_player_button_down"]
+[connection signal="button_down" from="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/help_page/debugger" to="." method="_on_help_debugger_button_down"]
+[connection signal="button_down" from="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/help_page/tools" to="." method="_on_help_tools_button_down"]
+[connection signal="button_down" from="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/help_page/language" to="." method="_on_help_language_button_down"]
+[connection signal="button_down" from="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/help_page/back" to="." method="_on_help_back_button_down"]
+[connection signal="meta_clicked" from="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/help_text_page/help_text_field" to="." method="_on_help_text_field_meta_clicked"]
+[connection signal="button_down" from="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/help_text_page/back" to="." method="_on_help_text_back_button_down"]

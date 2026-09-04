@@ -1,8 +1,10 @@
+##
+## Helper script for translation strings.
+## This is required because I'm not able to register translation files in the editor.
+##
 @tool
 
 const KEY_DEFAULT_BLOCK = "DEFAULT_BLOCK"
-const KEY_NO_DIALOGUE = "NO_DIALOGUE"
-const KEY_EXECUTE_DIALOGUE = "EXECUTE_DIALOGUE"
 const KEY_DIALOGUE_END="DIALOGUE_END"
 const KEY_DIALOGUE_LOADED="DIALOGUE_LOADED"
 const KEY_DIALOGUE_NOT_LOADED="DIALOGUE_NOT_LOADED"
@@ -18,31 +20,9 @@ const KEY_PLAYER_SHOW_META_TOOLTIP = "PLAYER_SHOW_META_TOOLTIP"
 const KEY_PLAYER_SHOW_DEBUG_TOOLTIP = "PLAYER_SHOW_DEBUG_TOOLTIP"
 const KEY_PLAYER_DIALOGUE_STARTED = "PLAYER_DIALOGUE_STARTED_MESSAGE"
 
-# top bar
-const KEY_FILE_MENU_NEW_FILE = "FILE_MENU_NEW_FILE"
-const KEY_FILE_MENU_OPEN_FILE = "FILE_MENU_OPEN_FILE"
-const KEY_FILE_MENU_OPEN_RECENT_FILE = "FILE_MENU_OPEN_RECENT"
-const KEY_FILE_MENU_OPEN_RECENT_NO_RECENTS = "FILE_MENU_OPEN_RECENT_NO_RECENTS"
-const KEY_FILE_MENU_RECENT_CLEAR_RECENTS = "FILE_MENU_RECENT_CLEAR_RECENTS"
-const KEY_FILE_MENU_SAVE_FILE = "FILE_MENU_SAVE_FILE"
-const KEY_FILE_MENU_SAVE_AS = "FILE_MENU_SAVE_AS"
-const KEY_FILE_MENU_SAVE_ALL = "FILE_MENU_SAVE_ALL"
-const KEY_FILE_MENU_RELOAD_FROM_DISK = "FILE_MENU_RELOAD_FROM_DISK"
-const KEY_FILE_MENU_SHOW_IN_FILESYSTEM = "FILE_MENU_SHOW_IN_FILESYSTEM"
-const KEY_FILE_MENU_CLOSE = "FILE_MENU_CLOSE"
-const KEY_FILE_MENU_CLOSE_ALL = "FILE_MENU_CLOSE_ALL"
-const KEY_FILE_MENU_CLOSE_OTHER = "FILE_MENU_CLOSE_OTHER"
-const KEY_TOOL_MENU_EDITOR_SECTION = "TOOL_MENU_EDITOR_SECTION"
-const KEY_TOOL_MENU_PLAYER_SECTION = "TOOL_MENU_PLAYER_SECTION"
-const KEY_TOOL_MENU_SHOW_LISTS = "TOOL_MENU_SHOW_LISTS"
-const KEY_TOOL_MENU_SHOW_PLAYER = "TOOL_MENU_SHOW_PLAYER"
-const KEY_TOOL_MENU_PLAYER_SYNC = "TOOL_MENU_PLAYER_SYNC"
-const KEY_TOOL_MENU_FOLLOW_EXECUTION = "TOOL_MENU_FOLLOW_EXECUTION"
-const KEY_MENU_FILE = "MENU_FILE"
-const KEY_MENU_TOOL = "MENU_TOOL"
-const KEY_MENU_HELP = "MENU_HELP"
 const KEY_HELP_ONLINE_DOCS = "HELP_ONLINE_DOCS"
 const KEY_HELP_REPORT_ISSUE = "HELP_REPORT_ISSUE"
+const KEY_HELP_ABOUT = "HELP_ABOUT"
 const KEY_DEBUG_PANEL_NAME = "DEBUG_PANEL_NAME"
 const KEY_DEBUG_VARIABLES_LABEL = "DEBUG_VARIABLES_LABEL"
 const KEY_DEBUG_EXT_VARIABLES_LABEL = "DEBUG_EXT_VARIABLES_LABEL"
@@ -60,15 +40,6 @@ const KEY_DEBUG_SAVE = "DEBUG_SAVE"
 const KEY_DEBUG_REMOVE = "DEBUG_REMOVE"
 const KEY_DEBUG_CANCEL = "DEBUG_CANCEL"
 const KEY_DEBUG_ADD_VARIABLE = "DEBUG_ADD_VARIABLE"
-const KEY_COPY_FILE_PATH = "COPY_FILE_PATH"
-const KEY_FILTER_FILES = "FILTER_FILES"
-const KEY_FILTER_BLOCKS = "FILTER_BLOCKS"
-const KEY_SORT = "SORT"
-const KEY_CLOSE_UNSAVED_FILE_MESSAGE = "CLOSE_UNSAVED_FILE_MESSAGE"
-const KEY_CLOSE_UNSAVED_FILES_MESSAGE = "CLOSE_UNSAVED_FILES_MESSAGE"
-const KEY_DISCARD = "DISCARD"
-const KEY_RELOAD_UNSAVED_FILE = "RELOAD_UNSAVED_FILE"
-const KEY_DIALOGUE = "DIALOGUE"
 const KEY_GENERATE_LINE_IDS = "GENERATE_LINE_IDS"
 const KEY_CREATE_CSV = "CREATE_CSV"
 
@@ -83,50 +54,82 @@ const KEY_CSV_EXPORTER_HEADER_LOCALE = "CSV_EXPORTER_HEADER_LOCALE"
 const KEY_CSV_EXPORTER_HEADER_LOCALE_DESC = "CSV_EXPORTER_HEADER_LOCALE_DESC"
 const KEY_CSV_EXPORTER_DELIMITER = "CSV_EXPORTER_DELIMITER"
 const KEY_CSV_EXPORTER_DELIMITER_DESC = "CSV_EXPORTER_DELIMITER_DESC"
+const KEY_CSV_EXPORTER_SOURCE_FILE = "CSV_EXPORTER_SOURCE_FILE"
 const KEY_CSV_EXPORTER_FILE = "CSV_EXPORTER_FILE"
 const KEY_CSV_EXPORTER_OPTIONS = "CSV_EXPORTER_OPTIONS"
 const KEY_CSV_EXPORTER_EXPORT = "CSV_EXPORTER_EXPORT"
 const KEY_CSV_FILE_EXISTS_WARNING = "CSV_FILE_EXISTS_WARNING"
 const KEY_CSV_EXPORTER_SUCCEED = "CSV_EXPORTER_SUCCEED"
 const KEY_CSV_EXPORTER_FAIL = "CSV_EXPORTER_FAIL"
+const KEY_CSV_EXPORTER_NOTE = "CSV_EXPORTER_NOTE"
+const KEY_CSV_EXPORTER_SOURCE_FILE_NOT_FOUND = "CSV_EXPORTER_SOURCE_FILE_NOT_FOUND"
+const KEY_CSV_EXPORTER_FILE_PARSE_FAIL = "KEY_CSV_EXPORTER_FILE_PARSE_FAIL"
+const KEY_FILE_NOT_FOUND = "FILE_NOT_FOUND"
 
-const KEY_EDITOR_WINDOW_TITLE = "EDITOR_WINDOW_TITLE"
-const KEY_PLAYER_WINDOW_TITLE = "PLAYER_WINDOW_TITLE"
-const KEY_DOCK_WINDOW = "DOCK_WINDOW"
+const KEY_DIALOGUE_PLAYER= "DIALOGUE_PLAYER"
+const KEY_OPEN_IN_DIALOGUE_PLAYER = "OPEN_IN_DIALOGUE_PLAYER"
+const KEY_PLAYER_OPEN_MENU = "PLAYER_OPEN_MENU"
+const KEY_PLAYER_FOLLOW_LINE = "PLAYER_FOLLOW_LINE"
+const KEY_PLAYER_WATCH_FILE = "PLAYER_WATCH_FILE"
+const KEY_PLAYER_ACTION_BAR_MOVE_TOP = "PLAYER_ACTION_BAR_MOVE_TOP"
+const KEY_PLAYER_ACTION_BAR_MOVE_BOTTOM = "PLAYER_ACTION_BAR_MOVE_BOTTOM"
+const KEY_PLAYER_STATUS_SUCCESS = "PLAYER_STATUS_SUCCESS"
+const KEY_PLAYER_STATUS_FAIL = "PLAYER_STATUS_FAIL"
+const KEY_PLAYER_STATUS_LOADING = "PLAYER_STATUS_LOADING"
+const KEY_OPEN_DIALOGUE_PLAYER = "OPEN_DIALOGUE_PLAYER"
 
+const KEY_WRONG_FILE_FORMAT_TITLE = "WRONG_FILE_FORMAT_TITLE"
+const KEY_WRONG_FILE_FORMAT_MESSAGE = "WRONG_FILE_FORMAT_MESSAGE"
+
+const KEY_ABOUT_WINDOW_TITLE = "ABOUT_WINDOW_TITLE"
+const KEY_ABOUT_TITLE = "ABOUT_TITLE"
+const KEY_ABOUT_DESCRIPTION = "ABOUT_DESCRIPTION"
+
+const KEY_PLUGIN_HELP_AND_INFO = "PLUGIN_HELP_AND_INFO"
+const KEY_VIEW_LICENSE = "VIEW_LICENSE"
+const KEY_BACK = "BACK"
+const KEY_EDITOR = "EDITOR"
+const KEY_PLAYER = "PLAYER"
+const KEY_DEBUGGER = "DEBUGGER"
+const KEY_TOOLS = "TOOLS"
+const KEY_LANGUAGE = "LANGUAGE"
 
 static var plugin_version := ""
-
+static var initialized := false
 static var _loaded_locale := "en"
 static var _default_locale := "en"
 
 static var _entries = {}
 static var _fallback = {}
 
+const TRANSLATIONS_PATH: String = "res://addons/clyde/editor/config/translations/%s.csv"
+
+
 static func get_string(key: String) -> String:
-	_load_strings()
 	if _entries.has(key):
 		return _entries[key]
 	return _fallback[key]
 
 
-static func _load_strings() -> void:
+static func load_strings_for_current_locale(translations_path: String = TRANSLATIONS_PATH) -> void:
 	var locale = TranslationServer.get_tool_locale()
-	if locale == _loaded_locale and not _entries.is_empty():
-		return
-	if not FileAccess.file_exists(_locale_translation_path(locale)):
-		locale = _default_locale
 
-	_load_entries_for_locale(_default_locale, _fallback)
-	if locale != _default_locale:
-		_load_entries_for_locale(locale, _entries)
+	_load_entries_from_file(
+		translations_path % _default_locale,
+		_fallback
+	)
+
+	var locale_file = translations_path % locale
+
+	if locale != _default_locale and FileAccess.file_exists(locale_file):
+		_load_entries_from_file(locale_file, _entries)
 	else:
 		_entries = _fallback
 	_loaded_locale = locale
+	initialized = true
 
-
-static func _load_entries_for_locale(locale: String, dictionary: Dictionary) -> void:
-	var file = FileAccess.open(_locale_translation_path(locale), FileAccess.READ)
+static func _load_entries_from_file(translation_file_path: String, dictionary: Dictionary) -> void:
+	var file = FileAccess.open(translation_file_path, FileAccess.READ)
 	var header = file.get_csv_line()
 	if header.size() < 2:
 		return
@@ -137,7 +140,3 @@ static func _load_entries_for_locale(locale: String, dictionary: Dictionary) -> 
 			continue
 		dictionary[line[0]] = line[1]
 	return
-
-
-static func _locale_translation_path(locale: String) -> String:
-	return "res://addons/clyde/editor/config/translations/%s.csv" % locale
