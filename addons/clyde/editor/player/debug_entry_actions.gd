@@ -1,6 +1,7 @@
 @tool
 extends HBoxContainer
 
+const Settings = preload("../config/settings.gd")
 const InterfaceText = preload("../config/interface_text.gd")
 
 signal save_pressed
@@ -8,15 +9,17 @@ signal edit_pressed
 signal cancel_pressed
 signal delete_pressed
 
+var settings: Settings
+
 
 func _ready():
-	$save.icon = get_theme_icon("Save", "EditorIcons")
+	$save.icon = settings.get_theme_icon("save")
 	$save.tooltip_text = InterfaceText.get_string(InterfaceText.KEY_DEBUG_SAVE)
-	$edit.icon = get_theme_icon("Edit", "EditorIcons")
+	$edit.icon = settings.get_theme_icon("edit")
 	$edit.tooltip_text = InterfaceText.get_string(InterfaceText.KEY_DEBUG_EDIT)
-	$delete.icon = get_theme_icon("Remove", "EditorIcons")
+	$delete.icon = settings.get_theme_icon("remove")
 	$delete.tooltip_text = InterfaceText.get_string(InterfaceText.KEY_DEBUG_REMOVE)
-	$cancel.icon = get_theme_icon("Close", "EditorIcons")
+	$cancel.icon = settings.get_theme_icon("close")
 	$cancel.tooltip_text = InterfaceText.get_string(InterfaceText.KEY_DEBUG_CANCEL)
 
 

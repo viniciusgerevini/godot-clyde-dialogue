@@ -1,0 +1,60 @@
+[gd_scene format=3 uid="uid://blp2r1kq2hlw3"]
+
+[ext_resource type="Script" uid="uid://cqxvwn27cchuw" path="res://addons/clyde/editor/player/player_dock.gd" id="1_imilj"]
+[ext_resource type="PackedScene" uid="uid://po7pmftb1orn" path="res://addons/clyde/editor/player/player.tscn" id="2_4l7bi"]
+[ext_resource type="Texture2D" uid="uid://dor1hukueyx7s" path="res://addons/clyde/editor/assets/clyde.svg" id="2_jpjvh"]
+[ext_resource type="PackedScene" uid="uid://b2nvhli0v8ep0" path="res://addons/clyde/editor/player/player_dock_status.tscn" id="2_r1176"]
+
+[node name="PlayerDock" type="MarginContainer" unique_id=587749561]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_imilj")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=187950495]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=1697541803]
+layout_mode = 2
+
+[node name="player_dock_status" parent="VBoxContainer/HBoxContainer" unique_id=2017535331 instance=ExtResource("2_r1176")]
+layout_mode = 2
+
+[node name="dialogue_path" type="LineEdit" parent="VBoxContainer/HBoxContainer" unique_id=2035376344]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "No Dialogue Selected"
+editable = false
+context_menu_enabled = false
+emoji_menu_enabled = false
+shortcut_keys_enabled = false
+middle_mouse_paste_enabled = false
+deselect_on_focus_loss_enabled = false
+drag_and_drop_selection_enabled = false
+
+[node name="dialogue_menu" type="MenuButton" parent="VBoxContainer/HBoxContainer" unique_id=357216945]
+layout_mode = 2
+icon = ExtResource("2_jpjvh")
+flat = false
+icon_alignment = 1
+item_count = 1
+popup/item_0/text = "Open File..."
+popup/item_0/id = 0
+
+[node name="Player" parent="VBoxContainer" unique_id=1232307310 instance=ExtResource("2_4l7bi")]
+layout_mode = 2
+size_flags_vertical = 3
+
+[connection signal="about_to_popup" from="VBoxContainer/HBoxContainer/dialogue_menu" to="." method="_on_dialogue_menu_about_to_popup"]
+[connection signal="content_finished_changing" from="VBoxContainer/Player" to="." method="_on_player_content_finished_changing"]
+[connection signal="dialogue_mem_clean" from="VBoxContainer/Player" to="." method="_on_player_dialogue_mem_clean"]
+[connection signal="dialogue_reset" from="VBoxContainer/Player" to="." method="_on_player_dialogue_reset"]
+[connection signal="event_triggered" from="VBoxContainer/Player" to="." method="_on_player_event_triggered"]
+[connection signal="external_variable_changed" from="VBoxContainer/Player" to="." method="_on_player_external_variable_changed"]
+[connection signal="follow_line_toggled" from="VBoxContainer/Player" to="." method="_on_player_follow_line_toggled"]
+[connection signal="position_selected" from="VBoxContainer/Player" to="." method="_on_player_position_selected"]
+[connection signal="toggle_debug_panel" from="VBoxContainer/Player" to="." method="_on_player_toggle_debug_panel"]
+[connection signal="variable_changed" from="VBoxContainer/Player" to="." method="_on_player_variable_changed"]
+[connection signal="watch_file_toggled" from="VBoxContainer/Player" to="." method="_on_player_watch_file_toggled"]
