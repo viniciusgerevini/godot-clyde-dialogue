@@ -21,7 +21,7 @@ config/icon="res://icon.png"
 
 [autoload]
 
-Dialogue="*uid://com7sq4jrg1n2"
+Dialogue="*res://addons/clyde/helpers/dialogue_manager.gd"
 
 [dialogue]
 

@@ -1,8 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://blv1whd6mrfkg"]
+[gd_scene format=3 uid="uid://blv1whd6mrfkg"]
 
 [ext_resource type="Script" uid="uid://b45b408ove2nd" path="res://addons/clyde/examples/simple_example/example.gd" id="1"]
 
-[node name="example" type="MarginContainer"]
+[node name="example" type="MarginContainer" unique_id=533649988]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -13,25 +13,25 @@ theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 script = ExtResource("1")
 
-[node name="Panel" type="PanelContainer" parent="."]
+[node name="Panel" type="PanelContainer" parent="." unique_id=198600068]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="MarginContainer" type="MarginContainer" parent="Panel"]
+[node name="MarginContainer" type="MarginContainer" parent="Panel" unique_id=1216475539]
 layout_mode = 2
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 10
 
-[node name="line" type="VBoxContainer" parent="Panel/MarginContainer"]
+[node name="line" type="VBoxContainer" parent="Panel/MarginContainer" unique_id=1819150632]
 layout_mode = 2
 
-[node name="speaker" type="Label" parent="Panel/MarginContainer/line"]
+[node name="speaker" type="Label" parent="Panel/MarginContainer/line" unique_id=589580725]
 layout_mode = 2
 
-[node name="text" type="Label" parent="Panel/MarginContainer/line"]
+[node name="text" type="Label" parent="Panel/MarginContainer/line" unique_id=1118360824]
 custom_minimum_size = Vector2(600, 0)
 layout_mode = 2
 text = "Click to start
@@ -39,30 +39,30 @@ text = "Click to start
 "
 autowrap_mode = 2
 
-[node name="options" type="VBoxContainer" parent="Panel/MarginContainer"]
+[node name="options" type="VBoxContainer" parent="Panel/MarginContainer" unique_id=450726219]
 visible = false
 layout_mode = 2
 
-[node name="speaker" type="Label" parent="Panel/MarginContainer/options"]
+[node name="speaker" type="Label" parent="Panel/MarginContainer/options" unique_id=318167220]
 layout_mode = 2
 
-[node name="name" type="Label" parent="Panel/MarginContainer/options"]
+[node name="name" type="Label" parent="Panel/MarginContainer/options" unique_id=362445861]
 layout_mode = 2
 text = "Speaker"
 
-[node name="items" type="VBoxContainer" parent="Panel/MarginContainer/options"]
+[node name="items" type="VBoxContainer" parent="Panel/MarginContainer/options" unique_id=306052566]
 layout_mode = 2
 
-[node name="dialogue_ended" type="VBoxContainer" parent="Panel/MarginContainer"]
+[node name="dialogue_ended" type="VBoxContainer" parent="Panel/MarginContainer" unique_id=1266219736]
 visible = false
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Panel/MarginContainer/dialogue_ended"]
+[node name="Label" type="Label" parent="Panel/MarginContainer/dialogue_ended" unique_id=1759625619]
 layout_mode = 2
 text = "Dialogue ended
 "
 
-[node name="restart" type="Button" parent="Panel/MarginContainer/dialogue_ended"]
+[node name="restart" type="Button" parent="Panel/MarginContainer/dialogue_ended" unique_id=1334795149]
 layout_mode = 2
 text = "Restart"
 
