@@ -2,6 +2,34 @@
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## Unreleased
+
+This is a major refactor with UX changes and bugfixes. The underlying functionality though remains the same.
+
+### Added
+
+- Added syntax highlighting, auto completion and error feedback to Godot's Script Editor
+- Implemented Plaer as native Godot dock, so now it can be placed in any dock slot
+- Added "About" window, with license information and plugin quick help
+- Implemented context menus for File System dock and script tabs to allow executing the dialogue in the player and also using other tools like generating line ids and CSV export
+
+### Changed
+
+- Improved CSV exporter interface, allowing selecting the source file
+- Allow player's action bar to be placed at the top or bottom of the player. Made top position default.
+- Moved LICENSE to addons folder so it's included in the generated zip file
+- Update project to Godot 4.7
+
+### Fixed
+
+- Multiline edge cases when defined closed to end of file
+- Handle null gracefully when notifying wrong token error
+
+### Removed
+- Remove custom editor and main panel
+- Cleaned up dead code
+
+
 ## 7.0.1 (2026-05-06)
 
 ### Fixed

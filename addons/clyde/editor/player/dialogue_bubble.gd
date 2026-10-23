@@ -12,6 +12,8 @@ const DialogueOption = preload("./dialogue_option.tscn")
 @onready var _line_meta = $MarginContainer/VBoxContainer/line_meta
 var _meta
 
+var chosen_option_color: Color
+
 func _ready():
 	var current_style = get_theme_stylebox("panel")
 	var style = StyleBoxFlat.new()
@@ -111,4 +113,4 @@ func set_chosen(index: int):
 		c.pressed.disconnect(_on_option_selected.bind(c.get_index()))
 		c.focus_mode = Button.FOCUS_NONE
 		if c.get_index() == index:
-			c.modulate = EditorInterface.get_editor_settings().get_setting("interface/theme/accent_color")
+			c.modulate = chosen_option_color

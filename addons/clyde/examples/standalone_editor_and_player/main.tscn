@@ -1,0 +1,72 @@
+[gd_scene format=3 uid="uid://dykfg6gqo46o5"]
+
+[ext_resource type="Script" uid="uid://bhfduysk1idts" path="res://addons/clyde/examples/standalone_editor_and_player/main.gd" id="1_b82e2"]
+[ext_resource type="PackedScene" uid="uid://itwcdoycxjc3" path="res://addons/clyde/examples/standalone_editor_and_player/editor/dialogue_editor.tscn" id="2_n4uuq"]
+[ext_resource type="PackedScene" uid="uid://po7pmftb1orn" path="res://addons/clyde/editor/player/player.tscn" id="3_n4uuq"]
+
+[node name="StandaloneEditor" type="Panel" unique_id=728890204]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_b82e2")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1019401754]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HSplitContainer" type="HSplitContainer" parent="MarginContainer" unique_id=1553899366]
+layout_mode = 2
+split_offsets = PackedInt32Array(28)
+split_offset = 28
+
+[node name="Editor" type="MarginContainer" parent="MarginContainer/HSplitContainer" unique_id=199063315]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="DialogueEditor" parent="MarginContainer/HSplitContainer/Editor" unique_id=545356960 instance=ExtResource("2_n4uuq")]
+layout_mode = 2
+text = "Vini:
+	Hello there!
+	This example has a working editor, using the plugin's syntax highligher,
+		auto complete and parser to identify errors
+	It also embeds the editor's player!
+Someone: And what's the point of this demo?
+Vini: I believe this is a good example to anyone trying to implement their own
+	editor and player.
+	To keep things simple I implemented only the essencial features, without bothering with
+	file selectors, debuggers, and other stuff."
+
+[node name="Player" type="MarginContainer" parent="MarginContainer/HSplitContainer" unique_id=280506423]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="Player" parent="MarginContainer/HSplitContainer/Player" unique_id=1232307310 instance=ExtResource("3_n4uuq")]
+layout_mode = 2
+
+[connection signal="parsing_failed" from="MarginContainer/HSplitContainer/Editor/DialogueEditor" to="." method="_on_dialogue_editor_parsing_failed"]
+[connection signal="parsing_finished" from="MarginContainer/HSplitContainer/Editor/DialogueEditor" to="." method="_on_dialogue_editor_parsing_finished"]
+[connection signal="content_finished_changing" from="MarginContainer/HSplitContainer/Player/Player" to="." method="_on_player_content_finished_changing"]
+[connection signal="dialogue_mem_clean" from="MarginContainer/HSplitContainer/Player/Player" to="." method="_on_player_dialogue_mem_clean"]
+[connection signal="dialogue_reset" from="MarginContainer/HSplitContainer/Player/Player" to="." method="_on_player_dialogue_reset"]
+[connection signal="event_triggered" from="MarginContainer/HSplitContainer/Player/Player" to="." method="_on_player_event_triggered"]
+[connection signal="external_variable_changed" from="MarginContainer/HSplitContainer/Player/Player" to="." method="_on_player_external_variable_changed"]
+[connection signal="follow_line_toggled" from="MarginContainer/HSplitContainer/Player/Player" to="." method="_on_player_follow_line_toggled"]
+[connection signal="position_selected" from="MarginContainer/HSplitContainer/Player/Player" to="." method="_on_player_position_selected"]
+[connection signal="toggle_debug_panel" from="MarginContainer/HSplitContainer/Player/Player" to="." method="_on_player_toggle_debug_panel"]
+[connection signal="variable_changed" from="MarginContainer/HSplitContainer/Player/Player" to="." method="_on_player_variable_changed"]
+[connection signal="watch_file_toggled" from="MarginContainer/HSplitContainer/Player/Player" to="." method="_on_player_watch_file_toggled"]

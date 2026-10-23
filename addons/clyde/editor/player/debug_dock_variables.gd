@@ -3,6 +3,7 @@ extends RefCounted
 
 signal variable_changed(var_name: String, value)
 
+const Settings = preload("../config/settings.gd")
 const DebugEntryActions = preload("./debug_entry_actions.tscn")
 
 enum Types {
@@ -16,10 +17,12 @@ const ADD_VAR_TEMP_NAME = "ADD-VAR"
 var _variables := {}
 var _is_adding = false
 
+var _settings: Settings
 var _var_entries: Node
 var _add_var_btn: Button
 
-func _init(var_entries: Node, add_var_btn: Button):
+func _init(settings: Settings, var_entries: Node, add_var_btn: Button):
+	_settings = settings
 	_var_entries = var_entries
 	_add_var_btn = add_var_btn
 
@@ -43,6 +46,7 @@ func _create_variable_fields(var_name: String):
 	var number_field = _create_number_field()
 	var boolean_field = _create_boolean_field()
 	var actions = DebugEntryActions.instantiate()
+	actions.settings = _settings
 
 	actions.save_pressed.connect(_on_action_save_pressed.bind(var_name))
 	actions.edit_pressed.connect(_on_action_edit_pressed.bind(var_name))

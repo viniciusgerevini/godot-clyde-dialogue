@@ -77,7 +77,7 @@ func _document():
 	var next = _tokens.peek(expected)
 
 	if next == null:
-		_tokens._wrong_token_error(next, expected)
+		_tokens._wrong_token_error(_tokens.peek(), expected)
 		return
 
 	var doc = DocumentNode()
@@ -201,7 +201,7 @@ func _lines_with_speaker():
 	var lines = []
 	_tokens.consume([Lexer.TOKEN_INDENT])
 
-	while not _tokens.has_next([Lexer.TOKEN_DEDENT, Lexer.TOKEN_EOF]):
+	while _tokens.has_next() and not _tokens.has_next([Lexer.TOKEN_DEDENT, Lexer.TOKEN_EOF]):
 		_tokens.consume([Lexer.TOKEN_TEXT])
 		var line = _text_line()
 		line.speaker = speaker_token.value;
@@ -252,18 +252,29 @@ func _text_line():
 			options.id_suffixes = line.id_suffixes
 			line = options
 		else:
-			while not _tokens.has_next([Lexer.TOKEN_DEDENT, Lexer.TOKEN_EOF]):
+			while _tokens.has_next() and not _tokens.has_next([Lexer.TOKEN_DEDENT, Lexer.TOKEN_EOF]):
 				_tokens.consume([Lexer.TOKEN_TEXT])
 				var next_line = _text_line()
-				line.value += " %s" % next_line.value
-				if next_line.id != null:
-					line.id = next_line.id
-					line.id_suffixes = next_line.id_suffixes
+				
+				if next_line.type == "options":
+					next_line.name = line.value + " " + next_line.name
+					if line.id:
+						next_line.id = line.id
+						next_line.id_suffixes = line.id_suffixes
+					if not line.tags.is_empty():
+						next_line.tags = line.tags
+					line = next_line
+				else:
+					line.value += " %s" % next_line.value
+					if next_line.id != null:
+						line.id = next_line.id
+						line.id_suffixes = next_line.id_suffixes
 
-				if not next_line.tags.is_empty():
-					line.tags = next_line.tags
+					if not next_line.tags.is_empty():
+						line.tags = next_line.tags
 
-			_tokens.consume([Lexer.TOKEN_DEDENT, Lexer.TOKEN_EOF])
+			if _tokens.has_next():
+				_tokens.consume([Lexer.TOKEN_DEDENT, Lexer.TOKEN_EOF])
 
 	return _with_optional_meta(line, { "line": text_line, "column": text_column })
 
@@ -383,7 +394,8 @@ func _option():
 		if main_item == null:
 			main_item = lines[0]
 
-		_tokens.consume([Lexer.TOKEN_DEDENT, Lexer.TOKEN_EOF])
+		if _tokens.has_next():
+			_tokens.consume([Lexer.TOKEN_DEDENT, Lexer.TOKEN_EOF])
 
 
 	var node = OptionNode(
@@ -627,7 +639,8 @@ func _conditional_line():
 		_tokens.consume([Lexer.TOKEN_LINE_BREAK])
 		_tokens.consume([Lexer.TOKEN_INDENT])
 		content = ContentNode(_lines())
-		_tokens.consume([Lexer.TOKEN_DEDENT, Lexer.TOKEN_EOF])
+		if _tokens.has_next():
+			_tokens.consume([Lexer.TOKEN_DEDENT, Lexer.TOKEN_EOF])
 	elif _tokens.has_next([Lexer.TOKEN_BRACE_OPEN]):
 		_tokens.consume([Lexer.TOKEN_BRACE_OPEN])
 		content = _line_with_action()

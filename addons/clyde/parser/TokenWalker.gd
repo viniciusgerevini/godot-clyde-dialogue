@@ -49,6 +49,9 @@ func _wrong_token_error(token, expected):
 	for e in expected:
 		expected_hints.push_back(Lexer.get_token_friendly_hint(e))
 
+	if token == null:
+		token = { token = null, line = -1, column = -1 }
+
 	var error = "Unexpected token \"%s\" on line %s column %s. Expected %s" % [
 		Lexer.get_token_friendly_hint(token.token),
 		token.line+1,
