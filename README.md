@@ -6,16 +6,14 @@ Importer, interpreter and editor for [Clyde Dialogue Language](https://github.co
 
 > Clyde is a language for writing game dialogues. It supports branching dialogues, translations and interfacing with your game through variables and events.
 
-![Clyde editor screenshot with dialogue file example](./images/editor_screenshot.png)
+![Clyde editor screenshot with dialogue file example](./images/clyde_godot_editor.png)
 
-
-_This branch has the source code for Godot 4. For Godot 3 check the [godot_3](https://github.com/viniciusgerevini/godot-clyde-dialogue/tree/godot_3) branch._
 
 ## Usage
 
 The importer automatically imports `.clyde` files to be used with the interpreter. This improves performance, as the dialogue is parsed beforehand.
 
-Check the [documentation](https://thisisvini.com/clyde/en/latest/godot/index.html) for how to use the interpreter.
+Check the [documentation](https://thisisvini.com/clyde/en/godot) for how to use the interpreter.
 
 You can find usage examples on [/addons/clyde/examples](./addons/clyde/examples)
 

@@ -2,7 +2,7 @@
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
-## Unreleased
+## 7.1.0 (2026-10-23)
 
 This is a major refactor with UX changes and bugfixes. The underlying functionality though remains the same.
 

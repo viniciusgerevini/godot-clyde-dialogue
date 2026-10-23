@@ -1,11 +1,11 @@
-[gd_scene load_steps=5 format=3 uid="uid://bqjvv0xyfm54y"]
+[gd_scene format=3 uid="uid://bqjvv0xyfm54y"]
 
 [ext_resource type="Script" uid="uid://dl7sti8x4yl7m" path="res://addons/clyde/examples/examples_with_helpers/floating_bubble/example_floating_with_helpers.gd" id="1_tjmj8"]
 [ext_resource type="Script" uid="uid://dg1mab6gcc4qj" path="res://addons/clyde/examples/examples_with_helpers/floating_bubble/clyde_dialogue_config.gd" id="2_bouif"]
 [ext_resource type="PackedScene" uid="uid://c2aifp4pq54ut" path="res://addons/clyde/helpers/bubbles/dialogue_bubble_floating.tscn" id="3_8rmxq"]
 [ext_resource type="Texture2D" uid="uid://d05r8uu5a8oru" path="res://icon.png" id="4_iuwpv"]
 
-[node name="example_floating_with_helpers" type="MarginContainer"]
+[node name="example_floating_with_helpers" type="MarginContainer" unique_id=382278934]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -17,79 +17,79 @@ theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 script = ExtResource("1_tjmj8")
 
-[node name="commands" type="VBoxContainer" parent="."]
+[node name="commands" type="VBoxContainer" parent="." unique_id=546694082]
 layout_mode = 2
 size_flags_vertical = 0
 
-[node name="next" type="HBoxContainer" parent="commands"]
+[node name="next" type="HBoxContainer" parent="commands" unique_id=870725908]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="commands/next"]
+[node name="Label" type="Label" parent="commands/next" unique_id=518486151]
 layout_mode = 2
 text = "Next content:"
 
-[node name="Action" type="Label" parent="commands/next"]
+[node name="Action" type="Label" parent="commands/next" unique_id=1426578577]
 layout_mode = 2
 
-[node name="select" type="HBoxContainer" parent="commands"]
+[node name="select" type="HBoxContainer" parent="commands" unique_id=1062191457]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="commands/select"]
+[node name="Label" type="Label" parent="commands/select" unique_id=642277134]
 layout_mode = 2
 text = "Select option:"
 
-[node name="Action" type="Label" parent="commands/select"]
+[node name="Action" type="Label" parent="commands/select" unique_id=1066040063]
 layout_mode = 2
 
-[node name="confirm" type="HBoxContainer" parent="commands"]
+[node name="confirm" type="HBoxContainer" parent="commands" unique_id=38214936]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="commands/confirm"]
+[node name="Label" type="Label" parent="commands/confirm" unique_id=356207920]
 layout_mode = 2
 text = "Confirm option:"
 
-[node name="Action" type="Label" parent="commands/confirm"]
+[node name="Action" type="Label" parent="commands/confirm" unique_id=1612563425]
 layout_mode = 2
 
-[node name="Button" type="Button" parent="."]
+[node name="Button" type="Button" parent="." unique_id=611900242]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 text = "Press any key to start dialogue"
 
-[node name="HUD" type="CanvasLayer" parent="."]
+[node name="HUD" type="CanvasLayer" parent="." unique_id=488452383]
 
-[node name="ClydeDialogueConfig" type="Node" parent="HUD"]
+[node name="ClydeDialogueConfig" type="Node" parent="HUD" unique_id=1235180140]
 script = ExtResource("2_bouif")
 _dialogue_bubble = ExtResource("3_8rmxq")
 
-[node name="jules" type="Sprite2D" parent="."]
-position = Vector2(382, 257)
+[node name="jules" type="Sprite2D" parent="." unique_id=1629000630]
+position = Vector2(317, 257)
 texture = ExtResource("4_iuwpv")
 
-[node name="Label" type="Label" parent="jules"]
-offset_left = -27.0
-offset_top = 54.0
-offset_right = 13.0
-offset_bottom = 77.0
+[node name="Label" type="Label" parent="jules" unique_id=980649519]
+offset_left = -11.0
+offset_top = 131.0
+offset_right = 29.0
+offset_bottom = 154.0
 text = "Jules"
 
-[node name="bubble_position" type="Node2D" parent="jules"]
+[node name="bubble_position" type="Node2D" parent="jules" unique_id=251892790]
 position = Vector2(59, -65)
 
-[node name="vincent" type="Sprite2D" parent="."]
+[node name="vincent" type="Sprite2D" parent="." unique_id=1336496599]
 self_modulate = Color(0, 0.509804, 0.513726, 1)
-position = Vector2(764, 257)
+position = Vector2(837, 257)
 texture = ExtResource("4_iuwpv")
 
-[node name="Label" type="Label" parent="vincent"]
-offset_left = -36.0
-offset_top = 54.0
-offset_right = 23.0
-offset_bottom = 77.0
+[node name="Label" type="Label" parent="vincent" unique_id=1468149085]
+offset_left = -20.0
+offset_top = 131.0
+offset_right = 39.0
+offset_bottom = 154.0
 text = "Vincent"
 
-[node name="bubble_position" type="Node2D" parent="vincent"]
+[node name="bubble_position" type="Node2D" parent="vincent" unique_id=973567600]
 position = Vector2(59, -65)
 
 [connection signal="pressed" from="Button" to="." method="_on_button_pressed"]
